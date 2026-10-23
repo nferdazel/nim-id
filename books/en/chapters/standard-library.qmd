@@ -1,0 +1,243 @@
+# A tour of the standard library
+
+A good language without a library is exhausting. Nim ships its standard library with the compiler,
+and its modules are imported with the `std/` prefix. This chapter tours the four modules you reach
+for most days: `strutils`, `sequtils`, `tables`, and `json`. Each gets enough coverage to be
+useful; the rest have their own chapters.
+
+::: {.callout-note}
+## What you will be able to do
+
+After this chapter you can process text with `std/strutils`, transform sequences with
+`std/sequtils`, store keyed values in a `Table`, read and build JSON, and choose between `Table`
+and `seq` with a clear reason.
+:::
+
+## Importing standard library modules
+
+Standard library modules are imported with the `std/` prefix, for example `import std/strutils` or
+`import std/sequtils`. The prefix separates official modules from local files. Without the import,
+names such as `strip` or `hasKey` are unknown to the compiler.
+
+## `std/strutils`: working with text
+
+```{.nim}
+import std/strutils
+
+let line = "  Ada,36,London  "
+
+echo line.strip
+echo line.strip.split(',')
+echo "ada".toUpperAscii
+echo "hello".startsWith("he")
+echo @["a", "b", "c"].join("-")
+```
+
+```{.txt}
+Ada,36,London
+@["Ada", "36", "London"]
+ADA
+true
+a-b-c
+```
+
+`strip` removes spaces from both ends. `split(',')` breaks a string into a `seq[string]`.
+`toUpperAscii` uppercases letters, and `startsWith` tests a prefix. `join("-")` joins a
+`seq[string]` back into one string with a separator. All of these return new values; the original
+string is untouched.
+
+## `std/sequtils`: transforming sequences
+
+```{.nim}
+import std/sequtils
+
+let numbers = @[1, 2, 3, 4, 5, 6]
+
+echo numbers.filterIt(it mod 2 == 0)
+echo numbers.mapIt(it * it)
+echo numbers.filterIt(it > 2).mapIt(it * 10)
+```
+
+```{.txt}
+@[2, 4, 6]
+@[1, 4, 9, 16, 25, 36]
+@[30, 40, 50, 60]
+```
+
+`filterIt` keeps matching elements, `mapIt` transforms each element. Both are templates: inside the
+parentheses, `it` refers to the element being processed. Both return a new `seq` and can be chained,
+as on the last line.
+
+## `std/tables`: mapping keys to values
+
+```{.nim}
+import std/tables
+
+var ages = initTable[string, int]()
+ages["ada"] = 36
+ages["grace"] = 45
+
+echo ages["ada"]
+echo ages.hasKey("linus")
+echo ages.getOrDefault("linus", -1)
+echo ages.len
+```
+
+```{.txt}
+36
+false
+-1
+2
+```
+
+`Table[string, int]` maps `string` keys to `int` values. `initTable` creates an empty table;
+writing `ages["ada"] = 36` adds a new pair. `hasKey` tests whether a key exists, and
+`getOrDefault` returns a default value when the key is missing. This is far handier than scanning
+a `seq` one item at a time.
+
+## `Table` or `seq`?
+
+Both store many values, but for different needs.
+
+| Need | Choice |
+|---|---|
+| order matters, access by index | `seq` |
+| fast lookup by key | `Table` |
+| small data read in order | `seq` |
+
+A `Table` stores through a hash function, so lookups are nearly instant no matter how much it
+holds. A `seq` must be checked one by one, but its order is fixed and elements are reached by
+index. For small data the choice often falls to `seq` for its simplicity.
+
+## `std/json`: reading data
+
+```{.nim}
+import std/json
+
+let doc = """{"name": "Ada", "age": 36, "tags": ["math", "code"]}"""
+let data = parseJson(doc)
+
+echo data["name"].getStr
+echo data["age"].getInt
+echo data["tags"][1].getStr
+echo data.pretty
+```
+
+```{.txt}
+Ada
+36
+code
+{
+  "name": "Ada",
+  "age": 36,
+  "tags": [
+    "math",
+    "code"
+  ]
+}
+```
+
+`parseJson` turns JSON text into a `JsonNode`. Fields are reached like a map: `data["name"]`. To
+pull out the value, use `getStr`, `getInt`, `getFloat`, or `getBool` to match its kind. `pretty`
+prints JSON with indentation so it is easy to read.
+
+## `std/json`: building data
+
+```{.nim}
+import std/json
+
+let person = %*{
+  "name": "Ada",
+  "age": 36,
+  "tags": ["math", "code"]
+}
+
+echo person.pretty
+
+type Person = object
+  name: string
+  age: int
+
+let parsed = person.to(Person)
+echo parsed.name, " is ", parsed.age
+```
+
+```{.txt}
+{
+  "name": "Ada",
+  "age": 36,
+  "tags": [
+    "math",
+    "code"
+  ]
+}
+Ada is 36
+```
+
+`%*{...}` builds a `JsonNode` straight from a literal, without writing a JSON string and parsing it
+back. `to(Type)` turns it into an ordinary object. Both avoid error-prone manual string assembly.
+
+## Reading an error: a missing key
+
+Reaching for a missing key is not a compile error; the program only stops while running.
+
+```{.nim}
+import std/json
+
+let data = """{"age": 36}""".parseJson
+echo data["name"]
+```
+
+```{.txt}
+Error: unhandled exception: key not found: name [KeyError]
+```
+
+The message names the missing key and the `KeyError` kind. The full output also carries a stack
+trace. Test with `hasKey` before reading, or use `getOrDefault`, so the program does not stop when
+the key is gone.
+
+## Other modules have their own chapters
+
+The standard library is far larger than these four modules. `std/os` is covered in the files and
+operating system chapter, `std/strformat` in the variables chapter, and modules such as `std/math`,
+`std/algorithm`, `std/random`, and `std/times` follow in later parts. The import pattern is always
+the same: `import std/name`.
+
+## Exercises
+
+1. Read a sentence, split it, uppercase each word with `toUpperAscii`, then join them back with
+   `join("-")`.
+2. Without running it, predict the output:
+   ```{.nim}
+   import std/sequtils
+
+   let xs = @[3, 1, 2]
+   echo xs.filterIt(it > 1).mapIt(it * 2)
+   ```
+3. Create a `Table[string, int]` with three values, print one existing value, and one value through
+   `getOrDefault` for a missing key.
+4. Write from scratch: parse `{"city": "Bandung"}` and print the value of `city`.
+5. The code below fails while running. Fix it without changing the contents of `t`, then explain
+   the error message:
+   ```{.nim}
+   import std/tables
+
+   let t = {"a": 1}.toTable
+   echo t["b"]
+   ```
+
+Answers are in [Appendix A](../appendix/answers.qmd).
+
+## Summary
+
+- Standard library modules are imported with the `std/` prefix, for example `import std/strutils`.
+- `strutils` processes text (`strip`, `split`, `join`), `sequtils` transforms sequences
+  (`filterIt`, `mapIt`).
+- `Table[K, V]` maps keys to values for fast lookup; `seq` remains the choice when order matters.
+- `parseJson` and `%*` read and build JSON; `to`, `getInt`, and `pretty` complete the set.
+- A missing key raises `KeyError` while running, so test with `hasKey` first.
+
+## Next
+
+The next chapter covers files and the operating system: [files and OS](files-and-os.qmd), reading
+and writing files, walking directories, and reading arguments and environment variables.

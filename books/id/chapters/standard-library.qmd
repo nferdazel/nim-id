@@ -1,0 +1,244 @@
+# Tur pustaka standar
+
+Bahasa yang bagus tanpa pustaka akan melelahkan. Nim mengirim pustaka standar bersama compiler,
+dan modulnya diimpor dengan awalan `std/`. Bab ini menelusuri empat modul yang paling sering
+dipakai hari-hari: `strutils`, `sequtils`, `tables`, dan `json`. Setiap modul dibahas secukupnya;
+sisanya punya bab sendiri.
+
+::: {.callout-note}
+## Tujuan bab
+
+Setelah bab ini, pembaca bisa mengolah teks dengan `std/strutils`, mengubah barisan dengan
+`std/sequtils`, menyimpan nilai berkunci di `Table`, membaca dan membangun JSON, serta memilih
+antara `Table` dan `seq` dengan alasan yang jelas.
+:::
+
+## Mengimpor modul pustaka standar
+
+Modul pustaka standar diimpor dengan awalan `std/`, misalnya `import std/strutils` atau
+`import std/sequtils`. Awalan itu memisahkan modul resmi dari berkas lokal. Tanpa impor, nama
+seperti `strip` atau `hasKey` tidak dikenal compiler.
+
+## `std/strutils`: mengolah teks
+
+```{.nim}
+import std/strutils
+
+let line = "  Ada,36,London  "
+
+echo line.strip
+echo line.strip.split(',')
+echo "ada".toUpperAscii
+echo "hello".startsWith("he")
+echo @["a", "b", "c"].join("-")
+```
+
+```{.txt}
+Ada,36,London
+@["Ada", "36", "London"]
+ADA
+true
+a-b-c
+```
+
+`strip` membuang spasi di kedua ujung. `split(',')` memecah string menjadi `seq[string]`.
+`toUpperAscii` mengubah huruf menjadi kapital, dan `startsWith` menguji awalan. `join("-")`
+menggabungkan kembali `seq[string]` menjadi satu string dengan pemisah. Semua fungsi ini
+mengembalikan nilai baru; string asalnya tidak berubah.
+
+## `std/sequtils`: mengubah barisan
+
+```{.nim}
+import std/sequtils
+
+let numbers = @[1, 2, 3, 4, 5, 6]
+
+echo numbers.filterIt(it mod 2 == 0)
+echo numbers.mapIt(it * it)
+echo numbers.filterIt(it > 2).mapIt(it * 10)
+```
+
+```{.txt}
+@[2, 4, 6]
+@[1, 4, 9, 16, 25, 36]
+@[30, 40, 50, 60]
+```
+
+`filterIt` menyaring elemen, `mapIt` mengubah setiap elemen. Keduanya template: di dalam kurung,
+`it` merujuk elemen yang sedang diproses. Keduanya mengembalikan `seq` baru dan bisa dirantai,
+seperti pada baris terakhir.
+
+## `std/tables`: peta kunci ke nilai
+
+```{.nim}
+import std/tables
+
+var ages = initTable[string, int]()
+ages["ada"] = 36
+ages["grace"] = 45
+
+echo ages["ada"]
+echo ages.hasKey("linus")
+echo ages.getOrDefault("linus", -1)
+echo ages.len
+```
+
+```{.txt}
+36
+false
+-1
+2
+```
+
+`Table[string, int]` memetakan kunci `string` ke nilai `int`. `initTable` membuat peta kosong;
+menulis `ages["ada"] = 36` menambahkan pasangan baru. `hasKey` menguji ada atau tidaknya kunci, dan
+`getOrDefault` mengembalikan nilai default kalau kuncinya tidak ada. Ini jauh lebih praktis
+daripada mencari di dalam `seq` satu per satu.
+
+## `Table` atau `seq`?
+
+Keduanya menyimpan banyak nilai, tapi untuk keperluan berbeda.
+
+| Kebutuhan | Pilihan |
+|---|---|
+| urutan penting, akses lewat indeks | `seq` |
+| pencarian cepat lewat kunci | `Table` |
+| data kecil, urutan yang dibaca | `seq` |
+
+`Table` menyimpan lewat fungsi hash, sehingga pencarian hampir langsung berapa pun isinya. `seq`
+harus diperiksa satu per satu, tapi urutannya tetap dan bisa diakses lewat indeks. Untuk data
+kecil, pilihan sering jatuh ke `seq` karena lebih sederhana.
+
+## `std/json`: membaca data
+
+```{.nim}
+import std/json
+
+let doc = """{"name": "Ada", "age": 36, "tags": ["math", "code"]}"""
+let data = parseJson(doc)
+
+echo data["name"].getStr
+echo data["age"].getInt
+echo data["tags"][1].getStr
+echo data.pretty
+```
+
+```{.txt}
+Ada
+36
+code
+{
+  "name": "Ada",
+  "age": 36,
+  "tags": [
+    "math",
+    "code"
+  ]
+}
+```
+
+`parseJson` mengubah teks JSON menjadi `JsonNode`. Field diakses seperti peta: `data["name"]`.
+Untuk mengambil nilainya, pakai `getStr`, `getInt`, `getFloat`, atau `getBool` sesuai jenisnya.
+`pretty` mencetak JSON dengan indentasi agar mudah dibaca.
+
+## `std/json`: membangun data
+
+```{.nim}
+import std/json
+
+let person = %*{
+  "name": "Ada",
+  "age": 36,
+  "tags": ["math", "code"]
+}
+
+echo person.pretty
+
+type Person = object
+  name: string
+  age: int
+
+let parsed = person.to(Person)
+echo parsed.name, " is ", parsed.age
+```
+
+```{.txt}
+{
+  "name": "Ada",
+  "age": 36,
+  "tags": [
+    "math",
+    "code"
+  ]
+}
+Ada is 36
+```
+
+`%*{...}` membangun `JsonNode` langsung dari literal, tanpa menulis string JSON lalu mem-parse-nya.
+`to(Tipe)` mengubahnya menjadi objek biasa. Keduanya menghindari penggabungan string manual yang
+mudah salah.
+
+## Membaca error: kunci yang tidak ada
+
+Mengakses kunci yang tidak ada bukan error kompilasi; program baru berhenti saat berjalan.
+
+```{.nim}
+import std/json
+
+let data = """{"age": 36}""".parseJson
+echo data["name"]
+```
+
+```{.txt}
+Error: unhandled exception: key not found: name [KeyError]
+```
+
+Pesannya menyebut kunci yang dicari dan jenis `KeyError`. Output lengkapnya juga memuat jejak
+tumpukan. Sebelum membaca, uji dengan `hasKey`, atau pakai `getOrDefault` supaya tidak berhenti
+saat kuncinya hilang.
+
+## Modul lain punya babnya sendiri
+
+Pustaka standar jauh lebih luas dari empat modul ini. `std/os` dibahas di bab berkas dan operasi
+sistem, `std/strformat` di bab variabel, dan modul seperti `std/math`, `std/algorithm`,
+`std/random`, serta `std/times` menyusul di bagian lain. Pola impornya sama: `import std/nama`.
+
+## Latihan
+
+1. Baca kalimat, pecah dengan `split`, ubah tiap kata menjadi huruf kapital dengan `toUpperAscii`,
+   lalu gabungkan kembali dengan `join("-")`.
+2. Tanpa menjalankan, prediksi outputnya:
+   ```{.nim}
+   import std/sequtils
+
+   let xs = @[3, 1, 2]
+   echo xs.filterIt(it > 1).mapIt(it * 2)
+   ```
+3. Buat `Table[string, int]` berisi tiga nilai, cetak satu nilai yang ada, dan satu nilai lewat
+   `getOrDefault` untuk kunci yang tidak ada.
+4. Tulis dari nol: parse `{"city": "Bandung"}` lalu cetak isi `city`.
+5. Kode berikut gagal saat dijalankan. Perbaiki tanpa mengubah isi `t`, lalu jelaskan pesan
+   error-nya:
+   ```{.nim}
+   import std/tables
+
+   let t = {"a": 1}.toTable
+   echo t["b"]
+   ```
+
+Jawaban ada di [Lampiran A](../appendix/answers.qmd).
+
+## Ringkasan
+
+- Modul pustaka standar diimpor dengan awalan `std/`, misalnya `import std/strutils`.
+- `strutils` mengolah teks (`strip`, `split`, `join`), `sequtils` mengubah barisan (`filterIt`,
+  `mapIt`).
+- `Table[K, V]` memetakan kunci ke nilai untuk pencarian cepat; `seq` tetap dipakai saat urutan
+  penting.
+- `parseJson` dan `%*` membaca serta membangun JSON; `to`, `getInt`, dan `pretty` melengkapinya.
+- Kunci yang tidak ada melempar `KeyError` saat berjalan, jadi uji dulu dengan `hasKey`.
+
+## Selanjutnya
+
+Bab berikutnya membahas berkas dan sistem operasi: [berkas dan OS](files-and-os.qmd), membaca dan
+menulis berkas, menelusuri direktori, serta membaca argumen dan variabel lingkungan.
