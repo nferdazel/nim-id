@@ -6,7 +6,7 @@ project:
 book:
   title: "Dasar Pemrograman Nim"
   subtitle: "Belajar bahasa Nim dari nol, dalam Bahasa Indonesia"
-  author: "Sachiel"
+  author: "Fredianto"
   date: "2026-10-23"
   language: id
   chapters:

@@ -6,7 +6,7 @@ project:
 book:
   title: "Learning Nim"
   subtitle: "From zero to working programs"
-  author: "Sachiel"
+  author: "Fredianto"
   date: "2026-10-23"
   language: en
   chapters:
