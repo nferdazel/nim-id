@@ -281,7 +281,7 @@ echo name
    ab
    ```
 
-**3.** Ekspresi di dalam `{...}` dievaluasi, jadi penjumlahannya benar-benar dihitung:
+**3.** *Expression* di dalam `{...}` dievaluasi, jadi penjumlahannya benar-benar dihitung:
    ```{.nim}
    echo &"{3 + 4}"
    ```
@@ -729,8 +729,8 @@ Tanpa tanda bintang, `shout` tidak akan terlihat dari `main.nim`.
 juga menghasilkan `42`, karena `from` hanya membatasi nama yang boleh dipakai tanpa kualifikasi,
 bukan menghapus nama modulnya. Kalau kualifikasi ingin dipaksa, tulis `from mathx import nil`.
 
-**3.** Pesannya `undeclared identifier: 'textutils'`. Garis miring di dalam ekspresi adalah operator
-pembagian, bukan penunjuk modul. Modul yang diimpor bernama `format`, jadi kualifikasi yang benar
+**3.** Pesannya `undeclared identifier: 'textutils'`. Garis miring di dalam *expression* adalah operator
+pembagian, bukan *pointer* modul. Modul yang diimpor bernama `format`, jadi kualifikasi yang benar
 memakai titik saja:
 
 ```{.nim}
@@ -1022,7 +1022,7 @@ template, jadi lebih luas dari yang dibutuhkan.
 
 ## Bab: Macro: kode yang membangun kode
 
-**1.** Template cukup, karena syaratnya hanya mengganti ekspresi.
+**1.** Template cukup, karena syaratnya hanya mengganti *expression*.
 
 ```{.nim}
 template minOf(a, b: untyped): untyped =
@@ -1035,7 +1035,7 @@ echo minOf(3, 7)
 3
 ```
 
-Perlu diingat bahwa `a` dan `b` disalin apa adanya, jadi argumen dengan efek samping bisa dievaluasi
+`a` dan `b` disalin apa adanya, jadi argumen dengan efek samping bisa dievaluasi
 lebih dari sekali.
 
 **2.** Outputnya:
@@ -1196,7 +1196,7 @@ echo area(Shape(kind: triangle, base: 3.0, altitude: 4.0))
 ```
 
 **2.** Outputnya `3.0`. Konstruktornya kini konsisten: `kind` bernilai `circle` dan yang diisi adalah
-`radius`, satu satunya field yang ada di cabang itu. Karena `c.radius` memang field yang benar,
+`radius`, satu-satunya field yang ada di cabang itu. Karena `c.radius` memang field yang benar,
 program berjalan dan mencetak nilai `radius`, yaitu `3.0`.
 
 **3.** Tipe `Meters` beserta `$`-nya.
@@ -1470,7 +1470,7 @@ if dirExists(getTempDir()):
 found
 ```
 
-## Bab: `unittest` dan disiplin tes
+## Bab: `unittest` dan disiplin *test*
 
 **1.** Satu `suite`, dua `test`.
 
@@ -1514,7 +1514,7 @@ tetap 1.
 
 `"nim".len` bernilai 3, dan `"nim"[0]` bernilai `'n'`, sehingga kedua `check` lulus.
 
-**3.** `check` menuntut ekspresi `bool`, sedangkan `1 + 1` bertipe `int`.
+**3.** `check` menuntut *expression* `bool`, sedangkan `1 + 1` bertipe `int`.
 
 ```{.txt}
 Error: type mismatch: got 'int literal(2)' for '2' but expected 'bool'
@@ -1679,3 +1679,529 @@ marshal.nim(52, 10) Error: marshal module is not supported in javascript.
 
 Perbaikannya mengganti modulnya dengan yang didukung semua backend, misalnya `std/json` untuk
 urusan data, lalu membangun ulang dengan `nim js`.
+
+## Bab: CLI dengan `parseopt`
+
+**1.** Tandai `--quiet` sebagai opsi tanpa nilai lewat `longNoVal`, lalu pakai bendera itu untuk
+melewati pencetakan token:
+
+```{.nim}
+import std/parseopt
+
+let args = @["--quiet", "input.txt"]
+
+var quiet = false
+for kind, key, val in getopt(args, longNoVal = @["quiet"]):
+  case kind
+  of cmdLongOption, cmdShortOption:
+    if key == "quiet":
+      quiet = true
+  of cmdArgument:
+    echo "argument: ", key
+  of cmdEnd:
+    discard
+
+if quiet:
+  echo "quiet mode"
+```
+
+```{.txt}
+argument: input.txt
+quiet mode
+```
+
+**2.** Tampil tiga token: dua opsi pendek lalu satu opsi panjang.
+
+```{.txt}
+[cmdShortOption] key=a val=
+[cmdShortOption] key=b val=
+[cmdLongOption] key=name val=ana
+```
+
+`-ab` adalah dua opsi pendek yang dibundel: `a` dan `b`, masing-masing tanpa nilai. `--name=ana`
+memberi `key` sama dengan `name` dan `val` sama dengan `ana`.
+
+**3.** `--count` di sini ditulis dengan pemisah `=` supaya nilainya pasti terbaca, karena tanpa
+`longNoVal` bentuk `--opt val` tidak menyerap token berikutnya:
+
+```{.nim}
+import std/[parseopt, strutils]
+
+let args = @["--count=4"]
+
+var count = 3
+for kind, key, val in getopt(args):
+  if key == "count" and val != "":
+    count = parseInt(val)
+
+for i in 1 .. count:
+  echo "count ", i
+```
+
+```{.txt}
+count 1
+count 2
+count 3
+count 4
+```
+
+**4.** `case` atas `kind` harus menutup semua nilai `CmdLineKind`. Hanya `cmdLongOption` yang
+ditangani, jadi compiler menyebut sisanya:
+
+```{.txt}
+main.nim(4, 3) Error: not all cases are covered; missing: {cmdEnd, cmdArgument, cmdShortOption}
+```
+
+Perbaikan terpendek: tambahkan cabang `else` yang membuang sisa kasus.
+
+```{.nim}
+import std/parseopt
+
+for kind, key, val in getopt(@["--one"]):
+  case kind
+  of cmdLongOption:
+    echo key
+  else:
+    discard
+```
+
+```{.txt}
+one
+```
+
+**5.** `--` perlu saat argumen bisa dimulai dengan tanda hubung, sehingga parser akan mengiranya
+opsi. Contohnya nama berkas `-draft.txt`: tulis `tool -- -draft.txt` supaya `-draft.txt` sampai
+sebagai argumen biasa.
+
+## Bab: HTTP API dengan `asynchttpserver`
+
+**1.** Tambahkan satu cabang pada `dispatch`, lalu cetak balasannya:
+
+```{.nim}
+import std/[httpcore, json]
+
+proc dispatch(path: string): tuple[code: HttpCode, body: string] =
+  case path
+  of "/version":
+    (Http200, $(%*{"version": "1"}))
+  else:
+    (Http404, """{"error":"not found"}""")
+
+let reply = dispatch("/version")
+echo reply.code.int, " ", reply.body
+```
+
+```{.txt}
+200 {"version":"1"}
+```
+
+**2.** Keluarannya `200` lalu `404`. Jalur `/ready` cocok dengan cabang pertama, sehingga
+`status(path).int` bernilai `200`. Jalur `/other` jatuh ke `else` dan memberi `404`.
+
+**3.** Ambil bagian `query` dari URL, lalu cari kuncinya:
+
+```{.nim}
+import std/[json, uri]
+
+proc page(path: string): string =
+  let target = parseUri(path)
+  var page = "1"
+  for key, value in decodeQuery(target.query):
+    if key == "page":
+      page = value
+  $(%*{"page": page})
+
+echo page("/list?page=2")
+```
+
+```{.txt}
+{"page":"2"}
+```
+
+**4.** Dua argumen `respond` tertukar. `respond` menuntut `code` lebih dulu, baru `content`.
+Compiler menolaknya karena `"ok"` bertipe `string`, bukan `HttpCode`:
+
+```{.txt}
+main.nim(4, 12) Error: type mismatch
+```
+
+Perbaikan: kembalikan urutannya.
+
+```{.nim}
+import std/[asynchttpserver, asyncdispatch, httpcore]
+
+proc handle(req: Request) {.async.} =
+  await req.respond(Http200, "ok")
+```
+
+**5.** `Http400` dipakai saat permintaannya sendiri tidak sesuai, misalnya body bukan JSON yang
+sah, atau metode yang salah untuk rute itu. `Http404` dipakai saat rutenya tidak ada sama sekali,
+misalnya GET ke `/missing`.
+
+## Bab: Database dengan `std/tables` dan `db_sqlite`
+
+**1.** Tambahkan satu buku, lalu urutkan seperti semula:
+
+```{.nim}
+import std/[tables, algorithm]
+
+type Book = object
+  title: string
+  year: int
+
+var shelf = @[
+  Book(title: "Neuromancer", year: 1984),
+  Book(title: "Dune", year: 1965),
+  Book(title: "Emma", year: 1815),
+  Book(title: "Hyperion", year: 1989),
+]
+
+shelf.sort(proc (a, b: Book): int = cmp(a.year, b.year))
+for book in shelf:
+  echo book.year, " ", book.title
+```
+
+```{.txt}
+1815 Emma
+1965 Dune
+1984 Neuromancer
+1989 Hyperion
+```
+
+**2.** `@[1999, 2001]`. Kedua baris bertahun 1999 dan 2001 lolos syarat `> 1990`; baris 1980 tidak.
+`echo` mencetak `seq[int]` dengan tanda `@` di depan.
+
+**3.** Tulis, baca kembali, cetak jumlah barisnya, lalu bersihkan:
+
+```{.nim}
+import std/[json, os]
+
+var rows = newJArray()
+for title in ["Dune", "Emma", "Hyperion"]:
+  rows.add %*{"title": title}
+
+let path = getTempDir() / "nim_id_answer.json"
+writeFile(path, rows.pretty)
+echo parseJson(readFile(path)).len, " rows"
+removeFile(path)
+```
+
+```{.txt}
+3 rows
+```
+
+**4.** Field `year` tidak ada, sehingga `row["year"]` melempar `KeyError` saat program berjalan:
+
+```{.txt}
+Error: unhandled exception: key not found: year [KeyError]
+```
+
+Uji dulu dengan `hasKey`, atau pakai nilai cadangan:
+
+```{.nim}
+import std/json
+
+let row = parseJson("""{"title": "Dune"}""")
+if row.hasKey("year"):
+  echo row["year"].getInt
+else:
+  echo "no year"
+```
+
+```{.txt}
+no year
+```
+
+**5.** Dua di antaranya: (a) datanya sudah besar sehingga membaca dan menulis seluruh berkas setiap
+kali terlalu mahal, dan (b) *query* perlu menyaring atau mengurutkan tanpa memuat semuanya ke memori.
+Yang pindah ke SQLite: penyaringan dan pengurutan (`WHERE`, `ORDER BY`), indeks, transaksi, serta
+penulisan bersamaan dari beberapa proses. Kode di bab ini tidak salah; ia hanya berhenti memadai
+begitu data tumbuh.
+
+## Bab: Membuat dan menerbitkan *package* nimble
+
+**1.** Empat di antaranya: (a) kode yang sama dipakai lebih dari satu proyek, (b) ada `README.md` yang
+menunjukkan cara memasang, mengimpor, dan memanggilnya, (c) ada *test* yang lulus lewat `nimble test`,
+dan (d) lisensinya jelas.
+
+**2.** `Nim Does Not Care`. `titleCase` mengapitalkan huruf pertama tiap kata, lalu mengubah sisanya
+menjadi huruf kecil. Karena itu `NIM` menjadi `Nim`, bukan tetap `NIM`.
+
+**3.** Strukturnya:
+
+```{.txt}
+notes/
+  notes.nimble
+  src/
+    notes.nim
+  tests/
+    test_notes.nim
+```
+
+Isi `notes.nimble`:
+
+```{.ini}
+# Package
+
+version       = "0.1.0"
+author        = "Sari Dewi"
+description   = "Store short notes in memory"
+license       = "MIT"
+srcDir        = "src"
+
+
+# Dependencies
+
+requires "nim >= 2.0.0"
+```
+
+Nama berkas *test* boleh apa saja selama diawali huruf `t`, karena `nimble test` menjalankan setiap
+berkas di `tests/` yang dimulai dengan `t`.
+
+**4.** Tidak ada berkas bernama `notes_helpers.nim` di jalur pencarian:
+
+```{.txt}
+main.nim(1, 8) Error: cannot open file: notes_helpers
+```
+
+`(1, 8)` adalah kolom 8, tepat di awal nama modul setelah `import `. Perbaikannya menyesuaikan impor
+dengan nama berkas yang benar, misalnya `import notes`, atau memberi berkas modulnya nama
+`notes_helpers.nim`.
+
+**5.** (a) `0.2.0`, karena ada tambahan dan belum ada yang rusak; (b) `0.1.1`, karena hanya memperbaiki
+pesan tanpa mengubah cara pakai; (c) `1.0.0` kalau *package* sudah mencapai `1.0.0` sebelumnya, karena
+mengganti nama prosedur memutus kode pemakai. Selama *package* masih di bawah `1.0.0`, perubahan ketiga
+itu cukup ditandai `0.2.0` dengan catatan di riwayat perubahan.
+
+## Bab: Benchmark dan profiling
+
+**1.** Dengan 100.000 iterasi, `checksum` menjumlahkan 0 sampai 99.999, jadi nilainya separuh dari
+100.000 kali 99.999:
+
+```{.txt}
+4999950000
+```
+
+**2.** Durasi berubah di setiap mesin dan setiap kali dijalankan, sehingga blok keluaran yang
+memuatnya tidak pernah sama saat diperiksa otomatis. Contoh harus punya **keluaran yang stabil**:
+jumlah iterasi, checksum, atau hasil perbandingan boolean. Waktu tetap diukur, tetapi hanya dipakai
+untuk membandingkan.
+
+**3.** `insert` di awal `seq` harus menggeser seluruh elemen, sedangkan `add` menulis di ujung:
+
+```{.nim}
+import std/[monotimes, times]
+
+proc atEnd(rounds: int): seq[int] =
+  for i in 0 ..< rounds:
+    result.add i
+
+proc atFront(rounds: int): seq[int] =
+  for i in 0 ..< rounds:
+    result.insert(i, 0)
+
+const Rounds = 20_000
+
+discard atEnd(100)
+discard atFront(100)
+
+let slowStart = getMonoTime()
+let slowSeq = atFront(Rounds)
+let slowMs = (getMonoTime() - slowStart).inMilliseconds
+
+let fastStart = getMonoTime()
+let fastSeq = atEnd(Rounds)
+let fastMs = (getMonoTime() - fastStart).inMilliseconds
+
+echo "same length: ", slowSeq.len == fastSeq.len
+echo "fast <= slow: ", fastMs <= slowMs
+```
+
+```{.txt}
+same length: true
+fast <= slow: true
+```
+
+**4.** Tanpa `import std/times`, prosedur `inMilliseconds` untuk `Duration` tidak ikut masuk. Pesannya
+menyebut nama field yang tidak ada, bukan nama prosedur, karena pemanggilannya berbentuk
+`elapsed.inMilliseconds`:
+
+```{.txt}
+main.nim(5, 13) Error: undeclared field: 'inMilliseconds' for type times.Duration
+```
+
+Tipe `Duration` sendiri tetap dikenali, karena `std/monotimes` mengimpornya. Yang hilang adalah
+prosedur pembacanya, dan itu ada di `std/times`. Perbaikannya menambahkan `import std/times`.
+
+**5.** Dua keadaan yang masuk akal untuk berhenti mengoptimasi:
+
+- Program sudah selesai dalam waktu yang bisa ditunggu. Mengejar beberapa milidetik hanya menambah
+  kode yang sulit dibaca, sementara pemakainya tidak merasakan bedanya.
+- Waktu habis di input/output atau menunggu jaringan. Mempercepat perhitungan tidak mengubah apa pun
+  kalau prosesornya memang menganggur menunggu jawaban.
+
+## Bab: Cross-compile dan deploy biner
+
+**1.** Nilainya mengikuti mesin yang dipakai, dan bisa dibaca dari contoh pertama. Di macOS dengan
+prosesor Apple, jawabannya `--os:macosx --cpu:arm64`. Di Linux 64-bit pada umumnya,
+`--os:linux --cpu:amd64`. Yang mencetak nilai mentahnya adalah `hostOS` dan `hostCPU`; contoh di bab
+sengaja hanya mencetak perbandingannya supaya keluarannya sama di kedua mesin.
+
+**2.** Saklar `-d:release` menyalakan simbol `release`, dan `-d:workers=8` mengganti nilai bawaan
+`{.intdefine.}`. `targetName` tidak diberikan, jadi tetap memakai bawaannya:
+
+```{.txt}
+build kind: release
+target name: host
+workers: 8
+```
+
+**3.** `when` memilih cabang saat kompilasi, jadi tidak ada pemeriksaan runtime:
+
+```{.nim}
+when defined(windows):
+  echo "windows target"
+else:
+  echo "unix target"
+```
+
+Cabang yang tidak dipilih dibuang seluruhnya. Ia bahkan tidak diperiksa tipenya, sehingga boleh
+menyebut nama yang hanya ada di sistem itu, misalnya prosedur dari `std/posix` pada cabang unix.
+Itu yang membuat `when` dipakai untuk kode per platform, bukan sekadar untuk memilih teks.
+
+**4.** `mode` diisi `let`, jadi nilainya baru diketahui saat program berjalan, sementara `when`
+meminta nilai compile-time:
+
+```{.txt}
+main.nim(5, 6) Error: cannot evaluate at compile time: mode
+```
+
+Perbaikan langsung adalah mengganti `when` dengan `if`:
+
+```{.nim}
+import std/os
+
+let mode = paramStr(1)
+
+if mode == "--debug":
+  echo "debug"
+```
+
+Kalau pilihannya memang harus compile-time, nilainya tidak boleh datang dari argumen. Ganti dengan
+simbol yang diberikan saat kompilasi, misalnya `when defined(debug)`.
+
+**5.** Dua hal yang harus ada sebelum cross-compile ke Windows menghasilkan biner:
+
+- **Toolchain C untuk target.** Untuk Windows dari Linux atau macOS, itu *package* MinGW, misalnya
+  `x86_64-w64-mingw32-gcc`. Nim sudah memetakannya di `config/nim.cfg` pada bagian
+  `@if unix and mingw`.
+- **Target yang benar sejak awal.** `--os:windows --cpu:amd64` harus diberikan, bukan dibiarkan
+  mengikuti mesin pengembang.
+
+Kalau toolchain-nya tidak ada, build berhenti di compiler C dengan
+`fatal error: 'windows.h' file not found`, karena header Windows tidak tersedia. Kalau targetnya
+tidak diberikan, yang dihasilkan adalah biner host yang tidak bisa dijalankan di Windows.
+
+## Bab: Proyek akhir: catatan dari terminal
+
+**1.** Tambahkan satu prosedur di `a02_store.nim`, sejajar dengan `removeNote`:
+
+```{.nim}
+proc setDone*(path: string, index: int, done: bool): bool =
+  var notes = loadNotes(path)
+  if index < 0 or index >= notes.len:
+    return false
+  notes[index].done = done
+  saveNotes(path, notes)
+  true
+```
+
+Lalu ubah dua tempat di `a03_main.nim`. Cabang `list` mencetak penanda, dan satu cabang baru
+menangani subperintah `done`:
+
+```{.nim}
+  of "list":
+    let notes = loadNotes(storePath)
+    if notes.len == 0:
+      echo "no notes"
+      return 0
+    for index, note in notes:
+      let mark = if note.done: "[x] " else: "[ ] "
+      echo index + 1, ": ", mark, note.text
+    0
+  of "done":
+    if operands.len != 1:
+      echo "done needs exactly one index"
+      return 1
+    let index = parseInt(operands[0]) - 1
+    if not setDone(storePath, index, true):
+      echo "no note at index ", operands[0]
+      return 1
+    0
+```
+
+Jangan lupa menambahkan baris `done <index>` pada teks `Usage`. Sesudah itu, `add "buy milk"`,
+`done 1`, dan `list` menghasilkan:
+
+```{.txt}
+1: [x] buy milk
+```
+
+**2.** Berkasnya belum ada, dan `loadNotes` mengembalikan barisan kosong untuk kasus itu:
+
+```{.txt}
+no notes
+```
+
+Setelah `add "one"`, berkasnya berisi satu catatan, sehingga `list` mencetak:
+
+```{.txt}
+1: one
+```
+
+**3.** *Test* untuk `saveNotes` cukup menulis, membaca kembali, lalu memeriksa keduanya:
+
+```{.nim}
+  test "saves and reads back":
+    saveNotes(testPath(), @[
+      Note(text: "first", done: false),
+      Note(text: "second", done: true),
+    ])
+    let notes = loadNotes(testPath())
+    check notes.len == 2
+    check notes[1].done
+```
+
+**4.** `parseJson("[]")` menghasilkan `JsonNode`, bukan barisan, dan prosedur `add` untuk `JsonNode`
+hanya menerima `JsonNode` lain sebagai anak:
+
+```{.txt}
+main.nim(4, 6) Error: type mismatch
+Expression: add(notes, "buy milk")
+  [1] notes: JsonNode
+  [2] "buy milk": string
+```
+
+Perbaikannya membungkus string menjadi `JsonNode` lebih dulu, atau membangun objeknya langsung:
+
+```{.nim}
+import std/json
+
+let notes = parseJson("[]")
+notes.add(%"buy milk")
+echo $notes
+```
+
+```{.txt}
+["buy milk"]
+```
+
+**5.** Satu keuntungan memisahkan modul penyimpanan: aturan "berkas kosong berarti belum ada
+catatan" ditulis sekali di `loadNotes`, dan baik CLI maupun *test* memakai aturan yang sama. Kalau
+aturan itu disalin ke dua tempat, keduanya bisa berbeda diam-diam.
+
+Satu pekerjaan yang harus ditambahkan sebelum dipakai dari dua komputer: aturan untuk penulisan
+bersamaan. Berkas JSON ditimpa seluruhnya setiap kali disimpan, jadi dua pengguna yang menambah
+catatan pada saat yang sama akan saling menghapus. Pilihannya mengunci berkas saat menulis,
+menyimpan ke berkas terpisah per pengguna, atau memindahkan datanya ke layanan seperti pada bab
+database.

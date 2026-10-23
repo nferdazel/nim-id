@@ -356,7 +356,7 @@ echo classify('e'), " ", classify('7'), " ", classify('z')
 vowel digit other
 ```
 
-**4.** The compiler points at line 3, column 4—the position of `name` inside the condition. The
+**4.** The compiler points at line 3, column 4, the position of `name` inside the condition. The
 condition has type `string`, not `bool`.
 
 ```{.txt}
@@ -594,7 +594,7 @@ echo pair[0]
 
 ## Chapter: Objects and constructors
 
-**1.** A new field is simply added to the `object` declaration, then filled through the constructor.
+**1.** A new field is added to the `object` declaration, then filled through the constructor.
 
 ```{.nim}
 type Person = object
@@ -1031,7 +1031,7 @@ echo minOf(3, 7)
 3
 ```
 
-Keep in mind that `a` and `b` are copied as written, so an argument with side effects may be
+`a` and `b` are copied as written, so an argument with side effects may be
 evaluated more than once.
 
 **2.** The output is:
@@ -1673,3 +1673,526 @@ marshal.nim(52, 10) Error: marshal module is not supported in javascript.
 
 The fix is to use a module every backend supports, such as `std/json` for data, and rebuild with
 `nim js`.
+
+## Chapter: CLI tools with `parseopt`
+
+**1.** Mark `--quiet` as an option with no value through `longNoVal`, then use the flag to skip
+printing tokens:
+
+```{.nim}
+import std/parseopt
+
+let args = @["--quiet", "input.txt"]
+
+var quiet = false
+for kind, key, val in getopt(args, longNoVal = @["quiet"]):
+  case kind
+  of cmdLongOption, cmdShortOption:
+    if key == "quiet":
+      quiet = true
+  of cmdArgument:
+    echo "argument: ", key
+  of cmdEnd:
+    discard
+
+if quiet:
+  echo "quiet mode"
+```
+
+```{.txt}
+argument: input.txt
+quiet mode
+```
+
+**2.** Three tokens come out: two short options then one long option.
+
+```{.txt}
+[cmdShortOption] key=a val=
+[cmdShortOption] key=b val=
+[cmdLongOption] key=name val=ana
+```
+
+`-ab` is two short options bundled together: `a` and `b`, each with no value. `--name=ana` gives a
+`key` of `name` and a `val` of `ana`.
+
+**3.** Here `--count` is written with the `=` separator so its value is read for sure, because
+without `longNoVal` the `--opt val` form does not swallow the next token:
+
+```{.nim}
+import std/[parseopt, strutils]
+
+let args = @["--count=4"]
+
+var count = 3
+for kind, key, val in getopt(args):
+  if key == "count" and val != "":
+    count = parseInt(val)
+
+for i in 1 .. count:
+  echo "count ", i
+```
+
+```{.txt}
+count 1
+count 2
+count 3
+count 4
+```
+
+**4.** A `case` over `kind` must cover every value of `CmdLineKind`. Only `cmdLongOption` is
+handled, so the compiler names the rest:
+
+```{.txt}
+main.nim(4, 3) Error: not all cases are covered; missing: {cmdEnd, cmdArgument, cmdShortOption}
+```
+
+The shortest fix: add an `else` branch that discards the remaining cases.
+
+```{.nim}
+import std/parseopt
+
+for kind, key, val in getopt(@["--one"]):
+  case kind
+  of cmdLongOption:
+    echo key
+  else:
+    discard
+```
+
+```{.txt}
+one
+```
+
+**5.** `--` is needed when an argument may start with a dash, so the parser would mistake it for an
+option. Take the file name `-draft.txt`: write `tool -- -draft.txt` so `-draft.txt` arrives as a
+plain argument.
+
+## Chapter: An HTTP API with `asynchttpserver`
+
+**1.** Add one branch to `dispatch`, then print the reply:
+
+```{.nim}
+import std/[httpcore, json]
+
+proc dispatch(path: string): tuple[code: HttpCode, body: string] =
+  case path
+  of "/version":
+    (Http200, $(%*{"version": "1"}))
+  else:
+    (Http404, """{"error":"not found"}""")
+
+let reply = dispatch("/version")
+echo reply.code.int, " ", reply.body
+```
+
+```{.txt}
+200 {"version":"1"}
+```
+
+**2.** The output is `200` then `404`. The `/ready` path matches the first branch, so
+`status(path).int` is `200`. The `/other` path falls into `else` and gives `404`.
+
+**3.** Take the `query` part of the URL, then look for the key:
+
+```{.nim}
+import std/[json, uri]
+
+proc page(path: string): string =
+  let target = parseUri(path)
+  var page = "1"
+  for key, value in decodeQuery(target.query):
+    if key == "page":
+      page = value
+  $(%*{"page": page})
+
+echo page("/list?page=2")
+```
+
+```{.txt}
+{"page":"2"}
+```
+
+**4.** The two `respond` arguments are swapped. `respond` wants `code` first, then `content`. The
+compiler rejects it because `"ok"` is a `string`, not an `HttpCode`:
+
+```{.txt}
+main.nim(4, 12) Error: type mismatch
+```
+
+The fix: put the order back.
+
+```{.nim}
+import std/[asynchttpserver, asyncdispatch, httpcore]
+
+proc handle(req: Request) {.async.} =
+  await req.respond(Http200, "ok")
+```
+
+**5.** `Http400` is used when the request itself is wrong, for example a body that is not valid
+JSON, or the wrong method for that route. `Http404` is used when the route does not exist at all,
+for example a GET to `/missing`.
+
+## Chapter: Databases with `std/tables` and `db_sqlite`
+
+**1.** Add one book, then sort as before:
+
+```{.nim}
+import std/[tables, algorithm]
+
+type Book = object
+  title: string
+  year: int
+
+var shelf = @[
+  Book(title: "Neuromancer", year: 1984),
+  Book(title: "Dune", year: 1965),
+  Book(title: "Emma", year: 1815),
+  Book(title: "Hyperion", year: 1989),
+]
+
+shelf.sort(proc (a, b: Book): int = cmp(a.year, b.year))
+for book in shelf:
+  echo book.year, " ", book.title
+```
+
+```{.txt}
+1815 Emma
+1965 Dune
+1984 Neuromancer
+1989 Hyperion
+```
+
+**2.** `@[1999, 2001]`. The rows from 1999 and 2001 pass the `> 1990` test; the 1980 row does not.
+`echo` prints a `seq[int]` with a leading `@`.
+
+**3.** Write, read back, print the row count, then clean up:
+
+```{.nim}
+import std/[json, os]
+
+var rows = newJArray()
+for title in ["Dune", "Emma", "Hyperion"]:
+  rows.add %*{"title": title}
+
+let path = getTempDir() / "nim_id_answer.json"
+writeFile(path, rows.pretty)
+echo parseJson(readFile(path)).len, " rows"
+removeFile(path)
+```
+
+```{.txt}
+3 rows
+```
+
+**4.** There is no `year` field, so `row["year"]` raises `KeyError` while the program runs:
+
+```{.txt}
+Error: unhandled exception: key not found: year [KeyError]
+```
+
+Test with `hasKey` first, or supply a fallback value:
+
+```{.nim}
+import std/json
+
+let row = parseJson("""{"title": "Dune"}""")
+if row.hasKey("year"):
+  echo row["year"].getInt
+else:
+  echo "no year"
+```
+
+```{.txt}
+no year
+```
+
+**5.** Two of them: (a) the data is large enough that reading and writing the whole file every time
+costs too much, and (b) queries must filter or sort without loading everything into memory. What
+moves to SQLite: filtering and sorting (`WHERE`, `ORDER BY`), indexes, transactions, and concurrent
+writes from several processes. Nothing in this chapter was wrong; it simply stops being enough once
+the data grows.
+
+## Chapter: Building and publishing a nimble package
+
+**1.** Four of them: (a) the same code is used by more than one project, (b) a `README.md` shows how
+to install, import, and call it, (c) tests pass with `nimble test`, and (d) the license is explicit.
+
+**2.** `Nim Does Not Care`. `titleCase` capitalizes the first letter of each word and lowercases the
+rest, so `NIM` becomes `Nim` rather than staying uppercase.
+
+**3.** The structure:
+
+```{.txt}
+notes/
+  notes.nimble
+  src/
+    notes.nim
+  tests/
+    test_notes.nim
+```
+
+The contents of `notes.nimble`:
+
+```{.ini}
+# Package
+
+version       = "0.1.0"
+author        = "Sari Dewi"
+description   = "Store short notes in memory"
+license       = "MIT"
+srcDir        = "src"
+
+
+# Dependencies
+
+requires "nim >= 2.0.0"
+```
+
+The test file may be named anything as long as it starts with `t`, because `nimble test` runs every
+file in `tests/` that does.
+
+**4.** There is no file named `notes_helpers.nim` on the search path:
+
+```{.txt}
+main.nim(1, 8) Error: cannot open file: notes_helpers
+```
+
+`(1, 8)` is column 8, right at the start of the module name after `import `. The fix is to match the
+import to the real file name, for example `import notes`, or to name the module file
+`notes_helpers.nim`.
+
+**5.** (a) `0.2.0`, because something was added and nothing broke; (b) `0.1.1`, because only the
+message changed; (c) `1.0.0` if the package had already reached `1.0.0`, because renaming a procedure
+breaks user code. While the package is below `1.0.0`, the third change may simply be marked `0.2.0`
+with a note in the changelog.
+
+## Chapter: Benchmarks and profiling
+
+**1.** With 100,000 iterations, `checksum` adds up 0 through 99,999, so it is half of 100,000 times
+99,999:
+
+```{.txt}
+4999950000
+```
+
+**2.** A duration changes on every machine and on every run, so an output block that contains one can
+never match during automated checks. Examples need **stable output**: an iteration count, a checksum,
+or the result of a boolean comparison. Time is still measured, but only used for comparisons.
+
+**3.** `insert` at the front of a `seq` has to shift every element, while `add` writes at the end:
+
+```{.nim}
+import std/[monotimes, times]
+
+proc atEnd(rounds: int): seq[int] =
+  for i in 0 ..< rounds:
+    result.add i
+
+proc atFront(rounds: int): seq[int] =
+  for i in 0 ..< rounds:
+    result.insert(i, 0)
+
+const Rounds = 20_000
+
+discard atEnd(100)
+discard atFront(100)
+
+let slowStart = getMonoTime()
+let slowSeq = atFront(Rounds)
+let slowMs = (getMonoTime() - slowStart).inMilliseconds
+
+let fastStart = getMonoTime()
+let fastSeq = atEnd(Rounds)
+let fastMs = (getMonoTime() - fastStart).inMilliseconds
+
+echo "same length: ", slowSeq.len == fastSeq.len
+echo "fast <= slow: ", fastMs <= slowMs
+```
+
+```{.txt}
+same length: true
+fast <= slow: true
+```
+
+**4.** Without `import std/times`, the `inMilliseconds` procedure for `Duration` does not come along.
+The message names a missing field rather than a missing procedure, because the call is written
+`elapsed.inMilliseconds`:
+
+```{.txt}
+main.nim(5, 13) Error: undeclared field: 'inMilliseconds' for type times.Duration
+```
+
+The `Duration` type itself is still known, because `std/monotimes` imports it. What is missing is the
+procedure that reads it, and that lives in `std/times`. The fix is to add `import std/times`.
+
+**5.** Two situations where stopping is the reasonable choice:
+
+- The program already finishes in a time you can wait for. Chasing milliseconds only adds code that
+  is harder to read, while its users feel no difference.
+- The time goes into input/output or waiting for a network reply. Making the arithmetic faster
+  changes nothing when the processor is idle waiting for an answer.
+
+## Chapter: Cross-compiling and deploying binaries
+
+**1.** The values follow the machine you use, and the first example prints what it needs. On macOS
+with an Apple processor the answer is `--os:macosx --cpu:arm64`. On 64-bit Linux it is usually
+`--os:linux --cpu:amd64`. The raw values come from `hostOS` and `hostCPU`; the example in the chapter
+deliberately prints only the comparison so its output is the same on both machines.
+
+**2.** The `-d:release` switch sets the `release` symbol, and `-d:workers=8` replaces the default of
+the `{.intdefine.}` constant. `targetName` is not given, so it keeps its default:
+
+```{.txt}
+build kind: release
+target name: host
+workers: 8
+```
+
+**3.** `when` picks the branch during compilation, so there is no runtime check at all:
+
+```{.nim}
+when defined(windows):
+  echo "windows target"
+else:
+  echo "unix target"
+```
+
+The branch that is not chosen is discarded entirely. It is not even type-checked, so it may refer to
+names that exist only on that system, for example a procedure from `std/posix` in the unix branch.
+That is what makes `when` the tool for per-platform code, not just for selecting text.
+
+**4.** `mode` is a `let`, so its value is only known while the program runs, while `when` asks for a
+compile-time value:
+
+```{.txt}
+main.nim(5, 6) Error: cannot evaluate at compile time: mode
+```
+
+The direct fix is to replace `when` with `if`:
+
+```{.nim}
+import std/os
+
+let mode = paramStr(1)
+
+if mode == "--debug":
+  echo "debug"
+```
+
+If the choice really has to happen at compile time, the value cannot come from an argument. Use a
+symbol given at build time instead, for example `when defined(debug)`.
+
+**5.** Two things must be present before cross-compiling to Windows produces a binary:
+
+- **A C toolchain for the target.** For Windows from Linux or macOS that means the MinGW package, for
+  example `x86_64-w64-mingw32-gcc`. Nim already maps it in `config/nim.cfg` under
+  `@if unix and mingw`.
+- **The right target from the start.** `--os:windows --cpu:amd64` must be given, rather than letting
+  it follow the development machine.
+
+If the toolchain is missing, the build stops in the C compiler with
+`fatal error: 'windows.h' file not found`, because the Windows headers are not available. If the
+target is not given, what comes out is a host binary that cannot run on Windows.
+
+## Chapter: Final project: notes from the terminal
+
+**1.** Add one procedure to `a02_store.nim`, alongside `removeNote`:
+
+```{.nim}
+proc setDone*(path: string, index: int, done: bool): bool =
+  var notes = loadNotes(path)
+  if index < 0 or index >= notes.len:
+    return false
+  notes[index].done = done
+  saveNotes(path, notes)
+  true
+```
+
+Then change two places in `a03_main.nim`. The `list` branch prints a marker, and a new branch handles
+the `done` subcommand:
+
+```{.nim}
+  of "list":
+    let notes = loadNotes(storePath)
+    if notes.len == 0:
+      echo "no notes"
+      return 0
+    for index, note in notes:
+      let mark = if note.done: "[x] " else: "[ ] "
+      echo index + 1, ": ", mark, note.text
+    0
+  of "done":
+    if operands.len != 1:
+      echo "done needs exactly one index"
+      return 1
+    let index = parseInt(operands[0]) - 1
+    if not setDone(storePath, index, true):
+      echo "no note at index ", operands[0]
+      return 1
+    0
+```
+
+Do not forget to add a `done <index>` line to the `Usage` text. After that, `add "buy milk"`,
+`done 1`, and `list` produce:
+
+```{.txt}
+1: [x] buy milk
+```
+
+**2.** The file does not exist yet, and `loadNotes` returns an empty sequence for that case:
+
+```{.txt}
+no notes
+```
+
+After `add "one"` the file holds one note, so `list` prints:
+
+```{.txt}
+1: one
+```
+
+**3.** A test for `saveNotes` only has to write, read back, and check both:
+
+```{.nim}
+  test "saves and reads back":
+    saveNotes(testPath(), @[
+      Note(text: "first", done: false),
+      Note(text: "second", done: true),
+    ])
+    let notes = loadNotes(testPath())
+    check notes.len == 2
+    check notes[1].done
+```
+
+**4.** `parseJson("[]")` produces a `JsonNode`, not a sequence, and the `add` procedure for `JsonNode`
+only accepts another `JsonNode` as its child:
+
+```{.txt}
+main.nim(4, 6) Error: type mismatch
+Expression: add(notes, "buy milk")
+  [1] notes: JsonNode
+  [2] "buy milk": string
+```
+
+The fix is to wrap the string into a `JsonNode` first, or to build the object directly:
+
+```{.nim}
+import std/json
+
+let notes = parseJson("[]")
+notes.add(%"buy milk")
+echo $notes
+```
+
+```{.txt}
+["buy milk"]
+```
+
+**5.** One advantage of a separate storage module: the rule "an empty file means no notes yet" is
+written once in `loadNotes`, and both the CLI and the tests use the same rule. If that rule were
+copied into two places, the two copies could quietly drift apart.
+
+One piece of work needed before using it from two computers: a rule for concurrent writes. The JSON
+file is overwritten whole on every save, so two users adding notes at the same time erase each
+other's work. The choices are locking the file while writing, storing one file per user, or moving the
+data to a service as in the database chapter.
