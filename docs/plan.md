@@ -353,6 +353,8 @@ Tambahan 23 Okt 2026 (setelah M0):
 
 Sisa:
 
-- [ ] Deploy otomatis lewat webhook (clone `monorepo/`, pasang hook, jalankan `deploy-static.sh`).
+- [x] Deploy otomatis lewat webhook: repo GitHub `nferdazel/nim-id` (publik), hook `nim-id` di
+      `/srv/qouver/config/webhook.json` (HMAC-SHA256), `monorepo/` di server, health check ke
+      origin langsung dengan retry (bukan lewat Cloudflare).
 - [ ] Trim size 7 × 9,19 inci + label Indonesia di PDF (kosmetik, boleh digeser ke M1).
 - [ ] CI pertama kali harus dijalankan di GitHub untuk memvalidasi aksi `setup-nim`/`quarto-actions`.
