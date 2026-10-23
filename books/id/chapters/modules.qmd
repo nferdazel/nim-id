@@ -1,0 +1,228 @@
+# Modul, `import`, dan `export`
+
+Program sepanjang seratus baris masih nyaman di satu berkas. Begitu melewati beberapa ratus baris,
+satu berkas menjadi sulit dibaca, dan setiap perubahan menyeret separuh program. Nim membagi program
+menjadi modul: satu berkas, satu ruang nama, satu unit yang bisa diimpor. Aturannya sebenarnya
+sederhana. Yang menyimpan kejutan adalah `import`: nama apa yang masuk, milik siapa, dan siapa yang
+boleh memakainya.
+
+::: {.callout-note}
+## Tujuan bab
+
+Setelah bab ini, pembaca bisa memecah kode menjadi beberapa modul, memakai `import`,
+`from ... import`, dan `export`, menaruh modul di dalam folder, serta membaca pesan error
+`cannot open file` dan `invalid module name`.
+:::
+
+## Satu berkas, satu modul
+
+Sebuah berkas Nim adalah sebuah modul. Nama berkas, tanpa akhiran `.nim`, menjadi nama modul. Simpan
+kode berikut sebagai `a01_greeting.nim`. Berkas contoh di buku ini diberi awalan `aNN`, dan awalan
+itu ikut menjadi bagian nama modul.
+
+```{.nim}
+proc greet*(name: string): string =
+  "Hello, " & name
+
+const version* = "1.0"
+
+when isMainModule:
+  echo greet("Nim")
+```
+
+```{.txt}
+Hello, Nim
+```
+
+Dua hal menentukan apakah `greet` dan `version` terlihat dari modul lain.
+
+- Tanda bintang setelah nama, `greet*`, menandai simbol sebagai ekspor. Tanpa bintang, simbol hanya
+  hidup di dalam modulnya. Ini kebalikan dari bahasa yang mengekspor semua nama secara default.
+- `when isMainModule` menandai blok yang hanya berjalan saat berkas ini dijalankan langsung. Ketika
+  modul lain mengimpornya, blok itu dilewati. Modul bisa sekaligus menjadi program kecil yang bisa
+  diuji sendiri.
+
+## `import`: memasukkan nama dari modul lain
+
+Modul lain memakai `import` untuk masuk ke berkas.
+
+```{.nim}
+import a01_greeting
+
+echo greet("Ada")
+echo version
+```
+
+```{.txt}
+Hello, Ada
+1.0
+```
+
+Setelah `import`, simbol yang diekspor dipakai langsung dengan namanya. `greet` dan `version` berasal
+dari `a01_greeting`, tetapi tidak perlu ditulis dengan awalan apa pun.
+
+## `from ... import`: mengambil sebagian nama
+
+`import` memasukkan semua simbol yang diekspor. Kalau hanya satu yang dibutuhkan, `from` lebih
+tepat.
+
+```{.nim}
+from a01_greeting import greet
+
+echo greet("Grace")
+```
+
+```{.txt}
+Hello, Grace
+```
+
+Bedanya praktis: `import` membuka semua nama, `from ... import` membuka yang disebut saja. Pada
+modul besar, bentuk kedua membuat daftar ketergantungan terbaca dari satu baris.
+
+## `export`: meneruskan simbol ke modul lain
+
+Sebuah modul boleh meneruskan simbol dari modul lain, sehingga pemanggil tidak perlu tahu modul
+asalnya. Pola ini dipakai untuk membuat modul fasad.
+
+```{.nim}
+import a01_greeting
+export a01_greeting
+
+when isMainModule:
+  echo greet("Nim")
+```
+
+```{.txt}
+Hello, Nim
+```
+
+Pemakai fasad cukup mengimpor satu modul.
+
+```{.nim}
+import a05_facade
+
+echo greet("Ada")
+```
+
+```{.txt}
+Hello, Ada
+```
+
+`a05_facade` tidak mendefinisikan `greet` sendiri. Ia hanya meneruskan. Pola ini menyembunyikan
+susunan internal sebuah paket dan menyediakan satu pintu masuk.
+
+## Nama modul harus identifier yang sah
+
+Nama modul harus identifier Nim yang sah. Nama tidak boleh diawali angka dan tidak boleh memuat
+tanda hubung. Compiler menolaknya sebelum sempat membaca isi berkas.
+
+```{.nim}
+echo "this file is fine; its name is not"
+```
+
+```{.txt}
+Error: invalid module name: '3d_helpers'; a module name must be a valid Nim identifier.
+```
+
+Pesan itu tidak menyebut baris, karena masalahnya ada di nama berkas, bukan di kode. Berkas di atas
+dinamai `3d_helpers.nim`, dan itulah yang ditolak.
+
+## Modul di dalam folder
+
+Modul boleh dikelompokkan di dalam folder. Isi `textutils/format.nim` seperti berikut.
+
+```{.nim}
+import std/strutils
+
+proc upper*(s: string): string =
+  s.toUpperAscii()
+```
+
+Pemanggil menulis garis miring untuk menunjuk letak berkas.
+
+```{.nim}
+import textutils/format
+
+echo format.upper("hello")
+```
+
+```{.txt}
+HELLO
+```
+
+Garis miring menunjuk letak berkas, bukan nama modul. Modul di atas tetap bernama `format`, jadi
+akses lengkapnya `format.upper`, bukan `textutils/format.upper`. Aturan yang sama berlaku untuk
+pustaka standar: `import std/strutils` mengambil modul bernama `strutils` dari folder `std`.
+
+## `include`: menyisipkan berkas, bukan mengimpor
+
+`include` tidak membuat modul baru. Ia menyalin isi berkas ke posisi perintahnya, seakan ditulis di
+sana. Karena itu `include` berguna untuk memecah satu modul yang sangat panjang, bukan untuk
+memisahkan tanggung jawab.
+
+```{.nim}
+const appName = "notes"
+```
+
+```{.nim}
+include "config_body.inc"
+
+echo appName
+```
+
+```{.txt}
+notes
+```
+
+Perhatikan `appName` dipakai langsung, tanpa awalan modul. Tidak ada modul yang dibuat. Karena
+`include` bekerja dengan menyalin teks, satu nama di dalamnya bisa bertabrakan dengan nama di
+berkas induk tanpa peringatan dari compiler. Untuk memisahkan kode, `import` hampir selalu pilihan
+yang lebih aman.
+
+## Membaca error: modul tidak ditemukan
+
+Kalau nama modul salah, compiler mencarinya di berkas dan berhenti.
+
+```{.nim}
+import not_a_real_module
+
+echo "never reached"
+```
+
+```{.txt}
+main.nim(1, 8) Error: cannot open file: not_a_real_module
+```
+
+Posisi `(1, 8)` menunjuk nama modul di baris `import`. Compiler tidak tahu berkas itu memang tidak
+ada atau hanya salah ketik, jadi pesannya literal: berkas tidak bisa dibuka. Periksa kembali nama
+berkas dan letaknya. Untuk pustaka standar, tulis awalan `std/` supaya jalur pencariannya jelas:
+`import std/strutils`, bukan `import strutils`.
+
+## Latihan
+
+1. Buat `shout.nim` berisi `proc shout*(text: string): string` bertanda bintang, lalu panggil dari
+   `main.nim`.
+2. Berkas `mathx.nim` mengekspor `double*`. Berkas kedua menulis `from mathx import double` lalu
+   `echo double(21)`. Berapa outputnya, dan bolehkah berkas kedua memanggil `mathx.double(21)`?
+3. Kode berikut gagal. Jelaskan kenapa, lalu perbaiki:
+   ```{.nim}
+   import textutils/format
+
+   echo textutils/format.upper("hi")
+   ```
+4. Tulis ulang contoh `include` pada bab ini memakai `import`, dan sebutkan keuntungannya.
+
+Jawaban ada di [Lampiran A](../appendix/answers.qmd).
+
+## Ringkasan
+
+- Satu berkas Nim adalah satu modul; nama berkas menjadi nama modul, dan harus identifier yang sah.
+- Tanpa tanda `*`, simbol tidak keluar dari modulnya.
+- `import` membuka semua ekspor, `from ... import` membuka sebagian, `export` meneruskan.
+- Modul di folder tetap bernama berkasnya, bukan jalurnya.
+- `include` menyalin teks dan tidak membuat modul; pakai `import` untuk memisahkan kode.
+
+## Selanjutnya
+
+Bab berikutnya membahas [pengecualian](exceptions.qmd): apa yang terjadi saat operasi gagal di tengah
+program, dan bagaimana Nim melacak pengecualian yang mungkin muncul.

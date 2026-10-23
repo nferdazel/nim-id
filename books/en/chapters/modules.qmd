@@ -1,0 +1,225 @@
+# Modules, `import`, and `export`
+
+A hundred-line program is still comfortable in one file. Past a few hundred lines, a single file
+turns hard to read, and every change drags half the program with it. Nim splits a program into
+modules: one file, one namespace, one unit that can be imported. The rules are simple. What hides
+surprises is `import`: which names enter, whose they are, and who may use them.
+
+::: {.callout-note}
+## What you will be able to do
+
+After this chapter you can split code into modules, use `import`, `from ... import`, and `export`,
+put modules inside folders, and read the `cannot open file` and `invalid module name` errors.
+:::
+
+## One file, one module
+
+A Nim file is a module. The file name, without the `.nim` extension, becomes the module name. Save
+the following as `a01_greeting.nim`. Example files in this book carry an `aNN` prefix, and that
+prefix becomes part of the module name too.
+
+```{.nim}
+proc greet*(name: string): string =
+  "Hello, " & name
+
+const version* = "1.0"
+
+when isMainModule:
+  echo greet("Nim")
+```
+
+```{.txt}
+Hello, Nim
+```
+
+Two things decide whether `greet` and `version` are visible from another module.
+
+- A star after the name, `greet*`, marks a symbol as exported. Without the star, the symbol lives
+  only inside its module. That is the opposite of languages that export every name by default.
+- `when isMainModule` marks a block that runs only when this file is run directly. When another
+  module imports it, that block is skipped. A module can double as a small program you test on its
+  own.
+
+## `import`: bringing names in from another module
+
+Another module uses `import` to enter the file.
+
+```{.nim}
+import a01_greeting
+
+echo greet("Ada")
+echo version
+```
+
+```{.txt}
+Hello, Ada
+1.0
+```
+
+After `import`, exported symbols are used by their plain names. `greet` and `version` come from
+`a01_greeting`, but no prefix is needed.
+
+## `from ... import`: taking some names
+
+`import` brings in every exported symbol. When only one is needed, `from` is more precise.
+
+```{.nim}
+from a01_greeting import greet
+
+echo greet("Grace")
+```
+
+```{.txt}
+Hello, Grace
+```
+
+The practical difference: `import` opens all names, `from ... import` opens only the ones named. In
+a large module, the second form makes the dependency list readable from a single line.
+
+## `export`: forwarding symbols to another module
+
+A module may forward symbols from another module, so callers do not need to know the original. This
+pattern builds a facade module.
+
+```{.nim}
+import a01_greeting
+export a01_greeting
+
+when isMainModule:
+  echo greet("Nim")
+```
+
+```{.txt}
+Hello, Nim
+```
+
+A caller of the facade imports just one module.
+
+```{.nim}
+import a05_facade
+
+echo greet("Ada")
+```
+
+```{.txt}
+Hello, Ada
+```
+
+`a05_facade` does not define `greet` itself. It only forwards it. The pattern hides a package's
+internal layout and offers one door in.
+
+## Module names must be valid identifiers
+
+A module name must be a valid Nim identifier. It may not begin with a digit and may not contain a
+hyphen. The compiler rejects such a file before it even reads the contents.
+
+```{.nim}
+echo "this file is fine; its name is not"
+```
+
+```{.txt}
+Error: invalid module name: '3d_helpers'; a module name must be a valid Nim identifier.
+```
+
+The message names no line, because the problem is the file name, not the code. The file above is
+called `3d_helpers.nim`, and that is what gets rejected.
+
+## Modules inside folders
+
+Modules may be grouped in a folder. Put this in `textutils/format.nim`.
+
+```{.nim}
+import std/strutils
+
+proc upper*(s: string): string =
+  s.toUpperAscii()
+```
+
+A caller writes a slash to point at the file's location.
+
+```{.nim}
+import textutils/format
+
+echo format.upper("hello")
+```
+
+```{.txt}
+HELLO
+```
+
+The slash points at the file's location, not at the module name. The module above is still called
+`format`, so its fully qualified use is `format.upper`, not `textutils/format.upper`. The same rule
+holds for the standard library: `import std/strutils` takes a module named `strutils` from the `std`
+folder.
+
+## `include`: splicing a file, not importing
+
+`include` does not create a module. It copies a file's contents at the position of the command, as
+if written right there. So `include` helps split one very long module, not separate
+responsibilities.
+
+```{.nim}
+const appName = "notes"
+```
+
+```{.nim}
+include "config_body.inc"
+
+echo appName
+```
+
+```{.txt}
+notes
+```
+
+Notice `appName` is used plainly, with no module prefix. No module was created. Because `include`
+works by copying text, a name inside it can collide with a name in the parent file without a warning
+from the compiler. To separate code, `import` is almost always the safer choice.
+
+## Reading an error: module not found
+
+When a module name is wrong, the compiler searches for the file and stops.
+
+```{.nim}
+import not_a_real_module
+
+echo "never reached"
+```
+
+```{.txt}
+main.nim(1, 8) Error: cannot open file: not_a_real_module
+```
+
+The position `(1, 8)` points at the module name on the `import` line. The compiler cannot tell
+whether the file truly does not exist or was just misspelled, so the message is literal: the file
+cannot be opened. Check the file name and its location. For standard library modules, write the
+`std/` prefix so the search path is clear: `import std/strutils`, not `import strutils`.
+
+## Exercises
+
+1. Create `shout.nim` with `proc shout*(text: string): string` marked with a star, then call it from
+   `main.nim`.
+2. A file `mathx.nim` exports `double*`. A second file writes `from mathx import double` and then
+   `echo double(21)`. What is the output, and may the second file call `mathx.double(21)`?
+3. The code below fails. Explain why, then fix it:
+   ```{.nim}
+   import textutils/format
+
+   echo textutils/format.upper("hi")
+   ```
+4. Rewrite the `include` example from this chapter using `import`, and name the advantage.
+
+Answers are in [Appendix A](../appendix/answers.qmd).
+
+## Summary
+
+- One Nim file is one module; the file name becomes the module name and must be a valid identifier.
+- Without a `*`, a symbol does not leave its module.
+- `import` opens every export, `from ... import` opens some, `export` forwards.
+- A module in a folder is still named after its file, not its path.
+- `include` copies text and creates no module; use `import` to separate code.
+
+## Next
+
+The next chapter covers [exceptions](exceptions.qmd): what happens when an operation fails in the
+middle of a program, and how Nim tracks which exceptions may appear.
