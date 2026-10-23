@@ -50,7 +50,7 @@ Polanya konsisten: setiap tambahan satu bit menggandakan *range itu*.
 | `int` | mengikuti mesin (64-bit di sini) | 8 byte |
 
 *Type* `int` adalah pilihan bawaan untuk *integer*: lebarnya mengikuti mesin tempat program
-dijalankan. Pakai *type* berlebar tetap hanya kalau ukurannya memang penting, misalnya saat read
+dijalankan. Pakai *type* berlebar tetap hanya kalau ukurannya memang penting, misalnya saat membaca
 format biner atau menghemat *memory* di dalam struktur besar.
 
 ## Literal numerik
@@ -100,7 +100,7 @@ menjadi −128. Pemeriksaan itu bisa dimatikan dengan `--overflowChecks:off` (at
 dan saat itu *line* di atas benar-benar menghasilkan −128. Jangan lakukan itu untuk menghilangkan
 error; *result* yang membungkus hampir selalu bug yang lebih sulit dilacak.
 
-Kalau *value itu* sudah diketahui saat write kode, compiler menangkapnya lebih awal:
+Kalau *value itu* sudah diketahui saat menulis kode, compiler menangkapnya lebih awal:
 
 ```{.nim}
 const TooBig: int8 = 127 + 1

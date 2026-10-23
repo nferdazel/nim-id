@@ -241,12 +241,12 @@ hello, bob
 
 Macro ini tidak menerima *argument*. Ia read `Names`, lalu membuat satu *procedure* untuk setiap nama.
 `newStmtList` menyusun daftar *statement*; `&` menyatukan awalan dengan nama, lalu `ident` membuat
-node identifier dari string itu. Write ini
+node identifier dari string itu. Menulis ini
 dengan template tidak mungkin: template tidak bisa mengulang atas data dan membuat nama baru.
 
 ## Kapan macro tidak perlu
 
-Sebelum write macro, tanyakan apakah template sudah cukup. Template lebih sederhana, tidak butuh
+Sebelum menulis macro, tanyakan apakah template sudah cukup. Template lebih sederhana, tidak butuh
 `import std/macros`, dan *error message*-nya lebih mudah dibaca.
 
 Kalau yang dibutuhkan hanya *value* yang dihitung saat *compile*, `const` dengan `func` sudah
@@ -270,7 +270,7 @@ Aturan praktisnya:
 
 - Ganti kode dengan kode, tanpa membaca bentuk *argument*: `template`.
 - Butuh *value* saat *compile*: `const` atau blok `static:`.
-- Butuh read AST, *type*, atau membangkitkan kode dari data: `macro`.
+- Butuh membaca AST, *type*, atau membangkitkan kode dari data: `macro`.
 
 ## Membaca error: `typed` menuntut *argument* yang sah
 
@@ -320,7 +320,7 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
   aman dari bentrok.
 - `treeRepr` menampilkan AST; `getType` hanya bekerja pada *argument* `typed`.
 - `quote do` dan API AST butuh `import std/macros`; macro sederhana yang hanya meneruskan node
-  tidak. Dahulukan `template` dan `const` sebelum write macro.
+  tidak. Dahulukan `template` dan `const` sebelum menulis macro.
 
 ## Selanjutnya
 

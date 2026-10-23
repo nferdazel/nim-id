@@ -44,7 +44,7 @@ Konversi `.int` return angkanya saja, dan dipakai nanti untuk menyusun *output* 
 `HttpMethod` adalah `enum`: `HttpGet` bernilai teks `GET`, `HttpPost` bernilai `POST`, begitu
 seterusnya.
 
-`HttpHeaders` adalah peta yang kuncinya tidak membedakan besar-kecil huruf. Write
+`HttpHeaders` adalah peta yang kuncinya tidak membedakan besar-kecil huruf. Menulis
 `headers["Content-Type"] = "application/json"` menambah satu entri; membacanya dengan kunci yang
 di-write berbeda tetap menemukan entri itu.
 
@@ -208,7 +208,7 @@ $ curl -s http://localhost:8080/nope
 
 ## Error sengaja: lupa `await` pada `respond`
 
-*Error* pertama yang hampir selalu terjadi: call `respond` tanpa `await`.
+*Error* pertama yang hampir selalu terjadi: memanggil `respond` tanpa `await`.
 
 ```{.nim}
 import std/[asynchttpserver, asyncdispatch, httpcore]
@@ -251,7 +251,7 @@ Menjaga lapisan itu setipis mungkin adalah kebiasaan yang dibawa terus saat API 
    for path in ["/ready", "/other"]:
      echo status(path).int
    ```
-3. Tulis dari nol: *handler* yang read `page` dari *query string* dan mengembalikannya sebagai
+3. Tulis dari nol: *handler* yang membaca `page` dari *query string* dan mengembalikannya sebagai
    JSON, misalnya `{"page":"2"}`.
 4. Kode berikut gagal *di-compile*. Perbaiki, lalu jelaskan isi *message*-nya:
    ```{.nim}

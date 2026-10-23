@@ -1,6 +1,6 @@
 # Generic: *type* dan *procedure*
 
-Write satu *procedure* untuk `int`, lalu menyalinnya untuk `string`, lalu lagi untuk `float`, cepat
+Menulis satu *procedure* untuk `int`, lalu menyalinnya untuk `string`, lalu lagi untuk `float`, cepat
 melelahkan. Nim menyelesaikan ini dengan *generic*: satu deklarasi yang di-write sekali, lalu
 compiler membuat versinya untuk setiap *type* yang dipakai.
 

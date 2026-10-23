@@ -46,7 +46,7 @@ ujung, jadi `3` ikut. Kesalahpahaman yang paling sering adalah memakai `..` untu
 padahal *index* terakhir selalu `len - 1`. Karena itu gaya yang aman untuk mengulang sebanyak `n`
 kali adalah `for i in 0 ..< n:`.
 
-*Variable* `i` hanya berlaku di dalam badan *loop* dan tidak bisa diubah. Write `i = 5` di
+*Variable* `i` hanya berlaku di dalam badan *loop* dan tidak bisa diubah. Menulis `i = 5` di
 dalamnya ditolak dengan *message* `'i' cannot be assigned to`. Ini disengaja, supaya *value* hitungan tidak
 dirusak dari dalam.
 

@@ -178,7 +178,7 @@ Iterator tidak menyimpan *element*, jadi ia hemat *memory* dan bisa berhenti leb
 dipakai berkali-kali.
 
 Aturan praktisnya: pilih iterator kalau alirannya besar atau tak terbatas, dan kalau pencarian sering
-berhenti di tengah. Pilih *seq* kalau butuh koleksi utuh. Read *line* log raksasa sambil mencari
+berhenti di tengah. Pilih *seq* kalau butuh koleksi utuh. Membaca *line* log raksasa sambil mencari
 satu pola adalah contoh yang sering: iterator berhenti begitu pola ketemu, tanpa memuat seluruh
 *file*.
 

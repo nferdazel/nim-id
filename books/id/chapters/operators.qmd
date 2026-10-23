@@ -45,7 +45,7 @@ echo 7 mod -3
 1
 ```
 
-`a / b` menghasilkan `3.5`, bukan `3`: operator `/` selalu return `float`. Pembagian bulat
+`a / b` menghasilkan `3.5`, bukan `3`: operator `/` selalu mengembalikan `float`. Pembagian bulat
 memakai `div`, yang memotong ke arah nol. `mod` memberi sisa, dan tandanya mengikuti bilangan yang
 dibagi. Jadi, `-7 mod 3` bernilai `-1`, bukan `2`. Keduanya sering dipakai bersama: `div` memberi tahu
 berapa kali bilangan pembagi muat, `mod` memberi sisanya. Membagi dengan nol tidak return
@@ -70,12 +70,12 @@ echo pow(3.0, 3.0)
 ```
 
 Untuk pangkat *integer*, kalikan berulang di dalam *loop* atau konversi ke `float` lebih
-dulu. Write `2 ^ 10` dengan dua *integer* tidak *di-compile* menjadi pangkat bulat, jadi
+dulu. Menulis `2 ^ 10` dengan dua *integer* tidak *di-compile* menjadi pangkat bulat, jadi
 niatnya perlu dibuat eksplisit.
 
 ## *Comparison*
 
-Operator *comparison* return `bool`: `==`, `!=`, `<`, `<=`, `>`, dan `>=`.
+Operator *comparison* mengembalikan `bool`: `==`, `!=`, `<`, `<=`, `>`, dan `>=`.
 
 ```{.nim}
 let age = 20

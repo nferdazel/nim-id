@@ -136,7 +136,7 @@ release is implied by danger
 *Result* itu dijalankan dengan `nim c -r -d:danger`, dan dua hal terbaca sekaligus. `danger` memang
 menyala, dan ia membawa serta `release`. Konsekuensinya nyata: *range* *array* yang lewat batas tidak
 lagi dilaporkan sebagai defect, melainkan membaca *memory* di luar datanya. `-d:danger` hanya untuk
-biner yang sudah terbukti benar, bukan untuk tahap write kode.
+biner yang sudah terbukti benar, bukan untuk tahap menulis kode.
 
 ## Biner statis
 

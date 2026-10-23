@@ -250,7 +250,7 @@ Untuk memakainya, pasang `db_connector`, lalu impor `db_connector/db_sqlite`. *M
 | jumlah *row* terpengaruh | tidak ada | `db.execAffectedRows` |
 | semua *result* | `parseJson` lalu `for` | `db.getAllRows(sql"SELECT ...")` |
 | satu *row* | `rows[0]` | `db.getRow(sql"SELECT ...")` |
-| menyisipkan *value* | `%*{...}` | `db.exec(sql"INSERT ... VALUES (?)", value)` |
+| menyisipkan *value* | `%*{...}` | `db.exec(sql"INSERT ...", value)` |
 | *transaction* | *file* sementara lalu `moveFile` | `BEGIN`, `COMMIT`, `ROLLBACK` |
 
 *Command itu* di-write sebagai `sql"SELECT ..."`, yang menghasilkan *value* `SqlQuery`. *Parameter* `?` di
@@ -292,7 +292,7 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 ## Ringkasan
 
 - `seq` dan `Table` menyimpan *row* selama program berjalan; keduanya hilang saat proses ditutup.
-- `%*` dan `pretty` membangun JSON, `parseJson` membacanya kembali; urutkan sendiri sebelum print.
+- `%*` dan `pretty` membangun JSON, `parseJson` membacanya kembali; urutkan sendiri sebelum di-print.
 - Pembaruan yang aman write ke *file* sementara lalu memindahkannya, pola yang sama dengan
   `COMMIT`.
 - `readFile` melempar `IOError` dan `parseJson` melempar `JsonParsingError`, seperti `DbError` di

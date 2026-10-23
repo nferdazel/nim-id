@@ -154,7 +154,7 @@ hanya memakai **standard library**, jadi belum ada dependensi yang perlu dipasan
 
 Nim menyertakan `nimsuggest`, sebuah server yang menjawab pertanyaan editor: apa *type* simbol ini,
 di mana didefinisikan, apa nama yang cocok di posisi ini. Sebagian besar editor Nim memakainya di
-belakang layar untuk melengkapi kode otomatis dan menampilkan *error* saat write.
+belakang layar untuk melengkapi kode otomatis dan menampilkan *error* saat menulis.
 
 Yang perlu disiapkan hanya dua: pastikan `nimsuggest` ada di PATH (biasanya sudah, karena dipasang
 bersama Nim), dan arahkan editor ke proyek yang benar. Tanpa server itu, editor tetap bisa dipakai,

@@ -61,7 +61,7 @@ Ada
 
 Kedua *line* menghasilkan hal yang sama. Compiler menyisipkan dereferensi saat pembaca write
 `p.name` pada sebuah `ref`. `p[]` adalah bentuk eksplisitnya, dan berlaku umum: `p.age`, `p.name`,
-dan seterusnya, tanpa write `[]` setiap kali.
+dan seterusnya, tanpa menulis `[]` setiap kali.
 
 ## `nil` dan `isNil`
 
@@ -110,7 +110,7 @@ echo x
 100
 ```
 
-`p` menunjuk ke `x`. Read `p[]` memberi *value* `x`, dan write `p[] = 100` mengubah `x`.
+`p` menunjuk ke `x`. Membaca `p[]` memberi *value* `x`, dan menulis `p[] = 100` mengubah `x`.
 Keduanya berbagi lokasi yang sama, jadi perubahan lewat `p` langsung terlihat di `x`.
 
 `ptr` tidak memiliki *memory*. Ia hanya mencatat alamat. Nim tidak membebaskan *memory* yang ditunjuk
@@ -207,7 +207,7 @@ di bab *object*.
 
 ## Kapan `ptr` perlu, dan risikonya
 
-`ptr` diperlukan untuk berbicara dengan C, write *procedure* tingkat rendah, atau menunjuk ke dalam
+`ptr` diperlukan untuk berbicara dengan C, menulis *procedure* tingkat rendah, atau menunjuk ke dalam
 buffer. Di luar itu, `ref` hampir selalu lebih baik karena *memory*-nya dikelola otomatis.
 
 Risikonya nyata:

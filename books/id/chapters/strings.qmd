@@ -89,7 +89,7 @@ saat pembaca baru memakainya. Raw string tiga kutip juga tidak memproses escape.
 
 ## Panjang dan *index*
 
-`len` memberi jumlah byte, dan *index* dimulai dari nol. Call `len` murah: panjang string
+`len` memberi jumlah byte, dan *index* dimulai dari nol. Memanggil `len` murah: panjang string
 disimpan bersama datanya, bukan dihitung ulang setiap kali.
 
 ```{.nim}

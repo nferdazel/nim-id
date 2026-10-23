@@ -69,7 +69,7 @@ menyebut nomor versi compiler C. Kalau yang muncul justru `command not found`, b
 belum ada dan perlu dipasang lebih dulu.
 
 **4.** *Command* `nim c hello.nim` melewati tahap depan Nim dengan sukses, menghasilkan kode C, lalu
-gagal pada langkah call compiler C. *Message*-nya menyerupai:
+gagal pada langkah memanggil compiler C. *Message*-nya menyerupai:
 
 ```{.txt}
 Error: execution of an external compiler program 'gcc ...' failed with exit code: 127
@@ -85,7 +85,7 @@ choosenim 2.2.12
 choosenim stable
 ```
 
-`choosenim 2.2.12` memasang dan mengaktifkan versi itu; `choosenim stable` return ke versi
+`choosenim 2.2.12` memasang dan mengaktifkan versi itu; `choosenim stable` kembali ke versi
 stabil terbaru.
 
 ## Bab: Alur kerja: `nim r`, `nimble`, editor
@@ -165,10 +165,10 @@ echo double(21)
 ```
 
 Jalankan `nim doc double.nim`; exit code-nya bukan nol karena `doAssert` gagal. Perbaikan yang
-benar adalah write `doAssert double(2) == 4`. Karena `nim doc` ikut menjalankan blok ini, contoh
+benar adalah menulis `doAssert double(2) == 4`. Karena `nim doc` ikut menjalankan blok ini, contoh
 di dokumentasi tidak bisa diam-diam basi.
 
-## Bab: *Variable*
+## Bab: *Variable*: `var`, `let`, `const`
 
 **1.** `const` untuk *value* yang tetap, `var` untuk yang diisi belakangan.
 
@@ -289,7 +289,7 @@ echo name
 
 **4.** `echo fmt"{7:>4}"` print tiga spasi lalu `7`, yaitu `   7`.
 
-**5.** Untuk print tanpa pindah *line*, pakai `write`:
+**5.** Kalau ingin print tanpa pindah *line*, pakai `write`:
    ```{.nim}
    stdout.write "loading"
    stdout.write "..."
@@ -760,7 +760,7 @@ echo config_module.appName
 Keuntungannya: nama `appName` berada di ruang nama *module itu*, jadi tidak bertabrakan dengan nama di
 *file* induk, dan *module itu* bisa dipakai *file* lain tanpa menyalin isinya.
 
-## Bab: Exception dan *effect* `raises`
+## Bab: *Exception* dan *effect* `raises`
 
 **1.**
 
@@ -1912,7 +1912,7 @@ else:
 no year
 ```
 
-**5.** Dua di antaranya: (a) datanya sudah besar sehingga read dan write seluruh *file* setiap
+**5.** Dua di antaranya: (a) datanya sudah besar sehingga membaca dan menulis seluruh *file* setiap
 kali terlalu mahal, dan (b) *query* perlu menyaring atau mengurutkan tanpa memuat semuanya ke *memory*.
 Yang pindah ke SQLite: penyaringan dan pengurutan (`WHERE`, `ORDER BY`), *index*, *transaction*, serta
 penulisan bersamaan dari beberapa proses. Kode di bab ini tidak salah; ia hanya berhenti memadai
@@ -2403,7 +2403,7 @@ Setelah `add "one"`, *file itu* berisi satu catatan, sehingga `list` print:
 1: one
 ```
 
-**3.** *Test* untuk `saveNotes` cukup write, read kembali, lalu memeriksa keduanya:
+**3.** *Test* untuk `saveNotes` cukup menulis, membaca kembali, lalu memeriksa keduanya:
 
 ```{.nim}
   test "saves and reads back":
@@ -2446,6 +2446,6 @@ aturan itu disalin ke dua tempat, keduanya bisa berbeda diam-diam.
 
 Satu pekerjaan yang harus ditambahkan sebelum dipakai dari dua komputer: aturan untuk penulisan
 bersamaan. *File* JSON ditimpa seluruhnya setiap kali disimpan, jadi dua pengguna yang menambah
-catatan pada saat yang sama akan saling menghapus. Pilihannya mengunci *file* saat write,
+catatan pada saat yang sama akan saling menghapus. Pilihannya mengunci *file* saat menulis,
 menyimpan ke *file* terpisah per pengguna, atau memindahkan datanya ke layanan seperti pada bab
 database.

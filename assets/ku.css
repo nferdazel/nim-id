@@ -212,6 +212,18 @@ input:focus-visible {
   outline-offset: 2px;
 }
 
+/* Bootstrap menulis fokusnya sendiri untuk .btn (pengalih sidebar, tombol cari) dan .nav-link
+   (daftar "Di halaman ini"). `.btn:focus-visible{outline:0;box-shadow:...}` berspesifisitas
+   (0,2,0), di atas `button:focus-visible` (0,1,1): dua kontrol itu tampil tanpa penanda fokus,
+   dan .nav-link memakai sorot biru Bootstrap di luar palet. Disamakan ke cincin navy; ku.css
+   dimuat setelah bootstrap, jadi seri spesifisitas dimenangi di sini. */
+.btn:focus-visible,
+.nav-link:focus-visible {
+  outline: 2px solid var(--aksen);
+  outline-offset: 2px;
+  box-shadow: none;
+}
+
 /* Bilah atas: kertas, satu garis bawah tipis, tanpa bayangan (buku, bukan dashboard). */
 .quarto-secondary-nav {
   background-color: var(--kertas);
@@ -754,6 +766,24 @@ hr {
     max-width: 100%;
   }
 
+  /* Tabel 3 kolom atau lebih: kolom terakhir kerap berisi teks panjang (glosarium: rujukan bab).
+     Karena tabel menyusut ke lebar kolom baca, kolom itu jatuh ke lebar satu kata dan tiap baris
+     jadi setinggi 258px. Lantai lebar 6rem membuat tabel menggulung (pola yang sama dengan tabel
+     lebar lain) alih-alih terjepit; `:has()` menjaga tabel 2 kolom tetap seperti semula. */
+  #quarto-document-content table:has(thead th:nth-child(3)) th:nth-child(3),
+  #quarto-document-content table:has(thead th:nth-child(3)) td:nth-child(3) {
+    min-width: 6rem;
+  }
+
+  /* Saat tabel menggulung, kolom istilah dibekukan supaya istilah tetap terbaca. Header lengket
+     tidak bisa dipakai di sini: kotak gulungnya adalah tabel itu sendiri, jadi `sticky; top:0`
+     pada <thead> tidak ikut halaman saat digulung. */
+  #quarto-document-content table:has(thead th:nth-child(3)) td:first-child {
+    position: sticky;
+    left: 0;
+    background-color: var(--kertas);
+  }
+
   h1,
   .title {
     font-size: 1.65rem;
@@ -830,6 +860,41 @@ hr {
     justify-content: flex-end;
     padding: 0 6px;
   }
+
+  /* Tautan breadcrumb dan penukar bahasa tingginya 16-18px, di bawah batas 44px. Kotaknya
+     ditinggikan, dan breadcrumb dipaksa satu baris: kalau judul bab yang panjang membuatnya
+     membungkus, dua baris bertinggi 44px akan menggandakan tinggi bilah. Sisa judul dipotong
+     elipsis. min-width:0 wajib supaya kolomnya boleh menyusut, bukan meluber ke tombol cari. */
+  .quarto-secondary-nav nav.quarto-page-breadcrumbs {
+    min-width: 0;
+  }
+
+  .quarto-secondary-nav nav.quarto-page-breadcrumbs .breadcrumb {
+    flex-wrap: nowrap;
+    overflow: hidden;
+    margin-bottom: 0;
+  }
+
+  .quarto-secondary-nav nav.quarto-page-breadcrumbs .breadcrumb-item {
+    display: flex;
+    align-items: center;
+    min-width: 0;
+  }
+
+  .quarto-secondary-nav nav.quarto-page-breadcrumbs .breadcrumb-item > a {
+    display: block;
+    min-height: 44px;
+    line-height: 44px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .sidebar-tools-main a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+  }
 }
 
 /* Penukar bahasa: Quarto merender tools sebagai tautan berikon kosong (teks hanya di
@@ -871,12 +936,60 @@ html[lang="en"] .sidebar-tools-main a::after {
   display: block !important;
 }
 
-/* Cetak: edisi PDF sudah punya daftar isinya sendiri, jadi navigasi bawah "Sebelumnya /
-   Berikutnya" tidak ikut tercetak. Quarto menyembunyikan .nav-page di print, tetapi aturan
-   .nav-page{display:block} di atas menimpanya. Tombol salin juga artefak di kertas. */
+/* Hormati preferensi gerak minimal. MOTION 1 memang hanya state hover/fokus, tetapi buka-tutup
+   sidebar dan daftar isi memakai transisi Bootstrap. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Cetak: edisi PDF sudah punya daftar isinya sendiri, jadi kolom "Di halaman ini" dan navigasi
+   bawah "Sebelumnya / Berikutnya" tidak ikut tercetak. Quarto menyembunyikan .nav-page di print,
+   tetapi aturan .nav-page{display:block} di atas menimpanya. Tombol salin juga artefak di kertas. */
 @media print {
+  #quarto-margin-sidebar,
   .page-navigation,
   .code-copy-button {
     display: none;
+  }
+
+  /* Bawaan body 18px menang atas :root 11pt Bootstrap, sehingga cetakan membengkak. Disetel ke
+     poin supaya panjang baris dan pemenggalan halaman wajar. */
+  body {
+    font-size: 11pt;
+    line-height: 1.5;
+  }
+
+  /* Judul tidak boleh tertinggal sendiri di dasar halaman; blok kode dan callout tidak dipotong. */
+  h1,
+  h2,
+  h3,
+  h4 {
+    break-after: avoid;
+  }
+
+  p,
+  li,
+  blockquote {
+    orphans: 2;
+    widows: 2;
+  }
+
+  pre,
+  .callout,
+  figure,
+  blockquote {
+    break-inside: avoid;
+  }
+
+  /* Garis bawah tautan memakai warna garis (hampir tak terlihat di kertas); pakai warna teks. */
+  a {
+    text-decoration-color: currentColor;
   }
 }

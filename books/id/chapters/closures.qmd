@@ -37,7 +37,7 @@ echo op(10, 20)
 ```
 
 `op` bertipe `proc(a, b: int): int`. Isi tanda kurung adalah daftar *parameter*, dan setelah titik dua
-adalah *type* **return value**. Call `op(2, 3)` sama saja dengan call `add(2, 3)`.
+adalah *type* **return value**. Memanggil `op(2, 3)` sama saja dengan memanggil `add(2, 3)`.
 
 ## Meneruskan *procedure* sebagai *argument*
 

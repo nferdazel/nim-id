@@ -1,49 +1,48 @@
-# Learning Nim {.unnumbered}
-
-::: {.book-lead}
-Fredianto · v{{< var version >}} · 23 October 2026
-
-[Download PDF](https://nim.qouver.com/en/Learning-Nim.pdf){.book-lead-pdf}
-:::
+# Preface {.unnumbered}
 
 This book teaches the [Nim](https://nim-lang.org) programming language in English, for readers who
-have written code in another language (Python, JavaScript, PHP, Go) but have never used a language
-that compiles to native code.
+have written code in another language (Python, JavaScript, PHP, or Go) but have never used a
+language that compiles to native code.
 
 It is **not** a translation of the official documentation. The official docs are complete and
 actively maintained; this book is a companion, not a replacement. If you are comfortable with
 systems programming jargon, start with the
 [official documentation](https://nim-lang.org/documentation.html) instead.
 
-## What makes this book different
+## Who this book is for
 
-- **Every example runs.** Files under `examples/` are compiled and their output is compared
-  automatically in CI. If a snippet in the book stops working, the build fails.
-- **Code that fails on purpose.** Some examples do not compile, and that is deliberate: you learn
-  to read compiler messages instead of avoiding them.
-- **Output is written, not photographed.** All program output is text you can search, copy, and
-  have read aloud by a screen reader.
+The book covers what is different about Nim, not the basics of programming. Readers are expected to
+know variables, loops, functions, and errors. If those ideas are new, finish an introduction to
+another language first, then come back. This is not a first course in programming; it speeds up a
+reader who already has the basics, rather than building them from scratch.
 
-## Versions
+## Before you start
 
-| Tool | Version |
-|---|---|
-| Nim | 2.2.12 |
-| Book | {{< var version >}} (draft, 43 chapters) |
+All you need is your own computer. The setup guide is in
+[Installing Nim](chapters/installation.qmd), and it only has to be run once. Once `nim` is
+available, every example in the book runs directly in the terminal. For the exercises, a plain
+text editor is enough; there is no framework or extra tool to install.
+
+This is not a pile of untested snippets. Every example lives under `examples/`, is compiled, and
+its output is compared automatically. Some examples fail on purpose, so you learn to read compiler
+messages from the first chapter.
 
 ## How to read
 
-If this is your first time with Nim, read in order. If you have used Nim before, jump to
-[Variables](chapters/variables.qmd) and continue from there. Every chapter ends with exercises;
-answers are in [Appendix A](appendix/answers.qmd).
+If this is your first time with Nim, read in order. If you have used a similar language before,
+start at [Variables](chapters/variables.qmd) and jump around as needed. Each chapter opens with a
+real problem and closes with exercises and a short summary.
 
-Indonesian version: [Dasar Pemrograman Nim](https://nim.qouver.com/).
+The book has three parts. Part A covers the syntax and types used every day. Part B moves into
+modules, exceptions, generics, and memory. Part C builds real programs: a CLI, an HTTP API, a
+database, and a published package. Each chapter stands on its own, but the examples in the later
+chapters reuse material from earlier ones.
 
-## Source
+Every chapter ends with exercises, and the answers are in [Appendix A](appendix/answers.qmd). Those
+answers are not the only correct ones, just the most direct.
 
-Book source and issue tracker: [github.com/nferdazel/nim-id](https://github.com/nferdazel/nim-id).
+## Download and other editions
 
-## License
-
-Book text: [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/).
-Code samples in `examples/`: MIT.
+The book is available as a [PDF](https://nim.qouver.com/en/Learning-Nim.pdf) for reading offline,
+and in the [Indonesian edition](https://nim.qouver.com/). Source and issue tracker live at
+[github.com/nferdazel/nim-id](https://github.com/nferdazel/nim-id).

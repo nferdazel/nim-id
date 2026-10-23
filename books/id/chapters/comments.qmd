@@ -135,7 +135,7 @@ contohnya tidak ikut dijalankan.
 
 ## *Comment* yang berguna
 
-Setelah ketiga bentuk ini, pertanyaannya kapan write *comment*. Tiga patokan yang membantu:
+Setelah ketiga bentuk ini, pertanyaannya kapan menulis *comment*. Tiga patokan yang membantu:
 
 - Jelaskan alasan, bukan mekanisme. `# retry because the API returns 429 during deploys` berguna;
   `# loop three times` tidak.

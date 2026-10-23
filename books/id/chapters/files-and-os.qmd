@@ -1,6 +1,6 @@
 # *File*, *directory*, dan OS
 
-Hampir setiap program akhirnya menyentuh *file*: read konfigurasi, write log, atau melihat isi
+Hampir setiap program akhirnya menyentuh *file*: membaca konfigurasi, menulis log, atau melihat isi
 *directory*. Di banyak bahasa, urusan ini tersebar di beberapa *library*. Nim mengumpulkannya di satu
 *module*: `std/os`. Bab ini memakai *module* itu untuk hal yang paling sering dibutuhkan, sekaligus
 menunjukkan kenapa `import std/os` tidak boleh terlupa.
@@ -216,6 +216,6 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
 ## Selanjutnya
 
-Bab berikutnya membahas `unittest`: write *test* yang duduk di samping kode, read *output*-nya, dan
+Bab berikutnya membahas `unittest`: menulis *test* yang duduk di samping kode, membaca *output*-nya, dan
 menjadikan *test* sebagai kebiasaan, bukan tambahan di akhir proyek. Lanjut ke
 [`unittest` dan disiplin *test*](unit-testing.qmd).

@@ -167,7 +167,7 @@ Run `nim doc double.nim`; the exit code is non-zero because `doAssert` fails. Th
 `doAssert double(2) == 4`. Because `nim doc` runs this block, documentation examples cannot quietly
 go stale.
 
-## Chapter: Variables
+## Chapter: Variables: `var`, `let`, `const`
 
 **1.** `const` for a fixed value, `var` for one filled in later.
 

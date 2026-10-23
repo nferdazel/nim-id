@@ -139,7 +139,7 @@ aman. Jujur soal ini lebih berguna daripada menjual satu bahasa sebagai jawaban 
 
 ## Latihan
 
-1. Ubah program `hello` di atas supaya print nama pembaca, bukan `Nim`.
+1. Ubah program `hello` di atas supaya menampilkan nama pembaca, bukan `Nim`.
 2. Pada contoh penjumlahan, ganti `1..5` menjadi `1..10`. Prediksi *output*-nya sebelum menjalankan.
 3. Tulis program yang print `7 * 6` beserta *result*-nya. Simpan sebagai `kali.nim`.
 4. Kode `var age: int = "twenty"` gagal *di-compile*. Jelaskan mengapa compiler menunjuk kolom 16, dan

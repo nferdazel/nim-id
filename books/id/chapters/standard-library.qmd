@@ -91,7 +91,7 @@ false
 ```
 
 `Table[string, int]` memetakan kunci `string` ke *value* `int`. `initTable` membuat peta kosong;
-write `ages["ada"] = 36` menambahkan pasangan baru. `hasKey` menguji ada atau tidaknya kunci, dan
+Menulis `ages["ada"] = 36` menambahkan pasangan baru. `hasKey` menguji ada atau tidaknya kunci, dan
 `getOrDefault` return *default value* kalau kuncinya tidak ada. Ini jauh lebih praktis
 daripada mencari di dalam `seq` satu per satu.
 
@@ -174,7 +174,7 @@ echo parsed.name, " is ", parsed.age
 Ada is 36
 ```
 
-`%*{...}` membangun `JsonNode` langsung dari literal, tanpa write string JSON lalu menguraikannya.
+`%*{...}` membangun `JsonNode` langsung dari literal, tanpa menulis string JSON lalu menguraikannya.
 `to(Tipe)` mengubahnya menjadi *object* biasa. Keduanya menghindari penggabungan string manual yang
 mudah salah.
 
@@ -194,7 +194,7 @@ Error: unhandled exception: key not found: name [KeyError]
 ```
 
 *Message*-nya menyebut kunci yang dicari dan jenis `KeyError`. *Output* lengkapnya juga memuat jejak
-tumpukan. Sebelum read, uji dengan `hasKey`, atau pakai `getOrDefault` supaya tidak berhenti
+tumpukan. Sebelum membaca, uji dengan `hasKey`, atau pakai `getOrDefault` supaya tidak berhenti
 saat kuncinya hilang.
 
 ## *Module* lain punya babnya sendiri
@@ -236,10 +236,10 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
   `mapIt`).
 - `Table[K, V]` memetakan kunci ke *value* untuk pencarian cepat; `seq` tetap dipakai saat urutan
   penting.
-- `parseJson` dan `%*` read serta membangun JSON; `to`, `getInt`, dan `pretty` melengkapinya.
+- `parseJson` dan `%*` membaca serta membangun JSON; `to`, `getInt`, dan `pretty` melengkapinya.
 - Kunci yang tidak ada melempar `KeyError` saat berjalan, jadi uji dulu dengan `hasKey`.
 
 ## Selanjutnya
 
-Bab berikutnya membahas *file* dan sistem operasi: [*file* dan OS](files-and-os.qmd), read dan
-write *file*, menelusuri *directory*, serta read *argument* dan *variable* lingkungan.
+Bab berikutnya membahas *file* dan sistem operasi: [*file* dan OS](files-and-os.qmd), membaca dan
+menulis *file*, menelusuri *directory*, serta membaca *argument* dan *variable* lingkungan.

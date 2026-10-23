@@ -1,7 +1,7 @@
 # FFI ke C
 
 Sebagian pekerjaan sudah selesai dikerjakan *library* C: penguraian tanggal, kompresi, atau fungsi
-sistem yang tidak punya padanan di Nim. Write ulang semuanya mahal. FFI, *foreign function
+sistem yang tidak punya padanan di Nim. Menulis ulang semuanya mahal. FFI, *foreign function
 interface*, membiarkan Nim call fungsi C secara langsung, tanpa lapisan perantara. Bab ini
 mulai dari satu fungsi sederhana, lalu membaca *error message* saat pragma-nya salah tempat.
 
@@ -150,7 +150,7 @@ dipasang pada deklarasi *procedure*. Aturan yang lebih umum: setiap pragma punya
 
 FFI memindahkan jaminan keamanan ke sisi kita. Nim tidak bisa memeriksa apakah panjang buffer cukup
 atau apakah *pointer*-nya masih sah. Karena itu pembungkus tipis di sekeliling fungsi C sering lebih
-baik daripada call fungsi mentahnya di seluruh program. Bungkus itu yang memeriksa *argument* dan
+baik daripada memanggil fungsi mentahnya di seluruh program. Bungkus itu yang memeriksa *argument* dan
 mengubah *type* C kembali menjadi *type* Nim, sehingga sisanya tetap kode Nim biasa.
 
 ## Latihan

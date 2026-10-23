@@ -1,49 +1,48 @@
-# Dasar Pemrograman Nim {.unnumbered}
+# Prakata {.unnumbered}
 
-::: {.book-lead}
-Fredianto · v{{< var version >}} · 23 Oktober 2026
+Buku ini mengajarkan bahasa [Nim](https://nim-lang.org) dalam bahasa Indonesia, untuk pembaca yang
+sudah pernah menulis program di bahasa lain (Python, JavaScript, PHP, atau Go) tetapi belum pernah
+memakai bahasa yang *di-compile* ke native.
 
-[Unduh PDF](https://nim.qouver.com/Dasar-Pemrograman-Nim.pdf){.book-lead-pdf}
-:::
+Buku ini **bukan** terjemahan dokumentasi resmi. Dokumentasi resmi Nim sudah lengkap dan berbahasa
+Inggris; buku ini pelengkap, bukan pengganti. Pembaca yang sudah nyaman dengan bahasa Inggris dan
+istilah sistem bisa langsung ke [dokumentasi resmi](https://nim-lang.org/documentation.html).
 
-Buku ini mengajarkan bahasa [Nim](https://nim-lang.org) dalam bahasa Indonesia, untuk pembaca
-yang sudah pernah menulis program di bahasa lain (Python, JavaScript, PHP, Go) tapi belum pernah
-menyentuh bahasa yang *di-compile* ke native.
+## Untuk siapa buku ini
 
-Buku ini **bukan** terjemahan dokumentasi resmi. Dokumentasi resmi Nim sudah lengkap dan
-berbahasa Inggris; buku ini pelengkap, bukan pengganti. Kalau pembaca sudah nyaman dengan bahasa
-Inggris dan istilah sistem, langsung ke [dokumentasi resmi](https://nim-lang.org/documentation.html)
-lebih cepat.
+Buku ini menjelaskan apa yang berbeda di Nim, bukan mengulang dasar pemrograman. Pembaca
+diasumsikan sudah mengenal *variable*, *loop*, fungsi, dan *error*. Kalau istilah itu masih asing,
+selesaikan dulu satu pengantar bahasa lain, lalu kembali ke sini. Buku ini juga bukan pengantar
+pemrograman yang pertama; ia mempercepat pembaca yang sudah punya bekal, bukan membangun bekal itu
+dari nol.
 
-## Yang membuat buku ini berbeda
+## Sebelum mulai
 
-- **Setiap contoh dijalankan.** Semua *file* di `examples/` *di-compile* dan *output*-nya
-  dibandingkan otomatis di CI. Kalau snippet di buku tidak jalan, build-nya gagal.
-- **Kode yang sengaja salah.** Beberapa contoh memang gagal *di-compile*, dan itu disengaja:
-  pembaca dilatih membaca *compiler message*, bukan menghindarinya.
-- **Output di-write, bukan difoto.** Semua *output* program berupa teks yang bisa dicari dan
-  disalin, dan tetap terbaca oleh pembaca layar.
+Yang dibutuhkan hanya komputer sendiri. Panduan pemasangan ada di
+[Instalasi Nim](chapters/installation.qmd), dan cukup dijalankan sekali. Setelah `nim` tersedia,
+semua contoh di buku ini bisa dijalankan langsung di terminal. Untuk mengerjakan latihan, cukup
+editor teks biasa; tidak ada kerangka kerja atau *tool* tambahan yang perlu dipasang.
 
-## Versi
-
-| Perangkat | Versi |
-|---|---|
-| Nim | 2.2.12 |
-| Buku | {{< var version >}} (draf, 43 bab) |
+Buku ini bukan kumpulan potongan kode yang diragukan. Setiap contoh disimpan di `examples/`,
+*di-compile*, dan *output*-nya dibandingkan otomatis. Beberapa contoh memang sengaja gagal
+*di-compile*, supaya pembaca terbiasa membaca *compiler message* sejak awal.
 
 ## Cara membaca
 
-Kalau baru pertama kali memakai Nim, baca berurutan. Kalau sudah pernah, lompat ke
-[*Variable*](chapters/variables.qmd) dan lanjut dari situ. Setiap bab berakhir dengan latihan;
-jawabannya ada di [Lampiran A](appendix/answers.qmd).
+Pembaca yang baru pertama kali memakai Nim sebaiknya membaca berurutan. Pembaca yang sudah pernah
+memakai bahasa serupa bisa mulai dari [*Variable*](chapters/variables.qmd) dan melompat sesuai
+kebutuhan. Setiap bab dibuka dengan masalah nyata, ditutup dengan latihan, lalu dirangkum singkat.
 
-Versi bahasa Inggris: [Learning Nim](https://nim.qouver.com/en/).
+Buku ini terbagi menjadi tiga bagian. Bagian A membahas sintaks dan *type* yang dipakai setiap hari.
+Bagian B masuk ke *module*, *exception*, *generic*, dan *memory*. Bagian C menyusun program nyata:
+CLI, HTTP API, basis data, sampai penerbitan *package*. Setiap bab bisa dibaca sendiri, tetapi
+contoh di bab-bab akhir memakai bahan dari bab sebelumnya.
 
-## Sumber
+Latihan di setiap bab ada jawabannya di [Lampiran A](appendix/answers.qmd). Jawaban itu bukan
+satu-satunya cara yang benar, hanya cara yang paling langsung.
 
-Sumber buku dan pelaporan masalah: [github.com/nferdazel/nim-id](https://github.com/nferdazel/nim-id).
+## Unduh dan edisi lain
 
-## Lisensi
-
-Teks buku: [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/deed.id).
-Kode contoh di `examples/`: MIT.
+Buku ini tersedia sebagai [PDF](https://nim.qouver.com/Dasar-Pemrograman-Nim.pdf) untuk dibaca tanpa
+komputer, dan dalam [edisi bahasa Inggris](https://nim.qouver.com/en/). Sumber buku dan laporan
+masalah ada di [github.com/nferdazel/nim-id](https://github.com/nferdazel/nim-id).

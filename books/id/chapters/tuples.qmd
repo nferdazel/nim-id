@@ -1,10 +1,10 @@
 # Tuple dan destructuring
 
 *Procedure* `minMax` perlu return dua angka: *value* terkecil dan terbesar. Di banyak bahasa,
-jalan pintasnya adalah return *array* atau *object* kecil. Nim punya cara yang lebih langsung:
+jalan pintasnya adalah mengembalikan *array* atau *object* kecil. Nim punya cara yang lebih langsung:
 tuple, *value* gabungan berukuran tetap yang *element itu* boleh berbeda *type*.
 
-Tuple itu kecil dan murah. Ia dipakai untuk return beberapa *value* sekaligus, menamai
+Tuple itu kecil dan murah. Ia dipakai untuk mengembalikan beberapa *value* sekaligus, menamai
 pasangan, atau menampung data sementara yang belum perlu menjadi *type* penuh.
 
 ::: {.callout-note}

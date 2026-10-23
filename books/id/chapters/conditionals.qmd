@@ -3,7 +3,7 @@
 Program yang mengerjakan hal yang sama untuk semua *input* jarang berguna. Cepat atau lambat kita
 perlu memilih *path*: saldo cukup atau tidak, nama kosong atau terisi, sistemnya Unix atau Windows.
 
-`if` sudah akrab bagi siapa pun yang pernah write di bahasa lain. Yang khas di Nim ada tiga: `if`
+`if` sudah akrab bagi siapa pun yang pernah menulis di bahasa lain. Yang khas di Nim ada tiga: `if`
 bisa langsung menghasilkan *value*, `case` menuntut semua kemungkinan tertutup, dan `when` memilih
 cabang **saat *compile***: cabang yang tidak terpilih tidak ikut *di-compile*.
 
@@ -173,7 +173,7 @@ tanpa `else`.
 1. Ubah `temperature` di contoh pertama menjadi `5`, lalu prediksi *output*-nya sebelum menjalankan.
 2. Tulis *expression* `if` yang mengubah *value* `age` menjadi `"anak"` (di bawah 13), `"remaja"` (13–19),
    atau `"dewasa"` (20 ke atas), lalu print *result*-nya.
-3. Tulis *procedure* yang menerima `char` dan memakai `case` untuk return `"vowel"` untuk
+3. Tulis *procedure* yang menerima `char` dan memakai `case` untuk mengembalikan `"vowel"` untuk
    `'a'`/`'i'`/`'u'`/`'e'`/`'o'`, `"digit"` untuk `'0' .. '9'`, dan `"other"` untuk sisanya.
 4. Kode berikut gagal *di-compile*. Perbaiki, lalu sebutkan *line* dan kolom yang ditunjuk compiler:
    ```{.nim}

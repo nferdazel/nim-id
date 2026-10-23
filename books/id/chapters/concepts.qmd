@@ -35,7 +35,7 @@ echo total(@[1.5, 2.5])
 4.0
 ```
 
-`SomeNumber` mencakup *type* bilangan. Satu *procedure*, dua *type* berbeda, tanpa write ulang. Batasan
+`SomeNumber` mencakup *type* bilangan. Satu *procedure*, dua *type* berbeda, tanpa menulis ulang. Batasan
 seperti ini berguna selama bentuk yang diinginkan sudah ada di **standard library**. Begitu yang
 dibutuhkan adalah "punya field `name`", tidak ada nama bawaan yang menolong.
 
@@ -199,7 +199,7 @@ field yang dijamin ada. Ini pola yang sering muncul begitu `or` dipakai.
 
 ## Membaca error: predicate gagal
 
-Call *procedure* dengan *type* yang tidak memenuhi konsep ditolak compiler.
+Memanggil *procedure* dengan *type* yang tidak memenuhi konsep ditolak compiler.
 
 ```{.nim}
 type

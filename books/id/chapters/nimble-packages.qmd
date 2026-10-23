@@ -47,7 +47,7 @@ lisensi, dan versi Nim terendah. Setelah selesai, *directory* baru berisi `texts
 
 ## Isi *file* `.nimble`
 
-*File* `.nimble` sebenarnya kode Nim yang dijalankan nimble saat read *package*. Bentuk dasarnya
+*File* `.nimble` sebenarnya kode Nim yang dijalankan nimble saat membaca *package*. Bentuk dasarnya
 begini:
 
 ```{.ini}
@@ -202,7 +202,7 @@ yang belum masuk daftar resmi tetap bisa dipasang lewat URL repositori Git-nya.
 
 Nomor versi bukan hiasan. Pemakai memakainya untuk memutuskan kapan berani memperbarui dependensi,
 dan nimble memakainya untuk memilih versi. Aturan yang dipakai luas, versi semantik (*semver*),
-read `0.1.0` sebagai `major.minor.patch`:
+membaca `0.1.0` sebagai `major.minor.patch`:
 
 | Angka | Naik kalau |
 |---|---|

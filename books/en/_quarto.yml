@@ -10,10 +10,8 @@ book:
   date: "2026-10-23"
   language: en
   chapters:
-    - part: "Part 0: Getting started"
-      chapters:
-        - index.qmd
-        - copyright.qmd
+    - index.qmd
+    - copyright.qmd
     - part: "Part A: Fundamentals"
       chapters:
         - chapters/what-is-nim.qmd
@@ -90,6 +88,7 @@ format:
     code-overflow: wrap
     fig-cap-location: bottom
   typst:
+    toc-depth: 1
     lang: en
     template-partials:
       - assets/typst/typst-show.typ

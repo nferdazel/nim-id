@@ -38,7 +38,7 @@ echo x, " ", y
 ```
 
 Compiler menyalin tiga *line* badan `swap` ke tempat *calling* dengan `a` menjadi `x` dan `b`
-menjadi `y`. *Result*-nya sama seperti write pertukaran itu langsung. *Argument*-nya tidak disalin
+menjadi `y`. *Result*-nya sama seperti menulis pertukaran itu langsung. *Argument*-nya tidak disalin
 *value itu*, jadi `swap` bekerja untuk *variable* `int` maupun `string`.
 
 ## Hygiene: nama di dalam template tidak bocor
