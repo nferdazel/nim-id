@@ -2,7 +2,7 @@
 
 [![ci](https://github.com/nferdazel/nim-id/actions/workflows/ci.yml/badge.svg)](https://github.com/nferdazel/nim-id/actions/workflows/ci.yml)
 
-Buku belajar bahasa [Nim](https://nim-lang.org) dalam dua bahasa: Indonesia dan English.
+Buku belajar bahasa [Nim](https://nim-lang.org) dalam dua bahasa: Indonesia dan Inggris.
 Situs: `nim.qouver.com` (`/en/` untuk versi Inggris).
 
 Setiap contoh di `examples/` dikompilasi dan keluarannya dibandingkan otomatis. Satu set contoh
@@ -60,7 +60,7 @@ nama modul yang dimulai angka atau memakai tanda hubung.
 
 ## Menambah bab
 
-1. Tulis versi Indonesia `books/id/chapters/<name>.qmd` dan English
+1. Tulis versi Indonesia `books/id/chapters/<name>.qmd` dan Inggris
    `books/en/chapters/<name>.qmd` dengan nama berkas **sama**.
 2. Daftarkan di `books/id/_quarto.yml` **dan** `books/en/_quarto.yml`.
 3. Taruh snippet di `examples/<chapter>/`, lengkap dengan `.expected` atau `.expected-error`.
@@ -72,8 +72,8 @@ nama modul yang dimulai angka atau memakai tanda hubung.
 
 Dua lisensi, sesuai isinya:
 
-- **Teks buku** (`books/`, `docs/`) — CC BY-SA 4.0, lihat [LICENSE](LICENSE).
-- **Kode contoh** (`examples/`, `tools/`, potongan kode di dalam buku) — MIT, lihat
+- **Teks buku** (`books/`, `docs/`): CC BY-SA 4.0, lihat [LICENSE](LICENSE).
+- **Kode contoh** (`examples/`, `tools/`, potongan kode di dalam buku): MIT, lihat
   [LICENSE-CODE](LICENSE-CODE).
 
 Kalau mengutip buku, sebutkan sumber dan tautan ke `nim.qouver.com`.

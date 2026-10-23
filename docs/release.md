@@ -6,7 +6,7 @@ saat build, dan berkas hasil itu tidak di-commit.
 
 ## Cara kerja X.Y.Z
 
-Tiga angka, dibaca dari kiri: **X.Y.Z**. Naikkan **satu** angka, nol-kan yang di kanannya.
+Tiga angka, dibaca dari kiri: **X.Y.Z**. Naikkan **satu** angka, nolkan yang di kanannya.
 
 | Angka | Nama | Naik kalau | Akibat ke pembaca |
 |---|---|---|---|
@@ -65,5 +65,5 @@ Sesudah `v0.1.0` ada, semua rilis berikutnya lewat `./task rilis`.
 - CI hanya jalan untuk push ke `main` dan `workflow_dispatch`. Tag `v*` sengaja tidak memicu apa
   pun: commit yang sama sudah lolos di `main`, jadi menjalankan ulang hanya membakar menit.
 - Deploy VPS dijaga ref-guard: hanya `refs/heads/main`. Push tag diabaikan, sesuai desain.
-- Kalau nanti butuh artefak rilis, tambahkan job yang membaca `VERSION` sebagai nama berkas —
+- Kalau nanti butuh artefak rilis, tambahkan job yang membaca `VERSION` sebagai nama berkas,
   jangan menghidupkan lagi trigger tag.

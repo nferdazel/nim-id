@@ -1,4 +1,4 @@
-# Rencana: Buku Nim Bahasa Indonesia — repo `nim-id`, situs `nim.qouver.com`
+# Rencana: Buku Nim Bahasa Indonesia, repo `nim-id`, situs `nim.qouver.com`
 
 Status: **draft untuk direview**. Belum ada kode/repo yang dibuat.
 Tanggal: 23 Okt 2026. Target tool: Nim 2.2.x.
@@ -19,7 +19,7 @@ Tanggal: 23 Okt 2026. Target tool: Nim 2.2.x.
 
 | Pendekatan | Kualitas PDF | Kompleksitas | Catatan |
 |---|---|---|---|
-| **Quarto → Typst** (rekomendasi) | tinggi (typografi buku asli, PDF/A, tagged) | 1 tool, 1 sumber | Quarto 1.9 baru punya *typst book*; kalau bermasalah, pindah ke LaTeX dari sumber yang sama |
+| **Quarto → Typst** (rekomendasi) | tinggi (typografi buku asli, PDF/A, tagged) | 1 tool, 1 sumber | Quarto 1.10 punya *typst book*; kalau bermasalah, pindah ke LaTeX dari sumber yang sama |
 | Docusaurus + Prince | sedang (hasil cetak = website yang di-print) | 2 config + Prince berbayar untuk komersial | ini yang dipakai novalagung |
 | Docusaurus + paged.js/Vivliostyle | sedang, rapuh di footnote/widow | 2 tool + CSS paged media tangan | bukan jalan pintas |
 | mdBook | PDF lewat jalur tidak resmi | rendah untuk web | tidak ada jalur PDF yang layak |
@@ -29,7 +29,7 @@ Alasan memilih Quarto:
 
 - **Satu sumber, dua keluaran.** Menulis dua kali (web + PDF) adalah kesalahan klasik yang bikin bab tidak sinkron.
 - **Typst memberi tipografi buku sungguhan**: hyphenation, widow/orphan, running header, TOC dengan dot leader, cross-reference bernomor, PDF/A + tagged PDF. Prince dari HTML selalu terasa "website yang dicetak".
-- **Callout, code annotation, cross-ref sudah built-in** — persis kebutuhan buku pemrograman.
+- **Callout, code annotation, cross-ref sudah built-in**: persis kebutuhan buku pemrograman.
 - Biaya build kecil: Typst satu biner, render detik, tidak perlu TinyTeX ~1 GB.
 
 **Escape hatch:** isi tetap Markdown polos + callout standar. Kalau Quarto/Typst menyakitkan, pindah ke Docusaurus atau LaTeX tanpa menulis ulang isi. Jangan pakai fitur eksotis Quarto di luar: heading, code block, callout, gambar, tabel, footnote.
@@ -59,7 +59,7 @@ Elemen yang menentukan kesan "buku", bukan "print website":
 
 - **Blok kode vs blok output dibedakan jelas.** Kode: latar putih, border tipis. Output: latar abu 4%, label kecil `output`, prompt `$` untuk terminal. Output di-generate dari eksekusi nyata, bukan screenshot.
 - **Screenshot maksimal 1 per 5 bab**, hanya untuk hal yang benar-benar visual: pesan error compiler berwarna, TUI, hasil grafis. Sisanya teks agar bisa di-copy, di-search, dan ramah pembaca tunanetra.
-- **Callout 3 jenis** (Catatan / Peringatan / Tips): border kiri 3 pt + tint. Wajib diuji **cetak hitam-putih** — tint 4–8% saja, jangan mengandalkan warna.
+- **Callout 3 jenis** (Catatan / Peringatan / Tips): border kiri 3 pt + tint. Wajib diuji **cetak hitam-putih**: tint 4–8% saja, jangan mengandalkan warna.
 - **Highlighting aman-grayscale & buta warna**: keyword bold, comment muted, tanpa mengandalkan merah/hijau untuk membedakan token.
 - **Nomor baris hanya di bab debug** ("kenapa error di baris 7"), tidak di semua blok.
 - **Running header** judul bab, nomor halaman bawah tengah, TOC 2 level dengan dot leader, daftar istilah di belakang.
@@ -74,7 +74,7 @@ Elemen yang menentukan kesan "buku", bukan "print website":
 
 ### 4.1 Audiens dan prasyarat
 
-Pembaca diasumsikan **sudah pernah menulis program** (variabel, loop, fungsi di Python/JS/PHP), tapi belum pernah menyentuh bahasa sistem. Ini audiens yang sama dengan buku Rust-nya novalagung, dan audiens paling realistis: mereka yang penasaran Nim karena dengar "sintaks Python, cepat seperti C".
+Pembaca diasumsikan **sudah pernah menulis program** (variabel, loop, fungsi di Python/JS/PHP), tapi belum pernah menyentuh bahasa sistem. Ini audiens yang sama dengan buku Rust-nya novalagung, dan audiens paling realistis: mereka yang penasaran Nim karena mendengar "sintaks Python, cepat seperti C".
 
 Konsekuensinya: **jangan** menjelaskan apa itu variabel selama satu halaman; **jelaskan** apa yang berbeda di Nim (`var` vs `let` vs `const`, `seq` vs `array`, ARC/ORC).
 
@@ -89,7 +89,7 @@ Konsekuensinya: **jangan** menjelaskan apa itu variabel selama satu halaman; **j
 ### 4.3 Kalimat dan paragraf
 
 - Rata-rata **≤ 20 kata** per kalimat. Satu ide per paragraf, **≤ 4 baris**.
-- Kalimat aktif. "Compiler menolak baris ini karena X", bukan "baris ini ditolak oleh compiler dikarenakan oleh X".
+- Kalimat aktif. "Compiler menolak baris ini karena X", bukan "baris ini ditolak oleh compiler dikarenakan X".
 - Buang basa-basi: "pada era digital ini", "seperti yang kita ketahui", "tentu saja", "perlu diingat bahwa" (kecuali benar-benar perlu diingat).
 - Batasi frasa favorit jadi maksimal **1× per bab**: "kurang lebih seperti berikut", "sebagai berikut", "oke", "nah".
 - Setiap klaim teknis harus bisa diuji, dan sebut versinya: "diuji di Nim 2.2.12".
@@ -108,7 +108,7 @@ Ejaan mengikuti **EYD V**. Istilah asing yang belum mapan dicetak *miring*.
 
 **Diterjemahkan konsisten**: variabel, fungsi, prosedur (`proc`), parameter, argumen, perulangan, percabangan, tipe data, nilai balik, pengecualian (*exception*), pustaka standar, modul, paket.
 
-**Keputusan istilah disimpan di `docs/GLOSARIUM.md`** (istilah ID, istilah EN, definisi satu kalimat, bab pertama kali muncul) dan **di-lint di CI**: kalau sebuah bab memakai varian terlarang ("variable", "looping", "array/list" campur), CI gagal. Ini murah dan mencegah inkonsistensi 50 bab.
+**Keputusan istilah disimpan di `docs/glossary.md`** (istilah ID, istilah EN, definisi satu kalimat, bab pertama kali muncul). Glosarium **di-lint di CI**: kalau sebuah bab memakai varian terlarang ("variable", "looping", "array/list" campur), CI gagal. Ini murah dan mencegah inkonsistensi 50 bab.
 
 ### 4.5 Template bab (baku, jangan diimprovisasi tiap bab)
 
@@ -116,7 +116,7 @@ Ejaan mengikuti **EYD V**. Istilah asing yang belum mapan dicetak *miring*.
 2. **Tujuan** satu baris: "Setelah bab ini, pembaca bisa …".
 3. **Konsep** sesingkat mungkin, satu contoh kecil yang jalan.
 4. **Bangun bertahap**: satu program yang tumbuh; setiap langkah = satu perubahan + satu output.
-5. **Error-first**: sengaja salahkan kode, tampilkan pesan compiler asli, ajari **cara membaca pesan itu** (ini skill paling berguna dan paling jarang diajarkan).
+5. **Error-first**: sengaja salahkan kode, tampilkan pesan compiler asli, ajari **cara membaca pesan itu** (ini keterampilan paling berguna dan paling jarang diajarkan).
 6. **Output nyata** dari eksekusi (blok `output`, bukan gambar).
 7. **Latihan 3–5 soal** dengan gradasi: (a) ubah, (b) prediksi output, (c) tulis dari nol, (d) perbaiki kode rusak. Jawaban di lampiran, bukan di bawah soal.
 8. **Ringkasan** 3–5 poin.
@@ -142,14 +142,14 @@ Panjang: **900–1.400 kata**, 10–15 menit baca. Satu bab = satu sesi duduk. B
 
 **Jawaban singkat: tidak harus, dan kontrak penuhnya tidak relevan.** Tapi memakai infra sendiri itu murah kalau hanya mengambil bagian yang relevan.
 
-Alasannya: kontrak emas di `AGENTS.md` dirancang untuk **service stateful** — migrasi DB, container, rollback image, retensi `:local`/`:prev`. Buku adalah **direktori file statis**. Tidak ada state, tidak ada container, tidak ada image. Memaksakan `podman tag :prev` untuk situs statis hanya menambah bagian yang tidak pernah dipakai.
+Alasannya: kontrak emas di `AGENTS.md` dirancang untuk **service stateful**: migrasi DB, container, rollback image, retensi `:local`/`:prev`. Buku adalah **direktori file statis**. Tidak ada state, tidak ada container, tidak ada image. Memaksakan `podman tag :prev` untuk situs statis hanya menambah bagian yang tidak pernah dipakai.
 
 Yang tetap relevan, dan tetap dipakai:
 
 | Bagian kontrak | Untuk buku statis |
 |---|---|
-| Ref-guard fail-closed (`refs/heads/main`) | **dipakai** — sama persis |
-| `flock` concurrency | **dipakai** — dua deploy bersamaan tetap merusak swap |
+| Ref-guard fail-closed (`refs/heads/main`) | **dipakai**: sama persis |
+| `flock` concurrency | **dipakai**: dua deploy bersamaan tetap merusak swap |
 | `git fetch && git reset --hard` | **dipakai** |
 | Tag image `:local`/`:prev` | **tidak relevan** (tidak ada image) |
 | Rollback | diganti **symlink swap**: `releases/<sha>/` + `current` → `previous` |
@@ -183,14 +183,14 @@ tag v*
   └─ CI: render ulang dengan nomor versi → upload PDF ke GitHub Releases
 ```
 
-Catatan DNS & server (sudah dicocokkan dengan `vps/README.md` + `AUDIT_CLOUDFLARE_PREP_2026-10-19.md`):
+Catatan DNS & server (sudah dicocokkan dengan catatan server di `vps/SERVER_STATE.md`):
 
 - Record: `A nim → 43.133.148.19`, **proxied (orange)** seperti 7 nama lain; SSL mode Cloudflare sudah `Full (strict)`.
 - Karena proxied, origin wajib punya sertifikat valid untuk `nim.qouver.com`; Caddy menerbitkannya otomatis (HTTP-01, port 80 tetap terbuka ke Cloudflare).
 - Path baru `/srv/qouver/apps/nim-id/web` butuh aturan `semanage fcontext` + `restorecon` **sekali** (sama seperti `kran`/`sds`). Tanpa itu Caddy balas 403/404 meski file ada.
 - Sebelum blok Caddy ada, `nim.qouver.com` menjawab **525** (Cloudflare gagal handshake TLS ke origin karena Caddy belum punya vhost untuk SNI itu). Itu normal, bukan tanda DNS salah.
 
-Script deploy static: ~60 baris bash, tanpa podman. Tetap `ops/scripts/deploy-static.sh`, tetap `ops/caddy/Caddyfile.nim-id.example`, tetap hook webhook HMAC — jadi masih "lewat infra", tapi dengan kontrak yang sesuai ukuran masalahnya.
+Script deploy static: ~60 baris bash, tanpa podman. Tetap `ops/scripts/deploy-static.sh`, tetap `ops/caddy/Caddyfile.nim-id.example`, tetap hook webhook HMAC, jadi masih "lewat infra", tapi dengan kontrak yang sesuai ukuran masalahnya.
 
 ---
 
@@ -256,15 +256,15 @@ Aturan:
 
 ## 7. Kerangka bab (~44 bab + lampiran)
 
-**Bagian 0 — Mulai (3):** Apa itu Nim dan kenapa; Instalasi (choosenim/brew, Termux); Alur kerja: `nim c -r`, `nimble`, editor + nimsuggest.
+**Bagian 0, Mulai (3):** Apa itu Nim dan kenapa; Instalasi (choosenim/brew, Termux); Alur kerja: `nim c -r`, `nimble`, editor + nimsuggest.
 
-**Bagian A — Dasar (13):** Komentar & doc comment; Variabel `var`/`let`/`const`; Tipe dasar & literal; String & raw string; `echo` & format; Operator; `if`/`case`/`when`; Perulangan; `array` vs `seq` vs `openArray`; Tuple; Object; Enum & set; `proc`, parameter, nilai balik.
+**Bagian A, Dasar (13):** Komentar & doc comment; Variabel `var`/`let`/`const`; Tipe dasar & literal; String & raw string; `echo` & format; Operator; `if`/`case`/`when`; Perulangan; `array` vs `seq` vs `openArray`; Tuple; Object; Enum & set; `proc`, parameter, nilai balik.
 
-**Bagian B — Menengah (17):** Module & `import`/`export`; Exception & `raises`; Iterator & `yield`; Closure; Generic; Template; Macro; Concept; Object variant & `distinct`; `ref`/`ptr`/`nil`; ARC/ORC & `=destroy`; Tur pustaka standar (`strutils`, `sequtils`, `tables`, `json`); File & OS; `unittest`; `async`/`await`; FFI ke C; compile ke JS.
+**Bagian B, Menengah (17):** Module & `import`/`export`; Exception & `raises`; Iterator & `yield`; Closure; Generic; Template; Macro; Concept; Object variant & `distinct`; `ref`/`ptr`/`nil`; ARC/ORC & `=destroy`; Tur pustaka standar (`strutils`, `sequtils`, `tables`, `json`); File & OS; `unittest`; `async`/`await`; FFI ke C; compile ke JS.
 
-**Bagian C — Praktik (7):** CLI dengan `cligen`; HTTP API (mummy/jester); Database (`norm`); Membuat & menerbitkan paket nimble; Benchmark & profiling; Cross-compile & deploy biner; Proyek akhir.
+**Bagian C, Praktik (7):** CLI dengan `cligen`; HTTP API (mummy/jester); Database (`norm`); Membuat & menerbitkan paket nimble; Benchmark & profiling; Cross-compile & deploy biner; Proyek akhir.
 
-**Bagian D — Lampiran (4):** Jawaban latihan; Glosarium; Cheat sheet; Nim untuk programmer Python/Go/Rust.
+**Bagian D, Lampiran (4):** Jawaban latihan; Glosarium; Cheat sheet; Nim untuk programmer Python/Go/Rust.
 
 Bab yang **tidak** diambil dari buku Rust karena khas Rust: ownership, borrowing, lifetime, `use`/`path-item`, operator `?`, slice memory management.
 
@@ -287,9 +287,9 @@ Total realistis **3–4 bulan** kerja konsisten. Publikasi per bab sejak M1; jan
 
 | Risiko | Mitigasi |
 |---|---|
-| Typst book Quarto 1.9 masih muda | Sudah terbukti jalan di 1.10.19 (§2); escape hatch ke LaTeX dari sumber sama |
+| Typst book Typst book masih muda | Sudah terbukti jalan di 1.10.19 (§2); escape hatch ke LaTeX dari sumber sama |
 | Highlighting Nim | Terverifikasi didukung (§2); tidak perlu mitigasi |
-| Istilah & ejaan melenceng antar bab | `GLOSARIUM.md` + lint CI untuk varian terlarang |
+| Istilah & ejaan melenceng antar bab | `docs/glossary.md` + lint CI untuk varian terlarang |
 | Snippet basi saat Nim naik versi | Versi Nim dipin di CI, golden output memaksa snippet diperbarui saat upgrade |
 | SEO: "NIM" = nomor induk mahasiswa | Selalu tulis "bahasa Nim" di judul/deskripsi, slug `belajar-nim`, structured data, judul buku eksplisit |
 | Solo, 44 bab | 3 bab/minggu, terbit bertahap, tiap bab satu PR kecil |
@@ -301,9 +301,9 @@ Total realistis **3–4 bulan** kerja konsisten. Publikasi per bab sejak M1; jan
 
 Sudah dikunci (23 Okt 2026):
 
-1. **Nama repo `nim-id`.** Alasan: nama repo tidak memengaruhi SEO (situs ada di domain sendiri), `dasarpemrogramannim` ambigu dengan "NIM = nomor induk mahasiswa", dan `nim-id` bisa menampung glosarium/kurikulum/playground tanpa mengunci diri jadi satu buku.
+1. **Nama repo `nim-id`.** Alasan: nama repo tidak memengaruhi SEO (situs ada di domain sendiri). `dasarpemrogramannim` ambigu dengan "NIM = nomor induk mahasiswa", dan `nim-id` bisa menampung glosarium/kurikulum/playground tanpa mengunci diri jadi satu buku.
 2. **Domain `nim.qouver.com`** (pemilik menyiapkan record-nya).
-3. **Judul buku terpisah dari nama repo**: "Dasar Pemrograman Nim — Bahasa Indonesia". Judul inilah yang jadi `<title>`, H1, dan slug halaman.
+3. **Judul buku terpisah dari nama repo**: "Dasar Pemrograman Nim: Bahasa Indonesia". Judul inilah yang jadi `<title>`, H1, dan slug halaman.
 4. **Lisensi**: teks CC BY-SA 4.0 + kode contoh MIT.
 
 Masih terbuka:

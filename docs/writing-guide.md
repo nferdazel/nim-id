@@ -24,7 +24,7 @@ Nim. Jangan menjelaskan apa itu variabel. Jelaskan apa yang **berbeda** di Nim.
 - **Kode selalu bahasa Inggris**: identifier, komentar, dan string. Prosa yang menjelaskan.
   Alasannya: satu set `examples/` dipakai kedua buku, dan satu verifikasi berlaku untuk keduanya.
 - Blok `output` **identik** di kedua bahasa karena kodenya sama. Jangan diterjemahkan.
-- Istilah mengikuti [`glossary.md`](glossary.md), yang memetakan istilah Indonesia ke English.
+- Istilah mengikuti [`glossary.md`](glossary.md), yang memetakan istilah Indonesia ke bahasa Inggris.
 - Commit yang hanya menyentuh satu bahasa harus menyebut apakah sisi lain perlu disusul.
 
 ## Kalimat
@@ -47,7 +47,7 @@ Contoh:
 ## Istilah
 
 - Ejaan mengikuti EYD V. Istilah asing yang belum ada padanan dicetak *miring*.
-- Penulisan istilah yang dipakai dan yang dilarang ada di [`GLOSARIUM.md`](GLOSARIUM.md).
+- Penulisan istilah yang dipakai dan yang dilarang ada di [`glossary.md`](glossary.md).
   Tambahkan istilah baru di sana **sebelum** dipakai di bab.
 
 ## Bentuk bab
@@ -61,7 +61,7 @@ Contoh:
    pesan itu (berkas, baris/kolom, tingkat, isi).
 6. **Output nyata** di blok ```` ```{.txt} ````, bukan gambar.
 7. **Latihan 3–5 soal** bergradasi: ubah, prediksi output, tulis dari nol, perbaiki kode rusak.
-   Jawaban di `lampiran/jawaban.qmd`, bukan di bawah soal.
+   Jawaban di `books/id/appendix/answers.qmd` dan `books/en/appendix/answers.qmd`, bukan di bawah soal.
 8. **Ringkasan** 3–5 poin.
 9. **Selanjutnya** satu tautan ke bab berikutnya.
 
@@ -76,7 +76,7 @@ Panjang: 900–1.400 kata. Satu bab = satu sesi baca 10–15 menit. Lebih dari i
 - Kode di bab harus **identik** dengan berkas contoh. Kalau butuh versi yang sengaja salah,
   jadikan berkas tersendiri berakhiran `.expected-error`.
 - Output di bab disalin dari `.expected`, jangan diketik ulang dari ingatan.
-- Contoh yang memerlukan berkas eksternar ditaruh di folder yang sama dan dibersihkan setelah
+- Contoh yang memerlukan berkas eksternal ditaruh di folder yang sama dan dibersihkan setelah
   jalan.
 
 ## Bahasa visual
@@ -95,7 +95,7 @@ Panjang: 900–1.400 kata. Satu bab = satu sesi baca 10–15 menit. Lebih dari i
   memakai `paper-size`/`width`/`height`. Kalau trim berubah, ubah partial, bukan YAML.
 - `format: typst: lang: <id|en>` wajib ada; tanpa itu label "Daftar Isi"/"Lampiran" jatuh ke
   bahasa Inggris.
-- PDF dibuat dari sumber yang sama dengan web. Kalau PDF gagal, `./task site` gagal — bukan
+- PDF dibuat dari sumber yang sama dengan web. Kalau PDF gagal, `./task site` gagal, bukan
   peringatan.
 
 ## Definition of Done
