@@ -9,6 +9,8 @@ actively maintained; this book is a companion, not a replacement. If you are com
 systems programming jargon, start with the
 [official documentation](https://nim-lang.org/documentation.html) instead.
 
+There is also a [PDF version](/en/Learning-Nim.pdf) (178 × 233 mm, about 2.4 MB).
+
 ## What makes this book different
 
 - **Every example runs.** Files under `examples/` are compiled and their output is compared

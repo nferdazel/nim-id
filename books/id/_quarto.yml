@@ -36,7 +36,7 @@ book:
     collapse-level: 1
   page-footer:
     left: "CC BY-SA 4.0 · kode contoh MIT"
-    right: "[English](/en/) · Quarto"
+    right: "[PDF](/Dasar-Pemrograman-Nim.pdf) · [English](/en/)"
 
 format:
   html:

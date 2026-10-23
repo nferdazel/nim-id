@@ -9,6 +9,8 @@ berbahasa Inggris; buku ini pelengkap, bukan pengganti. Kalau pembaca sudah nyam
 Inggris dan istilah sistem, langsung ke [dokumentasi resmi](https://nim-lang.org/documentation.html)
 lebih cepat.
 
+Ada juga [versi PDF](/Dasar-Pemrograman-Nim.pdf) (178 × 233 mm, sekitar 2,4 MB).
+
 ## Yang membuat buku ini berbeda
 
 - **Setiap contoh dijalankan.** Semua berkas di `examples/` dikompilasi dan keluarannya

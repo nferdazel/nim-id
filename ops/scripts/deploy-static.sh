@@ -27,8 +27,21 @@ HEALTH_URL="${NIMID_HEALTH_URL:-https://nim.qouver.com/}"
 # Uji origin langsung, bukan lewat Cloudflare: request dari VPS ke edge sendiri rawan
 # hairpin/timeout dan bukan yang sedang kita jamin. CF diuji terpisah dari luar.
 HEALTH_RESOLVE="${NIMID_HEALTH_RESOLVE:-127.0.0.1}"
+HEALTH_BODY="$APP_DIR/logs/health.html"
 
 mkdir -p "$APP_DIR/logs" "$RILIS_DIR"
+
+# Retensi: sisakan $SIMPAN rilis terbaru, jangan pernah hapus rilis yang sedang aktif.
+bersihkan_rilis() {
+  local aktif
+  aktif="$(readlink -f "$WEB_LINK" 2>/dev/null || true)"
+  ls -1dt "$RILIS_DIR"/*/ 2>/dev/null | tail -n +"$((SIMPAN + 1))" | while read -r lama; do
+    [ "$(readlink -f "$lama")" = "$aktif" ] && continue
+    log "==> hapus rilis lama: $lama"
+    rm -rf "$lama"
+  done
+}
+
 log() { printf '[%s] %s\n' "$(date '+%Y-%m-%d %H:%M:%S')" "$*" | tee -a "$LOG"; }
 die() { log "ERROR: $*"; exit 1; }
 
@@ -73,10 +86,14 @@ ln -sfn "$BARU" "$WEB_LINK"
 log "==> symlink web -> $BARU"
 
 # 6. Health check ke origin, dengan retry. Gagal berarti kembalikan symlink lama.
+# Body ditulis ke berkas dulu: `curl | grep -q` membuat grep keluar lebih awal, curl kena
+# SIGPIPE (exit 23), dan `pipefail` menandai pipeline gagal padahal isinya benar.
 sehat=0
 for i in 1 2 3 4 5; do
-  if curl -fsS --max-time 10 --resolve "nim.qouver.com:443:$HEALTH_RESOLVE" "$HEALTH_URL" \
-      | grep -q "Dasar Pemrograman Nim"; then
+  if curl -fsS --max-time 10 --resolve "nim.qouver.com:443:$HEALTH_RESOLVE" -o "$HEALTH_BODY" "$HEALTH_URL" \
+      && grep -q "Dasar Pemrograman Nim" "$HEALTH_BODY" \
+      && curl -fsS --max-time 10 --resolve "nim.qouver.com:443:$HEALTH_RESOLVE" -o "$HEALTH_BODY.en" "${HEALTH_URL}en/" \
+      && grep -q "Learning Nim" "$HEALTH_BODY.en"; then
     sehat=1
     break
   fi
@@ -91,15 +108,13 @@ if [ "$sehat" -ne 1 ]; then
     ln -sfn "$(readlink -f "$APP_DIR/.previous")" "$WEB_LINK"
     log "Rollback: symlink web dipulihkan"
   fi
+  bersihkan_rilis
   exit 1
 fi
 log "==> health check lolos"
 
-# 7. Retensi: sisakan $SIMPAN rilis terbaru.
-ls -1dt "$RILIS_DIR"/*/ 2>/dev/null | tail -n +"$((SIMPAN + 1))" | while read -r lama; do
-  log "==> hapus rilis lama: $lama"
-  rm -rf "$lama"
-done
+# 7. Retensi.
+bersihkan_rilis
 
 # 8. Self-update: skrip ini ikut repo, salin versi terbaru untuk deploy berikutnya.
 if [ -f "$MONO_DIR/ops/scripts/deploy-static.sh" ] && ! cmp -s "$MONO_DIR/ops/scripts/deploy-static.sh" "$APP_DIR/scripts/deploy-static.sh"; then

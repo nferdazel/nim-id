@@ -36,7 +36,7 @@ book:
     collapse-level: 1
   page-footer:
     left: "CC BY-SA 4.0 · code samples MIT"
-    right: "[Bahasa Indonesia](/) · Quarto"
+    right: "[PDF](/en/Learning-Nim.pdf) · [Bahasa Indonesia](/)"
 
 format:
   html:
