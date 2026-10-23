@@ -1,8 +1,8 @@
-# Object dan constructor
+# Objek dan konstruktor
 
 Tuple bagus untuk data kecil yang cepat dibongkar. Tapi begitu ada sepuluh field bernama, penanda
 berulang, dan aturan sendiri, tuple mulai menyulitkan. Objek memberi nama pada sekumpulan field,
-dan Nim menambahkan constructor literal yang membuatnya nyaman dipakai.
+dan Nim menambahkan konstruktor literal yang membuatnya nyaman dipakai.
 
 Bab ini juga membongkar satu perbedaan yang sering mengejutkan: objek nilai dan `ref object`
 berperilaku berbeda saat disalin. Mengabaikannya adalah sumber bug klasik.
@@ -10,7 +10,7 @@ berperilaku berbeda saat disalin. Mengabaikannya adalah sumber bug klasik.
 ::: {.callout-note}
 ## Tujuan bab
 
-Setelah bab ini, pembaca bisa mendefinisikan `object` dan mengisinya lewat constructor, memakai
+Setelah bab ini, pembaca bisa mendefinisikan `object` dan mengisinya lewat konstruktor, memakai
 nilai default, membedakan objek nilai dari `ref object`, menimpa `$`, dan membaca pesan error
 `undeclared field`.
 :::
@@ -32,7 +32,7 @@ echo ada.name, " is ", ada.age
 Ada is 36
 ```
 
-`Person(name: "Ada", age: 36)` adalah constructor literal. Nim membuatnya otomatis untuk setiap
+`Person(name: "Ada", age: 36)` adalah konstruktor literal. Nim membuatnya otomatis untuk setiap
 tipe objek, jadi tidak ada fungsi yang perlu ditulis sendiri. Field yang tidak disebut akan
 memakai nilai default.
 
@@ -90,7 +90,7 @@ echo Person(name: "Ada")
 (name: "Ada")
 ```
 
-Keluarannya adalah bentuk literal kembali: nama field beserta nilainya. Cocok untuk inspeksi
+Keluarannya menyerupai literal asalnya: nama field beserta nilainya. Cocok untuk inspeksi
 cepat, tapi biasanya belum enak dibaca manusia.
 
 ## Menimpa `$` sendiri
@@ -268,7 +268,7 @@ dibahas di bagian menengah.
 
 ## Latihan
 
-1. Tambahkan field `email: string` pada `Person`, isi lewat constructor, lalu cetak.
+1. Tambahkan field `email: string` pada `Person`, isi lewat konstruktor, lalu cetak.
 2. Tanpa menjalankan, prediksi outputnya:
    ```{.nim}
    type Task = object
@@ -294,7 +294,7 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
 ## Ringkasan
 
-- `object` mengelompokkan field bernama; `Tipe(field: nilai)` adalah constructor literal.
+- `object` mengelompokkan field bernama; `Tipe(field: nilai)` adalah konstruktor literal.
 - Field yang tidak diisi memakai default tipenya, dan objek tanpa isi tetap aman dipakai.
 - Objek nilai punya `$` bawaan; `ref object` tidak, jadi definisikan `$` atau pakai `p[]`.
 - Menyalin objek nilai menggandakan datanya; menyalin `ref object` menggandakan penunjuknya.

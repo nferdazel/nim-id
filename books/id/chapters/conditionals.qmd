@@ -5,7 +5,7 @@ perlu memilih jalur: saldo cukup atau tidak, nama kosong atau terisi, sistemnya 
 
 `if` sudah akrab bagi siapa pun yang pernah menulis di bahasa lain. Yang khas di Nim ada tiga: `if`
 bisa langsung menghasilkan nilai, `case` menuntut semua kemungkinan tertutup, dan `when` memilih
-cabang **saat kompilasi**—cabang yang tidak terpilih tidak ikut dikompilasi.
+cabang **saat kompilasi**: cabang yang tidak terpilih tidak ikut dikompilasi.
 
 ::: {.callout-note}
 ## Tujuan bab
@@ -96,7 +96,7 @@ for month in [1, 4, 7, 10, 13]:
 ```
 
 Satu `of` bisa memuat daftar nilai yang dipisah koma (`12, 1, 2`) atau rentang dengan `..`
-(`3 .. 5`). Nilai yang diuji `case` boleh bertipe ordinal—`int`, `char`, `bool`, `enum`—atau
+(`3 .. 5`). Nilai yang diuji `case` boleh bertipe ordinal (`int`, `char`, `bool`, `enum`) atau
 `string`. Rentang hanya berlaku untuk tipe ordinal: pada `string`, `of` menerima daftar nilai saja,
 dan `of "a" .. "c"` ditolak dengan pesan `range of string is invalid`.
 
@@ -140,7 +140,7 @@ main.nim(3, 4) Error: type mismatch: got 'int' for 'count' but expected 'bool'
 
 | Bagian | Arti |
 |---|---|
-| `main.nim(3, 4)` | berkas, baris 3, kolom 4—posisi `count` di kondisi |
+| `main.nim(3, 4)` | berkas, baris 3, kolom 4: posisi `count` di kondisi |
 | `Error` | tingkat keparahan; menghentikan kompilasi |
 | `got 'int'` | tipe yang benar-benar diberikan |
 | `expected 'bool'` | tipe yang diharapkan `if` |

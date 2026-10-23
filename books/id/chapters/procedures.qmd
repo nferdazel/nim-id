@@ -65,7 +65,7 @@ main.nim(1, 6) Error: 'shout' can have side effects
 
 Baca dari depan: berkas, posisi `(baris, kolom)`, tingkat, lalu isi pesannya. `(1, 6)` menunjuk
 baris 1 kolom 6, tepat di nama `shout`. Compiler menambahkan `Hint` yang menyebut `echo` sebagai
-penyebabnya. Perbaikan langsungnya: ganti `func` menjadi `proc`, karena `echo` menulis ke layar —
+penyebabnya. Perbaikan langsungnya: ganti `func` menjadi `proc`, karena `echo` menulis ke layar,
 sebuah efek samping.
 
 Aturan praktisnya: `func` untuk perhitungan murni, `proc` saat rutin memang mencetak, menulis
@@ -115,7 +115,7 @@ positive
 ```
 
 Dua `if` pertama sudah menangani kasusnya, jadi baris terakhir hanya dieksekusi untuk bilangan
-positif — dan hasilnya menjadi nilai balik.
+positif, dan hasilnya menjadi nilai balik.
 
 ## Parameter default dan argumen bernama
 

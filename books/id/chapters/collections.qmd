@@ -6,7 +6,7 @@ berarti menabrak dinding di tengah jalan.
 
 Nim mendorong kita menentukan pilihan sejak awal. `array` berukuran tetap dan disimpan langsung di
 tempatnya; `seq` berukuran dinamis dan bisa tumbuh. Bab ini memakai keduanya, lalu menunjukkan
-`openArray`: satu parameter prosedur yang menerima dua-duanya tanpa menyalin.
+`openArray`: satu parameter prosedur yang menerima keduanya tanpa menyalin.
 
 ::: {.callout-note}
 ## Tujuan bab
@@ -64,7 +64,7 @@ len: 3
 ```
 
 Tipe `array[3, int]` berarti tiga elemen bertipe `int`. Tanpa nilai awal, Nim mengisi semua elemen
-dengan default tipe elemennya—`0` untuk `int`, `""` untuk `string`. Panjangnya ikut menjadi bagian
+dengan default tipe elemennya: `0` untuk `int`, `""` untuk `string`. Panjangnya ikut menjadi bagian
 dari tipe: `array[3, int]` dan `array[4, int]` adalah dua tipe berbeda.
 
 ## `seq`: ukuran bisa berubah
@@ -162,7 +162,7 @@ variabel atau dikembalikan dari prosedur. Prosedur yang menerima `openArray` jug
 mengubah panjangnya.
 
 Satu catatan tentang penyalinan: menugaskan `array` atau `seq` ke variabel baru menyalin isinya,
-bukan berbagi. Mengubah salinannya tidak menyentuh yang asli—berbeda dari `list` di Python.
+bukan berbagi. Mengubah salinannya tidak menyentuh yang asli, berbeda dari `list` di Python.
 
 ## Batas indeks dan error out-of-bounds
 

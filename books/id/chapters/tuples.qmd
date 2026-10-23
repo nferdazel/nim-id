@@ -45,7 +45,7 @@ echo corner.x, ",", corner.y
 3,4
 ```
 
-Perhatikan `(x: 3, y: 4)`, bukan `Point(x: 3, y: 4)`. Tuple tidak punya constructor seperti
+Perhatikan `(x: 3, y: 4)`, bukan `Point(x: 3, y: 4)`. Tuple tidak punya konstruktor seperti
 objek. Cara membuatnya selalu literal dengan nama field di dalam tanda kurung, dan tipenya
 ditulis lewat anotasi variabel.
 
@@ -116,7 +116,7 @@ Di dalam prosedur, field `result` diisi satu per satu. Di sisi pemanggil, hasiln
 dibongkar dengan `let (low, high) = ...`. Tidak ada tipe bantu, tidak ada larik sementara.
 
 Batas praktisnya: tuple nyaman untuk dua sampai tiga nilai. Begitu field bertambah banyak, atau
-nilainya perlu aturan dan operasi sendiri, objek lebih tepat — dan itu bab berikutnya.
+nilainya perlu aturan dan operasi sendiri, objek lebih tepat, dan itu bab berikutnya.
 
 ## Membongkar di dalam perulangan
 
@@ -176,7 +176,7 @@ variabel atau memakai elemen lain. Posisi `(1, 5)` menunjuk ke awal pola `(a, b)
 
 ## Membaca error: tuple bukan objek
 
-Tuple tidak punya constructor, dan compiler menolaknya dengan jelas.
+Tuple tidak punya konstruktor, dan compiler menolaknya dengan jelas.
 
 ```{.nim}
 type Point = tuple[x, y: int]
@@ -189,7 +189,7 @@ echo corner.x, ",", corner.y
 main.nim(3, 19) Error: object constructor needs an object type
 ```
 
-Pesannya singkat saja: sintaksis constructor hanya untuk `object`. Untuk tuple, pakai literal
+Pesannya singkat saja: sintaksis konstruktor hanya untuk `object`. Untuk tuple, pakai literal
 `(x: 3, y: 4)`.
 
 ## Latihan
@@ -216,11 +216,11 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
 - Tuple adalah nilai gabungan berukuran tetap; elemennya boleh berbeda tipe.
 - Tuple anonim diakses lewat indeks, tuple bernama lewat field.
-- Tuple dibuat dengan literal, bukan dengan constructor bergaya objek.
+- Tuple dibuat dengan literal, bukan dengan konstruktor bergaya objek.
 - `let (a, b) = ...` membongkar tuple dalam satu baris, dan juga bekerja di kepala `for`.
 - Prosedur bisa mengembalikan tuple, lalu pemanggil membongkarnya.
 
 ## Selanjutnya
 
-Bab berikutnya membahas [objek](objects.qmd): tipe gabungan dengan field bernama, constructor, nilai
-default, dan dua bentuk penyimpanan — nilai dan referensi.
+Bab berikutnya membahas [objek](objects.qmd): tipe gabungan dengan field bernama, konstruktor, nilai
+default, dan dua bentuk penyimpanan: nilai dan referensi.

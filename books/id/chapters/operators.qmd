@@ -47,7 +47,7 @@ echo 7 mod -3
 
 `a / b` menghasilkan `3.5`, bukan `3`: operator `/` selalu mengembalikan `float`. Pembagian bulat
 memakai `div`, yang memotong ke arah nol. `mod` memberi sisa, dan tandanya mengikuti bilangan yang
-dibagi — `-7 mod 3` bernilai `-1`, bukan `2`. Keduanya sering dipakai bersama: `div` memberi tahu
+dibagi. Jadi, `-7 mod 3` bernilai `-1`, bukan `2`. Keduanya sering dipakai bersama: `div` memberi tahu
 berapa kali bilangan pembagi muat, `mod` memberi sisanya. Membagi dengan nol tidak mengembalikan
 nilai istimewa; program berhenti dengan `DivByZeroDefect`.
 
@@ -122,7 +122,7 @@ done
 ```
 
 Output tidak memuat `checking b`. Karena `check("a")` sudah `false`, `and` tahu hasil akhirnya
-pasti `false` dan melewati operan kedua. Sifat ini disebut *short-circuit*, dan bisa dipakai untuk
+pasti `false` dan melewati operan kedua. Sifat ini disebut evaluasi singkat, dan bisa dipakai untuk
 menjaga agar ekspresi kedua tidak dijalankan saat kondisi pertama belum terpenuhi.
 
 ## `in` dan `notin`
@@ -149,7 +149,7 @@ true
 false
 ```
 
-`in` bekerja pada rentang, himpunan (`{...}`), larik, dan — lewat `strutils` — pada string. Baris
+`in` bekerja pada rentang, himpunan (`{...}`), dan larik; lewat `strutils`, juga pada string. Baris
 terakhir bernilai `false` karena `4` memang tidak ada di dalam larik tersebut.
 
 ## Prioritas operator

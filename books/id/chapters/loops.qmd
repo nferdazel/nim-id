@@ -11,7 +11,7 @@ kesalahan penghitungan indeks.
 ::: {.callout-note}
 ## Tujuan bab
 
-Setelah bab ini, pembaca bisa membedakan rentang inkusif `..` dan eksklusif `..<`, memakai
+Setelah bab ini, pembaca bisa membedakan rentang inklusif `..` dan eksklusif `..<`, memakai
 `countdown` dan `countup`, mengiterasi elemen dengan `items` dan pasangan indeks-elemen dengan
 `pairs`, menulis `while` yang berhenti, serta memakai `break` dan `continue`.
 :::
@@ -41,13 +41,13 @@ i = 2
 i = 3
 ```
 
-`0 ..< 3` membaca "nol sampai kurang dari tiga": angkanya `0`, `1`, `2`. `0 .. 3` inkusif di kedua
+`0 ..< 3` membaca "nol sampai kurang dari tiga": angkanya `0`, `1`, `2`. `0 .. 3` inklusif di kedua
 ujung, jadi `3` ikut. Kesalahpahaman yang paling sering adalah memakai `..` untuk indeks `array`,
 padahal indeks terakhir selalu `len - 1`. Karena itu gaya yang aman untuk mengulang sebanyak `n`
 kali adalah `for i in 0 ..< n:`.
 
 Variabel `i` hanya berlaku di dalam badan perulangan dan tidak bisa diubah. Menulis `i = 5` di
-dalamnya ditolak dengan pesan `'i' cannot be assigned to`—sengaja, supaya nilai hitungan tidak
+dalamnya ditolak dengan pesan `'i' cannot be assigned to`. Ini disengaja, supaya nilai hitungan tidak
 dirusak dari dalam.
 
 Rentang juga boleh kosong. `for i in 5 .. 3:` tidak menjalankan badannya sama sekali, dan itu bukan
@@ -75,7 +75,7 @@ for i in countup(1, 3, 2):
 ```
 
 `countdown(3, 1)` berjalan dari `3` turun ke `1`. `countup(1, 3, 2)` berjalan naik dengan langkah
-dua, jadi hanya `1` dan `3` yang tercetak. Keduanya adalah iterator, bukan keyword; tanpa argumen
+dua, jadi hanya `1` dan `3` yang tercetak. Keduanya adalah iterator, bukan kata kunci; tanpa argumen
 langkah, `countup(a, b)` sama dengan `a .. b`. Keduanya menghasilkan satu nilai tiap putaran,
 sehingga bisa dipakai langsung sebagai sumber `for`.
 
@@ -203,7 +203,7 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
 ## Ringkasan
 
-- `for` memakai iterator, bukan penghitung gaya C; `0 ..< n` eksklusif, `0 .. n` inkusif.
+- `for` memakai iterator, bukan penghitung gaya C; `0 ..< n` eksklusif, `0 .. n` inklusif.
 - `countdown(a, b)` dan `countup(a, b, step)` mengatur arah dan langkah.
 - `items` memberi elemen, `pairs` memberi indeks dan elemen sekaligus.
 - Kondisi `while` diperiksa sebelum badan, jadi bisa berjalan nol kali.
