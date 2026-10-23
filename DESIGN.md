@@ -92,3 +92,59 @@ Aturan:
 - Satu berkas CSS bersama: `assets/ku.css`, disalin ke tiap buku saat build.
 - Semua perubahan harus lolos `./task check` dan diperiksa di dua bahasa (paritas ID/EN tidak
   boleh rusak).
+
+## Sistem visual (revisi 2)
+
+Versi pertama terlalu datar: hasilnya masih terbaca sebagai "situs contoh Quarto". Revisi ini
+menaikkan ENERGY ke 2 dengan mengandalkan tipografi dan aturan garis, bukan warna atau dekorasi.
+
+```
+ENERGY 2 / RHYTHM 2 / MOTION 1
+```
+
+### Halaman depan (pembuka buku)
+
+- Blok pembuka selebar kolom baca, bukan hero selebar layar.
+- Judul buku 3rem serif, diikuti garis ganda tipis (2px navy + 1px garis) selebar 6rem.
+- Subjudul miring, satu baris.
+- Baris metadata kecil: penulis, versi, tanggal, ukuran PDF, dipisah titik tengah.
+- Di kanan blok pembuka, satu tautan tegas: "Unduh PDF" dengan garis bawah, bukan tombol.
+- Tidak ada gambar sampul, tidak ada logo. Identitas dibawa oleh tipografi dan garis.
+
+### Pembuka bab
+
+- Nomor bab 4rem, tabular, navy, diletakkan di atas judul, rata kiri.
+- Judul bab 2rem, garis bawah 1px selebar kolom.
+- Paragraf pertama sedikit lebih besar (1.05em) sebagai "lead".
+
+### Sidebar dan bagian buku
+
+- Sidebar memakai `book: parts`: "Bagian 0: Mulai", "Bagian A: Dasar", "Lampiran".
+- Label bagian kecil, uppercase, letter-spacing 0.08em, dengan garis atas tipis.
+- Bab aktif: garis navy 2px di kiri, teks tinta, tanpa latar.
+- Nomor bab di sidebar tabular, lebar tetap, rata kanan supaya judul sejajar.
+- Kotak pencarian: hanya garis bawah, bukan kotak berbingkai.
+
+### Blok kode dan keluaran
+
+- Setiap blok kode punya pita atas tipis: label bahasa (`nim`) di kiri, tombol salin di kanan.
+- Blok keluaran memakai pita yang sama dengan label `output`, garis kiri 2px navy.
+- Latar kode satu tingkat di atas kertas; tanpa bayangan, radius maksimum 2px.
+- Baris kode minimal 1.5 tinggi; padding 0.9rem 1rem.
+
+### Navigasi bawah
+
+- Dua kolom: "Sebelumnya" dan "Berikutnya", label kecil uppercase, judul bab serif.
+- Tanpa panah dekoratif, tanpa tombol berwarna.
+
+### Yang tetap dilarang
+
+Gradien, kaca/blur, bayangan mengambang, sudut pil, badge dekoratif, ikon dekoratif, emoji,
+animasi masuk, parallax, dark mode (alasan print-first di bagian atas).
+
+### Verifikasi wajib
+
+- Screenshot 1440px untuk halaman depan, satu bab, dan lampiran.
+- Screenshot 390px lewat iframe (Chrome headless macOS minimum 500px, jadi iframe 390px).
+- Tidak ada overflow horizontal, tidak ada teks terpotong.
+- Kontras semua pasangan teks/latar minimal 4.5:1.
