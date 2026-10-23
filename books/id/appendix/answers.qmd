@@ -701,3 +701,980 @@ echo c
 ```{.txt}
 red
 ```
+
+## Bab: Modul, `import`, dan `export`
+
+**1.** Simpan `shout.nim` dan `main.nim` di folder yang sama.
+
+```{.nim}
+# shout.nim
+proc shout*(text: string): string =
+  text & "!"
+```
+
+```{.nim}
+# main.nim
+import shout
+
+echo shout("hi")
+```
+
+```{.txt}
+hi!
+```
+
+Tanpa tanda bintang, `shout` tidak akan terlihat dari `main.nim`.
+
+**2.** Outputnya `42`, karena `double(21)` menghasilkan `42`. Berkas kedua tidak boleh memanggil
+`mathx.double(21)`. `from mathx import double` hanya memasukkan nama `double`, bukan nama modul
+`mathx`, sehingga `mathx` dianggap identifier yang belum dideklarasikan.
+
+**3.** Pesannya `undeclared identifier: 'textutils'`. Garis miring di dalam ekspresi adalah operator
+pembagian, bukan penunjuk modul. Modul yang diimpor bernama `format`, jadi kualifikasi yang benar
+memakai titik saja:
+
+```{.nim}
+import textutils/format
+
+echo format.upper("hi")
+```
+
+```{.txt}
+HI
+```
+
+**4.** Contoh `include` diganti menjadi modul kecil.
+
+```{.nim}
+# config_module.nim
+const appName* = "notes"
+```
+
+```{.nim}
+# main.nim
+import config_module
+
+echo config_module.appName
+```
+
+Keuntungannya: nama `appName` berada di ruang nama modulnya, jadi tidak bertabrakan dengan nama di
+berkas induk, dan modulnya bisa dipakai berkas lain tanpa menyalin isinya.
+
+## Bab: Exception dan efek `raises`
+
+**1.**
+
+```{.nim}
+import std/strutils
+
+try:
+  discard parseInt("x")
+except ValueError as e:
+  echo "error: ", e.msg
+```
+
+```{.txt}
+error: invalid integer: x
+```
+
+**2.** Outputnya dua baris: `caught`, lalu `done`. `IOError` bukan `ValueError`, jadi blok `except`
+pertama dilewati. `IOError` termasuk `CatchableError`, jadi blok kedua menangkapnya. `finally` tetap
+jalan setelah itu.
+
+**3.**
+
+```{.nim}
+type TooLarge = object of CatchableError
+
+proc check(n: int) =
+  if n > 100:
+    raise newException(TooLarge, "too large: " & $n)
+
+try:
+  check(150)
+except TooLarge as e:
+  echo e.msg
+```
+
+```{.txt}
+too large: 150
+```
+
+**4.** Pesannya `can raise an unlisted exception: ref ValueError`. `useIt` berjanji `raises: []`,
+tetapi badannya memanggil `readValue()` yang melempar `ValueError`. Ada tiga perbaikan yang masuk
+akal: hapus `raises: []` supaya compiler menyimpulkan sendiri, tangkap `ValueError` di dalam
+`useIt`, atau daftarkan tipenya:
+
+```{.nim}
+proc readValue(): int =
+  raise newException(ValueError, "missing")
+
+proc useIt(): int {.raises: [ValueError].} =
+  readValue()
+```
+
+**5.**
+
+```{.nim}
+proc openLog() =
+  echo "open"
+  defer:
+    echo "close"
+  echo "log line"
+
+openLog()
+```
+
+```{.txt}
+open
+log line
+close
+```
+
+## Bab: Iterator dan `yield`
+
+**1.**
+
+```{.nim}
+iterator multiples(n: int, step: int): int =
+  var value = step
+  while value <= n:
+    yield value
+    value = value + step
+
+for m in multiples(20, 5):
+  echo m
+```
+
+```{.txt}
+5
+10
+15
+20
+```
+
+**2.** Outputnya `3`. `counts` mengeluarkan `1` lalu `2`, dan keduanya dijumlahkan ke `sum`.
+
+**3.**
+
+```{.nim}
+proc countdown(n: int): iterator (): int =
+  result = iterator (): int =
+    var i = n
+    while i >= 1:
+      yield i
+      dec i
+
+for n in countdown(3)():
+  echo n
+```
+
+```{.txt}
+3
+2
+1
+```
+
+Perhatikan `countdown(3)()`. Panggilan pertama menyiapkan iterator, panggilan kedua memakainya di
+dalam `for`.
+
+**4.** Pilih iterator kalau elemennya hanya dilewati sekali, jumlahnya besar atau belum diketahui,
+dan pencarian sering berhenti di tengah. Iterator tidak menyimpan elemen, jadi hemat memori. Pilih
+barisan kalau elemennya perlu diindeks, diurutkan, atau dipakai berkali-kali, karena barisan
+menyimpan semuanya sekaligus.
+
+## Bab: Closure dan variabel yang ditangkap
+
+**1.** Prosedur yang dikembalikan memakai `f` dan `g` dari parameter, jadi keduanya ikut ditangkap:
+
+```{.nim}
+proc compose(f, g: proc(x: int): int): proc(x: int): int =
+  result = proc(x: int): int = g(f(x))
+
+let inc = proc(x: int): int = x + 1
+let dbl = proc(x: int): int = x * 2
+echo compose(inc, dbl)(5)
+```
+
+```{.txt}
+12
+```
+
+`inc(5)` menghasilkan `6`, lalu `dbl(6)` menghasilkan `12`.
+
+**2.** Outputnya `7`. `add` menangkap `total` yang bertipe `var`, jadi kedua panggilan menambah
+variabel yang sama: `3 + 4 = 7`.
+
+**3.** `i` adalah satu variabel yang dipakai ulang tiap putaran perulangan. Ketiga closure menunjuk
+variabel itu, bukan salinannya. Setelah perulangan selesai, `i` bernilai `2`, jadi ketiganya
+mencetak `2`. Salah satu perbaikan: buat closure lewat prosedur terpisah yang parameternya baru
+setiap pemanggilan.
+
+**4.** Yang salah adalah tipe `{.nimcall.}` pada `addBase`. `makeAdder` mengembalikan closure karena
+menangkap `base`, sedangkan `{.nimcall.}` tidak boleh menyimpan closure. Perbaikannya menghapus
+`{.nimcall.}`:
+
+```{.nim}
+proc makeAdder(base: int): proc(x: int): int =
+  result = proc(x: int): int = x + base
+
+let addBase: proc(x: int): int = makeAdder(10)
+echo addBase(5)
+```
+
+```{.txt}
+15
+```
+
+Pesan compiler menyebut *calling convention* karena masalahnya bukan nilai yang dioper, melainkan
+konvensi pemanggilan tipe: closure memakai `{.closure.}`, sedangkan tipe yang diminta memakai
+`{.nimcall.}`.
+
+## Bab: Generic: tipe dan prosedur
+
+**1.** Parameter `openArray[T]` menerima larik maupun barisan, dan `T` disimpulkan dari isinya:
+
+```{.nim}
+proc largest[T](items: openArray[T]): T =
+  result = items[0]
+  for item in items:
+    if item > result:
+      result = item
+
+echo largest([3, 9, 4])
+echo largest(@["ant", "bee", "cat"])
+```
+
+```{.txt}
+9
+cat
+```
+
+**2.** Outputnya `(3, 3)` lalu `("a", "a")`. `T` disimpulkan `int` pada panggilan pertama dan
+`string` pada panggilan kedua, sehingga tuple yang dibentuk menyesuaikan.
+
+**3.** `T` hanya muncul di tipe balik `seq[T]`, bukan di daftar parameter. Tidak ada argumen yang
+bertipe `T`, jadi compiler tidak punya petunjuk untuk menyimpulkannya. Argumen tipe harus ditulis
+eksplisit: `makeSeq[int](3)`.
+
+**4.** Pesannya menampilkan satu-satunya kandidat, `double` dengan syarat `T: SomeInteger`, dan
+menyebut `2.5` bertipe `float64`. `float64` bukan bagian `SomeInteger`, jadi tidak ada versi yang
+cocok. Kalau memang ingin menerima bilangan pecahan, longgarkan batasannya:
+
+```{.nim}
+proc double[T: SomeNumber](value: T): T =
+  value * 2
+
+echo double(2.5)
+```
+
+```{.txt}
+5.0
+```
+
+`SomeNumber` mencakup bilangan bulat dan pecahan, jadi `float64` sekarang diterima.
+
+## Bab: Template: kode yang diperluas compiler
+
+**1.** Badan template disalin ke tempat pemanggilan, jadi `body` disalin dua kali:
+
+```{.nim}
+template twice(body: untyped) =
+  body
+  body
+
+twice:
+  echo "ping"
+```
+
+```{.txt}
+ping
+ping
+```
+
+**2.** Outputnya `2` lalu `2`. `x` dipakai dua kali di dalam `square`, jadi `next()` dipanggil dua
+kali. Panggilan pertama mengembalikan `1`, panggilan kedua mengembalikan `2`, dan hasil `1 * 2 = 2`.
+Setelah itu `n` bernilai `2`, sehingga `echo n` mencetak `2`.
+
+**3.** Karena hygiene. Simbol yang dideklarasikan di dalam template, termasuk `tmp`, mendapat nama
+unik yang tidak mungkin bentrok dengan nama di tempat pemanggilan. `tmp` milik pemanggil tidak
+tersentuh.
+
+**4.** Cara tersempit adalah menandai `total` dengan `{.inject.}`, sehingga hanya simbol itu yang
+terbuka dan sisa template tetap higienis:
+
+```{.nim}
+template sumUp(body: untyped) =
+  var total {.inject.} = 0
+  body
+  echo total
+
+sumUp:
+  total += 4
+```
+
+```{.txt}
+4
+```
+
+Mengganti `{.inject.}` dengan `{.dirty.}` juga berjalan, tapi mematikan hygiene untuk seluruh
+template, jadi lebih luas dari yang dibutuhkan.
+
+## Bab: Macro: kode yang membangun kode
+
+**1.** Template cukup, karena syaratnya hanya mengganti ekspresi.
+
+```{.nim}
+template minOf(a, b: untyped): untyped =
+  if a < b: a else: b
+
+echo minOf(3, 7)
+```
+
+```{.txt}
+3
+```
+
+Perlu diingat bahwa `a` dan `b` disalin apa adanya, jadi argumen dengan efek samping bisa dievaluasi
+lebih dari sekali.
+
+**2.** Outputnya:
+
+```{.txt}
+10
+calls: 4
+```
+
+Template menyalin `bump() + bump()` ke kedua sisi penjumlahan, jadi `bump()` dipanggil empat kali. Ia
+mengembalikan `1`, `2`, `3`, `4`, dan hasil akhirnya `(1 + 2) + (3 + 4) = 10`. Nilai `calls` di akhir
+adalah `4`.
+
+**3.** Macro dengan `quote do`.
+
+```{.nim}
+import std/macros
+
+macro triple(x: untyped): untyped =
+  result = quote do:
+    `x` * 3
+
+echo triple(4)
+```
+
+```{.txt}
+12
+```
+
+**4.** `getType` membutuhkan AST yang sudah bertipe. Argumen `untyped` belum melewati pemeriksaan tipe,
+jadi simpulnya tidak punya tipe dan compiler menghentikan proses dengan `node has no type`. Untuk
+memakai `getType`, parameternya harus `typed`.
+
+**5.** Macro yang mencetak `treeRepr` dari argumennya.
+
+```{.nim}
+import std/macros
+
+macro dumpAst(x: untyped): untyped =
+  let tree = x.treeRepr
+  result = quote do:
+    echo `tree`
+
+dumpAst(2 * 3)
+```
+
+```{.txt}
+Infix
+  Ident "*"
+  IntLit 2
+  IntLit 3
+```
+
+Simpul luar adalah `Infix` karena `2 * 3` adalah operasi dua operand. Anaknya: operator, lalu kedua
+operand.
+
+## Bab: Concept dan pencocokan tipe
+
+**1.** Concept `Sized` beserta prosedur yang memakainya.
+
+```{.nim}
+type
+  Sized = concept x
+    x.size is int
+
+type Box = object
+  size: int
+
+proc show[T: Sized](x: T) =
+  echo "size ", x.size
+
+show(Box(size: 3))
+```
+
+```{.txt}
+size 3
+```
+
+**2.** Tidak cocok. Field `name` ada, tapi tipenya `int`, sedangkan syaratnya `x.name is string`.
+Compiler menolak dengan `concept predicate failed`. Ini bedanya `concept` dari sekadar "punya field
+bernama sama": tipenya ikut diperiksa.
+
+**3.** Menggabungkan dua concept dengan `and`.
+
+```{.nim}
+type
+  Named = concept x
+    x.name is string
+  Sized = concept x
+    x.size is int
+
+type Crate = object
+  name: string
+  size: int
+
+proc label[T: Named and Sized](x: T): string =
+  x.name & " (" & $x.size & ")"
+
+echo label(Crate(name: "kit", size: 3))
+```
+
+```{.txt}
+kit (3)
+```
+
+**4.** `Named` adalah concept, bukan tipe yang bisa disimpan di memori, jadi `var value: Named`
+ditolak sebagai `invalid type: 'Named' for var`. Yang setara adalah mendeklarasikan tipe konkret yang
+memenuhi concept itu.
+
+```{.nim}
+type
+  Named = concept x
+    x.name is string
+
+type User = object
+  name: string
+
+var value = User(name: "Ada")
+echo value.name
+```
+
+```{.txt}
+Ada
+```
+
+## Bab: Object variant dan `distinct`
+
+**1.** Tambahkan `triangle` pada enum dan cabang `case` barunya. Fieldnya harus berbeda dari nama yang
+sudah dipakai, jadi `height` milik `rect` tidak bisa dipakai lagi; di sini dipakai `altitude`.
+
+```{.nim}
+type
+  ShapeKind = enum
+    circle, rect, triangle
+  Shape = object
+    case kind: ShapeKind
+      of circle:
+        radius: float
+      of rect:
+        width, height: float
+      of triangle:
+        base, altitude: float
+
+proc area(s: Shape): float =
+  case s.kind
+  of circle:
+    3.14159 * s.radius * s.radius
+  of rect:
+    s.width * s.height
+  of triangle:
+    s.base * s.altitude / 2.0
+
+echo area(Shape(kind: triangle, base: 3.0, altitude: 4.0))
+```
+
+```{.txt}
+6.0
+```
+
+**2.** Outputnya `3.0`. Konstruktornya kini konsisten: `kind` bernilai `circle` dan yang diisi adalah
+`radius`, satu satunya field yang ada di cabang itu. Karena `c.radius` memang field yang benar,
+program berjalan dan mencetak nilai `radius`, yaitu `3.0`.
+
+**3.** Tipe `Meters` beserta `$`-nya.
+
+```{.nim}
+type Meters = distinct int
+
+proc `$`(m: Meters): string =
+  $int(m) & " m"
+
+let d = Meters(5)
+echo d
+```
+
+```{.txt}
+5 m
+```
+
+`int(m)` mengubahnya kembali ke `int` sebelum dicetak, karena tipe dasarnya tidak otomatis tersedia.
+
+**4.** Alias `int` membuat `UserId` sama persis dengan `int`, sehingga tidak ada lagi yang memisahkan
+id pengguna dari angka lain. Program kehilangan pengamannya: nilai id bisa tertukar dengan id pesanan
+atau angka biasa tanpa satu pun error, dan bug seperti ini sering baru terlihat di produksi. `distinct`
+membuat kekeliruan itu ditolak saat kompilasi, dan itulah alasan utama memakainya.
+
+**5.** Pemeriksaan otomatis saat kompilasi hanya bisa dilakukan kalau compiler tahu nilai penandanya.
+Pada ekspresi `Shape(kind: rect, ...).radius`, penanda memang literal, tapi akses field lewat nilai
+sementara tetap diperiksa saat berjalan; setelah konstruksi, Nim menyisipkan pemeriksaan yang membaca
+`kind` dan memastikan fieldnya sesuai. Cara menghindarinya adalah membaca lewat `case` pada penanda,
+sehingga cabang yang salah tidak pernah dieksekusi.
+
+## Bab: `ref`, `ptr`, dan `nil`
+
+**1.** Dua instance, satu lewat `new`, satu lewat konstruktor literal:
+
+```nim
+type Book = ref object
+  title: string
+
+var a: Book
+new(a)
+a.title = "Nim in Action"
+
+var b = Book(title: "Programming Nim")
+
+echo a.title
+echo b.title
+```
+
+Keluarannya:
+
+```txt
+Nim in Action
+Programming Nim
+```
+
+**2.** `q` menunjuk objek yang sama dengan `p`, jadi mengubah `q.x` ikut mengubah `p.x`:
+
+```txt
+10 10
+```
+
+**3.**
+
+```nim
+proc incr(p: ptr int) =
+  p[] = p[] + 1
+
+var x = 1
+incr(addr x)
+echo x
+```
+
+Keluarannya `2`. `p[]` membaca dan menulis nilai di alamat yang ditunjuk `p`.
+
+**4.** `var p: Person` berisi `nil`; belum ada objek di heap untuk ditunjuk. `new(p)`
+mengalokasikan objek dengan default setiap field lalu menyimpan alamatnya di `p`. Tanpa itu,
+`p.name` mendereferensi `nil` dan program berhenti saat berjalan.
+
+**5.** Pesan error-nya:
+
+```txt
+main.nim(2, 18) Error: type mismatch: got 'int' for 'x' but expected 'ptr int'
+```
+
+Variabel `p` bertipe `ptr int`, yaitu alamat, sementara `x` adalah nilai `int`. Perbaikannya ambil
+alamatnya dulu:
+
+```nim
+var x = 5
+var p: ptr int = addr x
+echo p[]
+```
+
+## Bab: Manajemen memori: ARC, ORC, dan `=destroy`
+
+**1.** `=destroy` dipanggil saat variabel keluar dari ruang lingkupnya, jadi pesannya muncul di
+akhir blok, bukan saat alokasi:
+
+```nim
+type Handle = object
+  name: string
+
+proc `=destroy`(h: var Handle) =
+  echo "close ", h.name
+
+block:
+  var h = Handle(name: "f")
+  echo "open"
+echo "done"
+```
+
+Keluarannya:
+
+```txt
+open
+close f
+done
+```
+
+**2.** `a` dibuang di akhir blok, lalu `end` dicetak:
+
+```txt
+in block
+drop a
+end
+```
+
+**3.** `move` memakai magic `Move`: ia memindahkan nilai secara langsung lalu memanggil `=wasMoved`
+pada sumbernya. Jalur `=sink` hanya dipakai saat compiler memindahkan nilai sementara lewat
+penugasan biasa. Karena `move` sudah menyatakan pemindahan secara eksplisit, hooknya dilewati.
+
+**4.** Penghitungan referensi ARC hanya menambah dan mengurangi angka. Dua objek yang saling
+menunjuk sama-sama menyimpan satu referensi ke pasangannya, jadi angkanya tidak pernah nol. ORC
+menambahkan pendeteksi siklus yang menemukan pasangan seperti itu dan membebaskannya.
+
+**5.** Pesan error-nya:
+
+```txt
+main.nim(4, 1) Error: signature for '=destroy' must be proc[T: object](x: var T) or proc[T: object](x: T)
+```
+
+`=destroy` hanya boleh untuk tipe `object` nilai dan `ref object` yang sudah dibebaskan otomatis
+oleh ARC/ORC. `Person` di sini adalah `ref object`, jadi hooknya tidak berlaku. Perbaikannya,
+hapus prosedur itu dan serahkan pembebasan ke ARC/ORC, atau pindahkan sumber dayanya ke tipe
+`object` nilai yang dipegang oleh referensi tersebut.
+
+## Bab: Tur pustaka standar
+
+**1.** Pisahkan, ubah setiap kata, lalu gabungkan kembali:
+
+```nim
+import std/strutils
+
+var upper: seq[string] = @[]
+for word in "one two three".split(' '):
+  upper.add(word.toUpperAscii)
+echo upper.join("-")
+```
+
+Keluarannya `ONE-TWO-THREE`.
+
+**2.** `filterIt` menyisakan `3` dan `2`, lalu `mapIt` mengalikannya dengan dua:
+
+```txt
+@[6, 4]
+```
+
+**3.**
+
+```nim
+import std/tables
+
+var scores = initTable[string, int]()
+scores["a"] = 1
+scores["b"] = 2
+scores["c"] = 3
+
+echo scores["b"]
+echo scores.getOrDefault("z", 0)
+```
+
+Keluarannya:
+
+```txt
+2
+0
+```
+
+**4.**
+
+```nim
+import std/json
+
+let data = """{"city": "Bandung"}""".parseJson
+echo data["city"].getStr
+```
+
+Keluarannya `Bandung`.
+
+**5.** Pesan error-nya:
+
+```txt
+Error: unhandled exception: key not found: b [KeyError]
+```
+
+`t["b"]` meminta kunci yang tidak ada, dan `Table` melempar `KeyError` saat berjalan. Perbaikannya
+pakai `getOrDefault` (atau uji dulu dengan `hasKey`) tanpa mengubah isi `t`:
+
+```nim
+import std/tables
+
+let t = {"a": 1}.toTable
+echo t.getOrDefault("b", -1)
+```
+
+## Bab: Berkas, direktori, dan OS
+
+**1.** `splitFile` sudah memisahkan nama dan ekstensi; tidak perlu memotong string manual.
+
+```{.nim}
+import std/os
+
+let (dir, name, ext) = splitFile("/etc/nim/nim.cfg")
+echo name, " ", ext
+```
+
+```{.txt}
+nim .cfg
+```
+
+**2.** Keluarannya `notes`. `splitFile("notes.txt")` memberi direktori kosong, nama `notes`, dan
+ekstensi `.txt`. Yang dicetak hanya `.name`.
+
+**3.** Tulis, baca kembali, hitung baris, lalu bersihkan.
+
+```{.nim}
+import std/[os, strutils]
+
+let path = getTempDir() / "nim_id_answer.txt"
+writeFile(path, "alpha\nbeta")
+echo readFile(path).splitLines().len
+removeFile(path)
+```
+
+```{.txt}
+2
+```
+
+`splitLines` memecah pada setiap baris baru, jadi dua baris menjadi dua elemen.
+
+**4.** Compiler menolak perbandingannya, bukan pemanggilan `fileExists`.
+
+```{.txt}
+main.nim(3, 23) Error: type mismatch
+```
+
+`fileExists` mengembalikan `bool`, sedangkan `"yes"` bertipe `string`. Operator `==` tidak punya
+bentuk yang menerima `bool` di satu sisi dan `string` di sisi lain. Uji boolean-nya langsung, tanpa
+membandingkan ke teks.
+
+```{.nim}
+import std/os
+
+if dirExists(getTempDir()):
+  echo "found"
+```
+
+```{.txt}
+found
+```
+
+## Bab: `unittest` dan disiplin tes
+
+**1.** Satu `suite`, dua `test`.
+
+```{.nim}
+import std/unittest
+
+proc factorial(n: int): int =
+  result = 1
+  for i in 2 .. n:
+    result = result * i
+
+suite "factorial":
+  test "zero and one are one":
+    check factorial(0) == 1
+    check factorial(1) == 1
+
+  test "five is 120":
+    check factorial(5) == 120
+```
+
+Keluaran (baris pertama kosong, bawaan `unittest`):
+
+```{.txt}
+
+[Suite] factorial
+  [OK] zero and one are one
+  [OK] five is 120
+```
+
+Rentang `2 .. n` kosong saat `n` bernilai 0 atau 1, jadi perulangan tidak berjalan dan `result`
+tetap 1.
+
+**2.** Keluarannya:
+
+```{.txt}
+
+[Suite] strings
+  [OK] length
+  [OK] first char
+```
+
+`"nim".len` bernilai 3, dan `"nim"[0]` bernilai `'n'`, sehingga kedua `check` lulus.
+
+**3.** `check` menuntut ekspresi `bool`, sedangkan `1 + 1` bertipe `int`.
+
+```{.txt}
+Error: type mismatch: got 'int literal(2)' for '2' but expected 'bool'
+```
+
+Perbaikannya menambahkan perbandingan:
+
+```{.nim}
+import std/unittest
+
+suite "math":
+  test "one":
+    check 1 + 1 == 2
+```
+
+**4.** `expect` menuntut pengecualian itu benar-benar dilempar. Kalau bloknya selesai tanpa error,
+tesnya gagal dengan pesan `Expect Failed, no exception was thrown.`, lalu ditandai `[FAILED]`.
+Prosesnya keluar dengan kode bukan nol. Ini memang tujuannya: menguji jalur error hanya bermakna
+kalau error-nya benar-benar terjadi.
+
+## Bab: `async`/`await` dan IO
+
+**1.** Bungkus dua `Future` dengan `all`, lalu tunggu bersama.
+
+```{.nim}
+proc main() {.async.} =
+  let results = await all(fetch("alpha", 30), fetch("beta", 10))
+  for result in results:
+    echo result
+```
+
+Keluarannya tetap `alpha` lalu `beta`, tetapi waktunya berubah. Berurutan butuh sekitar 40
+milidetik (30 ditambah 10); dengan `all`, keduanya berjalan bersamaan sehingga totalnya sekitar 30
+milidetik.
+
+**2.** Keluarannya:
+
+```{.txt}
+tag:a
+tag:b
+```
+
+Kedua `await` berurutan, jadi `tag("a")` selesai dan dicetak lebih dulu, baru `tag("b")`.
+
+**3.** `all` menerima beberapa `Future` bertipe sama dan mengembalikan barisan hasil.
+
+```{.nim}
+import std/asyncdispatch
+
+proc total(a, b: Future[int]): Future[int] {.async.} =
+  let results = await all(a, b)
+  return results[0] + results[1]
+
+proc value(n: int): Future[int] {.async.} =
+  return n
+
+echo waitFor total(value(2), value(3))
+```
+
+```{.txt}
+5
+```
+
+**4.** Ganti `await` di prosedur sinkron dengan `waitFor`.
+
+```{.nim}
+proc main(): int =
+  waitFor work()
+```
+
+Alternatifnya, ubah `main` menjadi prosedur async dan panggil dengan `waitFor main()` di tingkat
+teratas.
+
+## Bab: FFI ke C
+
+**1.** Tambahkan fungsi di `helper.c`, lalu deklarasikan pasangannya di Nim.
+
+```{.c}
+int half(int x) {
+  return x / 2;
+}
+```
+
+```{.nim}
+{.compile: "helper.c".}
+
+proc half(x: cint): cint {.importc.}
+
+echo half(9)
+```
+
+```{.txt}
+4
+```
+
+Pembagian bilangan bulat di C memotong ke arah nol, jadi `9 / 2` bernilai 4.
+
+**2.** Keluarannya `7`. `abs` dari `<stdlib.h>` mengembalikan nilai mutlak `-7`.
+
+**3.** Saat Nim mengubah string `"hello"` menjadi `cstring`, ia menambahkan satu byte nol di akhir
+supaya fungsi C tahu di mana string berakhir. `strlen` menghitung byte sebelum penanda itu, yaitu
+lima karakter `h`, `e`, `l`, `l`, `o`. Penanda nol tidak ikut dihitung.
+
+**4.** `{.compile.}` tidak bisa menempel pada deklarasi prosedur, apalagi digabung dengan pragma
+lain.
+
+```{.txt}
+main.nim(1, 37) Error: invalid pragma: compile: "helper.c"
+```
+
+Pindahkan ke tempatnya sendiri: `{.compile.}` berdiri di barisnya, dan `{.importc.}` dipasang pada
+deklarasi prosedur.
+
+```{.nim}
+{.compile: "helper.c".}
+
+proc triple(x: cint): cint {.importc.}
+
+echo triple(2)
+```
+
+```{.txt}
+6
+```
+
+## Bab: Kompilasi ke JavaScript
+
+**1.** Keluarannya sama persis. Backend JavaScript memetakan aturan tipe dan pembagian Nim ke
+operator JavaScript yang setara.
+
+```{.txt}
+area: 21
+3
+2.5
+```
+
+**2.** Keluarannya:
+
+```{.txt}
+total: 27
+```
+
+`4 + 8 + 15` bernilai 27, dan perulangan `for n in numbers` menjumlahkannya satu per satu.
+
+**3.** Contoh yang mengubah isi `<div>`, dijalankan dari halaman HTML yang punya elemen itu:
+
+```js
+import std/dom
+
+document.getElementById("out").textContent = "from Nim"
+```
+
+`node` tidak menyediakan `document`; objek itu hanya ada di peramban. Karena itu program ini
+dikompilasi dengan `nim js` lalu berkas `.js`-nya disisipkan ke halaman HTML, bukan dijalankan
+langsung dari terminal.
+
+**4.** Modul `marshal` tidak punya padanan di target JavaScript.
+
+```{.txt}
+marshal.nim(52, 10) Error: marshal module is not supported in javascript.
+```
+
+Perbaikannya mengganti modulnya dengan yang didukung semua backend, misalnya `std/json` untuk
+urusan data, lalu membangun ulang dengan `nim js`.

@@ -700,3 +700,974 @@ echo c
 ```{.txt}
 red
 ```
+
+## Chapter: Modules, `import`, and `export`
+
+**1.** Save `shout.nim` and `main.nim` in the same folder.
+
+```{.nim}
+# shout.nim
+proc shout*(text: string): string =
+  text & "!"
+```
+
+```{.nim}
+# main.nim
+import shout
+
+echo shout("hi")
+```
+
+```{.txt}
+hi!
+```
+
+Without the star, `shout` would not be visible from `main.nim`.
+
+**2.** The output is `42`, because `double(21)` yields `42`. The second file may not call
+`mathx.double(21)`. `from mathx import double` brings in the name `double`, not the module name
+`mathx`, so `mathx` is treated as an undeclared identifier.
+
+**3.** The message is `undeclared identifier: 'textutils'`. A slash inside an expression is the
+division operator, not a module selector. The imported module is named `format`, so the correct
+qualification uses a dot only:
+
+```{.nim}
+import textutils/format
+
+echo format.upper("hi")
+```
+
+```{.txt}
+HI
+```
+
+**4.** The `include` example becomes a small module.
+
+```{.nim}
+# config_module.nim
+const appName* = "notes"
+```
+
+```{.nim}
+# main.nim
+import config_module
+
+echo config_module.appName
+```
+
+The advantage: the name `appName` lives in its module's namespace, so it cannot collide with a name
+in the parent file, and other files can use the module without copying its contents.
+
+## Chapter: Exceptions and the `raises` effect
+
+**1.**
+
+```{.nim}
+import std/strutils
+
+try:
+  discard parseInt("x")
+except ValueError as e:
+  echo "error: ", e.msg
+```
+
+```{.txt}
+error: invalid integer: x
+```
+
+**2.** The output is two lines: `caught`, then `done`. `IOError` is not a `ValueError`, so the first
+`except` clause is skipped. `IOError` is a `CatchableError`, so the second clause catches it.
+`finally` still runs after that.
+
+**3.**
+
+```{.nim}
+type TooLarge = object of CatchableError
+
+proc check(n: int) =
+  if n > 100:
+    raise newException(TooLarge, "too large: " & $n)
+
+try:
+  check(150)
+except TooLarge as e:
+  echo e.msg
+```
+
+```{.txt}
+too large: 150
+```
+
+**4.** The message is `can raise an unlisted exception: ref ValueError`. `useIt` promises
+`raises: []`, but its body calls `readValue()` which throws a `ValueError`. Three reasonable fixes:
+drop `raises: []` so the compiler infers it, catch the `ValueError` inside `useIt`, or list the type:
+
+```{.nim}
+proc readValue(): int =
+  raise newException(ValueError, "missing")
+
+proc useIt(): int {.raises: [ValueError].} =
+  readValue()
+```
+
+**5.**
+
+```{.nim}
+proc openLog() =
+  echo "open"
+  defer:
+    echo "close"
+  echo "log line"
+
+openLog()
+```
+
+```{.txt}
+open
+log line
+close
+```
+
+## Chapter: Iterators and `yield`
+
+**1.**
+
+```{.nim}
+iterator multiples(n: int, step: int): int =
+  var value = step
+  while value <= n:
+    yield value
+    value = value + step
+
+for m in multiples(20, 5):
+  echo m
+```
+
+```{.txt}
+5
+10
+15
+20
+```
+
+**2.** The output is `3`. `counts` yields `1` then `2`, and both are added into `sum`.
+
+**3.**
+
+```{.nim}
+proc countdown(n: int): iterator (): int =
+  result = iterator (): int =
+    var i = n
+    while i >= 1:
+      yield i
+      dec i
+
+for n in countdown(3)():
+  echo n
+```
+
+```{.txt}
+3
+2
+1
+```
+
+Notice `countdown(3)()`. The first call prepares the iterator, the second uses it inside `for`.
+
+**4.** Choose an iterator when elements are walked only once, their number is large or unknown, and
+a search often stops early. An iterator stores no elements, so it saves memory. Choose a sequence
+when elements must be indexed, sorted, or used several times, because a sequence keeps them all at
+once.
+
+## Chapter: Closures and captured variables
+
+**1.** The returned procedure uses `f` and `g` from its parameters, so both are captured:
+
+```{.nim}
+proc compose(f, g: proc(x: int): int): proc(x: int): int =
+  result = proc(x: int): int = g(f(x))
+
+let inc = proc(x: int): int = x + 1
+let dbl = proc(x: int): int = x * 2
+echo compose(inc, dbl)(5)
+```
+
+```{.txt}
+12
+```
+
+`inc(5)` gives `6`, then `dbl(6)` gives `12`.
+
+**2.** The output is `7`. `add` captures `total`, which is a `var`, so both calls add to the same
+variable: `3 + 4 = 7`.
+
+**3.** `i` is a single variable reused on every loop iteration. The three closures refer to that
+variable, not to a copy of it. When the loop ends, `i` holds `2`, so all three print `2`. One fix:
+create the closures through a separate procedure whose parameter is fresh on every call.
+
+**4.** The problem is the `{.nimcall.}` type on `addBase`. `makeAdder` returns a closure because it
+captures `base`, and a `{.nimcall.}` type may not hold a closure. The fix removes `{.nimcall.}`:
+
+```{.nim}
+proc makeAdder(base: int): proc(x: int): int =
+  result = proc(x: int): int = x + base
+
+let addBase: proc(x: int): int = makeAdder(10)
+echo addBase(5)
+```
+
+```{.txt}
+15
+```
+
+The compiler message mentions a *calling convention* because the problem is not the value passed,
+but the type's calling convention: a closure uses `{.closure.}`, while the requested type uses
+`{.nimcall.}`.
+
+## Chapter: Generics: types and procedures
+
+**1.** The `openArray[T]` parameter accepts an array or a sequence, and `T` is inferred from the
+contents:
+
+```{.nim}
+proc largest[T](items: openArray[T]): T =
+  result = items[0]
+  for item in items:
+    if item > result:
+      result = item
+
+echo largest([3, 9, 4])
+echo largest(@["ant", "bee", "cat"])
+```
+
+```{.txt}
+9
+cat
+```
+
+**2.** The output is `(3, 3)` then `("a", "a")`. `T` is inferred as `int` in the first call and
+`string` in the second, so the tuple built adapts.
+
+**3.** `T` only appears in the return type `seq[T]`, not in the parameter list. No argument has type
+`T`, so the compiler has no hint to infer it from. The type argument must be written explicitly:
+`makeSeq[int](3)`.
+
+**4.** The message shows the only candidate, `double` with the requirement `T: SomeInteger`, and
+notes that `2.5` has type `float64`. `float64` is not part of `SomeInteger`, so no version matches.
+To accept fractional numbers, relax the constraint:
+
+```{.nim}
+proc double[T: SomeNumber](value: T): T =
+  value * 2
+
+echo double(2.5)
+```
+
+```{.txt}
+5.0
+```
+
+`SomeNumber` covers both integers and floats, so `float64` is now accepted.
+
+## Chapter: Templates: code expanded by the compiler
+
+**1.** The template body is copied into the call site, so `body` is copied twice:
+
+```{.nim}
+template twice(body: untyped) =
+  body
+  body
+
+twice:
+  echo "ping"
+```
+
+```{.txt}
+ping
+ping
+```
+
+**2.** The output is `2` then `2`. `x` is used twice inside `square`, so `next()` is called twice.
+The first call returns `1`, the second returns `2`, and the result is `1 * 2 = 2`. After that `n`
+holds `2`, so `echo n` prints `2`.
+
+**3.** Because of hygiene. A symbol declared inside a template, including `tmp`, gets a unique name
+that cannot clash with a name at the call site. The caller's `tmp` is left untouched.
+
+**4.** The narrowest fix is to mark `total` with `{.inject.}`, so only that symbol is opened and the
+rest of the template stays hygienic:
+
+```{.nim}
+template sumUp(body: untyped) =
+  var total {.inject.} = 0
+  body
+  echo total
+
+sumUp:
+  total += 4
+```
+
+```{.txt}
+4
+```
+
+Replacing `{.inject.}` with `{.dirty.}` also works, but turns hygiene off for the whole template, so
+it is wider than needed.
+
+## Chapter: Macros: code that builds code
+
+**1.** A template is enough, since the task is only to substitute an expression.
+
+```{.nim}
+template minOf(a, b: untyped): untyped =
+  if a < b: a else: b
+
+echo minOf(3, 7)
+```
+
+```{.txt}
+3
+```
+
+Keep in mind that `a` and `b` are copied as written, so an argument with side effects may be
+evaluated more than once.
+
+**2.** The output is:
+
+```{.txt}
+10
+calls: 4
+```
+
+The template copies `bump() + bump()` into both sides of the addition, so `bump()` runs four times.
+It returns `1`, `2`, `3`, `4`, and the final result is `(1 + 2) + (3 + 4) = 10`. The value of `calls`
+at the end is `4`.
+
+**3.** The macro with `quote do`.
+
+```{.nim}
+import std/macros
+
+macro triple(x: untyped): untyped =
+  result = quote do:
+    `x` * 3
+
+echo triple(4)
+```
+
+```{.txt}
+12
+```
+
+**4.** `getType` needs an AST that already has a type. An `untyped` argument has not passed type
+checking yet, so its node has no type and the compiler stops with `node has no type`. To use
+`getType`, the parameter must be `typed`.
+
+**5.** A macro that prints the `treeRepr` of its argument.
+
+```{.nim}
+import std/macros
+
+macro dumpAst(x: untyped): untyped =
+  let tree = x.treeRepr
+  result = quote do:
+    echo `tree`
+
+dumpAst(2 * 3)
+```
+
+```{.txt}
+Infix
+  Ident "*"
+  IntLit 2
+  IntLit 3
+```
+
+The outer node is `Infix` because `2 * 3` is an operation on two operands. Its children are the
+operator, then the two operands.
+
+## Chapter: Concepts and type matching
+
+**1.** The `Sized` concept and a procedure that uses it.
+
+```{.nim}
+type
+  Sized = concept x
+    x.size is int
+
+type Box = object
+  size: int
+
+proc show[T: Sized](x: T) =
+  echo "size ", x.size
+
+show(Box(size: 3))
+```
+
+```{.txt}
+size 3
+```
+
+**2.** It does not match. The `name` field exists, but its type is `int` while the requirement is
+`x.name is string`. The compiler refuses with `concept predicate failed`. That is what separates a
+`concept` from merely "has a field with the same name": the type is checked too.
+
+**3.** Combining two concepts with `and`.
+
+```{.nim}
+type
+  Named = concept x
+    x.name is string
+  Sized = concept x
+    x.size is int
+
+type Crate = object
+  name: string
+  size: int
+
+proc label[T: Named and Sized](x: T): string =
+  x.name & " (" & $x.size & ")"
+
+echo label(Crate(name: "kit", size: 3))
+```
+
+```{.txt}
+kit (3)
+```
+
+**4.** `Named` is a concept, not a type that can hold storage, so `var value: Named` is rejected as
+`invalid type: 'Named' for var`. The equivalent is to declare a concrete type that meets the concept.
+
+```{.nim}
+type
+  Named = concept x
+    x.name is string
+
+type User = object
+  name: string
+
+var value = User(name: "Ada")
+echo value.name
+```
+
+```{.txt}
+Ada
+```
+
+## Chapter: Variant objects and `distinct`
+
+**1.** Add `triangle` to the enum and a new `case` branch. Its fields must differ from names already in
+use, so the `height` of `rect` cannot be reused; `altitude` stands in here.
+
+```{.nim}
+type
+  ShapeKind = enum
+    circle, rect, triangle
+  Shape = object
+    case kind: ShapeKind
+      of circle:
+        radius: float
+      of rect:
+        width, height: float
+      of triangle:
+        base, altitude: float
+
+proc area(s: Shape): float =
+  case s.kind
+  of circle:
+    3.14159 * s.radius * s.radius
+  of rect:
+    s.width * s.height
+  of triangle:
+    s.base * s.altitude / 2.0
+
+echo area(Shape(kind: triangle, base: 3.0, altitude: 4.0))
+```
+
+```{.txt}
+6.0
+```
+
+**2.** The output is `3.0`. The constructor is now consistent: `kind` is `circle` and what is filled
+is `radius`, the only field in that branch. Since `c.radius` is indeed the right field, the program
+runs and prints the value of `radius`, which is `3.0`.
+
+**3.** The `Meters` type with its `$`.
+
+```{.nim}
+type Meters = distinct int
+
+proc `$`(m: Meters): string =
+  $int(m) & " m"
+
+let d = Meters(5)
+echo d
+```
+
+```{.txt}
+5 m
+```
+
+`int(m)` converts back to an `int` before printing, because the base type is not available
+automatically.
+
+**4.** The alias `int` makes `UserId` exactly the same as `int`, so nothing separates a user id from
+any other number. The program loses its guard: an id value can be mixed up with an order id or a plain
+number with no error raised, and this kind of bug often surfaces only in production. `distinct` makes
+that mistake a compile error, which is the main reason to use it.
+
+**5.** The automatic check at compile time only works when the compiler knows the tag's value. In the
+expression `Shape(kind: rect, ...).radius` the tag is a literal, but an access through a temporary
+value is still checked while the program runs: after construction, Nim inserts a check that reads
+`kind` and confirms the field belongs to it. The way around it is to read through a `case` on the tag,
+so the wrong branch is never executed.
+
+## Chapter: `ref`, `ptr`, and `nil`
+
+**1.** Two instances, one through `new`, one through the constructor literal:
+
+```nim
+type Book = ref object
+  title: string
+
+var a: Book
+new(a)
+a.title = "Nim in Action"
+
+var b = Book(title: "Programming Nim")
+
+echo a.title
+echo b.title
+```
+
+The output:
+
+```txt
+Nim in Action
+Programming Nim
+```
+
+**2.** `q` points at the same object as `p`, so changing `q.x` also changes `p.x`:
+
+```txt
+10 10
+```
+
+**3.**
+
+```nim
+proc incr(p: ptr int) =
+  p[] = p[] + 1
+
+var x = 1
+incr(addr x)
+echo x
+```
+
+The output is `2`. `p[]` reads and writes the value at the address `p` points to.
+
+**4.** `var p: Person` holds `nil`; there is no heap object to point at yet. `new(p)` allocates an
+object with every field at its default, then stores the address in `p`. Without it, `p.name`
+dereferences `nil` and the program stops while running.
+
+**5.** The error message:
+
+```txt
+main.nim(2, 18) Error: type mismatch: got 'int' for 'x' but expected 'ptr int'
+```
+
+The variable `p` has type `ptr int`, an address, while `x` is an `int` value. The fix is to take
+its address first:
+
+```nim
+var x = 5
+var p: ptr int = addr x
+echo p[]
+```
+
+## Chapter: Memory management: ARC, ORC, and `=destroy`
+
+**1.** `=destroy` is called when a variable leaves its scope, so the message appears at the end of
+the block, not at allocation:
+
+```nim
+type Handle = object
+  name: string
+
+proc `=destroy`(h: var Handle) =
+  echo "close ", h.name
+
+block:
+  var h = Handle(name: "f")
+  echo "open"
+echo "done"
+```
+
+The output:
+
+```txt
+open
+close f
+done
+```
+
+**2.** `a` is dropped at the end of the block, then `end` is printed:
+
+```txt
+in block
+drop a
+end
+```
+
+**3.** `move` uses the `Move` magic: it moves the value directly, then calls `=wasMoved` on the
+source. The `=sink` path is taken only when the compiler moves a temporary through an ordinary
+assignment. Because `move` already declares the move explicitly, the hook is bypassed.
+
+**4.** ARC's reference counting only adds and subtracts a number. Two objects pointing at each
+other each hold a reference to the other, so the count never reaches zero. ORC adds a cycle
+detector that finds such pairs and frees them.
+
+**5.** The error message:
+
+```txt
+main.nim(4, 1) Error: signature for '=destroy' must be proc[T: object](x: var T) or proc[T: object](x: T)
+```
+
+`=destroy` is only for value `object` types and for `ref object`s that ARC/ORC already frees
+automatically. `Person` here is a `ref object`, so the hook does not apply. The fix is to remove
+the procedure and let ARC/ORC free it, or to move the resource into a value `object` that the
+reference holds.
+
+## Chapter: A tour of the standard library
+
+**1.** Split, transform each word, then join back:
+
+```nim
+import std/strutils
+
+var upper: seq[string] = @[]
+for word in "one two three".split(' '):
+  upper.add(word.toUpperAscii)
+echo upper.join("-")
+```
+
+The output is `ONE-TWO-THREE`.
+
+**2.** `filterIt` keeps `3` and `2`, then `mapIt` doubles them:
+
+```txt
+@[6, 4]
+```
+
+**3.**
+
+```nim
+import std/tables
+
+var scores = initTable[string, int]()
+scores["a"] = 1
+scores["b"] = 2
+scores["c"] = 3
+
+echo scores["b"]
+echo scores.getOrDefault("z", 0)
+```
+
+The output:
+
+```txt
+2
+0
+```
+
+**4.**
+
+```nim
+import std/json
+
+let data = """{"city": "Bandung"}""".parseJson
+echo data["city"].getStr
+```
+
+The output is `Bandung`.
+
+**5.** The error message:
+
+```txt
+Error: unhandled exception: key not found: b [KeyError]
+```
+
+`t["b"]` asks for a key that does not exist, and `Table` raises `KeyError` while running. The fix
+is `getOrDefault` (or a `hasKey` test first), without changing the contents of `t`:
+
+```nim
+import std/tables
+
+let t = {"a": 1}.toTable
+echo t.getOrDefault("b", -1)
+```
+
+## Chapter: Files, directories, and OS
+
+**1.** `splitFile` already separates the name and the extension; no manual slicing needed.
+
+```{.nim}
+import std/os
+
+let (dir, name, ext) = splitFile("/etc/nim/nim.cfg")
+echo name, " ", ext
+```
+
+```{.txt}
+nim .cfg
+```
+
+**2.** The output is `notes`. `splitFile("notes.txt")` gives an empty directory, the name `notes`, and
+the extension `.txt`. Only `.name` is printed.
+
+**3.** Write, read back, count the lines, then clean up.
+
+```{.nim}
+import std/[os, strutils]
+
+let path = getTempDir() / "nim_id_answer.txt"
+writeFile(path, "alpha\nbeta")
+echo readFile(path).splitLines().len
+removeFile(path)
+```
+
+```{.txt}
+2
+```
+
+`splitLines` splits on every newline, so two lines become two elements.
+
+**4.** The compiler rejects the comparison, not the call to `fileExists`.
+
+```{.txt}
+main.nim(3, 23) Error: type mismatch
+```
+
+`fileExists` returns a `bool`, while `"yes"` is a `string`. The `==` operator has no form that takes a
+`bool` on one side and a `string` on the other. Test the boolean directly, without comparing it to
+text.
+
+```{.nim}
+import std/os
+
+if dirExists(getTempDir()):
+  echo "found"
+```
+
+```{.txt}
+found
+```
+
+## Chapter: `unittest` and test discipline
+
+**1.** One `suite`, two `test` blocks.
+
+```{.nim}
+import std/unittest
+
+proc factorial(n: int): int =
+  result = 1
+  for i in 2 .. n:
+    result = result * i
+
+suite "factorial":
+  test "zero and one are one":
+    check factorial(0) == 1
+    check factorial(1) == 1
+
+  test "five is 120":
+    check factorial(5) == 120
+```
+
+Output (the first line is empty, `unittest`'s default):
+
+```{.txt}
+
+[Suite] factorial
+  [OK] zero and one are one
+  [OK] five is 120
+```
+
+The range `2 .. n` is empty when `n` is 0 or 1, so the loop never runs and `result` stays 1.
+
+**2.** The output is:
+
+```{.txt}
+
+[Suite] strings
+  [OK] length
+  [OK] first char
+```
+
+`"nim".len` is 3, and `"nim"[0]` is `'n'`, so both `check` calls pass.
+
+**3.** `check` demands a `bool` expression, while `1 + 1` has type `int`.
+
+```{.txt}
+Error: type mismatch: got 'int literal(2)' for '2' but expected 'bool'
+```
+
+The fix adds a comparison:
+
+```{.nim}
+import std/unittest
+
+suite "math":
+  test "one":
+    check 1 + 1 == 2
+```
+
+**4.** `expect` demands that the exception is actually raised. If the block finishes without an
+error, the test fails with `Expect Failed, no exception was thrown.` and is marked `[FAILED]`. The
+process exits with a non-zero code. That is the point: testing an error path is meaningful only when
+the error really happens.
+
+## Chapter: `async`/`await` and IO
+
+**1.** Wrap both `Future` values with `all`, then wait for them together.
+
+```{.nim}
+proc main() {.async.} =
+  let results = await all(fetch("alpha", 30), fetch("beta", 10))
+  for result in results:
+    echo result
+```
+
+The output is still `alpha` then `beta`, but the time changes. In sequence it takes about 40
+milliseconds (30 plus 10); with `all` both run together, so the total is about 30 milliseconds.
+
+**2.** The output is:
+
+```{.txt}
+tag:a
+tag:b
+```
+
+Both `await` calls run in order, so `tag("a")` finishes and prints first, then `tag("b")`.
+
+**3.** `all` takes several `Future` values of the same type and returns a sequence of results.
+
+```{.nim}
+import std/asyncdispatch
+
+proc total(a, b: Future[int]): Future[int] {.async.} =
+  let results = await all(a, b)
+  return results[0] + results[1]
+
+proc value(n: int): Future[int] {.async.} =
+  return n
+
+echo waitFor total(value(2), value(3))
+```
+
+```{.txt}
+5
+```
+
+**4.** Replace the `await` in the synchronous procedure with `waitFor`.
+
+```{.nim}
+proc main(): int =
+  waitFor work()
+```
+
+Alternatively, turn `main` into an async procedure and call it with `waitFor main()` at the top
+level.
+
+## Chapter: FFI to C
+
+**1.** Add the function to `helper.c`, then declare its counterpart in Nim.
+
+```{.c}
+int half(int x) {
+  return x / 2;
+}
+```
+
+```{.nim}
+{.compile: "helper.c".}
+
+proc half(x: cint): cint {.importc.}
+
+echo half(9)
+```
+
+```{.txt}
+4
+```
+
+Integer division in C truncates toward zero, so `9 / 2` is 4.
+
+**2.** The output is `7`. `abs` from `<stdlib.h>` returns the absolute value of `-7`.
+
+**3.** When Nim turns the string `"hello"` into a `cstring`, it appends one zero byte so the C
+function knows where the string ends. `strlen` counts the bytes before that terminator, which are the
+five characters `h`, `e`, `l`, `l`, `o`. The terminator itself is not counted.
+
+**4.** `{.compile.}` cannot attach to a procedure declaration, let alone share a list with another
+pragma.
+
+```{.txt}
+main.nim(1, 37) Error: invalid pragma: compile: "helper.c"
+```
+
+Move it to its own place: `{.compile.}` stands on its own line, and `{.importc.}` goes on the
+procedure declaration.
+
+```{.nim}
+{.compile: "helper.c".}
+
+proc triple(x: cint): cint {.importc.}
+
+echo triple(2)
+```
+
+```{.txt}
+6
+```
+
+## Chapter: Compiling to JavaScript
+
+**1.** The output is exactly the same. The JavaScript backend maps Nim's type and division rules to
+the matching JavaScript operators.
+
+```{.txt}
+area: 21
+3
+2.5
+```
+
+**2.** The output is:
+
+```{.txt}
+total: 27
+```
+
+`4 + 8 + 15` is 27, and the `for n in numbers` loop adds them one by one.
+
+**3.** An example that changes the contents of a `<div>`, loaded from an HTML page that has the
+element:
+
+```js
+import std/dom
+
+document.getElementById("out").textContent = "from Nim"
+```
+
+`node` does not provide `document`; that object exists only in a browser. So the program is compiled
+with `nim js` and its `.js` file is included in an HTML page, not run directly from the terminal.
+
+**4.** The `marshal` module has no counterpart on the JavaScript target.
+
+```{.txt}
+marshal.nim(52, 10) Error: marshal module is not supported in javascript.
+```
+
+The fix is to use a module every backend supports, such as `std/json` for data, and rebuild with
+`nim js`.
