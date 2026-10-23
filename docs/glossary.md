@@ -100,6 +100,13 @@ diterjemahkan ke bahasa Indonesia secara paksa; kolom **Jangan** mencatat varian
 | mode memori | memory management mode | pilihan pengelola memori compiler (`--mm:arc`, `--mm:orc`) | — | memory-management |
 | sumber daya | resource | hal yang harus dibebaskan setelah dipakai (berkas, soket) | resource | files-and-os |
 
+| modul | module | berkas atau folder yang berisi kode dan bisa diimpor | module | modules |
+| ruang nama | namespace | wilayah nama yang dipisahkan modul | namespace | modules |
+| mengimpor | import | memakai isi modul lain | impor (kecuali di kode) | modules |
+| mengekspor | export | menandai simbol modul yang boleh dipakai dari luar | ekspor (verba) | modules |
+| efek | effect | sifat prosedur yang dapat diperiksa compiler (`raises`) | — | exceptions |
+| fasad | facade | modul tipis yang menyatukan beberapa modul lain | facade | modules |
+
 Aturan singkat:
 
 - Istilah di kolom pertama dipakai di teks Indonesia; kolom English di teks Inggris.
