@@ -17,3 +17,4 @@ books/*/site_libs/
 books/*/_variables.yml
 .m1/
 .m2/
+.m3/
