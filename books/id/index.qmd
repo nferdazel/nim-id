@@ -31,6 +31,8 @@ Kalau baru pertama kali memakai Nim, baca berurutan. Kalau sudah pernah, lompat 
 [Variabel](chapters/variables.qmd) dan lanjut dari situ. Setiap bab berakhir dengan latihan;
 jawabannya ada di [Lampiran A](appendix/answers.qmd).
 
+Sumber buku dan pelaporan masalah: [github.com/nferdazel/nim-id](https://github.com/nferdazel/nim-id).
+
 ## Lisensi
 
 Teks buku: [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/deed.id).

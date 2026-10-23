@@ -33,6 +33,8 @@ answers are in [Appendix A](appendix/answers.qmd).
 
 Versi Bahasa Indonesia: [Dasar Pemrograman Nim](/).
 
+Book source and issue tracker: [github.com/nferdazel/nim-id](https://github.com/nferdazel/nim-id).
+
 ## License
 
 Book text: [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/).
