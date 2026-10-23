@@ -1,0 +1,62 @@
+name: ci
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+    tags: ['v*']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  contoh:
+    name: "Contoh: kompilasi & cek output"
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: "Pasang Nim 2.2.12"
+        uses: jiro4989/setup-nim-action@v2
+        with:
+          nim-version: '2.2.12'
+
+      - name: "Cache hasil kompilasi contoh"
+        uses: actions/cache@v4
+        with:
+          path: build
+          key: contoh-${{ runner.os }}-${{ hashFiles('examples/**/*.nim') }}
+
+      - name: "Verifikasi contoh"
+        run: bash tools/verify-examples.sh
+
+  buku:
+    name: "Buku: render dua bahasa + PDF"
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: "Pasang Quarto 1.10.19"
+        uses: quarto-dev/quarto-actions/setup@v2
+        with:
+          version: '1.10.19'
+
+      - name: "Render Indonesia + English"
+        run: bash tools/build-site.sh
+
+      - name: "Unggah situs (kedua bahasa)"
+        uses: actions/upload-artifact@v4
+        with:
+          name: situs
+          path: public
+          retention-days: 7
+
+      - name: "Unggah PDF"
+        uses: actions/upload-artifact@v4
+        with:
+          name: pdf
+          path: public/**/*.pdf
+          retention-days: 30
