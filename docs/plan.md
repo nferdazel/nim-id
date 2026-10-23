@@ -51,9 +51,9 @@ Alasan memilih Quarto:
 Ukuran & grid:
 
 - Trim **7 × 9,19 inci** (178 × 233 mm), standar buku teknis; cukup lebar untuk kode 80 kolom di 9 pt.
-- Margin: dalam 20 mm (gutter 22 mm), luar 16 mm, atas 18 mm, bawah 20 mm.
-- Body **10,5/15 pt** serif (Literata atau Source Serif 4), rata kiri-kanan + hyphenation aktif.
-- Kode **JetBrains Mono 9 pt**, line-height 1,35; blok >25 baris boleh pecah halaman, blok pendek **jangan** (`breakable: false`).
+- Margin 16 mm kanan-kiri, 18 mm atas-bawah (yang terpasang di `assets/typst/typst-show.typ`).
+- Badan **10 pt** serif, **rata kiri** tanpa justify, jarak antarparagraf 1,3 em, tanpa indentasi baris pertama.
+- Kode monospace ukuran lebih kecil dari badan, latar abu hangat, blok pendek tidak dipotong antarhalaman bila masih muat.
 
 Elemen yang menentukan kesan "buku", bukan "print website":
 
