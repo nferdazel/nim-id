@@ -23,9 +23,19 @@ nim.qouver.com {
 	try_files {path} {path}.html
 	file_server
 
-	# Aset ber-hash/tidak berubah sering: cache lama. HTML selalu revalidasi.
-	@aset path /fonts/* *.woff2 *.css *.js *.svg *.png *.jpg *.webp
-	header @aset Cache-Control "public, max-age=2592000"
+	# Font dan gambar jarang berubah: cache panjang.
+	@font path /fonts/* *.woff2
+	header @font Cache-Control "public, max-age=2592000, immutable"
+	@gambar path *.svg *.png *.jpg *.webp
+	header @gambar Cache-Control "public, max-age=604800"
+
+	# CSS dan JS memakai nama berkas tetap (Quarto tidak memberi hash), jadi jangan
+	# di-cache lama: tanpa ini, Cloudflare menyajikan CSS lama sampai 30 hari setelah deploy
+	# dan tampilan Indonesia tertinggal dari English.
+	@skrip path *.css *.js
+	header @skrip Cache-Control "public, max-age=300, must-revalidate"
+
+	# HTML selalu revalidasi.
 	@lain not path /fonts/* *.woff2 *.css *.js *.svg *.png *.jpg *.webp
 	header @lain Cache-Control "no-cache"
 
