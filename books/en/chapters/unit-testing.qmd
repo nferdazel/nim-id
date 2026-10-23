@@ -81,7 +81,7 @@ suite "isEven":
 ```
 
 To stop in the middle of a test, use `require`. The difference from `check`: `check` records the
-failure but keeps going through the rest of the test, whereas `require` stops the test right there.
+failure but keeps going through the rest of the test, whereas `require` stops the whole test run right there; `teardown` does not get to run either.
 Use `require` when the next step makes no sense without the previous one, for example dividing by a
 value you just proved is not zero.
 
@@ -120,8 +120,8 @@ suite "divide":
 Those three tools cover most tests. Their output is the same: `[OK]` for a passing test.
 
 When every case needs the same starting state, `unittest` provides `setup` and `teardown`. The
-`setup` block runs before each `test`, and `teardown` after it. Both can sit inside a `suite` or at
-the top level. Use them when each test needs fresh data, such as a temporary file that must be
+`setup` block runs before each `test`, and `teardown` after it. Both are written inside the `suite`
+block; at the top level the names are not recognised. Use them when each test needs fresh data, such as a temporary file that must be
 created and removed again.
 
 ## Deliberate error: forgetting to import `std/unittest`
@@ -184,7 +184,7 @@ Answers are in [Appendix A](../appendix/answers.qmd).
 
 - `unittest` is in the standard library; no package to install.
 - `suite` groups, `test` marks one case, and `check` compares a `bool` expression.
-- `require` stops a test early; `expect` makes sure an exception is raised.
+- `require` stops the whole run early; `expect` makes sure an exception is raised.
 - A passing test prints `[OK]`, a failing one `[FAILED]`, and a failing run exits non-zero.
 - A missing `import std/unittest` gives an `undeclared identifier` at compile time.
 

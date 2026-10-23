@@ -92,7 +92,7 @@ Some code only makes sense in a browser. The `std/dom` module gives access to th
 element, changing its text, attaching an event listener. The code below is written in Nim, but it
 can only run in a browser, not with `node`.
 
-```js
+```nim
 import std/dom
 
 proc onClick(event: Event) =

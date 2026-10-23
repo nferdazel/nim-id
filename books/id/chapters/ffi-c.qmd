@@ -139,7 +139,7 @@ echo triple(14)
 main.nim(1, 37) Error: invalid pragma: compile: "helper.c"
 ```
 
-Compiler menunjuk kolom 37, tepat tempat `compile` berada di dalam daftar pragma. Pesannya pendek:
+Compiler menunjuk kolom 37, yaitu titik dua setelah nama pragma (`compile` sendiri mulai kolom 30). Pesannya pendek:
 `invalid pragma: compile`. Artinya `{.compile.}` tidak sah di posisi itu. Menggabungkannya dengan
 `{.importc.}` tidak menolong; bahkan sendirian, pragma itu tetap ditolak selama menempel pada
 prosedur.

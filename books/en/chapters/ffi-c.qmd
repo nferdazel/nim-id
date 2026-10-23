@@ -137,7 +137,8 @@ echo triple(14)
 main.nim(1, 37) Error: invalid pragma: compile: "helper.c"
 ```
 
-The compiler points at column 37, exactly where `compile` sits inside the pragma list. The message is
+The compiler points at column 37, the colon right after the pragma name (`compile` itself starts at
+column 30). The message is
 short: `invalid pragma: compile`. It means `{.compile.}` is not valid in that position. Merging it
 with `{.importc.}` does not help; even alone, the pragma is rejected as long as it hangs off a
 procedure.

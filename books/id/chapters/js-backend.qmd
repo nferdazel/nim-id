@@ -92,7 +92,7 @@ Sebagian kode hanya masuk akal di peramban. Modul `std/dom` memberi akses ke DOM
 mengubah teksnya, memasang pendengar peristiwa. Kode berikut ditulis dalam Nim, tetapi hanya bisa
 dijalankan di peramban, bukan dengan `node`.
 
-```js
+```nim
 import std/dom
 
 proc onClick(event: Event) =
