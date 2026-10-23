@@ -1,0 +1,1 @@
+invalid type: 'iterator (n: int): int{.inline, noSideEffect, gcsafe.}' for let

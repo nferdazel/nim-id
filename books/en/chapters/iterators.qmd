@@ -1,0 +1,217 @@
+# Iterators and `yield`
+
+A sequence (`seq`) keeps every element in memory. That is wasteful when there are many elements, or
+when they can only be computed on demand. Nim has iterators: routines that produce values one at a
+time, when asked. The values are not stored; what moves is the iterator's position.
+
+::: {.callout-note}
+## What you will be able to do
+
+After this chapter you can write iterators with `yield`, use them inside `for`, rely on `items` and
+`pairs`, build a closure iterator you can resume, and read the error you get when an inline iterator
+is treated as a value.
+:::
+
+## `iterator` and `yield`
+
+An iterator is declared with `iterator`, and `yield` hands out one value.
+
+```{.nim}
+iterator countTo(n: int): int =
+  var i = 1
+  while i <= n:
+    yield i
+    inc i
+
+for value in countTo(3):
+  echo value
+```
+
+```{.txt}
+1
+2
+3
+```
+
+`for` runs the iterator to the end. Each `yield` hands over one value, then the iterator pauses and
+resumes on the next round. Because values come out one at a time, the caller can stop early without
+computing the rest.
+
+An iterator with no extra marker is inline by default: the compiler copies its body into the place
+it is used. The result runs as fast as a hand-written loop.
+
+## Iterators take parameters
+
+An iterator takes parameters like a procedure.
+
+```{.nim}
+iterator evens(numbers: openArray[int]): int =
+  for n in numbers:
+    if n mod 2 == 0:
+      yield n
+
+for n in evens([1, 2, 3, 4, 5, 6]):
+  echo n
+```
+
+```{.txt}
+2
+4
+6
+```
+
+`evens` yields only the even numbers from its input. The parameter `openArray[int]` accepts both
+arrays and sequences, so one iterator handles both.
+
+## `items` and `pairs`
+
+`for` works with iterators, and collections provide built-in ones.
+
+```{.nim}
+let names = @["Ada", "Grace"]
+
+for name in items(names):
+  echo name
+
+for i, name in pairs(names):
+  echo i, ": ", name
+```
+
+```{.txt}
+Ada
+Grace
+0: Ada
+1: Grace
+```
+
+`items` yields elements, `pairs` yields an index together with an element. The form
+`for name in names` is really shorthand for `for name in items(names)`; writing `items` and `pairs`
+explicitly sometimes makes clear which one is in use.
+
+## Closure iterators and `finished`
+
+An inline iterator sticks inside its `for`, so it cannot be separated from the loop. An iterator that
+must be stored or passed around is marked `{.closure.}`.
+
+```{.nim}
+iterator countBetween(a, b: int): int {.closure.} =
+  var x = a
+  while x <= b:
+    yield x
+    inc x
+
+var it = countBetween
+while true:
+  let value = it(3, 5)
+  if finished(it):
+    break
+  echo value
+```
+
+```{.txt}
+3
+4
+5
+```
+
+`countBetween` is a function you can resume. `var it = countBetween` prepares the iterator, and the
+arguments `(3, 5)` are given on every call. `finished(it)` becomes `true` once the iterator is done.
+Notice the order: call first, check `finished`, then use the value. The Nim manual warns that
+`finished` becomes `true` only one round after the last value comes out, so the value from that round
+must be discarded.
+
+## A factory: a procedure that returns an iterator
+
+A closure iterator is a value, so a procedure can return one.
+
+```{.nim}
+proc countTo(n: int): iterator (): int =
+  result = iterator (): int =
+    var i = 1
+    while i <= n:
+      yield i
+      inc i
+
+let numbers = countTo(3)
+for n in numbers():
+  echo n
+```
+
+```{.txt}
+1
+2
+3
+```
+
+`countTo` captures `n`, then returns an anonymous iterator that uses it. The pattern separates setup
+from gathering values, and the result can be used directly in `for`.
+
+## Reading an error: an inline iterator is not a value
+
+An inline iterator may only be used inside `for`.
+
+```{.nim}
+iterator countTo(n: int): int =
+  var i = 1
+  while i <= n:
+    yield i
+    inc i
+
+let it = countTo
+```
+
+```{.txt}
+main.nim(7, 5) Error: invalid type: 'iterator (n: int): int{.inline, noSideEffect, gcsafe.}' for let
+```
+
+The message spells out the full type, including the `{.inline.}` marker, and rejects the `let`. The
+fix: use it directly in `for`, or mark the iterator `{.closure.}` if you really need to store it as a
+value.
+
+## Iterator or sequence?
+
+An iterator stores no elements, so it saves memory and can stop early. The price: one element can be
+walked only once. There is no random index, no `.len`, and no sorting.
+
+A sequence reveals every element in memory. It fits when elements must be indexed, sorted, or used
+several times.
+
+The rule of thumb: choose an iterator for a large or unbounded stream, and when a search often stops
+early. Choose a sequence when you need the whole collection.
+
+On speed, an inline iterator is folded into the caller's code with no extra cost. A closure iterator
+involves a function call, so it is a little more expensive. Both still save more memory than building
+a sequence that is only walked once.
+
+## Exercises
+
+1. Write `iterator multiples(n: int, step: int): int` that yields multiples of `step` up to `n`, then
+   use it inside `for`.
+2. Without running it, predict the output:
+   ```{.nim}
+   iterator counts(): int =
+     yield 1
+     yield 2
+
+   var sum = 0
+   for n in counts():
+     sum = sum + n
+   echo sum
+   ```
+3. Write `proc countdown(n: int): iterator (): int` that yields from `n` down to 1.
+4. Explain when to choose an iterator and when to choose a sequence for the same data.
+
+Answers are in [Appendix A](../appendix/answers.qmd).
+
+## Summary
+
+- `iterator` and `yield` produce values one at a time, only when asked.
+- An inline iterator (the default) stores no values and is used directly inside `for`.
+- `items` yields elements, `pairs` yields an index and an element.
+- A closure iterator can be stored and resumed; `finished` marks its end.
+- Pick an iterator for a large stream or an early stop, a sequence for a whole collection.
+
+## Next
+
+The next chapter covers [tuples](tuples.qmd): bundling several values into one, and unpacking them
+again on a single line.

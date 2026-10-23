@@ -1,0 +1,220 @@
+# Iterator dan `yield`
+
+Barisan (`seq`) menyimpan semua elemennya di memori. Itu boros kalau elemennya banyak, atau baru
+bisa dihitung saat dibutuhkan. Nim punya iterator: rutin yang menghasilkan nilai satu per satu, saat
+diminta. Nilainya tidak disimpan; yang berpindah adalah posisi iteratornya. Karena itu iterator bisa
+melewati data yang sangat besar, atau bahkan data yang belum ada, tanpa menunggu semuanya siap.
+
+::: {.callout-note}
+## Tujuan bab
+
+Setelah bab ini, pembaca bisa menulis iterator dengan `yield`, memakainya di dalam `for`, memakai
+`items` dan `pairs`, membuat iterator closure yang bisa dilanjutkan, serta membaca pesan error saat
+iterator inline diperlakukan sebagai nilai.
+:::
+
+## `iterator` dan `yield`
+
+Iterator dideklarasikan dengan `iterator`, dan `yield` mengeluarkan satu nilai.
+
+```{.nim}
+iterator countTo(n: int): int =
+  var i = 1
+  while i <= n:
+    yield i
+    inc i
+
+for value in countTo(3):
+  echo value
+```
+
+```{.txt}
+1
+2
+3
+```
+
+`for` menjalankan iterator sampai habis. Setiap `yield` menyerahkan satu nilai, lalu iterator
+berhenti sebentar dan dilanjutkan pada putaran berikutnya. Karena nilai keluar satu per satu,
+pemanggil bisa berhenti kapan saja tanpa menghitung sisanya.
+
+Iterator tanpa penanda khusus default-nya inline: compiler menyalin badannya ke tempat pemakaian.
+Hasilnya sama cepat dengan perulangan yang ditulis tangan.
+
+## Iterator menerima parameter
+
+Iterator menerima parameter seperti prosedur.
+
+```{.nim}
+iterator evens(numbers: openArray[int]): int =
+  for n in numbers:
+    if n mod 2 == 0:
+      yield n
+
+for n in evens([1, 2, 3, 4, 5, 6]):
+  echo n
+```
+
+```{.txt}
+2
+4
+6
+```
+
+`evens` hanya mengeluarkan bilangan genap dari masukannya. Parameter `openArray[int]` menerima larik
+maupun barisan, jadi satu iterator menangani keduanya.
+
+## `items` dan `pairs`
+
+`for` bekerja dengan iterator, dan koleksi menyediakan iterator bawaan.
+
+```{.nim}
+let names = @["Ada", "Grace"]
+
+for name in items(names):
+  echo name
+
+for i, name in pairs(names):
+  echo i, ": ", name
+```
+
+```{.txt}
+Ada
+Grace
+0: Ada
+1: Grace
+```
+
+`items` mengeluarkan elemen, `pairs` mengeluarkan indeks bersama elemen. Bentuk `for name in names`
+sebenarnya singkatan dari `for name in items(names)`; menulis `items` dan `pairs` secara eksplisit
+kadang memperjelas mana yang sedang dipakai.
+
+## Closure iterator dan `finished`
+
+Iterator inline menempel di dalam `for`, jadi ia tidak bisa dipisahkan dari loop. Iterator yang perlu
+disimpan atau dioper ditandai `{.closure.}`.
+
+```{.nim}
+iterator countBetween(a, b: int): int {.closure.} =
+  var x = a
+  while x <= b:
+    yield x
+    inc x
+
+var it = countBetween
+while true:
+  let value = it(3, 5)
+  if finished(it):
+    break
+  echo value
+```
+
+```{.txt}
+3
+4
+5
+```
+
+`countBetween` adalah fungsi yang bisa dilanjutkan. `var it = countBetween` menyiapkan iteratornya,
+dan argumen `(3, 5)` diberikan pada tiap pemanggilan. `finished(it)` bernilai `true` setelah iterator
+selesai. Perhatikan urutannya: panggil dulu, periksa `finished`, baru pakai nilainya. Manual Nim
+memperingatkan bahwa `finished` baru bernilai `true` satu putaran setelah nilai terakhir keluar, jadi
+nilai pada putaran itu harus dibuang.
+
+## Factory: prosedur yang mengembalikan iterator
+
+Iterator closure adalah nilai, jadi sebuah prosedur bisa mengembalikannya.
+
+```{.nim}
+proc countTo(n: int): iterator (): int =
+  result = iterator (): int =
+    var i = 1
+    while i <= n:
+      yield i
+      inc i
+
+let numbers = countTo(3)
+for n in numbers():
+  echo n
+```
+
+```{.txt}
+1
+2
+3
+```
+
+`countTo` menangkap `n`, lalu mengembalikan iterator anonim yang memakainya. Pola ini memisahkan
+penyiapan dari pengambilan nilai, dan hasilnya bisa langsung dipakai di `for`.
+
+## Membaca error: iterator inline bukan nilai
+
+Iterator inline hanya boleh dipakai di dalam `for`.
+
+```{.nim}
+iterator countTo(n: int): int =
+  var i = 1
+  while i <= n:
+    yield i
+    inc i
+
+let it = countTo
+```
+
+```{.txt}
+main.nim(7, 5) Error: invalid type: 'iterator (n: int): int{.inline, noSideEffect, gcsafe.}' for let
+```
+
+Pesannya menuliskan tipe lengkapnya, termasuk penanda `{.inline.}`, dan menolak `let`. Solusinya:
+pakai langsung di `for`, atau tandai iteratornya `{.closure.}` kalau memang perlu disimpan sebagai
+nilai.
+
+## Iterator atau barisan?
+
+Iterator tidak menyimpan elemen, jadi ia hemat memori dan bisa berhenti lebih awal. Harganya: satu
+elemen hanya bisa dilewati sekali. Tidak ada indeks acak, tidak ada `.len`, dan tidak bisa diurutkan.
+
+Barisan menampilkan semua elemen di memori. Ia cocok kalau elemennya perlu diindeks, diurutkan, atau
+dipakai berkali-kali.
+
+Aturan praktisnya: pilih iterator kalau alirannya besar atau tak terbatas, dan kalau pencarian sering
+berhenti di tengah. Pilih barisan kalau butuh koleksi utuh. Membaca baris log raksasa sambil mencari
+satu pola adalah contoh yang sering: iterator berhenti begitu pola ketemu, tanpa memuat seluruh
+berkas.
+
+Dari sisi kecepatan, iterator inline dilipat ke kode pemanggil tanpa biaya tambahan. Iterator closure
+melibatkan pemanggilan fungsi, jadi sedikit lebih mahal. Keduanya tetap lebih hemat memori daripada
+membangun barisan yang hanya dilewati sekali.
+
+## Latihan
+
+1. Tulis `iterator multiples(n: int, step: int): int` yang mengeluarkan kelipatan `step` sampai `n`,
+   lalu pakai di dalam `for`.
+2. Tanpa menjalankan, prediksi outputnya:
+   ```{.nim}
+   iterator counts(): int =
+     yield 1
+     yield 2
+
+   var sum = 0
+   for n in counts():
+     sum = sum + n
+   echo sum
+   ```
+3. Tulis `proc countdown(n: int): iterator (): int` yang mengeluarkan nilai dari `n` turun sampai 1.
+4. Jelaskan kapan memilih iterator dan kapan memilih barisan untuk data yang sama.
+
+Jawaban ada di [Lampiran A](../appendix/answers.qmd).
+
+## Ringkasan
+
+- `iterator` dan `yield` menghasilkan nilai satu per satu, hanya saat diminta.
+- Iterator inline (default) tidak menyimpan nilai dan dipakai langsung di dalam `for`.
+- `items` mengeluarkan elemen, `pairs` mengeluarkan indeks dan elemen.
+- Iterator closure bisa disimpan dan dilanjutkan; `finished` menandai akhirnya.
+- Pilih iterator untuk aliran besar atau berhenti awal, barisan untuk koleksi utuh.
+
+## Selanjutnya
+
+Bab berikutnya membahas [tuple](tuples.qmd): menggabungkan beberapa nilai menjadi satu, dan
+membongkarnya kembali dalam satu baris.
