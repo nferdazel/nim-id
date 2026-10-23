@@ -70,4 +70,10 @@ nama modul yang dimulai angka atau memakai tanda hubung.
 
 ## Lisensi
 
-Teks: CC BY-SA 4.0. Kode contoh: MIT.
+Dua lisensi, sesuai isinya:
+
+- **Teks buku** (`books/`, `docs/`) — CC BY-SA 4.0, lihat [LICENSE](LICENSE).
+- **Kode contoh** (`examples/`, `tools/`, potongan kode di dalam buku) — MIT, lihat
+  [LICENSE-CODE](LICENSE-CODE).
+
+Kalau mengutip buku, sebutkan sumber dan tautan ke `nim.qouver.com`.
