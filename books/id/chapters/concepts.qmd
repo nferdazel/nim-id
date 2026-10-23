@@ -1,19 +1,19 @@
-# Concept dan pencocokan tipe
+# Konsep dan pencocokan tipe
 
 Prosedur generic dengan `[T]` menerima tipe apa saja. Itu sering terlalu longgar: badan prosedur
 memakai `x.name`, tapi tidak ada yang mencegah pemanggilan dengan `int`. Batasan seperti
-`[T: SomeInteger]` membantu, tapi daftarnya sudah ditentukan bahasa. Concept menutup celah itu:
+`[T: SomeInteger]` membantu, tapi daftarnya sudah ditentukan bahasa. Konsep menutup celah itu:
 batasan yang ditulis sendiri, berdasarkan bentuk tipe.
 
-Bab ini membangun concept dari yang sederhana sampai yang digabung, memakainya untuk memilih
-overload, dan membaca pesan error ketika syaratnya tidak terpenuhi. Semua contoh diuji di Nim
+Bab ini membangun konsep dari yang sederhana sampai yang digabung, memakainya untuk memilih
+overloading, dan membaca pesan error ketika syaratnya tidak terpenuhi. Semua contoh diuji di Nim
 2.2.12.
 
 ::: {.callout-note}
 ## Tujuan bab
 
 Setelah bab ini, pembaca bisa menulis `concept`, memakainya sebagai batasan generic, menggabung
-syarat dengan `and` dan `or`, memakai concept untuk memilih overload, dan membaca pesan
+syarat dengan `and` dan `or`, memakai konsep untuk memilih overloading, dan membaca pesan
 `concept predicate failed`.
 :::
 
@@ -39,9 +39,9 @@ echo total(@[1.5, 2.5])
 seperti ini berguna selama bentuk yang diinginkan sudah ada di pustaka standar. Begitu yang
 dibutuhkan adalah "punya field `name`", tidak ada nama bawaan yang menolong.
 
-## Concept: syarat yang ditulis sendiri
+## Konsep: syarat yang ditulis sendiri
 
-Concept mendaftar syarat dalam bentuk ekspresi yang harus benar untuk tipe itu.
+Konsep mendaftar syarat dalam bentuk ekspresi yang harus benar untuk tipe itu.
 
 ```{.nim}
 type
@@ -68,12 +68,12 @@ Hello, R2
 ```
 
 `x.name is string` adalah syaratnya: tipe apa pun yang punya field `name` bertipe `string` cocok.
-Perhatikan bahwa `Person` dan `Robot` tidak berhubungan sama sekali. Concept mencocokkan **bentuk**,
+Perhatikan bahwa `Person` dan `Robot` tidak berhubungan sama sekali. Konsep mencocokkan **bentuk**,
 bukan keturunan atau nama tipe.
 
 ## Dua syarat berarti keduanya harus benar
 
-Beberapa baris di dalam satu concept digabung dengan `and` secara implisit.
+Beberapa baris di dalam satu konsep digabung dengan `and` secara implisit.
 
 ```{.nim}
 type
@@ -98,9 +98,9 @@ Ada is 36
 `Employee` cocok karena memenuhi kedua syarat. Kalau salah satu saja tidak terpenuhi, misalnya
 `age` bertipe `string`, maka tipe itu ditolak.
 
-## Concept menentukan overload mana yang dipakai
+## Konsep menentukan overloading mana yang dipakai
 
-Karena concept menyaring tipe, beberapa prosedur bernama sama bisa hidup berdampingan dan masing
+Karena konsep menyaring tipe, beberapa prosedur bernama sama bisa hidup berdampingan dan masing
 masing menangkap kelompok tipe yang berbeda.
 
 ```{.nim}
@@ -130,11 +130,11 @@ sized 3
 
 `Label` hanya cocok dengan `Named`, `Box` hanya cocok dengan `Sized`, jadi compiler tidak ragu.
 Kalau satu tipe memenuhi keduanya, pemanggilan menjadi ambigu dan harus diselesaikan dengan cara
-lain. Karena itu, jaga agar concept tetap sempit.
+lain. Karena itu, jaga agar konsep tetap sempit.
 
-## Menggabungkan concept dengan `and`
+## Menggabungkan konsep dengan `and`
 
-Dua concept bisa disatukan dengan `and` pada posisi batasan.
+Dua konsep bisa disatukan dengan `and` pada posisi batasan.
 
 ```{.nim}
 type
@@ -157,10 +157,10 @@ echo show(Employee(name: "Ada", age: 36))
 Ada (36)
 ```
 
-`Named and Aged` menuntut kedua syarat sekaligus. Bedanya dengan dua baris di dalam satu concept:
-`and` di sini menggabungkan concept yang bisa dipakai ulang secara terpisah.
+`Named and Aged` menuntut kedua syarat sekaligus. Bedanya dengan dua baris di dalam satu konsep:
+`and` di sini menggabungkan konsep yang bisa dipakai ulang secara terpisah.
 
-## Menggabungkan concept dengan `or`
+## Menggabungkan konsep dengan `or`
 
 `or` melonggarkan syarat: cukup salah satu terpenuhi.
 
@@ -199,7 +199,7 @@ field yang dijamin ada. Ini pola yang sering muncul begitu `or` dipakai.
 
 ## Membaca error: predicate gagal
 
-Memanggil prosedur dengan tipe yang tidak memenuhi concept ditolak compiler.
+Memanggil prosedur dengan tipe yang tidak memenuhi konsep ditolak compiler.
 
 ```{.nim}
 type
@@ -227,14 +227,14 @@ main.nim(3, 5) Named: concept predicate failed
 ```
 
 Bacalah dari bawah. Baris terakhir, `concept predicate failed`, menyebut penyebab sebenarnya. Baris
-di atasnya menunjuk berkas dan baris concept, yaitu `Named` di baris 3, lalu merinci ekspresi mana
+di atasnya menunjuk berkas dan baris konsep, yaitu `Named` di baris 3, lalu merinci ekspresi mana
 yang gagal. Compiler mencoba `x.name` pada `int`, menemukan tidak ada field `name`, dan melaporkannya
-berulang untuk tiap bagian ekspresi. Pesannya panjang, tapi arahnya jelas: periksa concept di baris
+berulang untuk tiap bagian ekspresi. Pesannya panjang, tapi arahnya jelas: periksa konsep di baris
 yang ditunjuk.
 
-## Batas concept
+## Batas konsep
 
-Concept adalah alat pencocokan, bukan tipe biasa. Ia tidak bisa dipakai untuk mendeklarasikan
+Konsep adalah alat pencocokan, bukan tipe biasa. Ia tidak bisa dipakai untuk mendeklarasikan
 variabel.
 
 ```{.nim}
@@ -251,15 +251,15 @@ main.nim(5, 5) Error: invalid type: 'Named' for var
 ```
 
 Selain itu, pencocokan bersifat struktural: tipe yang kebetulan punya field `name` ikut cocok,
-meskipun penulisnya tidak pernah berniat begitu. Concept juga tidak memeriksa makna, hanya bentuk.
-Untuk tipe yang benar benar harus terdaftar, warisan atau `distinct` lebih tepat daripada concept.
+meskipun penulisnya tidak pernah berniat begitu. Konsep juga tidak memeriksa makna, hanya bentuk.
+Untuk tipe yang benar benar harus terdaftar, warisan atau `distinct` lebih tepat daripada konsep.
 
 ## Latihan
 
-1. Tulis concept `Sized` yang menuntut `x.size is int`, lalu prosedur yang mencetak ukurannya untuk
+1. Tulis konsep `Sized` yang menuntut `x.size is int`, lalu prosedur yang mencetak ukurannya untuk
    tipe `Box`.
 2. Apakah `type Num = object` dengan field `name: int` cocok dengan `Named`? Jalankan untuk membuktikan.
-3. Gabungkan dua concept dengan `and`, lalu pakai sebagai batasan satu prosedur.
+3. Gabungkan dua konsep dengan `and`, lalu pakai sebagai batasan satu prosedur.
 4. Jelaskan kenapa `var value: Named` ditolak compiler, lalu tulis deklarasi setara yang memakai
    tipe konkret dengan field `name`.
 
@@ -268,13 +268,13 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 ## Ringkasan
 
 - `concept` menyaring tipe berdasarkan bentuk, misalnya `x.name is string`.
-- Beberapa baris di dalam satu concept digabung dengan `and` secara implisit.
-- `and` dan `or` menyatukan concept; `or` menuntut badan prosedur memeriksa cabang dengan `when`.
-- Concept bisa memilih overload selama tiap tipe hanya cocok dengan satu kandidat.
-- Concept bukan tipe: `var x: Named` ditolak, dan pesan gagalnya berbentuk
+- Beberapa baris di dalam satu konsep digabung dengan `and` secara implisit.
+- `and` dan `or` menyatukan konsep; `or` menuntut badan prosedur memeriksa cabang dengan `when`.
+- Konsep bisa memilih overloading selama tiap tipe hanya cocok dengan satu kandidat.
+- Konsep bukan tipe: `var x: Named` ditolak, dan pesan gagalnya berbentuk
   `concept predicate failed`.
 
 ## Selanjutnya
 
-Bab berikutnya membahas [object variant dan `distinct`](variants-and-distinct.qmd): satu tipe objek
+Bab berikutnya membahas [object varian dan `distinct`](variants-and-distinct.qmd): satu tipe objek
 yang bentuk fieldnya berubah sesuai penanda, dan tipe baru yang tidak bisa tertukar.

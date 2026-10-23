@@ -134,7 +134,9 @@ The message is long, but it makes one point: `kind` is `circle` while `width` ex
 
 ## Runtime error: `FieldDefect`
 
-When the tag is only known while the program runs, the check moves to runtime.
+Nim does not check variant field access at compile time. A tag check is inserted at every access
+and runs while the program runs, even when the tag is a literal in the constructor. What stays a
+compile-time error is a constructor that fills a field from the wrong branch.
 
 ```{.nim}
 type
@@ -226,7 +228,8 @@ amounts of money.
 
 ## Adding back the operations you need
 
-A `distinct` type loses its base type's operations. Add them back as needed, including `$` so `echo`
+A `distinct` type does not inherit the arithmetic operations or `$` of its base type, while ordinal
+operations such as `ord` and `inc` keep working. Add back what you need, including `$` so `echo`
 reads well.
 
 ```{.nim}

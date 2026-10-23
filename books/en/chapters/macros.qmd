@@ -1,8 +1,9 @@
 # Macros: code that builds code
 
-A template replaces one piece of code with another, but it only pastes text. It cannot read the shape
-of its arguments, check their types, or decide what code to build from your data. At that point
-`macro` takes over: a procedure that runs at compile time and takes code as data.
+A template replaces one piece of code with another, but it only pastes text. It cannot take an
+argument as AST data to take apart, and it cannot loop over data to build new code. Types can still
+be checked with `when typeof(x) is ...`, but that only picks a branch, it does not build a new shape.
+At that point `macro` takes over: a procedure that runs at compile time and takes code as data.
 
 This chapter starts from templates, shows the point where they run out, then builds a macro step by
 step. Every example is tested on Nim 2.2.12.
@@ -101,11 +102,13 @@ never clashes with a caller's `it`.
 |---|---|---|
 | Works on | code pasted as written | the AST as data |
 | Arguments | cannot be read as data | `NimNode`, can be inspected |
-| Needs an import | no | `std/macros` |
+| Needs an import for the AST | no | yes, `std/macros` |
 
 ## Seeing the AST: `NimNode` and `treeRepr`
 
-The result of `quote do`, and every macro argument, has type `NimNode`. `treeRepr` prints it.
+The result of `quote do`, and every `untyped` or `typed` argument, has type `NimNode`. A `static`
+parameter is different: its value arrives as an ordinary value, not a node. `treeRepr` prints the
+node.
 
 ```{.nim}
 import std/macros
@@ -175,7 +178,8 @@ string: ab
 ```
 
 `$x.getType` turns the type node into text, such as `int` or `string`, and the result is spliced into
-the output. This is exactly what a template cannot reach.
+the output. A template can test the type with `when typeof(x) is ...`, but it cannot take the type
+node apart and splice it into code it builds.
 
 ## Building nodes yourself: `newTree`
 
@@ -306,7 +310,8 @@ Answers are in [Appendix A](../appendix/answers.qmd).
 - `quote do` builds an AST; a backtick splices a node or value from outside, and its local names are
   safe from clashes.
 - `treeRepr` prints the AST; `getType` works only on a `typed` argument.
-- Macros need `import std/macros`; prefer `template` and `const` before writing a macro.
+- `quote do` and the AST API need `import std/macros`; a simple macro that only forwards nodes does
+  not. Prefer `template` and `const` before writing a macro.
 
 ## Next
 

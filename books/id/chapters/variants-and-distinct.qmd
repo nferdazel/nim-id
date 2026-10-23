@@ -1,22 +1,22 @@
-# Object variant dan `distinct`
+# Object varian dan `distinct`
 
 Dua kebutuhan muncul berulang. Pertama, satu tipe yang isinya bergantung pada keadaan: bentuk punya
 `radius`, atau `width` dan `height`, tapi tidak keduanya sekaligus. Kedua, dua nilai yang secara
 data sama tetapi tidak boleh tertukar, misalnya id pengguna dan id pesanan.
 
-Nim menjawab keduanya dengan cara berbeda. Object variant menyatukan beberapa bentuk ke dalam satu
+Nim menjawab keduanya dengan cara berbeda. Object varian menyatukan beberapa bentuk ke dalam satu
 tipe dengan sebuah penanda. `distinct` membuat tipe benar benar baru, sehingga compiler menolak
 pencampuran. Bab ini memakai keduanya. Semua contoh diuji di Nim 2.2.12.
 
 ::: {.callout-note}
 ## Tujuan bab
 
-Setelah bab ini, pembaca bisa mendefinisikan object variant dengan field `case`, membaca error
+Setelah bab ini, pembaca bisa mendefinisikan object varian dengan field `case`, membaca error
 konstruksi yang bertentangan, mengenali `FieldDefect`, membuat tipe `distinct`, melakukan konversi
 eksplisit, dan tahu kapan `distinct` lebih baik daripada alias tipe.
 :::
 
-## Object variant: field yang bergantung pada penanda
+## Object varian: field yang bergantung pada penanda
 
 Awali dengan sebuah enum sebagai penanda, lalu tulis blok `case` di dalam objek.
 
@@ -45,7 +45,7 @@ Field `kind` adalah **discriminator** (penanda). Ia menentukan cabang `case` man
 
 ## Memakai `case` untuk mengakses field yang benar
 
-Cara aman membaca object variant adalah memeriksa penandanya lebih dulu.
+Cara aman membaca object varian adalah memeriksa penandanya lebih dulu.
 
 ```{.nim}
 type
@@ -135,7 +135,9 @@ cabang `rect`. Perbaikannya jelas dari isi pesan, yaitu hapus `width` dan isi `r
 
 ## Error saat runtime: `FieldDefect`
 
-Kalau penandanya baru diketahui saat program berjalan, pemeriksaan pindah ke runtime.
+Nim tidak memeriksa akses field varian saat kompilasi. Pemeriksaan penanda disisipkan pada setiap
+akses dan berjalan saat program berjalan, bahkan ketika penandanya literal di konstruktor. Yang
+tetap ditolak saat kompilasi adalah konstruktor yang mengisi field di cabang yang salah.
 
 ```{.nim}
 type
@@ -228,7 +230,8 @@ uang.
 
 ## Menambah kembali operasi yang dibutuhkan
 
-Tipe `distinct` kehilangan operasi tipe dasarnya. Tambahkan lagi secukupnya, termasuk `$` supaya
+Tipe `distinct` tidak mewarisi operasi aritmetika dan `$` dari tipe dasarnya, sementara operasi
+ordinal seperti `ord` dan `inc` tetap bekerja. Tambahkan lagi yang dibutuhkan, termasuk `$` supaya
 `echo` enak dibaca.
 
 ```{.nim}
@@ -285,7 +288,7 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
 ## Ringkasan
 
-- Object variant memakai field `case` dengan satu discriminator; hanya field cabang aktif yang ada.
+- Object varian memakai field `case` dengan satu discriminator; hanya field cabang aktif yang ada.
 - Konstruktor yang mengisi field di luar cabang ditolak sebagai error kompilasi.
 - Akses field variant tanpa memeriksa penanda berakhir `FieldDefect` saat program berjalan.
 - `distinct` membuat tipe baru; konversi ke dan dari tipe dasar harus eksplisit.

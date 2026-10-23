@@ -1,9 +1,11 @@
 # Macro: kode yang membangun kode
 
 Template sudah menyelesaikan banyak pekerjaan: ia mengganti satu potongan kode dengan potongan
-lain. Tapi template hanya menempel teks. Ia tidak bisa melihat bentuk argumennya, memeriksa
-tipenya, atau memutuskan kode apa yang dibuat berdasarkan isi data. Begitu kebutuhan sampai di
-situ, `macro` mengambil alih: prosedur yang berjalan saat kompilasi dan menerima kode sebagai data.
+lain. Tapi template hanya menempel teks. Ia tidak menerima argumen sebagai data AST yang bisa
+dibongkar, dan tidak bisa mengulang atas isi data untuk membangun kode baru. Tipe masih bisa
+diperiksa lewat `when typeof(x) is ...`, tapi itu hanya memilih cabang, bukan membangun bentuk baru.
+Begitu kebutuhan sampai di situ, `macro` mengambil alih: prosedur yang berjalan saat kompilasi dan
+menerima kode sebagai data.
 
 Bab ini mulai dari template, menunjukkan titik ketika ia mentok, lalu membangun macro selangkah
 demi selangkah. Semua contoh diuji di Nim 2.2.12.
@@ -106,11 +108,12 @@ Bedanya dengan template:
 |---|---|---|
 | Bekerja pada | kode yang ditempel apa adanya | AST sebagai data |
 | Argumen | tidak bisa dibaca sebagai data | `NimNode`, bisa diperiksa |
-| Butuh import | tidak | `std/macros` |
+| Butuh import untuk AST | tidak | ya, `std/macros` |
 
 ## Melihat AST: `NimNode` dan `treeRepr`
 
-Hasil `quote do`, dan setiap argumen macro, bertipe `NimNode`. `treeRepr` mencetaknya.
+Hasil `quote do`, dan setiap argumen `untyped` atau `typed`, bertipe `NimNode`. Parameter
+`static` berbeda: nilainya diterima sebagai nilai biasa, bukan node. `treeRepr` mencetak node.
 
 ```{.nim}
 import std/macros
@@ -179,7 +182,8 @@ string: ab
 ```
 
 `$x.getType` mengubah simpul tipe menjadi teks, misalnya `int` atau `string`, lalu hasilnya
-disisipkan ke keluaran. Informasi tipe inilah yang tidak terjangkau template.
+disisipkan ke keluaran. Template bisa memeriksa tipe lewat `when typeof(x) is ...`, tetapi tidak
+bisa membongkar node tipe untuk disisipkan ke kode yang dibangun.
 
 ## Membangun node sendiri: `newTree`
 
@@ -236,7 +240,8 @@ hello, bob
 ```
 
 Macro ini tidak menerima argumen. Ia membaca `Names`, lalu membuat satu prosedur untuk setiap nama.
-`newStmtList` menyusun daftar pernyataan, dan `ident` menyatukan awalan dengan nama. Menulis ini
+`newStmtList` menyusun daftar pernyataan; `&` menyatukan awalan dengan nama, lalu `ident` membuat
+node identifier dari string itu. Menulis ini
 dengan template tidak mungkin: template tidak bisa mengulang atas data dan membuat nama baru.
 
 ## Kapan macro tidak perlu
@@ -314,9 +319,10 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 - `quote do` membangun AST; backtick menempelkan node atau nilai dari luar, dan nama lokalnya
   aman dari bentrok.
 - `treeRepr` menampilkan AST; `getType` hanya bekerja pada argumen `typed`.
-- Macro butuh `import std/macros`; dahulukan `template` dan `const` sebelum menulis macro.
+- `quote do` dan API AST butuh `import std/macros`; macro sederhana yang hanya meneruskan node
+  tidak. Dahulukan `template` dan `const` sebelum menulis macro.
 
 ## Selanjutnya
 
-Bab berikutnya membahas [concept dan pencocokan tipe](concepts.qmd): membatasi prosedur generic
+Bab berikutnya membahas [konsep dan pencocokan tipe](concepts.qmd): membatasi prosedur generic
 berdasarkan bentuk tipe, bukan namanya.
