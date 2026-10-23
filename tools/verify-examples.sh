@@ -5,6 +5,9 @@
 #   aNN_nama.nim
 #   - .expected          stdout harus sama persis
 #   - .expected-error     kompilasi harus GAGAL dan stderr memuat teks ini
+#   - .mode               opsional, isinya:
+#                           js            → `nim js`, lalu dijalankan dengan node
+#                           <flag nim>    → argumen tambahan untuk `nim c -r`, mis. --mm:arc
 set -euo pipefail
 
 root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
@@ -17,6 +20,43 @@ lulus=0
 gagal=0
 daftar_gagal=()
 
+catat_gagal() {
+  gagal=$((gagal + 1))
+  daftar_gagal+=("$1")
+}
+
+catat_lulus() {
+  lulus=$((lulus + 1))
+}
+
+# Bandingkan stdout terhadap .expected.
+cek_keluaran() {
+  local src=$1 stdout_file=$2
+  local harap="${src%.nim}.expected"
+  if [ ! -f "$harap" ]; then
+    catat_gagal "$3: kompilasi sukses tapi tidak ada ${harap#"$root"/}"
+    return
+  fi
+  if diff -u "$harap" "$stdout_file" >"$out/$(basename "${src%.nim}").diff"; then
+    catat_lulus
+  else
+    catat_gagal "$3: stdout berbeda (build/verify/$(basename "${src%.nim}").diff)"
+  fi
+}
+
+# Pastikan stderr memuat isi .expected-error.
+cek_error() {
+  local src=$1 stderr_file=$2
+  local harap="${src%.nim}.expected-error"
+  if [ ! -f "$harap" ]; then
+    catat_gagal "$3: gagal dikompilasi tanpa ${harap#"$root"/}"
+  elif grep -qF -- "$(cat "$harap")" "$stderr_file"; then
+    catat_lulus
+  else
+    catat_gagal "$3: pesan error tidak memuat isi ${harap#"$root"/}"
+  fi
+}
+
 shopt -s nullglob
 for dir in "$root"/examples/*/; do
   for src in "$dir"*.nim; do
@@ -26,29 +66,35 @@ for dir in "$root"/examples/*/; do
     stderr_file="$out/$nama.err"
     biner="$out/$nama"
 
-    if "$nim_bin" c -r --hints:off --out:"$biner" --nimcache:"$cache" "$src" \
+    mode=""
+    mode_file="${src%.nim}.mode"
+    if [ -f "$mode_file" ]; then
+      mode="$(tr -d '\n' < "$mode_file" | sed 's/^[[:space:]]*//; s/[[:space:]]*$//')"
+    fi
+
+    if [ "$mode" = "js" ]; then
+      js_file="$out/$nama.js"
+      if "$nim_bin" js --hints:off --out:"$js_file" --nimcache:"$cache" "$src" \
+          >"$stdout_file" 2>"$stderr_file"; then
+        if ! command -v node >/dev/null 2>&1; then
+          catat_gagal "$rel: butuh node untuk menjalankan hasil nim js"
+        elif node "$js_file" >"$stdout_file" 2>>"$stderr_file"; then
+          cek_keluaran "$src" "$stdout_file" "$rel"
+        else
+          catat_gagal "$rel: node keluar bukan nol (build/verify/$nama.err)"
+        fi
+      else
+        cek_error "$src" "$stderr_file" "$rel"
+      fi
+      continue
+    fi
+
+    # shellcheck disable=SC2086
+    if "$nim_bin" c -r --hints:off $mode --out:"$biner" --nimcache:"$cache" "$src" \
         >"$stdout_file" 2>"$stderr_file"; then
-      harap="${src%.nim}.expected"
-      if [ ! -f "$harap" ]; then
-        gagal=$((gagal + 1))
-        daftar_gagal+=("$rel: kompilasi sukses tapi tidak ada ${harap#"$root"/}")
-      elif diff -u "$harap" "$stdout_file" >"$out/$nama.diff"; then
-        lulus=$((lulus + 1))
-      else
-        gagal=$((gagal + 1))
-        daftar_gagal+=("$rel: stdout berbeda (build/verify/$nama.diff)")
-      fi
+      cek_keluaran "$src" "$stdout_file" "$rel"
     else
-      harap="${src%.nim}.expected-error"
-      if [ ! -f "$harap" ]; then
-        gagal=$((gagal + 1))
-        daftar_gagal+=("$rel: gagal dikompilasi tanpa ${harap#"$root"/}")
-      elif grep -qF -- "$(cat "$harap")" "$stderr_file"; then
-        lulus=$((lulus + 1))
-      else
-        gagal=$((gagal + 1))
-        daftar_gagal+=("$rel: pesan error tidak memuat isi ${harap#"$root"/}")
-      fi
+      cek_error "$src" "$stderr_file" "$rel"
     fi
   done
 done
