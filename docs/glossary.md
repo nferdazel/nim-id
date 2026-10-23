@@ -93,6 +93,13 @@ diterjemahkan ke bahasa Indonesia secara paksa; kolom **Jangan** mencatat varian
 | instansiasi generic | generic instantiation | pembentukan tipe konkret dari generic pada pemakaian | — | generics |
 | typedesc | typedesc | tipe sebagai nilai, dipakai untuk overloading berbasis tipe | — | generics |
 
+| penunjuk | pointer | nilai yang menyimpan alamat memori (`ptr`) | pointer (kecuali di kode) | refs-and-pointers |
+| alamat | address | lokasi nilai di memori, diperoleh lewat `addr` | — | refs-and-pointers |
+| dereferensi | dereference | mengambil nilai yang ditunjuk sebuah penunjuk | — | refs-and-pointers |
+| penghitungan referensi | reference counting | menghitung pemakai sebuah nilai untuk tahu kapan dibebaskan | ref counting | memory-management |
+| mode memori | memory management mode | pilihan pengelola memori compiler (`--mm:arc`, `--mm:orc`) | — | memory-management |
+| sumber daya | resource | hal yang harus dibebaskan setelah dipakai (berkas, soket) | resource | files-and-os |
+
 Aturan singkat:
 
 - Istilah di kolom pertama dipakai di teks Indonesia; kolom English di teks Inggris.
