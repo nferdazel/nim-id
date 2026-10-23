@@ -1,0 +1,198 @@
+# `unittest` dan disiplin tes
+
+Tes yang tidak pernah dijalankan tidak membuktikan apa pun. Nim menyertakan `unittest` di pustaka
+standar, jadi tidak ada paket yang perlu dipasang. Bab ini menulis tes yang benar-benar berjalan,
+lalu membaca keluarannya. Yang dibawa pulang bukan kerangkanya, melainkan kebiasaan menjalankannya
+setiap kali kode berubah.
+
+::: {.callout-note}
+## Tujuan bab
+
+Setelah bab ini, pembaca bisa menulis `suite` dan `test`, memakai `check`, `require`, dan `expect`,
+membaca keluaran lulus dan gagal, serta mengenali `undeclared identifier` saat lupa mengimpor
+`std/unittest`.
+:::
+
+## Suite dan test
+
+Simpan kode berikut sebagai `tests.nim`, lalu jalankan `nim c -r tests.nim`.
+
+```{.nim}
+import std/unittest
+
+proc add(a, b: int): int =
+  a + b
+
+suite "add":
+  test "adds two positive numbers":
+    check add(2, 3) == 5
+
+  test "adds a negative number":
+    check add(-1, 4) == 3
+```
+
+```{.txt}
+
+[Suite] add
+  [OK] adds two positive numbers
+  [OK] adds a negative number
+```
+
+Tiga hal yang perlu diperhatikan.
+
+- `suite` mengelompokkan tes. Namanya muncul di keluaran dengan awalan `[Suite]`.
+- `test` adalah satu kasus uji. Setiap kasus yang lulus dicetak `[OK]`, menjorok dua spasi.
+- Baris pertama keluaran memang kosong. Itu bawaan `unittest`, bukan salah tulis di buku ini.
+
+`check` menerima ekspresi `bool`; kalau bernilai `false`, tesnya ditandai gagal. Karena itu
+perbandingan ditulis apa adanya di dalamnya, bukan string atau hasil lain.
+
+Beri nama tes sebagai perilaku, bukan sebagai nama prosedur. `"adds two positive numbers"` lebih
+berguna daripada `"test add"`, karena saat tes gagal, nama itulah yang muncul di keluaran dan
+menunjuk ke janji yang rusak. Nama yang baik membuat kegagalan bisa dipahami tanpa membuka kodenya.
+
+## `check`, `require`, dan `expect`
+
+`check` adalah alat utama. Ia boleh dipakai berkali-kali dalam satu `test`, dan semuanya harus lulus
+supaya tes ditandai `[OK]`.
+
+```{.nim}
+import std/unittest
+
+proc isEven(n: int): bool =
+  n mod 2 == 0
+
+suite "isEven":
+  test "catches even numbers":
+    check isEven(0)
+    check isEven(2)
+    check isEven(42)
+
+  test "rejects odd numbers":
+    check not isEven(1)
+    check not isEven(7)
+```
+
+```{.txt}
+
+[Suite] isEven
+  [OK] catches even numbers
+  [OK] rejects odd numbers
+```
+
+Untuk berhenti di tengah tes, pakai `require`. Bedanya dengan `check`: `check` mencatat kegagalan
+tetapi melanjutkan sisa tes, sedangkan `require` menghentikan tes saat itu juga. Pakai `require`
+kalau langkah berikutnya tidak masuk akal tanpa langkah sebelumnya, misalnya membagi dengan nilai
+yang baru saja dipastikan bukan nol.
+
+`expect` memeriksa bahwa sebuah blok melempar pengecualian dengan tipe tertentu. Blok di dalamnya
+tidak boleh lolos tanpa error; kalau lolos, tesnya gagal. Ini cara menguji jalur error, bukan hanya
+jalur sukses.
+
+```{.nim}
+import std/unittest
+
+proc divide(a, b: int): int =
+  if b == 0:
+    raise newException(ValueError, "division by zero")
+  a div b
+
+suite "divide":
+  test "returns the quotient":
+    check divide(10, 2) == 5
+
+  test "rejects a zero divisor":
+    expect ValueError:
+      discard divide(1, 0)
+
+  test "keeps running after a passing require":
+    require divide(9, 3) == 3
+    check true
+```
+
+```{.txt}
+
+[Suite] divide
+  [OK] returns the quotient
+  [OK] rejects a zero divisor
+  [OK] keeps running after a passing require
+```
+
+Ketiga alat itu cukup untuk sebagian besar tes. Keluarannya sama: `[OK]` untuk tes yang lulus.
+
+Kalau tiap kasus butuh keadaan awal yang sama, `unittest` menyediakan `setup` dan `teardown`. Blok
+`setup` berjalan sebelum tiap `test`, dan `teardown` sesudahnya. Keduanya bisa diletakkan di dalam
+`suite` maupun di tingkat atas. Pakai kalau setiap tes butuh data segar, misalnya berkas sementara
+yang harus dibuat dan dihapus ulang.
+
+## Error sengaja: lupa mengimpor `std/unittest`
+
+`suite`, `test`, dan `check` bukan bagian dari bahasa. Semuanya berasal dari `std/unittest`.
+
+```{.nim}
+suite "add":
+  test "adds two numbers":
+    check 1 + 1 == 2
+```
+
+```{.txt}
+tests.nim(1, 1) Error: undeclared identifier: 'suite'
+```
+
+Pesan ini menunjuk baris 1, kolom 1: huruf pertama `suite`. `undeclared identifier` berarti nama itu
+tidak dikenal di ruang lingkup mana pun. Perbaikannya menambahkan `import std/unittest` di baris
+pertama.
+
+Ini pola yang sama dengan modul lain. Nama dari pustaka standar tidak pernah masuk sendiri; ia
+harus diimpor dulu. Kebiasaan yang menghemat waktu: tulis `import` di baris pertama, sebelum
+menulis tesnya. Dalam proyek nimble, berkas tes diletakkan di folder `tests/`, dan `nimble test`
+menjalankan semuanya. Isinya tetap sama: `unittest`, dan kode keluar bukan nol kalau ada yang gagal.
+
+## Saat tes gagal
+
+Tes yang gagal mencetak baris `[FAILED]`, dan di atasnya baris `Check failed:` yang memuat berkas,
+baris, kolom, serta nilai yang dibandingkan. Prosesnya juga keluar dengan kode bukan nol.
+
+Kode keluar itu yang penting untuk otomatisasi. CI tidak membaca teks keluarannya; ia hanya
+memeriksa apakah prosesnya sukses. Selama satu tes gagal, seluruh proses dianggap gagal, dan
+penggabungan ditahan. Karena itu tes berfungsi sebagai gerbang, bukan sekadar laporan.
+
+## Latihan
+
+1. Tulis `suite` untuk prosedur yang menghitung faktorial, dengan tiga kasus: nol, satu, dan lima.
+2. Tanpa menjalankan, prediksi keluarannya:
+   ```{.nim}
+   import std/unittest
+
+   suite "strings":
+     test "length":
+       check "nim".len == 3
+     test "first char":
+       check "nim"[0] == 'n'
+   ```
+3. Kode berikut gagal dikompilasi. Perbaiki dan jelaskan pesannya:
+   ```{.nim}
+   import std/unittest
+
+   suite "math":
+     test "one":
+       check 1 + 1
+   ```
+4. Jalankan `test` yang memakai `expect` untuk pengecualian yang tidak dilempar. Jelaskan kenapa
+   tesnya gagal.
+
+Jawaban ada di [Lampiran A](../appendix/answers.qmd).
+
+## Ringkasan
+
+- `unittest` ada di pustaka standar; tidak ada paket yang perlu dipasang.
+- `suite` mengelompokkan, `test` menandai satu kasus, dan `check` membandingkan ekspresi `bool`.
+- `require` menghentikan tes lebih awal; `expect` memastikan sebuah pengecualian dilempar.
+- Tes yang lulus dicetak `[OK]`, yang gagal `[FAILED]`, dan proses gagal itu keluar dengan kode
+  bukan nol.
+- Lupa `import std/unittest` menghasilkan `undeclared identifier` di kompilasi.
+
+## Selanjutnya
+
+Bab berikutnya masuk ke `async`/`await`: menjalankan beberapa tugas sekaligus saat program menunggu
+IO, tanpa membuat utas baru. Lanjut ke [`async`/`await` dan IO](async.qmd).

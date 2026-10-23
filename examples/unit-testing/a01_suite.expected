@@ -1,0 +1,4 @@
+
+[Suite] add
+  [OK] adds two positive numbers
+  [OK] adds a negative number

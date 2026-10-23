@@ -1,0 +1,194 @@
+# `unittest` and test discipline
+
+A test that never runs proves nothing. Nim ships `unittest` in the standard library, so there is no
+package to install. This chapter writes tests that actually run, then reads their output. What you
+take away is not the framework but the habit of running it every time the code changes.
+
+::: {.callout-note}
+## What you will be able to do
+
+After this chapter you can write `suite` and `test` blocks, use `check`, `require`, and `expect`,
+read passing and failing output, and recognize `undeclared identifier` when `std/unittest` is not
+imported.
+:::
+
+## Suites and tests
+
+Save the following as `tests.nim`, then run `nim c -r tests.nim`.
+
+```{.nim}
+import std/unittest
+
+proc add(a, b: int): int =
+  a + b
+
+suite "add":
+  test "adds two positive numbers":
+    check add(2, 3) == 5
+
+  test "adds a negative number":
+    check add(-1, 4) == 3
+```
+
+```{.txt}
+
+[Suite] add
+  [OK] adds two positive numbers
+  [OK] adds a negative number
+```
+
+Three things are worth noticing.
+
+- `suite` groups tests. Its name appears in the output behind `[Suite]`.
+- `test` is one case. Every passing case prints `[OK]`, indented two spaces.
+- The first line of the output really is empty. That is `unittest`'s default, not a typo in this
+  book.
+
+`check` takes a `bool` expression; if it is `false`, the test is marked failed. That is why the
+comparison goes in as-is, not as a string or some other value.
+
+Name a test after behavior, not after a procedure. `"adds two positive numbers"` is more useful than
+`"test add"`, because when a test fails, that name is what shows up in the output and points to the
+promise that broke. A good name makes a failure readable without opening the code.
+
+## `check`, `require`, and `expect`
+
+`check` is the main tool. It may appear several times in one `test`, and all of them must pass for
+the test to print `[OK]`.
+
+```{.nim}
+import std/unittest
+
+proc isEven(n: int): bool =
+  n mod 2 == 0
+
+suite "isEven":
+  test "catches even numbers":
+    check isEven(0)
+    check isEven(2)
+    check isEven(42)
+
+  test "rejects odd numbers":
+    check not isEven(1)
+    check not isEven(7)
+```
+
+```{.txt}
+
+[Suite] isEven
+  [OK] catches even numbers
+  [OK] rejects odd numbers
+```
+
+To stop in the middle of a test, use `require`. The difference from `check`: `check` records the
+failure but keeps going through the rest of the test, whereas `require` stops the test right there.
+Use `require` when the next step makes no sense without the previous one, for example dividing by a
+value you just proved is not zero.
+
+`expect` checks that a block raises an exception of a given type. The block must not pass silently;
+if it does, the test fails. This is how you test the error path, not only the happy path.
+
+```{.nim}
+import std/unittest
+
+proc divide(a, b: int): int =
+  if b == 0:
+    raise newException(ValueError, "division by zero")
+  a div b
+
+suite "divide":
+  test "returns the quotient":
+    check divide(10, 2) == 5
+
+  test "rejects a zero divisor":
+    expect ValueError:
+      discard divide(1, 0)
+
+  test "keeps running after a passing require":
+    require divide(9, 3) == 3
+    check true
+```
+
+```{.txt}
+
+[Suite] divide
+  [OK] returns the quotient
+  [OK] rejects a zero divisor
+  [OK] keeps running after a passing require
+```
+
+Those three tools cover most tests. Their output is the same: `[OK]` for a passing test.
+
+When every case needs the same starting state, `unittest` provides `setup` and `teardown`. The
+`setup` block runs before each `test`, and `teardown` after it. Both can sit inside a `suite` or at
+the top level. Use them when each test needs fresh data, such as a temporary file that must be
+created and removed again.
+
+## Deliberate error: forgetting to import `std/unittest`
+
+`suite`, `test`, and `check` are not part of the language. They all come from `std/unittest`.
+
+```{.nim}
+suite "add":
+  test "adds two numbers":
+    check 1 + 1 == 2
+```
+
+```{.txt}
+tests.nim(1, 1) Error: undeclared identifier: 'suite'
+```
+
+The message points at line 1, column 1: the first letter of `suite`. `undeclared identifier` means
+the name is unknown in every scope. The fix is to add `import std/unittest` on the first line.
+
+This is the same pattern as any other module. Standard-library names never arrive on their own; they
+must be imported first. A time-saving habit is to write the `import` lines at the top before writing
+the tests. In a nimble project, test files live in the `tests/` folder, and `nimble test` runs them
+all. The contents stay the same: `unittest`, and a non-zero exit code when something fails.
+
+## When a test fails
+
+A failing test prints a `[FAILED]` line, and above it a `Check failed:` line carrying the file,
+line, column, and the values compared. The process also exits with a non-zero code.
+
+That exit code is what matters for automation. CI does not read the text; it only checks whether the
+process succeeded. As long as one test fails, the whole process counts as failed, and the merge is
+held. That is what turns a test suite into a gate rather than a report.
+
+## Exercises
+
+1. Write a `suite` for a procedure that computes factorials, with three cases: zero, one, and five.
+2. Without running it, predict the output:
+   ```{.nim}
+   import std/unittest
+
+   suite "strings":
+     test "length":
+       check "nim".len == 3
+     test "first char":
+       check "nim"[0] == 'n'
+   ```
+3. The code below fails to compile. Fix it and explain the message:
+   ```{.nim}
+   import std/unittest
+
+   suite "math":
+     test "one":
+       check 1 + 1
+   ```
+4. Run a `test` that uses `expect` for an exception that is never raised. Explain why the test fails.
+
+Answers are in [Appendix A](../appendix/answers.qmd).
+
+## Summary
+
+- `unittest` is in the standard library; no package to install.
+- `suite` groups, `test` marks one case, and `check` compares a `bool` expression.
+- `require` stops a test early; `expect` makes sure an exception is raised.
+- A passing test prints `[OK]`, a failing one `[FAILED]`, and a failing run exits non-zero.
+- A missing `import std/unittest` gives an `undeclared identifier` at compile time.
+
+## Next
+
+The next chapter moves to `async`/`await`: running several tasks while the program waits on IO,
+without spawning threads. Continue to [`async`/`await` and IO](async.qmd).

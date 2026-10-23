@@ -1,0 +1,5 @@
+
+[Suite] divide
+  [OK] returns the quotient
+  [OK] rejects a zero divisor
+  [OK] keeps running after a passing require
