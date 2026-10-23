@@ -37,6 +37,9 @@ TERLARANG = {
     "build debug": "debug build",
     "scaffolding": "perancah proyek",
     "casting": "konversi tipe",
+    "concept": "konsep",
+    "overload": "overloading",
+    "object variant": "object varian",
 }
 
 FENCE = re.compile(r"```.*?```", re.S)

@@ -16,6 +16,9 @@ out="$root/build/verify"
 cache="$root/build/nimcache"
 mkdir -p "$out" "$cache"
 
+# Contoh files-and-os membaca variabel ini; keluaran harus tidak bergantung environment pemanggil.
+unset NIM_ID_GREETING || true
+
 lulus=0
 gagal=0
 daftar_gagal=()
