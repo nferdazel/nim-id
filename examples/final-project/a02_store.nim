@@ -41,7 +41,7 @@ proc removeNote*(path: string, index: int): bool =
   true
 
 when isMainModule:
-  let path = getTempDir() / "nim_id_notes_demo.json"
+  let path = getTempDir() / ("nim_id_notes_demo_" & $getCurrentProcessId() & ".json")
   removeFile(path)
 
   addNote(path, "buy milk")

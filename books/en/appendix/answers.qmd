@@ -2019,7 +2019,7 @@ The message names a missing field rather than a missing procedure, because the c
 `elapsed.inMilliseconds`:
 
 ```{.txt}
-main.nim(5, 13) Error: undeclared field: 'inMilliseconds' for type times.Duration
+main.nim(17, 42) Error: undeclared field: 'inMilliseconds' for type times.Duration
 ```
 
 The `Duration` type itself is still known, because `std/monotimes` imports it. What is missing is the
@@ -2034,8 +2034,14 @@ procedure that reads it, and that lives in `std/times`. The fix is to add `impor
 
 ## Chapter: Cross-compiling and deploying binaries
 
-**1.** The values follow the machine you use, and the first example prints what it needs. On macOS
-with an Apple processor the answer is `--os:macosx --cpu:arm64`. On 64-bit Linux it is usually
+**1.** The values follow the machine you use. The quick way to read them:
+
+```bash
+$ nim --hints:off --eval:'import std/os; echo hostOS, " ", hostCPU'
+macosx arm64
+```
+
+On macOS with an Apple processor the answer is `--os:macosx --cpu:arm64`. On 64-bit Linux it is usually
 `--os:linux --cpu:amd64`. The raw values come from `hostOS` and `hostCPU`; the example in the chapter
 deliberately prints only the comparison so its output is the same on both machines.
 
@@ -2188,7 +2194,7 @@ echo $notes
 ["buy milk"]
 ```
 
-**5.** One advantage of a separate storage module: the rule "an empty file means no notes yet" is
+**5.** One advantage of a separate storage module: the rule "a missing file means no notes yet" is
 written once in `loadNotes`, and both the CLI and the tests use the same rule. If that rule were
 copied into two places, the two copies could quietly drift apart.
 

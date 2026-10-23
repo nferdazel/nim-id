@@ -51,7 +51,7 @@ way to read it.
 
 The duration itself never appears in the output, and that is deliberate. A timing number changes on
 every machine and every run, so an output block containing one can never match during automated
-checks. The examples stay identical on any machine; time is used for comparisons, and the comparison
+checks. The examples stay identical on any 64-bit machine; time is used for comparisons, and the comparison
 result is what gets printed.
 
 The line `discard sumUp(10_000)` is a *warm-up*. On the first call, memory pages have not been
@@ -228,7 +228,7 @@ went.
 
 This profiler samples, so its usefulness scales with how long the program runs. A program that
 finishes instantly produces an almost empty file; increase the workload first. Two other switches are
-handy: `--stackTraceMsgs:on` adds a message to each frame, and `--profileVM:on` profiles the code that
+handy: `--stackTraceMsgs:on` shows the messages set with `setFrameMsg`, and `--profileVM:on` profiles the code that
 runs at compile time.
 
 ## System tools: `perf` and Instruments

@@ -2,7 +2,7 @@ import std/[unittest, os]
 import a02_store
 
 proc testPath(): string =
-  getTempDir() / "nim_id_notes_test.json"
+  getTempDir() / ("nim_id_notes_test_" & $getCurrentProcessId() & ".json")
 
 suite "store":
   setup:

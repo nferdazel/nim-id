@@ -98,7 +98,7 @@ proc removeNote*(path: string, index: int): bool =
   true
 
 when isMainModule:
-  let path = getTempDir() / "nim_id_notes_demo.json"
+  let path = getTempDir() / ("nim_id_notes_demo_" & $getCurrentProcessId() & ".json")
   removeFile(path)
 
   addNote(path, "buy milk")
@@ -261,7 +261,7 @@ import std/[unittest, os]
 import a02_store
 
 proc testPath(): string =
-  getTempDir() / "nim_id_notes_test.json"
+  getTempDir() / ("nim_id_notes_test_" & $getCurrentProcessId() & ".json")
 
 suite "store":
   setup:

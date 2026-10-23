@@ -58,8 +58,9 @@ concepts to compose types.
 | Nim | `concept`, generic bounds, or the old `interface` |
 
 A Nim concept is not recognized at program runtime; it is checked during overloading at compile
-time. That is closer to a Rust `trait` than to a Go `interface`, which is dynamic. A concept checks
-the shape of a type, such as the presence of a field or a procedure, without demanding an
+time. That is closer to a Go `interface` than to a Rust `trait`: both are structural, so a type that
+happens to have a matching procedure satisfies them with no explicit `impl` as in Rust. A concept
+checks the shape of a type, such as the presence of a field or a procedure, without demanding an
 inheritance declaration. A type from another library can therefore satisfy it untouched.
 
 ## Error handling
@@ -126,10 +127,12 @@ exception is actually raised. Both report failure with a non-zero exit code, so 
 | Rust | threads with `Send`/`Sync`, `async`/`await` via tokio |
 | Nim | `{.async.}` in `std/asyncdispatch`, threads, and `spawn` |
 
-Nim has two tracks: `async`/`await` for IO in one thread, and real threads with `--threads:on`. The
-async model uses a single event loop, and tasks wait without blocking the thread. For heavy CPU
-work, threads and `spawn` fit better, with explicit communication channels. There is no direct
-equivalent of a Go channel, which unites lightweight goroutines and channels in one model.
+Nim has two tracks: `async`/`await` for IO in one thread, and real threads. Since Nim 2.x threads are
+on by default (`compileOption("threads")` is `true`), so `--threads:on` is no longer needed. The
+async model uses a single event loop, and tasks wait without blocking the thread. For communication
+between threads there is `Channel[T]`; `std/threadpool` and `spawn` still exist but are marked
+deprecated. What Nim does not have is Go's goroutine model, lightweight goroutines with `select`
+over many channels.
 
 ## What is similar
 
@@ -151,12 +154,13 @@ copied with only a small adjustment.
 
 Nim compiles to a binary through C, C++, or JavaScript; there is no virtual machine interpreting
 code at runtime. Indentation delimits blocks, as in Python, with no curly braces. Memory management
-uses ARC or ORC with deterministic destructors, not a stop-the-world garbage collector. `nil` only
-applies to `ref`, `ptr`, and procedures; value objects are never `nil`. The `raises` effect is
+uses ARC or ORC with deterministic destructors, not a stop-the-world garbage collector. `nil` applies
+to `ref`, `ptr`, `cstring`, `pointer`, and procedures; value objects are never `nil`. The `raises` effect is
 checked by the compiler. The range `0 .. 5` is inclusive, while Python `range` is exclusive. `and`,
 `or`, and `not` replace `&&`, `||`, and `!`. There is no built-in `async`/`await` keyword; async is
-built with the `{.async.}` macro. Integers have fixed widths and are checked on overflow, not
-arbitrary-precision as in Python.
+built with the `{.async.}` macro. Integers have fixed widths, not arbitrary precision as in Python. Overflow of a signed integer
+raises `OverflowDefect` even under `-d:release`; unsigned integers wrap; only `-d:danger` disables
+that check.
 
 A value object is copied on assignment, not shared through a reference as a Python `class` is. To
 share, use a `ref object`. There are no decorators as in Python; pragmas in `{.braces.}` and macros
@@ -176,7 +180,8 @@ variable with no explicit pointer. Nim identifiers ignore case and underscores e
 first letter, so `get_name` equals `getName`, but `GetName` differs. `var n: Node` for a `ref
 object` holds `nil`, so `new(n)` is needed before use. Copying a `ref` copies the pointer, not the
 contents, so two names can point to the same object. A `case` on an enum must be complete, and the
-compiler rejects a missing branch. There is no automatic conversion from `int` to `float`. `if`
+compiler rejects a missing branch. There is no automatic conversion from an `int` variable to `float`; a
+literal such as `1` is still accepted. `if`
 runs while the program runs, whereas `when` is settled at compile time; swapping them changes the
 meaning. A string is not a sequence of `char`, and `s[0]` has type `char`. Finally, `echo` adds no
 separator between arguments.
