@@ -1,0 +1,287 @@
+# Closures and captured variables
+
+Procedures in Nim are values. A procedure can be stored in a variable, passed as an argument, and
+returned from another procedure. When a procedure remembers a variable from where it was created,
+it becomes a *closure*.
+
+The confusing part is not the syntax but what that memory holds. A change to a captured variable is
+sometimes visible and sometimes not, depending on whether the variable is `var` or `let`. Inside a
+loop, one small choice makes every closure point at the same variable.
+
+::: {.callout-note}
+## What you will be able to do
+
+After this chapter you can store a procedure in a variable of type `proc`, write closures that
+capture variables, explain when a capture refers and when it copies, and recognize the closure trap
+inside a loop.
+:::
+
+## Procedures as values
+
+A named procedure can be stored in a variable. The variable's type is written with the `proc`
+keyword.
+
+```{.nim}
+proc add(a, b: int): int =
+  a + b
+
+# A procedure stored in a variable of type `proc`.
+let op: proc(a, b: int): int = add
+
+echo op(2, 3)
+echo op(10, 20)
+```
+
+```{.txt}
+5
+30
+```
+
+`op` has type `proc(a, b: int): int`. The parentheses hold the parameter list, and the part after
+the colon is the return type. Calling `op(2, 3)` is the same as calling `add(2, 3)`.
+
+## Passing a procedure as an argument
+
+A `proc` type can also be a parameter type, so a procedure can be handed to another procedure.
+
+```{.nim}
+proc apply(f: proc(x: int): int, value: int): int =
+  f(value)
+
+proc twice(x: int): int =
+  x * 2
+
+echo apply(twice, 5)
+echo apply(proc(x: int): int = x + 1, 10)
+```
+
+```{.txt}
+10
+11
+```
+
+The first call passes the named procedure `twice`. The second writes the procedure right in the
+argument position, `proc(x: int): int = x + 1`. This form is an anonymous procedure (*anonymous
+proc*), and its type matches `twice`.
+
+## Closures: procedures that remember
+
+An anonymous procedure may use a variable from the procedure that encloses it. Nim stores that
+variable together with the procedure, and the pair is called a *closure*.
+
+```{.nim}
+proc makeCounter(): proc(): int =
+  var count = 0
+  result = proc(): int =
+    count += 1
+    count
+
+let c = makeCounter()
+echo c()
+echo c()
+echo c()
+```
+
+```{.txt}
+1
+2
+3
+```
+
+`makeCounter` returns a procedure, and `count` travels with it. Each call to `c()` bumps the same
+`count`. If `makeCounter` is called twice, we get two separate `count` variables, each starting at
+zero.
+
+## Two closures sharing one variable
+
+Several closures born from the same call use the same variable.
+
+```{.nim}
+proc makePair(): (proc(): int, proc(): int) =
+  var n = 0
+  let increment = proc(): int =
+    n += 1
+    n
+  let current = proc(): int = n
+  (increment, current)
+
+let (increment, current) = makePair()
+echo current()
+echo increment()
+echo current()
+```
+
+```{.txt}
+0
+1
+1
+```
+
+`current` reports `n`, while `increment` raises it. Because both refer to the same `n`, the last
+`current()` already sees the change made by `increment`.
+
+## Capturing `var` and `let`: refer or copy
+
+The rule to keep in mind: `var` is captured by reference, while `let` is captured by copying its
+value.
+
+```{.nim}
+var message = "hello"
+let show = proc(): string = message
+
+message = "changed"
+echo show()
+```
+
+```{.txt}
+changed
+```
+
+`show` does not store the text `"hello"`; it refers to the variable `message`. Once `message` is
+replaced, `show` sees the new value.
+
+For `let`, the copy is made when the closure is created.
+
+```{.nim}
+proc demo() =
+  var x = 1
+  let frozen = x
+  let readVar = proc(): int = x
+  let readLet = proc(): int = frozen
+  x = 99
+  echo readVar()
+  echo readLet()
+
+demo()
+```
+
+```{.txt}
+99
+1
+```
+
+`readVar` refers to `x`, so it sees `99`. `readLet` holds a copy of `frozen` taken when the closure
+was created, so it still sees `1`. Since a `let` cannot be reassigned, copying it is always safe.
+
+## Closures inside a loop
+
+The most common trap lives in a loop.
+
+```{.nim}
+var fns: seq[proc(): int]
+for i in 0..2:
+  fns.add(proc(): int = i)
+
+for f in fns:
+  echo f()
+```
+
+```{.txt}
+2
+2
+2
+```
+
+The expected output is probably `0`, `1`, `2`. What prints is `2` three times. The reason: `i` is a
+single variable reused on every iteration, and all three closures refer to that same variable. When
+the loop ends, `i` holds `2`.
+
+Copying inside the loop body does not help, because Nim still uses one slot for the loop variable.
+The fix is to create closures through a separate procedure, so every call has its own parameter.
+
+```{.nim}
+proc make(value: int): proc(): int =
+  result = proc(): int = value
+
+var fns: seq[proc(): int]
+for i in 0..2:
+  fns.add(make(i))
+
+for f in fns:
+  echo f()
+```
+
+```{.txt}
+0
+1
+2
+```
+
+Inside `make`, the parameter `value` is fresh for every call. The closure inside it captures the
+`value` of that call, not a shared variable.
+
+## Reading an error: calling convention
+
+Nim distinguishes ordinary procedures from closures. An ordinary procedure uses the *nimcall*
+convention, while a closure uses *closure* because it carries its environment. Mixing the two is
+rejected by the compiler.
+
+```{.nim}
+type IntFn = proc(x: int): int {.nimcall.}
+
+proc apply(f: IntFn, value: int): int = f(value)
+
+proc outer(base: int): int =
+  let g = proc(x: int): int = x + base
+  apply(g, 1)
+
+echo outer(10)
+```
+
+```{.txt}
+main.nim(7, 8) Error: type mismatch
+Expression: apply(g, 1)
+  [1] g: proc (x: int): int{.closure, noSideEffect, gcsafe.}
+  [2] 1: int literal(1)
+
+Expected one of (first mismatch at [position]):
+[1] proc apply(f: IntFn; value: int): int
+  expression 'g' is of type: proc (x: int): int{.closure, noSideEffect, gcsafe.}
+  Calling convention mismatch: got '{.closure.}', but expected '{.nimcall.}'.
+```
+
+Read from the bottom. The last line names the problem: `g` has closure type, while `IntFn` demands
+`{.nimcall.}`. `g` became a closure because it captures `base`. There are two fixes: remove
+`{.nimcall.}` from `IntFn`, or capture nothing in `g`. Without `base`, `g` is an ordinary procedure
+and fits `IntFn`.
+
+## Exercises
+
+1. Write `proc compose(f, g: proc(x: int): int): proc(x: int): int` that returns a procedure
+   computing `g(f(x))`, then call the result with one value.
+2. Without running it, predict the output:
+   ```{.nim}
+   var total = 0
+   let add = proc(n: int) =
+     total += n
+   add(3)
+   add(4)
+   echo total
+   ```
+3. Why do the three closures in the loop example above all print `2`? Name one way to fix it.
+4. The code below fails to compile. Fix it, then explain why the message mentions a *calling
+   convention*:
+   ```{.nim}
+   proc makeAdder(base: int): proc(x: int): int =
+     result = proc(x: int): int = x + base
+
+   let addBase: proc(x: int): int {.nimcall.} = makeAdder(10)
+   echo addBase(5)
+   ```
+
+Answers are in [Appendix A](../appendix/answers.qmd).
+
+## Summary
+
+- A procedure is a value of type `proc(...)`; it can be stored, passed, and returned.
+- A closure is a procedure together with the variables it captured.
+- `var` is captured by reference, `let` by copy; closures from the same call share one variable.
+- Closures inside a loop refer to the same loop variable; create them through a separate procedure
+  so each closure gets its own copy.
+- Closures use the `{.closure.}` convention; mixing them with a `{.nimcall.}` type is rejected by the
+  compiler.
+
+## Next
+
+The next chapter covers *generics*: writing a single procedure or type that works for many types,
+with constraints the compiler checks before the program runs.
