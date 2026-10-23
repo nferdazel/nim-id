@@ -16,3 +16,4 @@ books/*/appendix/*.html
 books/*/site_libs/
 books/*/_variables.yml
 .m1/
+.m2/
