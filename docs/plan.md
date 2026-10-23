@@ -1,6 +1,6 @@
 # Rencana: Buku Nim Bahasa Indonesia, repo `nim-id`, situs `nim.qouver.com`
 
-Status: **draft untuk direview**. Belum ada kode/repo yang dibuat.
+Status: **M1 selesai** (16 bab, situs dan PDF terbit, deploy otomatis aktif). M2 belum dimulai.
 Tanggal: 23 Okt 2026. Target tool: Nim 2.2.x.
 
 ---
