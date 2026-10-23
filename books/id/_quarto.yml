@@ -51,8 +51,20 @@ book:
         - chapters/async.qmd
         - chapters/ffi-c.qmd
         - chapters/js-backend.qmd
+    - part: "Bagian C: Praktik"
+      chapters:
+        - chapters/cli-tools.qmd
+        - chapters/http-api.qmd
+        - chapters/database.qmd
+        - chapters/nimble-packages.qmd
+        - chapters/benchmarking.qmd
+        - chapters/cross-compile.qmd
+        - chapters/final-project.qmd
   appendices:
     - appendix/answers.qmd
+    - appendix/glossary.qmd
+    - appendix/cheatsheet.qmd
+    - appendix/nim-for-others.qmd
   search: true
   sidebar:
     style: docked
