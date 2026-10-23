@@ -107,6 +107,15 @@ diterjemahkan ke bahasa Indonesia secara paksa; kolom **Jangan** mencatat varian
 | efek | effect | sifat prosedur yang dapat diperiksa compiler (`raises`) | — | exceptions |
 | fasad | facade | modul tipis yang menyatukan beberapa modul lain | facade | modules |
 
+| macro | macro | prosedur compile-time yang menerima dan menghasilkan AST | — | macros |
+| pohon sintaksis | abstract syntax tree | struktur pohon yang mewakili kode sumber | AST (kecuali penjelasan awal) | macros |
+| `quote do` | quote do | blok macro yang menulis kode seperti biasa | — | macros |
+| untyped | untyped | parameter macro yang diterima sebelum diperiksa tipe | — | macros |
+| konsep | concept | syarat bentuk tipe yang diperiksa saat overloading | concept (kecuali di kode) | concepts |
+| object varian | variant object | object yang field-nya bergantung pada satu penanda | — | variants-and-distinct |
+| distinct | distinct | tipe baru dengan representasi sama tetapi tidak saling tukar | — | variants-and-distinct |
+| alias tipe | type alias | nama lain untuk tipe yang sudah ada, tanpa tipe baru | — | variants-and-distinct |
+
 Aturan singkat:
 
 - Istilah di kolom pertama dipakai di teks Indonesia; kolom English di teks Inggris.
