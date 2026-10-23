@@ -15,7 +15,7 @@ echo "Hello, Sari"
 Hello, Sari
 ```
 
-**2.** Outputnya `55`. Jumlah `1..10` adalah 55. Rentangnya inklusif, jadi 10 ikut dihitung.
+**2.** Outputnya `55`. Jumlah `1..10` adalah 55. *Range itu* inklusif, jadi 10 ikut dihitung.
 
 **3.** `echo` menerima beberapa argumen, tapi tidak menambahkan pemisah. Karena itu spasi ditulis
 sendiri di dalam string:
@@ -28,8 +28,8 @@ echo "7 * 6 = ", 7 * 6
 7 * 6 = 42
 ```
 
-**4.** Deklarasi `var age: int` sendiri sah. Yang tidak cocok adalah nilai awalnya. Compiler
-menunjuk kolom 16, yaitu awal literal `"twenty"`; di situlah tipe `string` muncul padahal `int` yang
+**4.** Deklarasi `var age: int` sendiri sah. Yang tidak cocok adalah *value* awalnya. Compiler
+menunjuk kolom 16, yaitu awal literal `"twenty"`; di situlah *type* `string` muncul padahal `int` yang
 dibutuhkan. Kolom 5 adalah nama `age`, dan nama tidak salah.
 
 **5.** Tidak valid. `greet` menuntut parameter `string`, sedangkan `42` bertipe `int`. Compiler
@@ -39,7 +39,7 @@ langsung menolaknya tanpa menjalankan program:
 greet42.nim(3, 11) Error: type mismatch
 ```
 
-Perbaikan yang wajar: kirim string, misalnya `echo greet("42")`, atau ubah tipe parameter.
+Perbaikan yang wajar: kirim string, misalnya `echo greet("42")`, atau ubah *type* parameter.
 
 ## Bab: Instalasi Nim
 
@@ -59,16 +59,16 @@ Yang penting baris pertama. Bagian `[MacOSX: arm64]` berbeda di setiap sistem.
 bash: nim: command not found
 ```
 
-`bash` adalah nama shell yang melaporkan. `nim` adalah perintah yang dicari. `command not found`
-bukan kalimat dari Nim, melainkan dari shell: ia menelusuri seluruh direktori di PATH, tidak
-menemukan program bernama `nim`, lalu berhenti. Perbaikannya menambahkan direktori `bin` Nim dan
+`bash` adalah nama shell yang melaporkan. `nim` adalah *command* yang dicari. `command not found`
+bukan kalimat dari Nim, melainkan dari shell: ia menelusuri seluruh *directory* di PATH, tidak
+menemukan program bernama `nim`, lalu berhenti. Perbaikannya menambahkan *directory* `bin` Nim dan
 `~/.nimble/bin` ke PATH.
 
-**3.** Perintahnya `gcc --version` atau `clang --version`, tergantung apa yang dipasang. Keluarannya
+**3.** *Command itu* `gcc --version` atau `clang --version`, tergantung apa yang dipasang. Keluarannya
 menyebut nomor versi compiler C. Kalau yang muncul justru `command not found`, berarti compiler C
 belum ada dan perlu dipasang lebih dulu.
 
-**4.** Perintah `nim c hello.nim` melewati tahap depan Nim dengan sukses, menghasilkan kode C, lalu
+**4.** *Command* `nim c hello.nim` melewati tahap depan Nim dengan sukses, menghasilkan kode C, lalu
 gagal pada langkah memanggil compiler C. Pesannya menyerupai:
 
 ```{.txt}
@@ -91,18 +91,18 @@ stabil terbaru.
 ## Bab: Alur kerja: `nim r`, `nimble`, editor
 
 **1.** Dengan `nim r hello.nim`, tidak ada biner baru di samping *file* sumber; hasil antara masuk ke
-direktori cache. Dengan `nim c hello.nim`, muncul biner bernama `hello` di direktori kerja, lalu
+*directory* cache. Dengan `nim c hello.nim`, muncul biner bernama `hello` di *directory* kerja, lalu
 dijalankan dengan `./hello`.
 
-**2.** Biner muncul di direktori kerja, di samping *file* sumber, dan namanya mengikuti nama *file*:
+**2.** Biner muncul di *directory* kerja, di samping *file* sumber, dan namanya mengikuti nama *file*:
 `join` di Linux dan macOS, `join.exe` di Windows. Nama itu bisa diganti dengan `-o:program`.
 
 **3.** Meski berekstensi `.txt`, Nim tetap *meng-compile* isinya: `nim c data.txt` berhasil dan
 menghasilkan biner bernama `data`. Nim tidak mewajibkan ekstensi `.nim` pada *file* utama. Namun
-konvensinya tetap `.nim`, dan saat mengimpor sebuah modul, Nim mencari *file* bernama `<modul>.nim`.
-Jadi *file* `.txt` tidak bisa dipakai sebagai modul yang diimpor. Simpan kode Nim di `.nim`.
+konvensinya tetap `.nim`, dan saat mengimpor sebuah *module*, Nim mencari *file* bernama `<modul>.nim`.
+Jadi *file* `.txt` tidak bisa dipakai sebagai *module* yang diimpor. Simpan kode Nim di `.nim`.
 
-**4.** Keduanya melaporkan error yang sama. `nim check` berhenti setelah pemeriksaan tipe dan
+**4.** Keduanya melaporkan error yang sama. `nim check` berhenti setelah pemeriksaan *type* dan
 semantik, tidak melanjutkan ke pembuatan biner, dan keluar dengan kode bukan nol. `nim c` juga
 berhenti dengan kode bukan nol, tetapi hanya setelah mencoba seluruh tahap *compile*. Untuk umpan
 balik cepat, `nim check` lebih ringan.
@@ -115,7 +115,7 @@ nimble build
 nimble run
 ```
 
-`nimble init notes` membuat direktori proyek lengkap dengan *file* `.nimble`, `nimble build`
+`nimble init notes` membuat *directory* proyek lengkap dengan *file* `.nimble`, `nimble build`
 membangunnya, dan `nimble run` membangun sekaligus menjalankannya.
 
 ## Bab: Komentar dan doc comment
@@ -168,9 +168,9 @@ Jalankan `nim doc double.nim`; kode keluarnya bukan nol karena `doAssert` gagal.
 benar adalah menulis `doAssert double(2) == 4`. Karena `nim doc` ikut menjalankan blok ini, contoh
 di dokumentasi tidak bisa diam-diam basi.
 
-## Bab: Variabel
+## Bab: *Variable*
 
-**1.** `const` untuk nilai yang tetap, `var` untuk yang diisi belakangan.
+**1.** `const` untuk *value* yang tetap, `var` untuk yang diisi belakangan.
 
 ```{.nim}
 import std/strformat
@@ -186,11 +186,11 @@ echo message
 released in 2026
 ```
 
-**2.** Outputnya `2-1`. Baris `let b = a` menyalin **nilai** `a` saat itu juga, yaitu `1`.
+**2.** Outputnya `2-1`. Baris `let b = a` menyalin ***value*** `a` saat itu juga, yaitu `1`.
 Mengubah `a` sesudahnya tidak menyentuh `b`.
 
 **3.** `let` hanya boleh diisi sekali, dan pengisian itu harus terjadi pada baris deklarasinya.
-Tanpa nilai awal, tidak akan pernah ada pengisian, jadi compiler menolaknya di depan. Yang valid:
+Tanpa *value* awal, tidak akan pernah ada pengisian, jadi compiler menolaknya di depan. Yang valid:
 
 ```{.nim}
 let x: int = 0
@@ -206,32 +206,32 @@ name = "Nim 2"
 echo name
 ```
 
-## Bab: Tipe data primitif dan literal
+## Bab: *Data type* primitif dan literal
 
 **1.** `echo 0xFF` mencetak `255`, `echo 0b1010` mencetak `10`, dan `echo 1_000` mencetak `1000`.
    Awalan menentukan basis; garis bawah diabaikan.
 
-**2.** Program berhenti dengan `OverflowDefect`. Nilainya baru diketahui saat runtime, jadi compiler
+**2.** Program berhenti dengan `OverflowDefect`. *Value itu* baru diketahui saat runtime, jadi compiler
    tidak bisa menghitungnya jauh di depan. Saat baris `n = n + 1` dijalankan, 128 tidak muat di
    `int8` dan pemeriksaan overflow menghentikan program:
    ```{.txt}
    Error: unhandled exception: over- or underflow [OverflowDefect]
    ```
 
-**3.** Karena 0,1 tidak punya bentuk biner yang tepat. Nilai `0.1` di sisi kanan bertipe `float64`,
+**3.** Karena 0,1 tidak punya bentuk biner yang tepat. *Value* `0.1` di sisi kanan bertipe `float64`,
    sedangkan `float32(0.1)` hanya menyimpan sekitar tujuh angka penting. Saat dibandingkan,
    `float32(0.1)` berbeda dari `0.1` di digit-digit yang tidak terlihat. Bandingkan selisihnya
    dengan toleransi, bukan dengan `==`.
 
 **4.** Hasilnya 2. Konversi `int(...)` memotong ke arah nol, tidak membulatkan.
 
-**5.** `200` melewati batas `int8` (127). Perbaikan yang paling pas adalah memakai tipe yang cukup
+**5.** `200` melewati batas `int8` (127). Perbaikan yang paling pas adalah memakai *type* yang cukup
    lebar:
    ```{.nim}
    const Big: int16 = 200
    ```
 
-## Bab: String, raw string, dan karakter
+## Bab: String, raw string, dan *character*
 
 **1.** Kutip ganda dan garis miring perlu di-escape:
    ```{.nim}
@@ -263,7 +263,7 @@ echo name
    echo s
    ```
 
-**5.** Tiga karakter terakhir diambil dengan `^`:
+**5.** Tiga *character* terakhir diambil dengan `^`:
    ```{.nim}
    echo "programming"[^3..^1]
    ```
@@ -311,7 +311,7 @@ echo name
    ```
 
 **5.** Gagal karena `in` berubah menjadi `contains("4", n)`, dan tidak ada `contains` yang menerima
-   `string` di satu sisi dan `int` di sisi lain. Samakan tipe operand dulu:
+   `string` di satu sisi dan `int` di sisi lain. Samakan *type* operand dulu:
    ```{.nim}
    import std/strutils
    let n = 4
@@ -322,7 +322,7 @@ echo name
 
 ## Bab: Percabangan: `if`, `case`, `when`
 
-**1.** Outputnya `cold`. Nilai `5` lebih kecil dari `10`, jadi cabang `if` pertama yang jalan;
+**1.** Outputnya `cold`. *Value* `5` lebih kecil dari `10`, jadi cabang `if` pertama yang jalan;
 `elif` dan `else` dilewati.
 
 **2.** `age` bernilai 15, jadi jatuh ke cabang `elif`.
@@ -395,9 +395,9 @@ for i in countup(2, 10, 2):
 10
 ```
 
-**2.** Outputnya `6`. `1 + 2 + 3 = 6`; rentang `1 .. 3` inklusif, jadi `3` ikut dijumlahkan.
+**2.** Outputnya `6`. `1 + 2 + 3 = 6`; *range* `1 .. 3` inklusif, jadi `3` ikut dijumlahkan.
 
-**3.** `values[maxIndex]` menyimpan nilai terbesar yang sudah dilihat; `maxIndex` mencatat posisinya.
+**3.** `values[maxIndex]` menyimpan *value* terbesar yang sudah dilihat; `maxIndex` mencatat posisinya.
 
 ```{.nim}
 let values = @[4, 9, 2, 7]
@@ -440,7 +440,7 @@ while n > 0:
 
 ## Bab: `array`, `seq`, dan `openArray`
 
-**1.** Indeks `0` menyisipkan di depan; elemen lama bergeser, tidak ada yang hilang.
+**1.** *Index* `0` menyisipkan di depan; *element* lama bergeser, tidak ada yang hilang.
 
 ```{.nim}
 var names = @["ada", "bob", "cyd"]
@@ -453,10 +453,10 @@ echo names
 @["eve", "ada", "bob", "cyd"]
 ```
 
-**2.** Outputnya `@[2, 3, 4]`. `delete(0)` membuang `1` sehingga isinya `@[2, 3]`. Elemen terakhir
+**2.** Outputnya `@[2, 3, 4]`. `delete(0)` membuang `1` sehingga isinya `@[2, 3]`. *Element* terakhir
 saat itu `3`, jadi `add(3 + 1)` menambahkan `4`.
 
-**3.** Nilai awal diambil dari elemen pertama supaya pembandingnya selalu ada.
+**3.** *Value* awal diambil dari *element* pertama supaya pembandingnya selalu ada.
 
 ```{.nim}
 proc smallest(values: openArray[int]): int =
@@ -474,12 +474,12 @@ echo smallest(@[7, 2, 8])
 2
 ```
 
-**4.** `@[]` tidak memuat petunjuk apa pun tentang tipe elemennya, sehingga compiler tidak bisa
+**4.** `@[]` tidak memuat petunjuk apa pun tentang *type* *element itu*, sehingga compiler tidak bisa
 menyimpulkannya dan menolak dengan `cannot infer the type of the sequence`. Pada `var y: seq[int]`,
-tipenya ditulis eksplisit; Nim mengisinya dengan `seq` kosong, dan panjangnya `0`. Jadi yang kurang
-pada kasus pertama bukan nilai awalnya, melainkan tipe elemennya.
+*type itu* ditulis eksplisit; Nim mengisinya dengan `seq` kosong, dan panjangnya `0`. Jadi yang kurang
+pada kasus pertama bukan *value* awalnya, melainkan *type* *element itu*.
 
-**5.** `values` bertipe `array[0..2, int]`, ukurannya sudah bagian dari tipe dan tidak bisa diubah.
+**5.** `values` bertipe `array[0..2, int]`, ukurannya sudah bagian dari *type* dan tidak bisa diubah.
 `add` hanya ada untuk `seq`, jadi compiler menolak dengan `type mismatch`. Perbaikannya: pakai `seq`.
 
 ```{.nim}
@@ -494,7 +494,7 @@ echo values
 
 ## Bab: *Procedure*, parameter, dan **return value**
 
-**1.** Tambahkan parameter dengan nilai default, lalu panggil dengan dan tanpa mengisinya.
+**1.** Tambahkan parameter dengan *default value*, lalu panggil dengan dan tanpa mengisinya.
 
 ```{.nim}
 proc greet(name: string, punctuation = "!"): string =
@@ -509,7 +509,7 @@ Hello, Ada!
 Hello, Ada?
 ```
 
-**2.** Outputnya `10` lalu `50`. Panggilan pertama tidak mengisi `factor`, jadi nilainya 2 dan
+**2.** Outputnya `10` lalu `50`. Panggilan pertama tidak mengisi `factor`, jadi *value itu* 2 dan
 `5 * 2 = 10`. Panggilan kedua menimpa `factor` dengan 10 lewat named argument, jadi `5 * 10 = 50`.
 
 **3.** Perhatikan penanganan ukuran nol supaya tidak terjadi pembagian dengan nol.
@@ -550,7 +550,7 @@ echo double(n)
 
 ## Bab: Tuple dan destructuring
 
-**1.** Tipe `Range` dideklarasikan sebagai tuple bernama, lalu diisi dengan literal.
+**1.** *Type* `Range` dideklarasikan sebagai tuple bernama, lalu diisi dengan literal.
 
 ```{.nim}
 type Range = tuple[low, high: int]
@@ -583,7 +583,7 @@ echo count, " ", total
 ```
 
 **4.** `Error: undeclared field: 'x'`. Tuple anonim `(1, 2)` tidak punya nama field, hanya punya
-posisi, jadi `.x` tidak ada. Dua perbaikan yang sah: pakai indeks, atau beri nama fieldnya.
+posisi, jadi `.x` tidak ada. Dua perbaikan yang sah: pakai *index*, atau beri nama fieldnya.
 
 ```{.nim}
 let pair = (1, 2)
@@ -594,9 +594,9 @@ echo pair[0]
 1
 ```
 
-## Bab: *Object* dan konstruktor
+## Bab: *Object* dan *constructor*
 
-**1.** Field baru cukup ditambahkan di deklarasi `object`, lalu diisi lewat konstruktor.
+**1.** Field baru cukup ditambahkan di deklarasi `object`, lalu diisi lewat *constructor*.
 
 ```{.nim}
 type Person = object
@@ -611,7 +611,7 @@ echo ada.email
 ada@example.com
 ```
 
-**2.** Outputnya `false write`. Field `done` tidak disebut di konstruktor, jadi isinya default tipe
+**2.** Outputnya `false write`. Field `done` tidak disebut di *constructor*, jadi isinya default *type*
 `bool`, yaitu `false`. Field `title` diisi `"write"`.
 
 **3.** `Book` mewarisi dari `RootObj`, dan *procedure* menerima `Book` secara langsung.
@@ -633,7 +633,7 @@ Nim: 200 pages
 ```
 
 **4.** `Error: 'p.x' cannot be assigned to`. `p` dideklarasikan `let`, jadi seluruh isinya beku,
-termasuk fieldnya. Karena `let` tidak boleh diubah, perbaikannya adalah mengisi nilai yang benar
+termasuk fieldnya. Karena `let` tidak boleh diubah, perbaikannya adalah mengisi *value* yang benar
 sejak awal.
 
 ```{.nim}
@@ -702,9 +702,9 @@ echo c
 red
 ```
 
-## Bab: Modul, `import`, dan `export`
+## Bab: *Module*, `import`, dan `export`
 
-**1.** Simpan `shout.nim` dan `main.nim` di folder yang sama.
+**1.** Simpan `shout.nim` dan `main.nim` di *directory* yang sama.
 
 ```{.nim}
 # shout.nim
@@ -727,10 +727,10 @@ Tanpa tanda bintang, `shout` tidak akan terlihat dari `main.nim`.
 
 **2.** Outputnya `42`, karena `double(21)` menghasilkan `42`. Kualifikasi tetap sah: `mathx.double(21)`
 juga menghasilkan `42`, karena `from` hanya membatasi nama yang boleh dipakai tanpa kualifikasi,
-bukan menghapus nama modulnya. Kalau kualifikasi ingin dipaksa, tulis `from mathx import nil`.
+bukan menghapus nama *module itu*. Kalau kualifikasi ingin dipaksa, tulis `from mathx import nil`.
 
 **3.** Pesannya `undeclared identifier: 'textutils'`. Garis miring di dalam *expression* adalah operator
-pembagian, bukan *pointer* modul. Modul yang diimpor bernama `format`, jadi kualifikasi yang benar
+pembagian, bukan *pointer* *module*. *Module* yang diimpor bernama `format`, jadi kualifikasi yang benar
 memakai titik saja:
 
 ```{.nim}
@@ -743,7 +743,7 @@ echo format.upper("hi")
 HI
 ```
 
-**4.** Contoh `include` diganti menjadi modul kecil.
+**4.** Contoh `include` diganti menjadi *module* kecil.
 
 ```{.nim}
 # config_module.nim
@@ -757,10 +757,10 @@ import config_module
 echo config_module.appName
 ```
 
-Keuntungannya: nama `appName` berada di ruang nama modulnya, jadi tidak bertabrakan dengan nama di
-*file* induk, dan modulnya bisa dipakai *file* lain tanpa menyalin isinya.
+Keuntungannya: nama `appName` berada di ruang nama *module itu*, jadi tidak bertabrakan dengan nama di
+*file* induk, dan *module itu* bisa dipakai *file* lain tanpa menyalin isinya.
 
-## Bab: Exception dan efek `raises`
+## Bab: Exception dan *effect* `raises`
 
 **1.**
 
@@ -803,7 +803,7 @@ too large: 150
 **4.** Pesannya `can raise an unlisted exception: ref ValueError`. `useIt` berjanji `raises: []`,
 tetapi badannya memanggil `readValue()` yang melempar `ValueError`. Ada tiga perbaikan yang masuk
 akal: hapus `raises: []` supaya compiler menyimpulkan sendiri, tangkap `ValueError` di dalam
-`useIt`, atau daftarkan tipenya:
+`useIt`, atau daftarkan *type itu*:
 
 ```{.nim}
 proc readValue(): int =
@@ -878,12 +878,12 @@ for n in countdown(3)():
 Perhatikan `countdown(3)()`. Panggilan pertama menyiapkan iterator, panggilan kedua memakainya di
 dalam `for`.
 
-**4.** Pilih iterator kalau elemennya hanya dilewati sekali, jumlahnya besar atau belum diketahui,
-dan pencarian sering berhenti di tengah. Iterator tidak menyimpan elemen, jadi hemat memori. Pilih
-*seq* kalau elemennya perlu diindeks, diurutkan, atau dipakai berkali-kali, karena *seq*
+**4.** Pilih iterator kalau *element itu* hanya dilewati sekali, jumlahnya besar atau belum diketahui,
+dan pencarian sering berhenti di tengah. Iterator tidak menyimpan *element*, jadi hemat memori. Pilih
+*seq* kalau *element itu* perlu diindeks, diurutkan, atau dipakai berkali-kali, karena *seq*
 menyimpan semuanya sekaligus.
 
-## Bab: Closure dan variabel yang ditangkap
+## Bab: Closure dan *variable* yang ditangkap
 
 **1.** *Procedure* yang dikembalikan memakai `f` dan `g` dari parameter, jadi keduanya ikut ditangkap:
 
@@ -903,14 +903,14 @@ echo compose(inc, dbl)(5)
 `inc(5)` menghasilkan `6`, lalu `dbl(6)` menghasilkan `12`.
 
 **2.** Outputnya `7`. `add` menangkap `total` yang bertipe `var`, jadi kedua panggilan menambah
-variabel yang sama: `3 + 4 = 7`.
+*variable* yang sama: `3 + 4 = 7`.
 
-**3.** `i` adalah satu variabel yang dipakai ulang tiap putaran *loop*. Ketiga closure menunjuk
-variabel itu, bukan salinannya. Setelah *loop* selesai, `i` bernilai `2`, jadi ketiganya
+**3.** `i` adalah satu *variable* yang dipakai ulang tiap putaran *loop*. Ketiga closure menunjuk
+*variable* itu, bukan salinannya. Setelah *loop* selesai, `i` bernilai `2`, jadi ketiganya
 mencetak `2`. Salah satu perbaikan: buat closure lewat *procedure* terpisah yang parameternya baru
 setiap pemanggilan.
 
-**4.** Yang salah adalah tipe `{.nimcall.}` pada `addBase`. `makeAdder` mengembalikan closure karena
+**4.** Yang salah adalah *type* `{.nimcall.}` pada `addBase`. `makeAdder` mengembalikan closure karena
 menangkap `base`, sedangkan `{.nimcall.}` tidak boleh menyimpan closure. Perbaikannya menghapus
 `{.nimcall.}`:
 
@@ -926,11 +926,11 @@ echo addBase(5)
 15
 ```
 
-Pesan compiler menyebut *calling convention* karena masalahnya bukan nilai yang dioper, melainkan
-konvensi pemanggilan tipe: closure memakai `{.closure.}`, sedangkan tipe yang diminta memakai
+Pesan compiler menyebut *calling convention* karena masalahnya bukan *value* yang dioper, melainkan
+konvensi pemanggilan *type*: closure memakai `{.closure.}`, sedangkan *type* yang diminta memakai
 `{.nimcall.}`.
 
-## Bab: Generic: tipe dan *procedure*
+## Bab: Generic: *type* dan *procedure*
 
 **1.** Parameter `openArray[T]` menerima *array* maupun *seq*, dan `T` disimpulkan dari isinya:
 
@@ -953,8 +953,8 @@ cat
 **2.** Outputnya `(3, 3)` lalu `("a", "a")`. `T` disimpulkan `int` pada panggilan pertama dan
 `string` pada panggilan kedua, sehingga tuple yang dibentuk menyesuaikan.
 
-**3.** `T` hanya muncul di tipe balik `seq[T]`, bukan di daftar parameter. Tidak ada argumen yang
-bertipe `T`, jadi compiler tidak punya petunjuk untuk menyimpulkannya. Argumen tipe harus ditulis
+**3.** `T` hanya muncul di *type* balik `seq[T]`, bukan di daftar parameter. Tidak ada argumen yang
+bertipe `T`, jadi compiler tidak punya petunjuk untuk menyimpulkannya. Argumen *type* harus ditulis
 eksplisit: `makeSeq[int](3)`.
 
 **4.** Pesannya menampilkan satu-satunya kandidat, `double` dengan syarat `T: SomeInteger`, dan
@@ -1035,7 +1035,7 @@ echo minOf(3, 7)
 3
 ```
 
-`a` dan `b` disalin apa adanya, jadi argumen dengan efek samping bisa dievaluasi
+`a` dan `b` disalin apa adanya, jadi argumen dengan *side effect* bisa dievaluasi
 lebih dari sekali.
 
 **2.** Outputnya:
@@ -1046,7 +1046,7 @@ calls: 4
 ```
 
 Template menyalin `bump() + bump()` ke kedua sisi penjumlahan, jadi `bump()` dipanggil empat kali. Ia
-mengembalikan `1`, `2`, `3`, `4`, dan hasil akhirnya `(1 + 2) + (3 + 4) = 10`. Nilai `calls` di akhir
+mengembalikan `1`, `2`, `3`, `4`, dan hasil akhirnya `(1 + 2) + (3 + 4) = 10`. *Value* `calls` di akhir
 adalah `4`.
 
 **3.** Macro dengan `quote do`.
@@ -1065,8 +1065,8 @@ echo triple(4)
 12
 ```
 
-**4.** `getType` membutuhkan AST yang sudah bertipe. Argumen `untyped` belum melewati pemeriksaan tipe,
-jadi simpulnya tidak punya tipe dan compiler menghentikan proses dengan `node has no type`. Untuk
+**4.** `getType` membutuhkan AST yang sudah bertipe. Argumen `untyped` belum melewati pemeriksaan *type*,
+jadi simpulnya tidak punya *type* dan compiler menghentikan proses dengan `node has no type`. Untuk
 memakai `getType`, parameternya harus `typed`.
 
 **5.** Macro yang mencetak `treeRepr` dari argumennya.
@@ -1092,7 +1092,7 @@ Infix
 Simpul luar adalah `Infix` karena `2 * 3` adalah operasi dua operand. Anaknya: operator, lalu kedua
 operand.
 
-## Bab: Konsep dan pencocokan tipe
+## Bab: Konsep dan pencocokan *type*
 
 **1.** Konsep `Sized` beserta *procedure* yang memakainya.
 
@@ -1114,9 +1114,9 @@ show(Box(size: 3))
 size 3
 ```
 
-**2.** Tidak cocok. Field `name` ada, tapi tipenya `int`, sedangkan syaratnya `x.name is string`.
+**2.** Tidak cocok. Field `name` ada, tapi *type itu* `int`, sedangkan syaratnya `x.name is string`.
 Compiler menolak dengan `concept predicate failed`. Ini bedanya `concept` dari sekadar "punya field
-bernama sama": tipenya ikut diperiksa.
+bernama sama": *type itu* ikut diperiksa.
 
 **3.** Menggabungkan dua konsep dengan `and`.
 
@@ -1141,8 +1141,8 @@ echo label(Crate(name: "kit", size: 3))
 kit (3)
 ```
 
-**4.** `Named` adalah konsep, bukan tipe yang bisa disimpan di memori, jadi `var value: Named`
-ditolak sebagai `invalid type: 'Named' for var`. Yang setara adalah mendeklarasikan tipe konkret yang
+**4.** `Named` adalah konsep, bukan *type* yang bisa disimpan di memori, jadi `var value: Named`
+ditolak sebagai `invalid type: 'Named' for var`. Yang setara adalah mendeklarasikan *type* konkret yang
 memenuhi konsep itu.
 
 ```{.nim}
@@ -1195,11 +1195,11 @@ echo area(Shape(kind: triangle, base: 3.0, altitude: 4.0))
 6.0
 ```
 
-**2.** Outputnya `3.0`. Konstruktornya kini konsisten: `kind` bernilai `circle` dan yang diisi adalah
+**2.** Outputnya `3.0`. *Constructor itu* kini konsisten: `kind` bernilai `circle` dan yang diisi adalah
 `radius`, satu-satunya field yang ada di cabang itu. Karena `c.radius` memang field yang benar,
-program berjalan dan mencetak nilai `radius`, yaitu `3.0`.
+program berjalan dan mencetak *value* `radius`, yaitu `3.0`.
 
-**3.** Tipe `Meters` beserta `$`-nya.
+**3.** *Type* `Meters` beserta `$`-nya.
 
 ```{.nim}
 type Meters = distinct int
@@ -1215,16 +1215,16 @@ echo d
 5 m
 ```
 
-`int(m)` mengubahnya kembali ke `int` sebelum dicetak, karena tipe dasarnya tidak otomatis tersedia.
+`int(m)` mengubahnya kembali ke `int` sebelum dicetak, karena *type* dasarnya tidak otomatis tersedia.
 
 **4.** Alias `int` membuat `UserId` sama persis dengan `int`, sehingga tidak ada lagi yang memisahkan
-id pengguna dari angka lain. Program kehilangan pengamannya: nilai id bisa tertukar dengan id pesanan
+id pengguna dari angka lain. Program kehilangan pengamannya: *value* id bisa tertukar dengan id pesanan
 atau angka biasa tanpa satu pun error, dan bug seperti ini sering baru terlihat di produksi. `distinct`
 membuat kekeliruan itu ditolak saat *compile*, dan itulah alasan utama memakainya.
 
 **5.** Nim tidak memeriksa akses field varian saat *compile*. Setiap akses disertai pemeriksaan
 yang membaca `kind` lalu memastikan fieldnya sesuai, dan pemeriksaan itu berjalan saat program
-berjalan, baik *object itu* nilai sementara maupun disimpan di `let` atau `var`. Cara menghindarinya
+berjalan, baik *object itu* *value* sementara maupun disimpan di `let` atau `var`. Cara menghindarinya
 adalah membaca lewat `case` pada penanda, sehingga cabang yang salah tidak pernah dieksekusi.
 
 ## Bab: `ref`, `ptr`, dan `nil`
@@ -1271,7 +1271,7 @@ incr(addr x)
 echo x
 ```
 
-Keluarannya `2`. `p[]` membaca dan menulis nilai di alamat yang ditunjuk `p`.
+Keluarannya `2`. `p[]` membaca dan menulis *value* di alamat yang ditunjuk `p`.
 
 **4.** `var p: Person` berisi `nil`; belum ada *object* di heap untuk ditunjuk. `new(p)`
 mengalokasikan *object* dengan default setiap field lalu menyimpan alamatnya di `p`. Tanpa itu,
@@ -1283,7 +1283,7 @@ mengalokasikan *object* dengan default setiap field lalu menyimpan alamatnya di 
 main.nim(2, 18) Error: type mismatch: got 'int' for 'x' but expected 'ptr int'
 ```
 
-Variabel `p` bertipe `ptr int`, yaitu alamat, sementara `x` adalah nilai `int`. Perbaikannya ambil
+*Variable* `p` bertipe `ptr int`, yaitu alamat, sementara `x` adalah *value* `int`. Perbaikannya ambil
 alamatnya dulu:
 
 ```nim
@@ -1294,7 +1294,7 @@ echo p[]
 
 ## Bab: Manajemen memori: ARC, ORC, dan `=destroy`
 
-**1.** `=destroy` dipanggil saat variabel keluar dari ruang lingkupnya, jadi pesannya muncul di
+**1.** `=destroy` dipanggil saat *variable* keluar dari ruang lingkupnya, jadi pesannya muncul di
 akhir blok, bukan saat alokasi:
 
 ```nim
@@ -1326,8 +1326,8 @@ drop a
 end
 ```
 
-**3.** `move` memakai magic `Move`: ia memindahkan nilai secara langsung lalu memanggil `=wasMoved`
-pada sumbernya. Jalur `=sink` hanya dipakai saat compiler memindahkan nilai sementara lewat
+**3.** `move` memakai magic `Move`: ia memindahkan *value* secara langsung lalu memanggil `=wasMoved`
+pada sumbernya. *Path* `=sink` hanya dipakai saat compiler memindahkan *value* sementara lewat
 penugasan biasa. Karena `move` sudah menyatakan pemindahan secara eksplisit, hooknya dilewati.
 
 **4.** Penghitungan referensi ARC hanya menambah dan mengurangi angka. Dua *object* yang saling
@@ -1340,10 +1340,10 @@ menambahkan pendeteksi siklus yang menemukan pasangan seperti itu dan membebaska
 main.nim(4, 1) Error: signature for '=destroy' must be proc[T: object](x: var T) or proc[T: object](x: T)
 ```
 
-`=destroy` hanya berlaku untuk tipe `object` nilai. `ref object` sudah dibebaskan otomatis oleh
+`=destroy` hanya berlaku untuk *type* `object` *value*. `ref object` sudah dibebaskan otomatis oleh
 ARC/ORC, jadi hooknya justru tidak diterima. `Person` di sini adalah `ref object`. Perbaikannya,
-hapus *procedure* itu dan serahkan pembebasan ke ARC/ORC, atau pindahkan sumber dayanya ke tipe
-`object` nilai yang dipegang oleh referensi tersebut.
+hapus *procedure* itu dan serahkan pembebasan ke ARC/ORC, atau pindahkan sumber dayanya ke *type*
+`object` *value* yang dipegang oleh referensi tersebut.
 
 ## Bab: Tur **standard library**
 
@@ -1414,7 +1414,7 @@ let t = {"a": 1}.toTable
 echo t.getOrDefault("b", -1)
 ```
 
-## Bab: *File*, direktori, dan OS
+## Bab: *File*, *directory*, dan OS
 
 **1.** `splitFile` sudah memisahkan nama dan ekstensi; tidak perlu memotong string manual.
 
@@ -1429,7 +1429,7 @@ echo name, " ", ext
 nim .cfg
 ```
 
-**2.** Keluarannya `notes`. `splitFile("notes.txt")` memberi direktori kosong, nama `notes`, dan
+**2.** Keluarannya `notes`. `splitFile("notes.txt")` memberi *directory* kosong, nama `notes`, dan
 ekstensi `.txt`. Yang dicetak hanya `.name`.
 
 **3.** Tulis, baca kembali, hitung baris, lalu bersihkan.
@@ -1447,7 +1447,7 @@ removeFile(path)
 2
 ```
 
-`splitLines` memecah pada setiap baris baru, jadi dua baris menjadi dua elemen.
+`splitLines` memecah pada setiap baris baru, jadi dua baris menjadi dua *element*.
 
 **4.** Compiler menolak perbandingannya, bukan pemanggilan `fileExists`.
 
@@ -1500,7 +1500,7 @@ Keluaran (baris pertama kosong, bawaan `unittest`):
   [OK] five is 120
 ```
 
-Rentang `2 .. n` kosong saat `n` bernilai 0 atau 1, jadi *loop* tidak berjalan dan `result`
+*Range* `2 .. n` kosong saat `n` bernilai 0 atau 1, jadi *loop* tidak berjalan dan `result`
 tetap 1.
 
 **2.** Keluarannya:
@@ -1531,8 +1531,8 @@ suite "math":
 ```
 
 **4.** `expect` menuntut *exception* itu benar-benar dilempar. Kalau bloknya selesai tanpa error,
-tesnya gagal dengan pesan `Expect Failed, no exception was thrown.`, lalu ditandai `[FAILED]`.
-Prosesnya keluar dengan kode bukan nol. Ini memang tujuannya: menguji jalur error hanya bermakna
+*test*-nya gagal dengan pesan `Expect Failed, no exception was thrown.`, lalu ditandai `[FAILED]`.
+Prosesnya keluar dengan kode bukan nol. Ini memang tujuannya: menguji *path* error hanya bermakna
 kalau error-nya benar-benar terjadi.
 
 ## Bab: `async`/`await` dan IO
@@ -1612,11 +1612,11 @@ echo half(9)
 
 Pembagian bilangan bulat di C memotong ke arah nol, jadi `9 / 2` bernilai 4.
 
-**2.** Keluarannya `7`. `abs` dari `<stdlib.h>` mengembalikan nilai mutlak `-7`.
+**2.** Keluarannya `7`. `abs` dari `<stdlib.h>` mengembalikan *value* mutlak `-7`.
 
 **3.** Saat Nim mengubah string `"hello"` menjadi `cstring`, ia menambahkan satu byte nol di akhir
 supaya fungsi C tahu di mana string berakhir. `strlen` menghitung byte sebelum penanda itu, yaitu
-lima karakter `h`, `e`, `l`, `l`, `o`. Penanda nol tidak ikut dihitung.
+lima *character* `h`, `e`, `l`, `l`, `o`. Penanda nol tidak ikut dihitung.
 
 **4.** `{.compile.}` tidak bisa menempel pada deklarasi *procedure*, apalagi digabung dengan pragma
 lain.
@@ -1642,7 +1642,7 @@ echo triple(2)
 
 ## Bab: *Compile* ke JavaScript
 
-**1.** Keluarannya sama persis. Backend JavaScript memetakan aturan tipe dan pembagian Nim ke
+**1.** Keluarannya sama persis. Backend JavaScript memetakan aturan *type* dan pembagian Nim ke
 operator JavaScript yang setara.
 
 ```{.txt}
@@ -1659,7 +1659,7 @@ total: 27
 
 `4 + 8 + 15` bernilai 27, dan *loop* `for n in numbers` menjumlahkannya satu per satu.
 
-**3.** Contoh yang mengubah isi `<div>`, dijalankan dari halaman HTML yang punya elemen itu:
+**3.** Contoh yang mengubah isi `<div>`, dijalankan dari halaman HTML yang punya *element* itu:
 
 ```nim
 import std/dom
@@ -1667,22 +1667,22 @@ import std/dom
 document.getElementById("out").textContent = "from Nim"
 ```
 
-`node` tidak menyediakan `document`; *object* itu hanya ada di peramban. Karena itu program ini
+`node` tidak menyediakan `document`; *object* itu hanya ada di *browser*. Karena itu program ini
 *di-compile* dengan `nim js` lalu *file* `.js`-nya disisipkan ke halaman HTML, bukan dijalankan
 langsung dari terminal.
 
-**4.** Modul `marshal` tidak punya padanan di target JavaScript.
+**4.** *Module* `marshal` tidak punya padanan di target JavaScript.
 
 ```{.txt}
 marshal.nim(52, 10) Error: marshal module is not supported in javascript.
 ```
 
-Perbaikannya mengganti modulnya dengan yang didukung semua backend, misalnya `std/json` untuk
+Perbaikannya mengganti *module itu* dengan yang didukung semua backend, misalnya `std/json` untuk
 urusan data, lalu membangun ulang dengan `nim js`.
 
 ## Bab: CLI dengan `parseopt`
 
-**1.** Tandai `--quiet` sebagai opsi tanpa nilai lewat `longNoVal`, lalu pakai bendera itu untuk
+**1.** Tandai `--quiet` sebagai *option* tanpa *value* lewat `longNoVal`, lalu pakai bendera itu untuk
 melewati pencetakan token:
 
 ```{.nim}
@@ -1710,7 +1710,7 @@ if quiet:
 quiet mode
 ```
 
-**2.** Tampil tiga token: dua opsi pendek lalu satu opsi panjang.
+**2.** Tampil tiga token: dua *option* pendek lalu satu *option* panjang.
 
 ```{.txt}
 [cmdShortOption] key=a val=
@@ -1718,11 +1718,11 @@ quiet mode
 [cmdLongOption] key=name val=ana
 ```
 
-`-ab` adalah dua opsi pendek yang dibundel: `a` dan `b`, masing-masing tanpa nilai. `--name=ana`
+`-ab` adalah dua *option* pendek yang dibundel: `a` dan `b`, masing-masing tanpa *value*. `--name=ana`
 memberi `key` sama dengan `name` dan `val` sama dengan `ana`.
 
 **3.** Agar `--count 4` menyerap `4`, `longNoVal` harus tidak kosong. Di sini `--help` dipakai
-sebagai penanda yang sudah dipakai alat ini, sehingga `count` tidak termasuk di dalamnya:
+sebagai penanda yang sudah dipakai *tool* ini, sehingga `count` tidak termasuk di dalamnya:
 
 ```{.nim}
 import std/[parseopt, strutils]
@@ -1745,7 +1745,7 @@ count 3
 count 4
 ```
 
-**4.** `case` atas `kind` harus menutup semua nilai `CmdLineKind`. Hanya `cmdLongOption` yang
+**4.** `case` atas `kind` harus menutup semua *value* `CmdLineKind`. Hanya `cmdLongOption` yang
 ditangani, jadi compiler menyebut sisanya:
 
 ```{.txt}
@@ -1770,7 +1770,7 @@ one
 ```
 
 **5.** `--` perlu saat argumen bisa dimulai dengan tanda hubung, sehingga parser akan mengiranya
-opsi. Contohnya nama *file* `-draft.txt`: tulis `tool -- -draft.txt` supaya `-draft.txt` sampai
+*option*. Contohnya nama *file* `-draft.txt`: tulis `tool -- -draft.txt` supaya `-draft.txt` sampai
 sebagai argumen biasa.
 
 ## Bab: HTTP API dengan `asynchttpserver`
@@ -1795,8 +1795,8 @@ echo reply.code.int, " ", reply.body
 200 {"version":"1"}
 ```
 
-**2.** Keluarannya `200` lalu `404`. Jalur `/ready` cocok dengan cabang pertama, sehingga
-`status(path).int` bernilai `200`. Jalur `/other` jatuh ke `else` dan memberi `404`.
+**2.** Keluarannya `200` lalu `404`. *Path* `/ready` cocok dengan cabang pertama, sehingga
+`status(path).int` bernilai `200`. *Path* `/other` jatuh ke `else` dan memberi `404`.
 
 **3.** Ambil bagian `query` dari URL, lalu cari kuncinya:
 
@@ -1835,7 +1835,7 @@ proc handle(req: Request) {.async.} =
 ```
 
 **5.** `Http400` dipakai saat permintaannya sendiri tidak sesuai, misalnya body bukan JSON yang
-sah, atau metode yang salah untuk rute itu. `Http404` dipakai saat rutenya tidak ada sama sekali,
+sah, atau metode yang salah untuk *route* itu. `Http404` dipakai saat *route itu* tidak ada sama sekali,
 misalnya GET ke `/missing`.
 
 ## Bab: Database dengan `std/tables` dan `db_sqlite`
@@ -1896,7 +1896,7 @@ removeFile(path)
 Error: unhandled exception: key not found: year [KeyError]
 ```
 
-Uji dulu dengan `hasKey`, atau pakai nilai cadangan:
+Uji dulu dengan `hasKey`, atau pakai *value* cadangan:
 
 ```{.nim}
 import std/json
@@ -1914,7 +1914,7 @@ no year
 
 **5.** Dua di antaranya: (a) datanya sudah besar sehingga membaca dan menulis seluruh *file* setiap
 kali terlalu mahal, dan (b) *query* perlu menyaring atau mengurutkan tanpa memuat semuanya ke memori.
-Yang pindah ke SQLite: penyaringan dan pengurutan (`WHERE`, `ORDER BY`), indeks, transaksi, serta
+Yang pindah ke SQLite: penyaringan dan pengurutan (`WHERE`, `ORDER BY`), *index*, *transaction*, serta
 penulisan bersamaan dari beberapa proses. Kode di bab ini tidak salah; ia hanya berhenti memadai
 begitu data tumbuh.
 
@@ -1958,14 +1958,14 @@ requires "nim >= 2.0.0"
 Nama *file* *test* boleh apa saja selama diawali huruf `t`, karena `nimble test` menjalankan setiap
 *file* di `tests/` yang dimulai dengan `t`.
 
-**4.** Tidak ada *file* bernama `notes_helpers.nim` di jalur pencarian:
+**4.** Tidak ada *file* bernama `notes_helpers.nim` di *search path*:
 
 ```{.txt}
 main.nim(1, 8) Error: cannot open file: notes_helpers
 ```
 
-`(1, 8)` adalah kolom 8, tepat di awal nama modul setelah `import `. Perbaikannya menyesuaikan impor
-dengan nama *file* yang benar, misalnya `import notes`, atau memberi *file* modulnya nama
+`(1, 8)` adalah kolom 8, tepat di awal nama *module* setelah `import `. Perbaikannya menyesuaikan impor
+dengan nama *file* yang benar, misalnya `import notes`, atau memberi *file* *module itu* nama
 `notes_helpers.nim`.
 
 **5.** (a) `0.2.0`, karena ada tambahan dan belum ada yang rusak; (b) `0.1.1`, karena hanya memperbaiki
@@ -1976,7 +1976,7 @@ riwayat perubahan.
 
 ## Bab: Benchmark dan profiling
 
-**1.** Dengan 100.000 iterasi, `checksum` menjumlahkan 0 sampai 99.999, jadi nilainya separuh dari
+**1.** Dengan 100.000 iterasi, `checksum` menjumlahkan 0 sampai 99.999, jadi *value itu* separuh dari
 100.000 kali 99.999:
 
 ```{.txt}
@@ -1988,7 +1988,7 @@ memuatnya tidak pernah sama saat diperiksa otomatis. Contoh harus punya **keluar
 jumlah iterasi, checksum, atau hasil perbandingan boolean. Waktu tetap diukur, tetapi hanya dipakai
 untuk membandingkan.
 
-**3.** `insert` di awal `seq` harus menggeser seluruh elemen, sedangkan `add` menulis di ujung:
+**3.** `insert` di awal `seq` harus menggeser seluruh *element*, sedangkan `add` menulis di ujung:
 
 ```{.nim}
 import std/[monotimes, times]
@@ -2028,10 +2028,10 @@ menyebut nama field yang tidak ada, bukan nama *procedure*, karena pemanggilanny
 `elapsed.inMilliseconds`:
 
 ```{.txt}
-main.nim(5, 13) Error: undeclared field: 'inMilliseconds' for type times.Duration
+main.nim(17, 42) Error: undeclared field: 'inMilliseconds' for type times.Duration
 ```
 
-Tipe `Duration` sendiri tetap dikenali, karena `std/monotimes` mengimpornya. Yang hilang adalah
+*Type* `Duration` sendiri tetap dikenali, karena `std/monotimes` mengimpornya. Yang hilang adalah
 *procedure* pembacanya, dan itu ada di `std/times`. Perbaikannya menambahkan `import std/times`.
 
 **5.** Dua keadaan yang masuk akal untuk berhenti mengoptimasi:
@@ -2043,12 +2043,18 @@ Tipe `Duration` sendiri tetap dikenali, karena `std/monotimes` mengimpornya. Yan
 
 ## Bab: Cross-compile dan deploy biner
 
-**1.** Nilainya mengikuti mesin yang dipakai, dan bisa dibaca dari contoh pertama. Di macOS dengan
-prosesor Apple, jawabannya `--os:macosx --cpu:arm64`. Di Linux 64-bit pada umumnya,
-`--os:linux --cpu:amd64`. Yang mencetak nilai mentahnya adalah `hostOS` dan `hostCPU`; contoh di bab
+**1.** *Value* itu mengikuti mesin yang dipakai. Cara cepat membacanya:
+
+```bash
+$ nim --hints:off --eval:'import std/os; echo hostOS, " ", hostCPU'
+macosx arm64
+```
+
+Di macOS dengan prosesor Apple, jawabannya `--os:macosx --cpu:arm64`. Di Linux 64-bit pada umumnya,
+`--os:linux --cpu:amd64`. Yang mencetak *value* mentahnya adalah `hostOS` dan `hostCPU`; contoh di bab
 sengaja hanya mencetak perbandingannya supaya keluarannya sama di kedua mesin.
 
-**2.** Saklar `-d:release` menyalakan simbol `release`, dan `-d:workers=8` mengganti nilai bawaan
+**2.** Saklar `-d:release` menyalakan simbol `release`, dan `-d:workers=8` mengganti *value* bawaan
 `{.intdefine.}`. `targetName` tidak diberikan, jadi tetap memakai bawaannya:
 
 ```{.txt}
@@ -2066,12 +2072,12 @@ else:
   echo "unix target"
 ```
 
-Cabang yang tidak dipilih dibuang seluruhnya. Ia bahkan tidak diperiksa tipenya, sehingga boleh
+Cabang yang tidak dipilih dibuang seluruhnya. Ia bahkan tidak diperiksa *type itu*, sehingga boleh
 menyebut nama yang hanya ada di sistem itu, misalnya *procedure* dari `std/posix` pada cabang unix.
 Itu yang membuat `when` dipakai untuk kode per platform, bukan sekadar untuk memilih teks.
 
-**4.** `mode` diisi `let`, jadi nilainya baru diketahui saat program berjalan, sementara `when`
-meminta nilai compile-time:
+**4.** `mode` diisi `let`, jadi *value itu* baru diketahui saat program berjalan, sementara `when`
+meminta *value* compile-time:
 
 ```{.txt}
 main.nim(5, 6) Error: cannot evaluate at compile time: mode
@@ -2088,7 +2094,7 @@ if mode == "--debug":
   echo "debug"
 ```
 
-Kalau pilihannya memang harus compile-time, nilainya tidak boleh datang dari argumen. Ganti dengan
+Kalau pilihannya memang harus compile-time, *value itu* tidak boleh datang dari argumen. Ganti dengan
 simbol yang diberikan saat *compile*, misalnya `when defined(debug)`.
 
 **5.** Dua hal yang harus ada sebelum cross-compile ke Windows menghasilkan biner:
@@ -2118,7 +2124,7 @@ proc setDone*(path: string, index: int, done: bool): bool =
 ```
 
 Lalu ubah dua tempat di `a03_main.nim`. Cabang `list` mencetak penanda, dan satu cabang baru
-menangani subperintah `done`:
+menangani *subcommand* `done`:
 
 ```{.nim}
   of "list":
@@ -2197,7 +2203,7 @@ echo $notes
 ["buy milk"]
 ```
 
-**5.** Satu keuntungan memisahkan modul penyimpanan: aturan "*file* kosong berarti belum ada
+**5.** Satu keuntungan memisahkan *module* penyimpanan: aturan "*file* tidak ada berarti belum ada
 catatan" ditulis sekali di `loadNotes`, dan baik CLI maupun *test* memakai aturan yang sama. Kalau
 aturan itu disalin ke dua tempat, keduanya bisa berbeda diam-diam.
 

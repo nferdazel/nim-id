@@ -1,22 +1,22 @@
 # Tur **standard library**
 
 Bahasa yang bagus tanpa *library* akan melelahkan. Nim mengirim **standard library** bersama compiler,
-dan modulnya diimpor dengan awalan `std/`. Bab ini menelusuri empat modul yang paling sering
-dipakai hari-hari: `strutils`, `sequtils`, `tables`, dan `json`. Setiap modul dibahas secukupnya;
+dan *module itu* diimpor dengan awalan `std/`. Bab ini menelusuri empat *module* yang paling sering
+dipakai hari-hari: `strutils`, `sequtils`, `tables`, dan `json`. Setiap *module* dibahas secukupnya;
 sisanya punya bab sendiri.
 
 ::: {.callout-note}
 ## Tujuan bab
 
 Setelah bab ini, pembaca bisa mengolah teks dengan `std/strutils`, mengubah *seq* dengan
-`std/sequtils`, menyimpan nilai berkunci di `Table`, membaca dan membangun JSON, serta memilih
+`std/sequtils`, menyimpan *value* berkunci di `Table`, membaca dan membangun JSON, serta memilih
 antara `Table` dan `seq` dengan alasan yang jelas.
 :::
 
-## Mengimpor modul **standard library**
+## Mengimpor *module* **standard library**
 
-Modul **standard library** diimpor dengan awalan `std/`, misalnya `import std/strutils` atau
-`import std/sequtils`. Awalan itu memisahkan modul resmi dari *file* lokal. Tanpa impor, nama
+*Module* **standard library** diimpor dengan awalan `std/`, misalnya `import std/strutils` atau
+`import std/sequtils`. Awalan itu memisahkan *module* resmi dari *file* lokal. Tanpa impor, nama
 seperti `strip` atau `hasKey` tidak dikenal compiler.
 
 ## `std/strutils`: mengolah teks
@@ -44,7 +44,7 @@ a-b-c
 `strip` membuang spasi di kedua ujung. `split(',')` memecah string menjadi `seq[string]`.
 `toUpperAscii` mengubah huruf menjadi kapital, dan `startsWith` menguji awalan. `join("-")`
 menggabungkan kembali `seq[string]` menjadi satu string dengan pemisah. Semua fungsi ini
-mengembalikan nilai baru; string asalnya tidak berubah.
+mengembalikan *value* baru; string asalnya tidak berubah.
 
 ## `std/sequtils`: mengubah *seq*
 
@@ -64,11 +64,11 @@ echo numbers.filterIt(it > 2).mapIt(it * 10)
 @[30, 40, 50, 60]
 ```
 
-`filterIt` menyaring elemen, `mapIt` mengubah setiap elemen. Keduanya template: di dalam kurung,
-`it` merujuk elemen yang sedang diproses. Keduanya mengembalikan `seq` baru dan bisa dirantai,
+`filterIt` menyaring *element*, `mapIt` mengubah setiap *element*. Keduanya template: di dalam kurung,
+`it` merujuk *element* yang sedang diproses. Keduanya mengembalikan `seq` baru dan bisa dirantai,
 seperti pada baris terakhir.
 
-## `std/tables`: peta kunci ke nilai
+## `std/tables`: peta kunci ke *value*
 
 ```{.nim}
 import std/tables
@@ -90,23 +90,23 @@ false
 2
 ```
 
-`Table[string, int]` memetakan kunci `string` ke nilai `int`. `initTable` membuat peta kosong;
+`Table[string, int]` memetakan kunci `string` ke *value* `int`. `initTable` membuat peta kosong;
 menulis `ages["ada"] = 36` menambahkan pasangan baru. `hasKey` menguji ada atau tidaknya kunci, dan
-`getOrDefault` mengembalikan nilai default kalau kuncinya tidak ada. Ini jauh lebih praktis
+`getOrDefault` mengembalikan *default value* kalau kuncinya tidak ada. Ini jauh lebih praktis
 daripada mencari di dalam `seq` satu per satu.
 
 ## `Table` atau `seq`?
 
-Keduanya menyimpan banyak nilai, tapi untuk keperluan berbeda.
+Keduanya menyimpan banyak *value*, tapi untuk keperluan berbeda.
 
 | Kebutuhan | Pilihan |
 |---|---|
-| urutan penting, akses lewat indeks | `seq` |
+| urutan penting, akses lewat *index* | `seq` |
 | pencarian cepat lewat kunci | `Table` |
 | data kecil, urutan yang dibaca | `seq` |
 
 `Table` menyimpan lewat fungsi hash, sehingga pencarian hampir langsung berapa pun isinya. `seq`
-harus diperiksa satu per satu, tapi urutannya tetap dan bisa diakses lewat indeks. Untuk data
+harus diperiksa satu per satu, tapi urutannya tetap dan bisa diakses lewat *index*. Untuk data
 kecil, pilihan sering jatuh ke `seq` karena lebih sederhana.
 
 ## `std/json`: membaca data
@@ -138,7 +138,7 @@ code
 ```
 
 `parseJson` mengubah teks JSON menjadi `JsonNode`. Field diakses seperti peta: `data["name"]`.
-Untuk mengambil nilainya, pakai `getStr`, `getInt`, `getFloat`, atau `getBool` sesuai jenisnya.
+Untuk mengambil *value itu*, pakai `getStr`, `getInt`, `getFloat`, atau `getBool` sesuai jenisnya.
 `pretty` mencetak JSON dengan indentasi agar mudah dibaca.
 
 ## `std/json`: membangun data
@@ -197,10 +197,10 @@ Pesannya menyebut kunci yang dicari dan jenis `KeyError`. Output lengkapnya juga
 tumpukan. Sebelum membaca, uji dengan `hasKey`, atau pakai `getOrDefault` supaya tidak berhenti
 saat kuncinya hilang.
 
-## Modul lain punya babnya sendiri
+## *Module* lain punya babnya sendiri
 
-**Standard library** jauh lebih luas dari empat modul ini. `std/os` dibahas di bab *file* dan operasi
-sistem, `std/strformat` di bab variabel, dan `std/math` serta `std/algorithm` muncul di bab operasi
+**Standard library** jauh lebih luas dari empat *module* ini. `std/os` dibahas di bab *file* dan operasi
+sistem, `std/strformat` di bab *variable*, dan `std/math` serta `std/algorithm` muncul di bab operasi
 dan *file*. `std/random` dan `std/times` tidak punya bab khusus di buku ini; dokumentasi resmi jadi
 rujukan berikutnya. Pola impornya sama: `import std/nama`.
 
@@ -215,7 +215,7 @@ rujukan berikutnya. Pola impornya sama: `import std/nama`.
    let xs = @[3, 1, 2]
    echo xs.filterIt(it > 1).mapIt(it * 2)
    ```
-3. Buat `Table[string, int]` berisi tiga nilai, cetak satu nilai yang ada, dan satu nilai lewat
+3. Buat `Table[string, int]` berisi tiga *value*, cetak satu *value* yang ada, dan satu *value* lewat
    `getOrDefault` untuk kunci yang tidak ada.
 4. Tulis dari nol: parse `{"city": "Bandung"}` lalu cetak isi `city`.
 5. Kode berikut gagal saat dijalankan. Perbaiki tanpa mengubah isi `t`, lalu jelaskan pesan
@@ -231,10 +231,10 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
 ## Ringkasan
 
-- Modul **standard library** diimpor dengan awalan `std/`, misalnya `import std/strutils`.
+- *Module* **standard library** diimpor dengan awalan `std/`, misalnya `import std/strutils`.
 - `strutils` mengolah teks (`strip`, `split`, `join`), `sequtils` mengubah *seq* (`filterIt`,
   `mapIt`).
-- `Table[K, V]` memetakan kunci ke nilai untuk pencarian cepat; `seq` tetap dipakai saat urutan
+- `Table[K, V]` memetakan kunci ke *value* untuk pencarian cepat; `seq` tetap dipakai saat urutan
   penting.
 - `parseJson` dan `%*` membaca serta membangun JSON; `to`, `getInt`, dan `pretty` melengkapinya.
 - Kunci yang tidak ada melempar `KeyError` saat berjalan, jadi uji dulu dengan `hasKey`.
@@ -242,4 +242,4 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 ## Selanjutnya
 
 Bab berikutnya membahas *file* dan sistem operasi: [*file* dan OS](files-and-os.qmd), membaca dan
-menulis *file*, menelusuri direktori, serta membaca argumen dan variabel lingkungan.
+menulis *file*, menelusuri *directory*, serta membaca argumen dan *variable* lingkungan.

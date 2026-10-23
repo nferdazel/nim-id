@@ -1,10 +1,10 @@
-# Variabel: `var`, `let`, `const`
+# *Variable*: `var`, `let`, `const`
 
-Nim punya tiga kata kunci untuk menyimpan nilai: `var`, `let`, dan `const`. Di layar ketiganya
+Nim punya tiga kata kunci untuk menyimpan *value*: `var`, `let`, dan `const`. Di layar ketiganya
 kelihatan sama saja. Yang berbeda adalah janji yang ditepati compiler: mana yang boleh berubah,
-kapan nilainya ditentukan, dan siapa yang boleh mengubahnya.
+kapan *value itu* ditentukan, dan siapa yang boleh mengubahnya.
 
-Salah memilih tidak langsung membuat program error. Yang terjadi biasanya lebih mahal: nilai
+Salah memilih tidak langsung membuat program error. Yang terjadi biasanya lebih mahal: *value*
 berubah di tempat yang tidak diduga, dan bug-nya baru muncul dua ratus baris kemudian. Bab ini
 memisahkan ketiganya dengan contoh yang bisa dijalankan.
 
@@ -16,7 +16,7 @@ membaca pesan error `cannot be assigned to`, dan tahu kenapa `user_name` dan `us
 identifier yang sama oleh Nim.
 :::
 
-## `var`: nilai yang boleh berubah
+## `var`: *value* yang boleh berubah
 
 Simpan kode berikut sebagai `main.nim`, lalu jalankan dengan `nim r main.nim`.
 
@@ -41,9 +41,9 @@ Dua hal yang perlu diperhatikan:
   antaranya. Spasi di output di atas datang dari string `"Hello, "`, bukan dari `echo`. Kalau butuh
   spasi, tulis sendiri.
 - `&"..."` adalah *string interpolation* dari `std/strformat`: teks di dalam `{...}` diganti
-  dengan nilai variabelnya. Tanpa `import std/strformat`, bentuk ini tidak dikenal compiler.
+  dengan *value* *variable itu*. Tanpa `import std/strformat`, bentuk ini tidak dikenal compiler.
 
-`var` berarti nilai boleh diganti kapan saja setelah deklarasi:
+`var` berarti *value* boleh diganti kapan saja setelah deklarasi:
 
 ```{.nim}
 var score = 0
@@ -57,13 +57,13 @@ echo "score: ", score
 score: 15
 ```
 
-## Tipe: ditulis eksplisit atau disimpulkan compiler
+## *Type*: ditulis eksplisit atau disimpulkan compiler
 
-Pada contoh sebelumnya, tipe variabel tidak ditulis. Compiler menyimpulkannya dari nilai awal:
+Pada contoh sebelumnya, *type* *variable* tidak ditulis. Compiler menyimpulkannya dari *value* awal:
 `"Nim"` adalah `string`, `2008` adalah `int`. Ini disebut *type inference*.
 
-Kalau tipe perlu ditegaskan (misalnya untuk menghemat memori, atau karena nilainya akan diisi
-belakangan), tulis setelah nama variabel dengan tanda titik dua:
+Kalau *type* perlu ditegaskan (misalnya untuk menghemat memori, atau karena *value itu* akan diisi
+belakangan), tulis setelah nama *variable* dengan tanda titik dua:
 
 ```{.nim}
 var age: int8 = 24
@@ -78,7 +78,7 @@ echo age, " ", temperature, " ", active, " ", initial
 24 36.5 true S
 ```
 
-`int8` adalah bilangan bulat 8-bit, rentangnya −128 sampai 127. Nim menyediakan `int8`, `int16`,
+`int8` adalah bilangan bulat 8-bit, *range itu* −128 sampai 127. Nim menyediakan `int8`, `int16`,
 `int32`, `int64`, dan `int` (ukuran mengikuti arsitektur mesin). `float` adalah nama lain dari
 `float64`.
 
@@ -108,8 +108,8 @@ Pesan itu pendek, dan isinya lengkap kalau tahu cara membacanya:
 | `Error` | tingkat keparahan; `Warning` dan `Hint` tidak menghentikan build |
 | `'pi' cannot be assigned to` | yang salah: `pi` dideklarasikan `let`, jadi hanya boleh diisi sekali |
 
-Inilah bedanya dengan `var`. `let` adalah variabel yang nilainya ditetapkan saat deklarasi dan
-tidak boleh diubah setelahnya. Kalau nilainya harus dihitung lebih dulu, hitung di baris
+Inilah bedanya dengan `var`. `let` adalah *variable* yang *value itu* ditetapkan saat deklarasi dan
+tidak boleh diubah setelahnya. Kalau *value itu* harus dihitung lebih dulu, hitung di baris
 deklarasinya:
 
 ```{.nim}
@@ -121,15 +121,15 @@ echo "circumference: ", circumference
 circumference: 43.98226
 ```
 
-Karena `let` hanya boleh diisi sekali, mendeklarasikannya tanpa nilai juga ditolak:
+Karena `let` hanya boleh diisi sekali, mendeklarasikannya tanpa *value* juga ditolak:
 
 ```{.txt}
 main.nim(1, 5) Error: 'let' symbol requires an initialization
 ```
 
-## `const`: nilainya diketahui saat *compile*
+## `const`: *value itu* diketahui saat *compile*
 
-`const` lebih ketat lagi. Nilainya harus sudah bisa dihitung **saat *compile***, bukan saat
+`const` lebih ketat lagi. *Value itu* harus sudah bisa dihitung **saat *compile***, bukan saat
 program berjalan.
 
 ```{.nim}
@@ -148,22 +148,22 @@ notes (max 128)
 ```
 
 Bedanya dengan `let` bukan sekadar "lebih tidak boleh diubah". `const` disubstitusi langsung oleh
-compiler, jadi nilainya bisa dipakai untuk hal yang harus diketahui sebelum program jalan:
+compiler, jadi *value itu* bisa dipakai untuk hal yang harus diketahui sebelum program jalan:
 ukuran array tetap, parameter generic, atau cabang `when`. Konsekuensinya, `const` tidak bisa
 diisi hasil yang baru diketahui saat runtime, misalnya isi *file* atau waktu sistem.
 
 Aturan praktisnya:
 
-| Kata kunci | Bisa diubah? | Kapan nilainya ditentukan | Pakai untuk |
+| Kata kunci | Bisa diubah? | Kapan *value itu* ditentukan | Pakai untuk |
 |---|---|---|---|
 | `var` | ya, berkali-kali | runtime | state yang memang berubah |
-| `let` | tidak, sekali | runtime, saat deklarasi | nilai yang dihitung lalu dibekukan |
-| `const` | tidak | compile-time | konstanta, ukuran tetap, nilai konfigurasi |
+| `let` | tidak, sekali | runtime, saat deklarasi | *value* yang dihitung lalu dibekukan |
+| `const` | tidak | compile-time | *constant*, ukuran tetap, *value* konfigurasi |
 
-## Jebakan pertama: nama variabel tidak sesensitif yang dikira
+## Jebakan pertama: nama *variable* tidak sesensitif yang dikira
 
 Nim membandingkan identifier dengan mengabaikan huruf besar-kecil dan garis bawah, **kecuali
-huruf pertama**. Artinya dua penulisan berikut menunjuk variabel yang sama:
+huruf pertama**. Artinya dua penulisan berikut menunjuk *variable* yang sama:
 
 ```{.nim}
 var user_name = "hello"
@@ -182,7 +182,7 @@ Karena dianggap sama, keduanya tidak bisa dideklarasikan bersamaan:
 main.nim(2, 5) Error: redefinition of 'userName'; previous declaration here: main.nim(1, 5)
 ```
 
-Tapi huruf pertama tetap dibedakan. `UserName` bukan variabel yang sama:
+Tapi huruf pertama tetap dibedakan. `UserName` bukan *variable* yang sama:
 
 ```{.txt}
 main.nim(2, 6) Error: undeclared identifier: 'UserName'
@@ -193,12 +193,12 @@ candidates (edit distance, scope distance); see '--spellSuggest':
 Perhatikan baris `candidates`: compiler tidak sekadar bilang "tidak ada"; ia menawarkan kandidat
 terdekat. Ini salah satu alasan pesan error Nim terasa membantu begitu dibiasakan.
 
-Saran praktis: pilih satu gaya penulisan dan pakai konsisten. Gaya resmi Nim untuk variabel
-adalah `camelCase`, untuk tipe `PascalCase`.
+Saran praktis: pilih satu gaya penulisan dan pakai konsisten. Gaya resmi Nim untuk *variable*
+adalah `camelCase`, untuk *type* `PascalCase`.
 
-## Jebakan kedua: `var` tanpa nilai tidak kosong
+## Jebakan kedua: `var` tanpa *value* tidak kosong
 
-`var` boleh dideklarasikan tanpa nilai awal, dan Nim mengisinya dengan nilai default tipe
+`var` boleh dideklarasikan tanpa *value* awal, dan Nim mengisinya dengan *default value* *type*
 tersebut:
 
 ```{.nim}
@@ -214,8 +214,8 @@ echo count, "|", active, "|", repr(text)
 ```
 
 `repr` menampilkan bentuk yang bisa dibaca mesin; karena itu string kosong tercetak sebagai `""`,
-bukan kosong sama sekali. Nilai default ini aman (tidak ada sampah memori seperti di C), tapi
-kode lebih mudah dibaca kalau nilainya diisi eksplisit saat deklarasi.
+bukan kosong sama sekali. *Default value* ini aman (tidak ada sampah memori seperti di C), tapi
+kode lebih mudah dibaca kalau *value itu* diisi eksplisit saat deklarasi.
 
 ## Latihan
 
@@ -241,13 +241,13 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 ## Ringkasan
 
 - `var` boleh diubah, `let` diisi sekali, `const` ditentukan saat *compile*.
-- `let` dan `const` tidak boleh dideklarasikan tanpa nilai.
+- `let` dan `const` tidak boleh dideklarasikan tanpa *value*.
 - `echo` tidak menambahkan pemisah antar argumen; `&"..."` butuh `import std/strformat`.
 - Identifier Nim mengabaikan besar-kecil dan `_`, kecuali huruf pertama, sehingga
   `user_name` = `userName` ≠ `UserName`.
-- `var` tanpa nilai berisi default tipe (`0`, `false`, `""`), bukan nilai acak.
+- `var` tanpa *value* berisi default *type* (`0`, `false`, `""`), bukan *value* acak.
 
 ## Selanjutnya
 
-Bab berikutnya membahas tipe data dasar secara lebih rinci: rentang setiap tipe integer, kapan
-memakai `float32` dan kapan `float64`, serta cara konversi antar tipe tanpa kehilangan data.
+Bab berikutnya membahas *data type* dasar secara lebih rinci: *range* setiap *type* integer, kapan
+memakai `float32` dan kapan `float64`, serta cara konversi antar *type* tanpa kehilangan data.

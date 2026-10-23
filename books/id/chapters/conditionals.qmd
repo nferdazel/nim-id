@@ -1,17 +1,17 @@
 # Percabangan: `if`, `case`, `when`
 
 Program yang mengerjakan hal yang sama untuk semua masukan jarang berguna. Cepat atau lambat kita
-perlu memilih jalur: saldo cukup atau tidak, nama kosong atau terisi, sistemnya Unix atau Windows.
+perlu memilih *path*: saldo cukup atau tidak, nama kosong atau terisi, sistemnya Unix atau Windows.
 
 `if` sudah akrab bagi siapa pun yang pernah menulis di bahasa lain. Yang khas di Nim ada tiga: `if`
-bisa langsung menghasilkan nilai, `case` menuntut semua kemungkinan tertutup, dan `when` memilih
+bisa langsung menghasilkan *value*, `case` menuntut semua kemungkinan tertutup, dan `when` memilih
 cabang **saat *compile***: cabang yang tidak terpilih tidak ikut *di-compile*.
 
 ::: {.callout-note}
 ## Tujuan bab
 
-Setelah bab ini, pembaca bisa menulis `if`/`elif`/`else`, mengambil nilai dari sebuah `if`, memakai
-`case` dengan *set* dan rentang, memisahkan kode per sistem operasi lewat `when`, dan membaca
+Setelah bab ini, pembaca bisa menulis `if`/`elif`/`else`, mengambil *value* dari sebuah `if`, memakai
+`case` dengan *set* dan *range*, memisahkan kode per sistem operasi lewat `when`, dan membaca
 pesan `type mismatch` serta `not all cases are covered`.
 :::
 
@@ -43,7 +43,7 @@ Tiga hal yang berbeda dari banyak bahasa lain:
 
 ## `if` sebagai *expression*
 
-Di Nim, `if` adalah *expression*: hasilnya bisa langsung disimpan ke variabel.
+Di Nim, `if` adalah *expression*: hasilnya bisa langsung disimpan ke *variable*.
 
 ```{.nim}
 let score = 72
@@ -64,14 +64,14 @@ label: keep going
 ```
 
 Perhatikan bentuk satu baris `if score >= 75: 'A' else: 'B'`. Bentuk ini valid karena setiap cabang
-menghasilkan satu nilai. Kalau `if` dipakai sebagai *expression*, semua cabang harus bertipe sama, dan
-`else` wajib ada. Tanpa `else`, Nim memperlakukannya sebagai *statement* biasa, sehingga nilai di
+menghasilkan satu *value*. Kalau `if` dipakai sebagai *expression*, semua cabang harus bertipe sama, dan
+`else` wajib ada. Tanpa `else`, Nim memperlakukannya sebagai *statement* biasa, sehingga *value* di
 dalamnya dianggap tidak terpakai: `let x = if cond: 1` ditolak dengan pesan
 `has to be used (or discarded)`.
 
-## `case`: memilih berdasarkan nilai
+## `case`: memilih berdasarkan *value*
 
-Kalau yang diperiksa adalah satu nilai dengan banyak kemungkinan, `case` lebih terbaca daripada
+Kalau yang diperiksa adalah satu *value* dengan banyak kemungkinan, `case` lebih terbaca daripada
 deretan `elif`.
 
 ```{.nim}
@@ -95,9 +95,9 @@ for month in [1, 4, 7, 10, 13]:
 13: unknown
 ```
 
-Satu `of` bisa memuat daftar nilai yang dipisah koma (`12, 1, 2`) atau rentang dengan `..`
-(`3 .. 5`). Nilai yang diuji `case` boleh bertipe ordinal (`int`, `char`, `bool`, `enum`) atau
-`string`. Rentang hanya berlaku untuk tipe ordinal: pada `string`, `of` menerima daftar nilai saja,
+Satu `of` bisa memuat daftar *value* yang dipisah koma (`12, 1, 2`) atau *range* dengan `..`
+(`3 .. 5`). *Value* yang diuji `case` boleh bertipe ordinal (`int`, `char`, `bool`, `enum`) atau
+`string`. *Range* hanya berlaku untuk *type* ordinal: pada `string`, `of` menerima daftar *value* saja,
 dan `of "a" .. "c"` ditolak dengan pesan `range of string is invalid`.
 
 ## `when`: cabang yang dipilih compiler
@@ -125,7 +125,7 @@ Pola ini juga dipakai untuk `when isMainModule:` atau `when sizeof(int) == 8:`.
 
 ## Membaca pesan error: kondisi harus `bool`
 
-Nim tidak mengonversi nilai lain menjadi boolean. Angka `0`, string kosong, dan `nil` bukan `false`.
+Nim tidak mengonversi *value* lain menjadi boolean. Angka `0`, string kosong, dan `nil` bukan `false`.
 
 ```{.nim}
 var count = 3
@@ -142,8 +142,8 @@ main.nim(3, 4) Error: type mismatch: got 'int' for 'count' but expected 'bool'
 |---|---|
 | `main.nim(3, 4)` | *file*, baris 3, kolom 4: posisi `count` di kondisi |
 | `Error` | tingkat keparahan; menghentikan *compile* |
-| `got 'int'` | tipe yang benar-benar diberikan |
-| `expected 'bool'` | tipe yang diharapkan `if` |
+| `got 'int'` | *type* yang benar-benar diberikan |
+| `expected 'bool'` | *type* yang diharapkan `if` |
 
 Bacanya sederhana: kondisi `if` harus bertipe `bool`. Perbaikannya tulis perbandingan yang jelas,
 misalnya `if count > 0:`.
@@ -163,15 +163,15 @@ echo describe(0)
 main.nim(2, 3) Error: not all cases are covered
 ```
 
-`case` pada `int` tidak bisa dihabiskan. Nilai `2`, `3`, sampai jutaan lain tidak punya cabang. Nim
+`case` pada `int` tidak bisa dihabiskan. *Value* `2`, `3`, sampai jutaan lain tidak punya cabang. Nim
 menolaknya di depan, bukan menyerahkan masalah ke runtime. Tambahkan `else:` untuk menangani sisanya.
-Untuk tipe tertutup seperti `bool` atau `enum`, daftar `of` yang lengkap bisa menghabiskan `case`
+Untuk *type* tertutup seperti `bool` atau `enum`, daftar `of` yang lengkap bisa menghabiskan `case`
 tanpa `else`.
 
 ## Latihan
 
 1. Ubah `temperature` di contoh pertama menjadi `5`, lalu prediksi outputnya sebelum menjalankan.
-2. Tulis *expression* `if` yang mengubah nilai `age` menjadi `"anak"` (di bawah 13), `"remaja"` (13–19),
+2. Tulis *expression* `if` yang mengubah *value* `age` menjadi `"anak"` (di bawah 13), `"remaja"` (13–19),
    atau `"dewasa"` (20 ke atas), lalu cetak hasilnya.
 3. Tulis *procedure* yang menerima `char` dan memakai `case` untuk mengembalikan `"vowel"` untuk
    `'a'`/`'i'`/`'u'`/`'e'`/`'o'`, `"digit"` untuk `'0' .. '9'`, dan `"other"` untuk sisanya.
@@ -188,13 +188,13 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 ## Ringkasan
 
 - `if` memakai `elif`, tidak butuh tanda kurung, dan bloknya ditentukan indentasi.
-- `if` adalah *expression*; kalau dipakai sebagai nilai, semua cabang harus bertipe sama dan `else` wajib.
-- `case` mendukung daftar nilai (`12, 1, 2`) dan rentang (`3 .. 5`); `of` yang tidak lengkap tanpa
+- `if` adalah *expression*; kalau dipakai sebagai *value*, semua cabang harus bertipe sama dan `else` wajib.
+- `case` mendukung daftar *value* (`12, 1, 2`) dan *range* (`3 .. 5`); `of` yang tidak lengkap tanpa
   `else` ditolak compiler.
 - `when` memilih cabang saat *compile*; hanya cabang terpilih yang *di-compile*.
 - Kondisi `if` harus bertipe `bool`; Nim tidak menganggap `0` atau `""` sebagai salah.
 
 ## Selanjutnya
 
-Bab berikutnya membahas [*loop*](loops.qmd): `for` dengan rentang, `while`, `countdown`, serta
+Bab berikutnya membahas [*loop*](loops.qmd): `for` dengan *range*, `while`, `countdown`, serta
 cara memakai `break` dan `continue` tanpa membuat alurnya sulit dibaca.

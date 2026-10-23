@@ -1,22 +1,22 @@
 # *Loop*: `for`, `while`, `break`, `continue`
 
 Mengulang pekerjaan yang sama seratus kali adalah alasan komputer ada. Tapi *loop* juga sumber
-bug paling tua: batas yang salah satu, elemen terakhir tidak ikut, atau indeks yang melewati ujung
+bug paling tua: batas yang salah satu, *element* terakhir tidak ikut, atau *index* yang melewati ujung
 *array*.
 
 Nim tidak menyediakan `for (int i = 0; i < n; i++)` seperti C. *Loop* `for` di Nim selalu
-memakai *iterator*: rentang, *array*, `seq`, atau iterator buatan sendiri. Bentuk itu menghapus banyak
-*error* penghitungan indeks.
+memakai *iterator*: *range*, *array*, `seq`, atau iterator buatan sendiri. Bentuk itu menghapus banyak
+*error* penghitungan *index*.
 
 ::: {.callout-note}
 ## Tujuan bab
 
-Setelah bab ini, pembaca bisa membedakan rentang inklusif `..` dan eksklusif `..<`, memakai
-`countdown` dan `countup`, mengiterasi elemen dengan `items` dan pasangan indeks-elemen dengan
+Setelah bab ini, pembaca bisa membedakan *range* inklusif `..` dan eksklusif `..<`, memakai
+`countdown` dan `countup`, mengiterasi *element* dengan `items` dan pasangan *index*-*element* dengan
 `pairs`, menulis `while` yang berhenti, serta memakai `break` dan `continue`.
 :::
 
-## `for` dengan rentang: `..` dan `..<`
+## `for` dengan *range*: `..` dan `..<`
 
 Simpan sebagai `main.nim`, lalu jalankan.
 
@@ -42,16 +42,16 @@ i = 3
 ```
 
 `0 ..< 3` membaca "nol sampai kurang dari tiga": angkanya `0`, `1`, `2`. `0 .. 3` inklusif di kedua
-ujung, jadi `3` ikut. Kesalahpahaman yang paling sering adalah memakai `..` untuk indeks `array`,
-padahal indeks terakhir selalu `len - 1`. Karena itu gaya yang aman untuk mengulang sebanyak `n`
+ujung, jadi `3` ikut. Kesalahpahaman yang paling sering adalah memakai `..` untuk *index* `array`,
+padahal *index* terakhir selalu `len - 1`. Karena itu gaya yang aman untuk mengulang sebanyak `n`
 kali adalah `for i in 0 ..< n:`.
 
-Variabel `i` hanya berlaku di dalam badan *loop* dan tidak bisa diubah. Menulis `i = 5` di
-dalamnya ditolak dengan pesan `'i' cannot be assigned to`. Ini disengaja, supaya nilai hitungan tidak
+*Variable* `i` hanya berlaku di dalam badan *loop* dan tidak bisa diubah. Menulis `i = 5` di
+dalamnya ditolak dengan pesan `'i' cannot be assigned to`. Ini disengaja, supaya *value* hitungan tidak
 dirusak dari dalam.
 
-Rentang juga boleh kosong. `for i in 5 .. 3:` tidak menjalankan badannya sama sekali, dan itu bukan
-error. Kalau memang ingin mundur, pakai `countdown`, bukan rentang yang dibalik.
+*Range* juga boleh kosong. `for i in 5 .. 3:` tidak menjalankan badannya sama sekali, dan itu bukan
+error. Kalau memang ingin mundur, pakai `countdown`, bukan *range* yang dibalik.
 
 ## Mundur dan melompat: `countdown`, `countup`
 
@@ -76,7 +76,7 @@ for i in countup(1, 3, 2):
 
 `countdown(3, 1)` berjalan dari `3` turun ke `1`. `countup(1, 3, 2)` berjalan naik dengan langkah
 dua, jadi hanya `1` dan `3` yang tercetak. Keduanya adalah iterator, bukan kata kunci; tanpa argumen
-langkah, `countup(a, b)` sama dengan `a .. b`. Keduanya menghasilkan satu nilai tiap putaran,
+langkah, `countup(a, b)` sama dengan `a .. b`. Keduanya menghasilkan satu *value* tiap putaran,
 sehingga bisa dipakai langsung sebagai sumber `for`.
 
 ## `items` dan `pairs`
@@ -103,10 +103,10 @@ cyd
 2: cyd
 ```
 
-`for name in names` memanggil iterator `items` secara implisit: setiap putaran mengambil elemennya.
-Kalau indeksnya dibutuhkan, tulis dua nama variabel. Bentuk itu memakai `pairs`, yang menghasilkan
-indeks dan elemen sekaligus. Untuk `array` dan `seq`, indeks `pairs` bertipe `int` mulai dari nol.
-Untuk `Table` dan tipe lain, `pairs` menghasilkan pasangan yang sesuai tipe tersebut.
+`for name in names` memanggil iterator `items` secara implisit: setiap putaran mengambil *element itu*.
+Kalau *index itu* dibutuhkan, tulis dua nama *variable*. Bentuk itu memakai `pairs`, yang menghasilkan
+*index* dan *element* sekaligus. Untuk `array` dan `seq`, *index* `pairs` bertipe `int` mulai dari nol.
+Untuk `Table` dan *type* lain, `pairs` menghasilkan pasangan yang sesuai *type* tersebut.
 
 ## `while`: selama kondisinya benar
 
@@ -179,7 +179,7 @@ yang sama di posisi serupa.
 
 ## Latihan
 
-1. Cetak bilangan genap dari `2` sampai `10` dengan `for` dan rentang yang tepat.
+1. Cetak bilangan genap dari `2` sampai `10` dengan `for` dan *range* yang tepat.
 2. Tanpa menjalankan, prediksi outputnya:
    ```{.nim}
    var total = 0
@@ -189,8 +189,8 @@ yang sama di posisi serupa.
 
    echo total
    ```
-3. Tulis *loop* yang menjumlahkan elemen sebuah `seq[int]` memakai `pairs`, lalu cetak total dan
-   indeks elemen terbesar.
+3. Tulis *loop* yang menjumlahkan *element* sebuah `seq[int]` memakai `pairs`, lalu cetak total dan
+   *index* *element* terbesar.
 4. Kode berikut tidak pernah berhenti. Perbaiki tanpa mengubah maksudnya:
    ```{.nim}
    var n = 5
@@ -205,7 +205,7 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
 - `for` memakai iterator, bukan penghitung gaya C; `0 ..< n` eksklusif, `0 .. n` inklusif.
 - `countdown(a, b)` dan `countup(a, b, step)` mengatur arah dan langkah.
-- `items` memberi elemen, `pairs` memberi indeks dan elemen sekaligus.
+- `items` memberi *element*, `pairs` memberi *index* dan *element* sekaligus.
 - Kondisi `while` diperiksa sebelum badan, jadi bisa berjalan nol kali.
 - `break` menghentikan *loop*, `continue` melewati satu putaran; keduanya hanya sah di dalam
   *loop*.

@@ -1,22 +1,22 @@
-# *File*, direktori, dan OS
+# *File*, *directory*, dan OS
 
 Hampir setiap program akhirnya menyentuh *file*: membaca konfigurasi, menulis log, atau melihat isi
-direktori. Di banyak bahasa, urusan ini tersebar di beberapa *library*. Nim mengumpulkannya di satu
-modul: `std/os`. Bab ini memakai modul itu untuk hal yang paling sering dibutuhkan, sekaligus
+*directory*. Di banyak bahasa, urusan ini tersebar di beberapa *library*. Nim mengumpulkannya di satu
+*module*: `std/os`. Bab ini memakai *module* itu untuk hal yang paling sering dibutuhkan, sekaligus
 menunjukkan kenapa `import std/os` tidak boleh terlupa.
 
 ::: {.callout-note}
 ## Tujuan bab
 
-Setelah bab ini, pembaca bisa membongkar dan menyusun jalur *file*, menulis lalu membaca *file*,
-menelusuri direktori dengan keluaran yang stabil, membaca argumen dan variabel lingkungan, serta
-membaca pesan `undeclared identifier` saat sebuah modul lupa diimpor.
+Setelah bab ini, pembaca bisa membongkar dan menyusun *path* *file*, menulis lalu membaca *file*,
+menelusuri *directory* dengan keluaran yang stabil, membaca argumen dan *variable* lingkungan, serta
+membaca pesan `undeclared identifier` saat sebuah *module* lupa diimpor.
 :::
 
-## Satu pintu: modul `std/os`
+## Satu pintu: *module* `std/os`
 
-`std/os` memuat nama *file*, direktori, argumen, dan variabel lingkungan. Kita mulai dari operasi
-jalur yang tidak menyentuh *file* sama sekali. Simpan kode berikut sebagai `main.nim`, lalu jalankan
+`std/os` memuat nama *file*, *directory*, argumen, dan *variable* lingkungan. Kita mulai dari operasi
+*path* yang tidak menyentuh *file* sama sekali. Simpan kode berikut sebagai `main.nim`, lalu jalankan
 `nim c -r main.nim`.
 
 ```{.nim}
@@ -38,14 +38,14 @@ ext:  .txt
 back: /srv/app/logs/today.txt
 ```
 
-`splitFile` membongkar satu jalur menjadi tiga bagian: direktori, nama, dan ekstensi. Perhatikan
-bahwa direktori tidak diakhiri pemisah. `joinPath` adalah kebalikannya: ia menyatukan bagian demi
+`splitFile` membongkar satu *path* menjadi tiga bagian: *directory*, nama, dan ekstensi. Perhatikan
+bahwa *directory* tidak diakhiri pemisah. `joinPath` adalah kebalikannya: ia menyatukan bagian demi
 bagian dengan pemisah yang benar untuk sistem tempat program berjalan.
 
-Pemisah jalur berbeda antara Unix (`/`) dan Windows (`\`). Karena itu jangan menyambung jalur
-dengan `&`. Pakai `joinPath`, atau operator `/` yang juga disediakan modul ini.
+Pemisah *path* berbeda antara Unix (`/`) dan Windows (`\`). Karena itu jangan menyambung *path*
+dengan `&`. Pakai `joinPath`, atau operator `/` yang juga disediakan *module* ini.
 
-`splitFile` juga bekerja untuk jalur tanpa direktori: `splitFile("notes.txt")` memberi direktori
+`splitFile` juga bekerja untuk *path* tanpa *directory*: `splitFile("notes.txt")` memberi *directory*
 kosong. Untuk mengambil satu bagian saja, ada pintasan `extractFilename`, `parentDir`, dan
 `tailDir`. Pakai `splitFile` kalau butuh dua bagian sekaligus; pakai pintasan kalau hanya butuh satu.
 
@@ -73,23 +73,23 @@ second line
 exists after remove: false
 ```
 
-`writeFile` menerima jalur dan satu string, lalu menimpanya kalau *file* sudah ada. `readFile`
+`writeFile` menerima *path* dan satu string, lalu menimpanya kalau *file* sudah ada. `readFile`
 mengembalikan seluruh isi sebagai satu string; barisnya dipecah dengan `splitLines` dari
 `std/strutils`.
 
-Contoh ini menulis ke `getTempDir()`, bukan ke direktori kerja. Alasannya praktis: contoh harus
+Contoh ini menulis ke `getTempDir()`, bukan ke *directory* kerja. Alasannya praktis: contoh harus
 berjalan di mesin siapa pun tanpa meninggalkan *file* di tempat yang tidak terduga. Setelah selesai,
 `removeFile` menghapusnya dan `fileExists` membuktikan *file itu* sudah tidak ada. Untuk membuat
-direktori, pakai `createDir`; untuk memeriksa keberadaannya, `dirExists`.
+*directory*, pakai `createDir`; untuk memeriksa keberadaannya, `dirExists`.
 
 Kalau *file itu* tidak ada, `readFile` tidak mengembalikan penanda error seperti di C. Ia melempar
-`IOError`, dan pesannya memuat jalur yang dicari. Pola Nim konsisten di sini: *error* yang tidak
+`IOError`, dan pesannya memuat *path* yang dicari. Pola Nim konsisten di sini: *error* yang tidak
 bisa diabaikan menjadi *exception*, lalu ditangani dengan `try` dan `except` di tempat yang tahu
 cara menanganinya.
 
-## Menelusuri direktori
+## Menelusuri *directory*
 
-Untuk melihat isi direktori, pakai `walkDir`. Ia menghasilkan pasangan: jenis entri dan jalurnya.
+Untuk melihat isi *directory*, pakai `walkDir`. Ia menghasilkan pasangan: jenis entri dan *path itu*.
 
 ```{.nim}
 import std/[os, algorithm]
@@ -119,17 +119,17 @@ Urutan `walkDir` mengikuti urutan sistem *file* dan tidak dijamin. Karena itu na
 baru diurutkan dengan `sort` dari `std/algorithm`. Tanpa langkah ini, keluaran bisa berbeda setiap
 kali program dijalankan, dan contoh yang keluarannya berubah tidak bisa dipakai untuk menguji.
 
-`kind` bertipe `PathComponent`. Nilainya antara lain `pcFile`, `pcDir`, dan dua varian tautan
-simbolik. Contoh di atas mengabaikan `kind`, tetapi `case` atas nilainya adalah cara lazim
+`kind` bertipe `PathComponent`. *Value itu* antara lain `pcFile`, `pcDir`, dan dua varian tautan
+simbolik. Contoh di atas mengabaikan `kind`, tetapi `case` atas *value itu* adalah cara lazim
 memisahkan *file* dari subdirektori.
 
 `walkDir` tidak masuk ke subdirektori; ia membaca satu tingkat saja. Untuk menelusuri seluruh pohon
-direktori, ada `walkDirRec`, yang mengeluarkan setiap *file* di bawah direktori awal beserta
-jalurnya.
+*directory*, ada `walkDirRec`, yang mengeluarkan setiap *file* di bawah *directory* awal beserta
+*path itu*.
 
-## Argumen dan variabel lingkungan
+## Argumen dan *variable* lingkungan
 
-Banyak alat kecil mengambil konfigurasi dari argumen dan variabel lingkungan. Keduanya ada di
+Banyak *tool* kecil mengambil konfigurasi dari argumen dan *variable* lingkungan. Keduanya ada di
 `std/os`.
 
 ```{.nim}
@@ -159,9 +159,9 @@ echo getEnv("NIM_ID_GREETING", "no greeting set")
 no greeting set
 ```
 
-`getEnv` menerima nama variabel dan nilai cadangan. Kalau `NIM_ID_GREETING` belum diatur, yang
-dipakai adalah `"no greeting set"`. Nilai cadangan mencegah program gagal hanya karena sebuah
-variabel lingkungan belum disetel. Kalau seluruh argumen dibutuhkan sebagai satu *seq*, ada
+`getEnv` menerima nama *variable* dan *value* cadangan. Kalau `NIM_ID_GREETING` belum diatur, yang
+dipakai adalah `"no greeting set"`. *Value* cadangan mencegah program gagal hanya karena sebuah
+*variable* lingkungan belum disetel. Kalau seluruh argumen dibutuhkan sebagai satu *seq*, ada
 `commandLineParams()` yang mengembalikannya sebagai `seq[string]`.
 
 ## Error sengaja: lupa mengimpor `std/os`
@@ -187,7 +187,7 @@ compiler menyebut nama yang menurut kita seharusnya ada, periksa daftar `import`
 
 ## Latihan
 
-1. Cetak nama *file* dan ekstensinya dari jalur `/etc/nim/nim.cfg` memakai `splitFile`.
+1. Cetak nama *file* dan ekstensinya dari *path* `/etc/nim/nim.cfg` memakai `splitFile`.
 2. Tanpa menjalankan, prediksi keluarannya:
    ```{.nim}
    import std/os
@@ -208,8 +208,8 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
 ## Ringkasan
 
-- `std/os` menangani jalur, *file*, direktori, argumen, dan variabel lingkungan.
-- Susun jalur dengan `joinPath` atau `/`, bukan dengan `&`, supaya pemisahnya benar di setiap sistem.
+- `std/os` menangani *path*, *file*, *directory*, argumen, dan *variable* lingkungan.
+- Susun *path* dengan `joinPath` atau `/`, bukan dengan `&`, supaya pemisahnya benar di setiap sistem.
 - `readFile` dan `writeFile` cukup untuk *file* biasa; bersihkan *file* sementara setelah dipakai.
 - Urutan `walkDir` tidak dijamin; urutkan sendiri kalau keluaran harus stabil.
 - Lupa `import std/os` menghasilkan `undeclared identifier` di *compile*, bukan crash saat runtime.

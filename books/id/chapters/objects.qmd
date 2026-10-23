@@ -1,17 +1,17 @@
-# *Object* dan konstruktor
+# *Object* dan *constructor*
 
 Tuple bagus untuk data kecil yang cepat dibongkar. Tapi begitu ada sepuluh field bernama, penanda
 berulang, dan aturan sendiri, tuple mulai menyulitkan. *Object* memberi nama pada sekumpulan field,
-dan Nim menambahkan konstruktor literal yang membuatnya nyaman dipakai.
+dan Nim menambahkan *constructor* literal yang membuatnya nyaman dipakai.
 
-Bab ini juga membongkar satu perbedaan yang sering mengejutkan: *object* nilai dan `ref object`
+Bab ini juga membongkar satu perbedaan yang sering mengejutkan: *object* *value* dan `ref object`
 berperilaku berbeda saat disalin. Mengabaikannya sering berujung bug.
 
 ::: {.callout-note}
 ## Tujuan bab
 
-Setelah bab ini, pembaca bisa mendefinisikan `object` dan mengisinya lewat konstruktor, memakai
-nilai default, membedakan *object* nilai dari `ref object`, menimpa `$`, dan membaca pesan error
+Setelah bab ini, pembaca bisa mendefinisikan `object` dan mengisinya lewat *constructor*, memakai
+*default value*, membedakan *object* *value* dari `ref object`, menimpa `$`, dan membaca pesan error
 `undeclared field`.
 :::
 
@@ -32,13 +32,13 @@ echo ada.name, " is ", ada.age
 Ada is 36
 ```
 
-`Person(name: "Ada", age: 36)` adalah konstruktor literal. Nim membuatnya otomatis untuk setiap
-tipe *object*, jadi tidak ada fungsi yang perlu ditulis sendiri. Field yang tidak disebut akan
-memakai nilai default.
+`Person(name: "Ada", age: 36)` adalah *constructor* literal. Nim membuatnya otomatis untuk setiap
+*type* *object*, jadi tidak ada fungsi yang perlu ditulis sendiri. Field yang tidak disebut akan
+memakai *default value*.
 
 ## Field yang bisa diubah
 
-Field boleh diubah selama variabelnya dideklarasikan `var`.
+Field boleh diubah selama *variable itu* dideklarasikan `var`.
 
 ```{.nim}
 type Point = object
@@ -55,9 +55,9 @@ echo p.x, ",", p.y
 
 `x, y: int` adalah singkatan untuk dua field bertipe sama.
 
-## Nilai default *object*
+## *Default value* *object*
 
-*Object* yang dideklarasikan tanpa isi sudah aman dipakai; setiap field berisi default tipenya.
+*Object* yang dideklarasikan tanpa isi sudah aman dipakai; setiap field berisi default *type itu*.
 
 ```{.nim}
 type Counter = object
@@ -72,12 +72,12 @@ echo c.hits, "|", repr(c.label)
 0|""
 ```
 
-Sama seperti `var` tanpa nilai awal pada tipe dasar: tidak ada sampah memori yang perlu
+Sama seperti `var` tanpa *value* awal pada *type* dasar: tidak ada sampah memori yang perlu
 dikhawatirkan.
 
 ## *Object* sudah punya `$` bawaan
 
-Pembaca sering menduga `echo` menolak *object*. Untuk *object* nilai, Nim menyediakan `$` bawaan.
+Pembaca sering menduga `echo` menolak *object*. Untuk *object* *value*, Nim menyediakan `$` bawaan.
 
 ```{.nim}
 type Person = object
@@ -90,12 +90,12 @@ echo Person(name: "Ada")
 (name: "Ada")
 ```
 
-Keluarannya menyerupai literal asalnya: nama field beserta nilainya. Cocok untuk inspeksi
+Keluarannya menyerupai literal asalnya: nama field beserta *value itu*. Cocok untuk inspeksi
 cepat, tapi biasanya belum enak dibaca manusia.
 
 ## Menimpa `$` sendiri
 
-Untuk mengubah cara *object* dicetak, definisikan `$` untuk tipe itu.
+Untuk mengubah cara *object* dicetak, definisikan `$` untuk *type* itu.
 
 ```{.nim}
 type Person = object
@@ -114,11 +114,11 @@ Ada (36)
 
 Setelah `$` didefinisikan, `echo` memakainya otomatis. Aturan yang sama berlaku untuk `&`,
 interpolasi string, dan pemanggilan `$` eksplisit. Inilah cara idiomatis menambah representasi teks
-pada tipe sendiri.
+pada *type* sendiri.
 
 ## `ref object`: disimpan di heap
 
-`ref object` menyimpan datanya di heap, dan variabelnya menyimpan *pointer* ke sana.
+`ref object` menyimpan datanya di heap, dan *variable itu* menyimpan *pointer* ke sana.
 
 ```{.nim}
 type Node = ref object
@@ -135,9 +135,9 @@ echo head.value, " -> ", head.next.value
 ```
 
 Field `next` bertipe `Node`, yaitu referensi ke node lain. Struktur berantai seperti inilah yang
-membuat `ref` praktis. `nil` adalah nilai yang sah untuk sebuah referensi.
+membuat `ref` praktis. `nil` adalah *value* yang sah untuk sebuah referensi.
 
-Deklarasi `ref` tanpa nilai awal berisi `nil`. Untuk mengisinya, pakai `new`.
+Deklarasi `ref` tanpa *value* awal berisi `nil`. Untuk mengisinya, pakai `new`.
 
 ```{.nim}
 type Person = ref object
@@ -162,7 +162,7 @@ Grace
 
 ## `$` bawaan tidak berlaku untuk `ref`
 
-*Object* nilai punya `$` bawaan, tapi referensinya tidak.
+*Object* *value* punya `$` bawaan, tapi referensinya tidak.
 
 ```{.nim}
 type Person = ref object
@@ -182,12 +182,12 @@ Expected one of (first mismatch at [position]):
 ```
 
 Pesannya tidak menyebut `$` secara gamblang, tapi baris terakhir memberi petunjuk: `echo` butuh
-tipe yang punya `$`. Ada dua perbaikan. Pertama, definisikan `$` untuk `Person`. Kedua, lepas
+*type* yang punya `$`. Ada dua perbaikan. Pertama, definisikan `$` untuk `Person`. Kedua, lepas
 referensinya dengan `echo p[]`, supaya `$` bawaan *object* yang dipakai.
 
-## Nilai vs referensi: menyalin tidak selalu sama
+## *Value* vs referensi: menyalin tidak selalu sama
 
-Perbedaan paling mahal antara keduanya muncul saat nilai disalin.
+Perbedaan paling mahal antara keduanya muncul saat *value* disalin.
 
 ```{.nim}
 type
@@ -212,12 +212,12 @@ value: 1 99
 ref:   99 99
 ```
 
-Pada *object* nilai, `var b = a` menyalin seluruh isinya, jadi mengubah `b` tidak menyentuh `a`.
-Pada `ref object`, `var d = c` menyalin penunjuknya, bukan datanya. Keduanya menunjuk *object* yang
+Pada *object* *value*, `var b = a` menyalin seluruh isinya, jadi mengubah `b` tidak menyentuh `a`.
+Pada `ref object`, `var d = c` menyalin *pointer*-nya, bukan datanya. Keduanya menunjuk *object* yang
 sama, sehingga mengubah `d` ikut mengubah `c`.
 
-Aturannya: pakai `object` untuk nilai kecil yang ingin disalin, dan `ref object` untuk data besar
-atau saat beberapa bagian kode memang harus berbagi satu nilai.
+Aturannya: pakai `object` untuk *value* kecil yang ingin disalin, dan `ref object` untuk data besar
+atau saat beberapa bagian kode memang harus berbagi satu *value*.
 
 ## Membaca error: field yang tidak ada
 
@@ -235,9 +235,9 @@ echo ada.email
 main.nim(5, 9) Error: undeclared field: 'email'
 ```
 
-Pesannya menyebut field yang dicari. Awali pemeriksaan dari deklarasi tipe: `Person` hanya punya
+Pesannya menyebut field yang dicari. Awali pemeriksaan dari deklarasi *type*: `Person` hanya punya
 `name`, jadi `email` memang tidak ada. Ini jenis error yang paling mudah diperbaiki, karena
-jawabannya ada di definisi tipe, bukan di baris pemakaiannya.
+jawabannya ada di definisi *type*, bukan di baris pemakaiannya.
 
 ## Warisan dasar
 
@@ -268,7 +268,7 @@ dibahas di bagian menengah.
 
 ## Latihan
 
-1. Tambahkan field `email: string` pada `Person`, isi lewat konstruktor, lalu cetak.
+1. Tambahkan field `email: string` pada `Person`, isi lewat *constructor*, lalu cetak.
 2. Tanpa menjalankan, prediksi outputnya:
    ```{.nim}
    type Task = object
@@ -294,13 +294,13 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
 ## Ringkasan
 
-- `object` mengelompokkan field bernama; `Tipe(field: nilai)` adalah konstruktor literal.
-- Field yang tidak diisi memakai default tipenya, dan *object* tanpa isi tetap aman dipakai.
-- *Object* nilai punya `$` bawaan; `ref object` tidak, jadi definisikan `$` atau pakai `p[]`.
-- Menyalin *object* nilai menggandakan datanya; menyalin `ref object` menggandakan penunjuknya.
+- `object` mengelompokkan field bernama; `Tipe(field: nilai)` adalah *constructor* literal.
+- Field yang tidak diisi memakai default *type itu*, dan *object* tanpa isi tetap aman dipakai.
+- *Object* *value* punya `$` bawaan; `ref object` tidak, jadi definisikan `$` atau pakai `p[]`.
+- Menyalin *object* *value* menggandakan datanya; menyalin `ref object` menggandakan *pointer*-nya.
 - `object of RootObj` mewariskan field; `new` mengalokasikan `ref` yang masih `nil`.
 
 ## Selanjutnya
 
-Bab berikutnya membahas [enum dan set](enums-and-sets.qmd): *set* nilai bernama dengan urutan
+Bab berikutnya membahas [enum dan set](enums-and-sets.qmd): *set* *value* bernama dengan urutan
 tetap, dan *bitset* untuk menguji keanggotaan dengan cepat.

@@ -9,13 +9,13 @@ mulai dari satu fungsi sederhana, lalu membaca pesan error saat pragma-nya salah
 ## Tujuan bab
 
 Setelah bab ini, pembaca bisa *meng-compile* *file* C bersama program Nim, mendeklarasikan fungsi C
-dengan `{.importc.}`, memakai tipe `cint`, `csize_t`, dan `cstring`, serta membaca error
+dengan `{.importc.}`, memakai *type* `cint`, `csize_t`, dan `cstring`, serta membaca error
 `invalid pragma: compile`.
 :::
 
 ## Memanggil fungsi dari *file* C
 
-Siapkan dua *file* di direktori yang sama. `helper.c` berisi fungsi C biasa:
+Siapkan dua *file* di *directory* yang sama. `helper.c` berisi fungsi C biasa:
 
 ```{.c}
 int triple(int x) {
@@ -37,23 +37,23 @@ echo triple(14)
 42
 ```
 
-`{.compile: "helper.c".}` memberi tahu compiler C untuk ikut *meng-compile* *file* itu. Jalurnya
-dihitung relatif terhadap *file* Nim yang memuat pragma, jadi `helper.c` dicari di direktori yang
+`{.compile: "helper.c".}` memberi tahu compiler C untuk ikut *meng-compile* *file* itu. *Path itu*
+dihitung relatif terhadap *file* Nim yang memuat pragma, jadi `helper.c` dicari di *directory* yang
 sama.
 
 `{.importc.}` menyatakan bahwa `triple` bukan *procedure* Nim, melainkan nama yang sudah ada di biner
 C. Namanya harus sama persis; pragma ini tidak menerjemahkan apa pun.
 
-Tipe parameternya `cint`, bukan `int`. `cint` adalah padanan tipe `int` di C, dan keberadaannya
-membuat Nim berbicara dengan ABI C tanpa menebak ukuran tipe. Ukuran `int` di Nim mengikuti mesin,
+*Type* parameternya `cint`, bukan `int`. `cint` adalah padanan *type* `int` di C, dan keberadaannya
+membuat Nim berbicara dengan ABI C tanpa menebak ukuran *type*. Ukuran `int` di Nim mengikuti mesin,
 sedangkan fungsi C mengharapkan lebar yang tetap.
 
 Kalau fungsi C-nya ada di *library* terpisah, bukan di *file* yang kita tulis, pustakanya dihubungkan
-dengan `{.passL: "-lm".}`. Pragma itu meneruskan opsi ke linker, dan nama pustakanya mengikuti
+dengan `{.passL: "-lm".}`. Pragma itu meneruskan *option* ke linker, dan nama pustakanya mengikuti
 kebiasaan sistem, misalnya `-lm` untuk *library* matematika.
 
 Tidak ada skrip build yang perlu ditulis. `nim c main.nim` membaca `{.compile.}`, *meng-compile*
-`helper.c`, lalu menyambungkan keduanya dalam satu perintah.
+`helper.c`, lalu menyambungkan keduanya dalam satu *command*.
 
 ## Fungsi dari header sistem
 
@@ -70,11 +70,11 @@ echo strlen("hello")
 ```
 
 `header: "<string.h>"` menyuruh compiler menyertakan header itu, dan `strlen` diambil dari sana.
-Tipe hasilnya `csize_t`, tipe C untuk ukuran, bukan `int`. Memakai tipe yang benar menghindari
+*Type* hasilnya `csize_t`, *type* C untuk ukuran, bukan `int`. Memakai *type* yang benar menghindari
 konversi yang tidak perlu dan menjaga program tetap portabel. Kalau hasilnya dipakai di perhitungan
-Nim, ubah tipenya secara eksplisit dengan `int(strlen(s))`, bukan membiarkan compiler menebak.
+Nim, ubah *type itu* secara eksplisit dengan `int(strlen(s))`, bukan membiarkan compiler menebak.
 
-Untuk tipe gabungan, deklarasikan `object` dengan pragma `{.importc, header: "<time.h>".}` dan nama
+Untuk *type* gabungan, deklarasikan `object` dengan pragma `{.importc, header: "<time.h>".}` dan nama
 field yang sama seperti di C. Karena header C ikut disertakan, Nim memakai tata letak yang sama
 dengan yang dipakai compiler C.
 
@@ -99,7 +99,7 @@ echo strlen(text.cstring)
 
 `text.len` melaporkan panjang yang dicatat Nim, yaitu 5 byte, termasuk `\0` di tengahnya. Tetapi
 `strlen` dari C menghitung sampai byte nol pertama, jadi hasilnya 2. Inilah bedanya: `cstring`
-adalah *pointer* ke byte, sedangkan string Nim adalah nilai yang tahu panjangnya.
+adalah *pointer* ke byte, sedangkan string Nim adalah *value* yang tahu panjangnya.
 
 Saat Nim mengubah string menjadi `cstring`, ia menambahkan penanda nol di akhir. Karena itu
 `text.cstring` aman dipakai oleh fungsi C. Yang tetap berlaku: fungsi C berhenti di nol
@@ -122,7 +122,7 @@ pi is about 3.14
 
 `printf` mengembalikan `cint` yang tidak dipakai, jadi hasilnya dibuang dengan `discard`. Format
 `%.2f` tetap aturan C, bukan aturan Nim; Nim hanya meneruskan argumennya. Sejak titik ini, keamanan
-tipe ada di tangan pemanggil, dan *error* format baru terlihat saat program berjalan.
+*type* ada di tangan pemanggil, dan *error* format baru terlihat saat program berjalan.
 
 ## Error sengaja: pragma salah tempat
 
@@ -151,7 +151,7 @@ dipasang pada deklarasi *procedure*. Aturan yang lebih umum: setiap pragma punya
 FFI memindahkan jaminan keamanan ke sisi kita. Nim tidak bisa memeriksa apakah panjang buffer cukup
 atau apakah penunjuknya masih sah. Karena itu pembungkus tipis di sekeliling fungsi C sering lebih
 baik daripada memanggil fungsi mentahnya di seluruh program. Bungkus itu yang memeriksa argumen dan
-mengubah tipe C kembali menjadi tipe Nim, sehingga sisanya tetap kode Nim biasa.
+mengubah *type* C kembali menjadi *type* Nim, sehingga sisanya tetap kode Nim biasa.
 
 ## Latihan
 
@@ -175,14 +175,14 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
 ## Ringkasan
 
-- `{.compile.}` ikut *meng-compile* *file* C; jalurnya relatif terhadap *file* Nim.
+- `{.compile.}` ikut *meng-compile* *file* C; *path itu* relatif terhadap *file* Nim.
 - `{.importc.}` menyambungkan deklarasi Nim ke simbol C yang namanya sama.
 - `header: "<...>"` mengambil fungsi dari header sistem tanpa *meng-compile* *file* tambahan.
-- `cint`, `csize_t`, dan `cstring` menjaga kecocokan dengan tipe C.
+- `cint`, `csize_t`, dan `cstring` menjaga kecocokan dengan *type* C.
 - `{.compile.}` berdiri sendiri; ia tidak bisa menempel pada deklarasi *procedure*.
 
 ## Selanjutnya
 
 Bab berikutnya mengganti target keluaran dari biner menjadi JavaScript: *meng-compile* program Nim
-yang sama dengan `nim js`, menjalankannya di Node.js atau peramban, dan mengenali modul yang tidak
+yang sama dengan `nim js`, menjalankannya di Node.js atau *browser*, dan mengenali *module* yang tidak
 tersedia di sana. Lanjut ke [*Compile* ke JavaScript](js-backend.qmd).

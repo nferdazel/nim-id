@@ -7,7 +7,7 @@ server sulit diuji bukan *socket*-nya, melainkan *handler* yang bercampur dengan
 ::: {.callout-note}
 ## Tujuan bab
 
-Setelah bab ini, pembaca bisa membedakan `HttpCode` dan `HttpMethod`, menulis rute sederhana,
+Setelah bab ini, pembaca bisa membedakan `HttpCode` dan `HttpMethod`, menulis *route* sederhana,
 membaca body JSON lalu mengembalikan JSON, membaca *query string* dengan `std/uri`, menyalakan
 server dengan `newAsyncHttpServer` dan `serve`, serta membaca pesan `has to be used (or discarded)`
 saat lupa `await` pada `respond`.
@@ -15,8 +15,8 @@ saat lupa `await` pada `respond`.
 
 ## Status, metode, dan header
 
-Sebelum menyentuh *socket*, kenali dulu tipe yang dipakai bersama: `HttpCode`, `HttpMethod`, dan
-`HttpHeaders`. Ketiganya berasal dari `std/httpcore`, modul yang dipakai baik oleh sisi klien
+Sebelum menyentuh *socket*, kenali dulu *type* yang dipakai bersama: `HttpCode`, `HttpMethod`, dan
+`HttpHeaders`. Ketiganya berasal dari `std/httpcore`, *module* yang dipakai baik oleh sisi klien
 maupun sisi server. Simpan sebagai `main.nim`, lalu jalankan `nim c -r main.nim`.
 
 ```{.nim}
@@ -38,8 +38,8 @@ GET
 application/json
 ```
 
-`Http200` adalah nilai `HttpCode`, tipe `distinct` yang nilainya dibatasi 0 sampai 599. `httpcore`
-memberi `$` untuk tipe ini, sehingga `echo Http200` mencetak `"200 OK"`, bukan angka telanjang.
+`Http200` adalah *value* `HttpCode`, *type* `distinct` yang *value itu* dibatasi 0 sampai 599. `httpcore`
+memberi `$` untuk *type* ini, sehingga `echo Http200` mencetak `"200 OK"`, bukan angka telanjang.
 Konversi `.int` mengembalikan angkanya saja, dan dipakai nanti untuk menyusun keluaran yang ringkas.
 `HttpMethod` adalah `enum`: `HttpGet` bernilai teks `GET`, `HttpPost` bernilai `POST`, begitu
 seterusnya.
@@ -48,9 +48,9 @@ seterusnya.
 `headers["Content-Type"] = "application/json"` menambah satu entri; membacanya dengan kunci yang
 ditulis berbeda tetap menemukan entri itu.
 
-## Rute sederhana dan *handler* murni
+## *Route* sederhana dan *handler* murni
 
-Satu *handler* menerima metode, jalur, dan body, lalu memutuskan kode dan isi balasan. Kalau
+Satu *handler* menerima metode, *path*, dan body, lalu memutuskan kode dan isi balasan. Kalau
 keputusan itu dipisahkan dari *socket*, hasilnya bisa diuji sebagai fungsi biasa. Simpan potongan
 berikut, lalu jalankan seperti sebelumnya.
 
@@ -91,14 +91,14 @@ for (httpMethod, path, body) in requests:
 404 {"error":"not found"}
 ```
 
-Rute dicocokkan dengan `case path`. Jalur `/items` menerima `HttpPost` saja; metode lain dijawab
-`Http400`, yang berarti permintaan klien tidak sesuai. Jalur yang tidak dikenal dijawab `Http404`.
-Pemisahan ini penting: `Http400` menyalahkan permintaan, `Http404` mengatakan rutenya tidak ada.
+*Route* dicocokkan dengan `case path`. *Path* `/items` menerima `HttpPost` saja; metode lain dijawab
+`Http400`, yang berarti permintaan klien tidak sesuai. *Path* yang tidak dikenal dijawab `Http404`.
+Pemisahan ini penting: `Http400` menyalahkan permintaan, `Http404` mengatakan *route itu* tidak ada.
 
 Body JSON dibaca dengan `parseJson` dari `std/json`. Field diambil memakai `payload["name"]`, lalu
 `getStr` mengubahnya menjadi `string`. Untuk membalas, `%*{...}` membangun JSON langsung dan `$`
 mengubahnya menjadi teks: `$(%*{"name": ...})`. Karena `dispatch` memanggil `parseJson`, ia
-dideklarasikan sebagai `proc`, bukan `func`. `parseJson` punya efek samping menurut compiler, dan
+dideklarasikan sebagai `proc`, bukan `func`. `parseJson` punya *side effect* menurut compiler, dan
 sebuah `func` menolak memanggilnya.
 
 Parameter bernama `httpMethod`, bukan `method`, karena `method` adalah kata kunci Nim.
@@ -128,7 +128,7 @@ page = 2
 `parseUri` membongkar URL menjadi bagian-bagiannya: `.path`, `.query`, `.hostname`, dan lainnya.
 Bagian `query` masih teks mentah. Iterator `decodeQuery` membagi atas `&`, lalu mengurai tiap
 pasangan `kunci=nilai`. Perhatikan `q`: tanda plus menjadi spasi, karena pada *query string* `+`
-memang mewakili spasi. Nilai yang dicetak sudah terurai, siap dipakai.
+memang mewakili spasi. *Value* yang dicetak sudah terurai, siap dipakai.
 
 ## Dari `Request` ke *handler*
 
@@ -197,7 +197,7 @@ ditulis dengan `await`. *Procedure* `main` membangun server, lalu memanggil `ser
 dinyalakan di sini: contoh hanya memanggil `dispatch` langsung supaya keluarannya tetap. Di program
 sungguhan, baris terakhir adalah `waitFor main()`, yang menjalankan *event loop*.
 
-Setelah server berjalan, uji dengan alat baris perintah biasa:
+Setelah server berjalan, uji dengan *tool* *command line* biasa:
 
 ```bash
 $ curl -s http://localhost:8080/health
@@ -222,8 +222,8 @@ proc handle(req: Request) {.async.} =
 main.nim(4, 6) Error: expression 'respond(req, Http200, "ok", nil)' is of type 'Future[system.void]' and has to be used (or discarded)
 ```
 
-Pesannya dua bagian. Bagian pertama menyebut tipe hasil panggilan: `Future[system.void]`, bukan
-`void`. Bagian kedua menawarkan dua pilihan, memakai nilainya atau membuangnya dengan sadar. Karena
+Pesannya dua bagian. Bagian pertama menyebut *type* hasil panggilan: `Future[system.void]`, bukan
+`void`. Bagian kedua menawarkan dua pilihan, memakai *value itu* atau membuangnya dengan sadar. Karena
 kita memang menunggu balasan terkirim, jawabannya `await`. Penulisan yang benar:
 `await req.respond(Http200, "ok")`. Compiler juga menandai baris tempat `{.async.}` dipakai, tanda
 bahwa masalahnya ada di dalam *procedure* async.
@@ -237,7 +237,7 @@ Menjaga lapisan itu setipis mungkin adalah kebiasaan yang dibawa terus saat API 
 
 ## Latihan
 
-1. Tambahkan rute `/version` pada `dispatch` yang mengembalikan `{"version":"1"}` dengan `Http200`,
+1. Tambahkan *route* `/version` pada `dispatch` yang mengembalikan `{"version":"1"}` dengan `Http200`,
    lalu cetak balasannya.
 2. Tanpa menjalankan, prediksi keluarannya:
    ```{.nim}
@@ -268,9 +268,9 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 ## Ringkasan
 
 - `std/httpcore` menyediakan `HttpCode`, `HttpMethod`, dan `HttpHeaders` untuk kedua sisi.
-- `dispatch` murni memisahkan keputusan rute dari *socket*, sehingga bisa diuji dengan keluaran tetap.
+- `dispatch` murni memisahkan keputusan *route* dari *socket*, sehingga bisa diuji dengan keluaran tetap.
 - Body JSON dibaca dengan `parseJson` dan dibalas dengan `%*` lalu `$`.
-- `parseUri` dan `decodeQuery` mengambil nilai dari *query string*.
+- `parseUri` dan `decodeQuery` mengambil *value* dari *query string*.
 - `newAsyncHttpServer` dan `serve` menyambungkan *handler*; `respond` wajib dipanggil dengan
   `await`.
 

@@ -11,7 +11,7 @@ apa yang terjadi waktu kode salah, lalu menimbang kapan Nim layak dipilih.
 ## Tujuan bab
 
 Setelah bab ini, pembaca bisa menjelaskan arti "*di-compile*" dan "bertipe statis", menjalankan
-program Nim pertama, dan membaca pesan error tipe yang dikeluarkan compiler.
+program Nim pertama, dan membaca pesan error *type* yang dikeluarkan compiler.
 :::
 
 ## *Di-compile*, bukan diinterpretasi
@@ -46,10 +46,10 @@ Hello, Nim
 koma, dan indentasi yang menentukan blok. Satu *file* boleh berisi *statement* di tingkat atas
 seperti ini.
 
-## Tipe diperiksa sebelum program berjalan
+## *Type* diperiksa sebelum program berjalan
 
-Inilah bedanya dengan Python. Di Nim, setiap nilai punya tipe yang sudah diketahui compiler. Kalau
-tipe tidak cocok, program tidak pernah dijalankan. Coba kode berikut.
+Inilah bedanya dengan Python. Di Nim, setiap *value* punya *type* yang sudah diketahui compiler. Kalau
+*type* tidak cocok, program tidak pernah dijalankan. Coba kode berikut.
 
 ```{.nim}
 var age: int = "twenty"
@@ -107,30 +107,30 @@ echo total
 15
 ```
 
-`1..5` adalah rentang inklusif: 1, 2, 3, 4, 5. Operator `+=` menambahkan ke nilai yang sudah ada.
-`total` memakai `var` karena nilainya berubah; bab tentang [variabel](variables.qmd) membahas
+`1..5` adalah *range* inklusif: 1, 2, 3, 4, 5. Operator `+=` menambahkan ke *value* yang sudah ada.
+`total` memakai `var` karena *value itu* berubah; bab tentang [*variable*](variables.qmd) membahas
 pilihan `var`, `let`, dan `const` sampai tuntas.
 
 ## Satu kode, banyak target
 
-Backend bawaan Nim adalah C. Tersedia juga backend C++, Objective-C, dan JavaScript. Perintah
+Backend bawaan Nim adalah C. Tersedia juga backend C++, Objective-C, dan JavaScript. *Command*
 `nim c --backend:js hello.nim` menghasilkan *file* JavaScript dari kode yang sama. Untuk sebagian
 besar program, kita jarang perlu memilih backend secara manual.
 
 Nim 2.x memakai ORC sebagai pengelola memori bawaan. ORC menghitung referensi dan mengumpulkan
-siklus, dan destruktor berjalan saat nilai keluar dari ruang lingkupnya. Tidak ada garbage
+siklus, dan *destructor* berjalan saat *value* keluar dari ruang lingkupnya. Tidak ada garbage
 collector yang menghentikan seluruh program untuk menyapu memori. Untuk kode sehari-hari yang
 penting: kita tidak memanggil `free`, dan lupa tidak membebaskan memori bukan *error* fatal.
 
 Nim juga punya *template* dan *macro*: kode yang dijalankan saat *compile* untuk menghasilkan kode
 lain. Karena itu Nim bisa punya sintaks khusus bidang (*domain-specific language*) dan *boilerplate*
 tipis tanpa mengorbankan performa. Kita akan membahasnya jauh nanti, karena keduanya butuh
-pemahaman tipe yang lebih dulu.
+pemahaman *type* yang lebih dulu.
 
 ## Kapan Nim cocok, dan kapan tidak
 
 Nim cocok ketika kita butuh biner native, pemakaian memori yang bisa diprediksi, dan kode yang
-enak dibaca. Alat baris perintah, layanan jaringan, pengolah data, dan program yang dibagikan
+enak dibaca. *Tool* *command line*, layanan jaringan, pengolah data, dan program yang dibagikan
 sebagai satu *file* semuanya masuk hitungan.
 
 Nim bukan pilihan pertama kalau ekosistem yang menentukan. Untuk *machine learning*, *library* Python
@@ -149,7 +149,7 @@ aman. Jujur soal ini lebih berguna daripada menjual satu bahasa sebagai jawaban 
 ## Ringkasan
 
 - Nim *di-compile* ke C lalu ke biner; tidak ada mesin virtual saat program berjalan.
-- Tipe diperiksa saat *compile*, jadi *error* tipe menghentikan build sebelum ada output.
+- *Type* diperiksa saat *compile*, jadi *error* *type* menghentikan build sebelum ada output.
 - `echo` mencetak ke stdout; *procedure* memakai `proc` dengan *expression* terakhir sebagai **return value**.
 - Backend bisa diganti (C, C++, Objective-C, JavaScript); pengelola memori bawaan adalah ORC.
 - Ekosistem Nim lebih kecil daripada Python atau JavaScript; pilih Nim karena kebutuhan, bukan tren.

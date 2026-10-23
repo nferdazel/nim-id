@@ -1,6 +1,6 @@
 # Alur kerja: `nim r`, `nimble`, editor
 
-Nim terpasang. Pertanyaan berikutnya bukan lagi "bagaimana menulis program", tapi "perintah apa yang
+Nim terpasang. Pertanyaan berikutnya bukan lagi "bagaimana menulis program", tapi "*command* apa yang
 dipakai tiap hari". Empat kebiasaan sudah cukup untuk sebagian besar pekerjaan: `nim r` untuk
 mencoba cepat, `nim c` untuk menghasilkan biner, `nimble` untuk mengelola proyek, dan editor yang
 bicara dengan compiler.
@@ -45,7 +45,7 @@ echo words.join(", ")
 nim, is, fast
 ```
 
-`nim c` meninggalkan *file* biner bernama `join` di direktori yang sama. Jalankan dengan `./join`.
+`nim c` meninggalkan *file* biner bernama `join` di *directory* yang sama. Jalankan dengan `./join`.
 Di Windows namanya `join.exe`. Nama biner mengikuti nama *file* sumber; ubah dengan `-o:program`.
 Tambahkan `-r` pada `nim c` untuk sekaligus menjalankannya: `nim c -r join.nim`.
 
@@ -58,7 +58,7 @@ penuh pemeriksaan. Untuk hasil akhir, pakai *release build*:
 nim c -d:release join.nim
 ```
 
-Release build mengaktifkan optimasi dan mematikan sebagian pemeriksaan, seperti pemeriksaan rentang
+Release build mengaktifkan optimasi dan mematikan sebagian pemeriksaan, seperti pemeriksaan *range*
 *array*. Karena itu program berjalan lebih cepat, dengan catatan *error* yang seharusnya ditangkap
 pemeriksaan tadi bisa lolos. Jangan memakai `-d:release` sebelum logikanya benar.
 
@@ -66,10 +66,10 @@ pemeriksaan tadi bisa lolos. Jangan memakai `-d:release` sebelum logikanya benar
 
 Dua lokasi perlu dibedakan:
 
-- `nim c` menaruh biner di direktori kerja, di samping *file* sumber kecuali `-o` diberikan.
-- `nim r` menyimpan hasil antara di direktori cache, biasanya di bawah `~/.cache/nim/`.
+- `nim c` menaruh biner di *directory* kerja, di samping *file* sumber kecuali `-o` diberikan.
+- `nim r` menyimpan hasil antara di *directory* cache, biasanya di bawah `~/.cache/nim/`.
 
-Direktori cache bisa dipindah dengan `--nimcache:path`. Isinya hasil antara yang bisa dibuat ulang:
+*Directory* cache bisa dipindah dengan `--nimcache:path`. Isinya hasil antara yang bisa dibuat ulang:
 aman dihapus kapan saja, dan akan diisi lagi pada *compile* berikutnya. Kalau proses build terasa
 aneh, menghapus cache adalah langkah pertama yang murah.
 
@@ -103,10 +103,10 @@ Bacalah dari baris pertama:
 | `main.nim` | *file* yang bermasalah |
 | `(4, 12)` | baris 4, kolom 12: posisi argumen yang salah |
 | `Error` | tingkat keparahan; build berhenti |
-| `type mismatch` | kategori masalahnya: tipe tidak cocok |
+| `type mismatch` | kategori masalahnya: *type* tidak cocok |
 
 Baris sisanya adalah bukti. `Expression: square("four")` menunjukkan *expression* yang diperiksa. Baris
-`[1] "four": string` menyebut argumen pertama beserta tipenya. Bagian `Expected one of` mendaftar
+`[1] "four": string` menyebut argumen pertama beserta *type itu*. Bagian `Expected one of` mendaftar
 *procedure* yang mungkin cocok, dan `[1] proc square(n: int): int` menjelaskan syaratnya: parameter
 `n` harus `int`. Jadi masalahnya sederhana: `"four"` adalah `string`, bukan `int`.
 
@@ -116,15 +116,15 @@ jawabannya.
 
 ## `nim check`: umpan balik cepat
 
-Kalau hanya ingin tahu apakah tipe sudah benar, tanpa menghasilkan biner, pakai `nim check`:
+Kalau hanya ingin tahu apakah *type* sudah benar, tanpa menghasilkan biner, pakai `nim check`:
 
 ```{.bash}
 nim check square.nim
 ```
 
-`nim check` menjalankan pemeriksaan tipe dan semantik, lalu berhenti. Pada *file* di atas, keluaran
+`nim check` menjalankan pemeriksaan *type* dan semantik, lalu berhenti. Pada *file* di atas, keluaran
 pertamanya sama dengan sebelumnya, yaitu `type mismatch` di baris 4, dan kode keluarnya bukan nol.
-Ini perintah yang dipakai editor di latar belakang karena jauh lebih ringan daripada `nim c`.
+Ini *command* yang dipakai editor di latar belakang karena jauh lebih ringan daripada `nim c`.
 
 ## `nimble`: proyek dan *package*
 
@@ -135,10 +135,10 @@ baru:
 nimble init notes
 ```
 
-Perintah itu membuat direktori `notes` berisi *file* `notes.nimble`, kode di `src/`, dan kerangka
-*test* di `tests/`. Setelah ada, perintah yang sering dipakai:
+*Command* itu membuat *directory* `notes` berisi *file* `notes.nimble`, kode di `src/`, dan kerangka
+*test* di `tests/`. Setelah ada, *command* yang sering dipakai:
 
-| Perintah | Kegunaan |
+| *Command* | Kegunaan |
 |---|---|
 | `nimble build` | membangun proyek |
 | `nimble run` | membangun lalu menjalankannya |
@@ -152,7 +152,7 @@ hanya memakai **standard library**, jadi belum ada dependensi yang perlu dipasan
 
 ## Editor dan `nimsuggest`
 
-Nim menyertakan `nimsuggest`, sebuah server yang menjawab pertanyaan editor: apa tipe simbol ini,
+Nim menyertakan `nimsuggest`, sebuah server yang menjawab pertanyaan editor: apa *type* simbol ini,
 di mana didefinisikan, apa nama yang cocok di posisi ini. Sebagian besar editor Nim memakainya di
 belakang layar untuk melengkapi kode otomatis dan menampilkan *error* saat menulis.
 
@@ -164,12 +164,12 @@ menggantikannya.
 ## Latihan
 
 1. Jalankan `hello.nim` dengan `nim r`, lalu dengan `nim c` dan `./hello`. Bandingkan: *file* apa
-   yang muncul di direktori kerja pada masing-masing cara?
+   yang muncul di *directory* kerja pada masing-masing cara?
 2. Pada `nim c join.nim`, di mana biner muncul, dan apa namanya di Linux, macOS, dan Windows?
 3. Aku sengaja memberi nama *file* `data.txt` tetapi menulis kode Nim di dalamnya. Apa yang terjadi
    waktu `nim c data.txt` dijalankan? Jelaskan.
 4. Jalankan `nim check square.nim` dan `nim c square.nim`. Bandingkan keluaran dan kode keluarnya.
-5. Buat proyek baru dengan `nimble init`, lalu sebutkan perintah untuk membangun dan menjalankannya.
+5. Buat proyek baru dengan `nimble init`, lalu sebutkan *command* untuk membangun dan menjalankannya.
 
 ## Ringkasan
 

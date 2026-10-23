@@ -4,7 +4,7 @@ Di banyak bahasa, `+` pada dua bilangan bulat menghasilkan bilangan bulat, dan p
 bilangan pecahan. Nim membalik sebagian kebiasaan itu: `/` selalu menghasilkan `float`, sedangkan
 pembagian bulat punya operatornya sendiri, `div`.
 
-Kesalahpahaman soal operator kecil, tapi efeknya nyata: hasil yang salah tanpa error, atau tipe
+Kesalahpahaman soal operator kecil, tapi *effect itu* nyata: hasil yang salah tanpa error, atau *type*
 yang tidak terduga. Bab ini merangkum operator yang paling sering dipakai dan jebakan di
 belakangnya.
 
@@ -49,7 +49,7 @@ echo 7 mod -3
 memakai `div`, yang memotong ke arah nol. `mod` memberi sisa, dan tandanya mengikuti bilangan yang
 dibagi. Jadi, `-7 mod 3` bernilai `-1`, bukan `2`. Keduanya sering dipakai bersama: `div` memberi tahu
 berapa kali bilangan pembagi muat, `mod` memberi sisanya. Membagi dengan nol tidak mengembalikan
-nilai istimewa; program berhenti dengan `DivByZeroDefect`.
+*value* istimewa; program berhenti dengan `DivByZeroDefect`.
 
 ## Pangkat dan akar
 
@@ -149,7 +149,7 @@ true
 false
 ```
 
-`in` bekerja pada rentang, *set* (`{...}`), dan *array*; lewat `strutils`, juga pada string. Baris
+`in` bekerja pada *range*, *set* (`{...}`), dan *array*; lewat `strutils`, juga pada string. Baris
 terakhir bernilai `false` karena `4` memang tidak ada di dalam *array* tersebut.
 
 ## Prioritas operator
@@ -178,9 +178,9 @@ true
 bit yang sama-sama bernilai satu. Hanya pakai `and` dan `or` pada `bool`; untuk bit gunakan
 operatornya dengan sadar.
 
-## Tipe yang tidak cocok
+## *Type* yang tidak cocok
 
-Memperbandingkan dua tipe berbeda ditolak compiler. Simpan sebagai `type_error.nim`:
+Memperbandingkan dua *type* berbeda ditolak compiler. Simpan sebagai `type_error.nim`:
 
 ```{.nim}
 let a = 5
@@ -196,10 +196,10 @@ Expression: a == b
   [2] b: string
 ```
 
-Pesan menunjukkan baris dan kolom, lalu mengutip *expression* yang gagal beserta tipe setiap operan.
+Pesan menunjukkan baris dan kolom, lalu mengutip *expression* yang gagal beserta *type* setiap operan.
 Bagian yang paling berguna ada di bawahnya: compiler mendaftar semua versi `==` yang dikenalnya,
 supaya kita bisa melihat bahwa tidak ada yang menerima pasangan `int` dan `string`. Perbaikannya
-adalah menyamakan tipe lebih dulu, misalnya `a == parseInt(b)`.
+adalah menyamakan *type* lebih dulu, misalnya `a == parseInt(b)`.
 
 ## Latihan
 
@@ -227,9 +227,9 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 - `mod` mengikuti tanda bilangan yang dibagi; membagi dengan nol menghentikan program.
 - `^` berasal dari `std/math` dan bekerja pada `float`.
 - `and` dan `or` mengevaluasi singkat; pada `int` keduanya berarti operasi bitwise.
-- `in` dan `notin` memeriksa keanggotaan pada rentang, *set*, *array*, dan string.
+- `in` dan `notin` memeriksa keanggotaan pada *range*, *set*, *array*, dan string.
 
 ## Selanjutnya
 
-Bab berikutnya membahas percabangan: `if`, *expression* `if`, `case`, dan `when` untuk memilih jalur
+Bab berikutnya membahas percabangan: `if`, *expression* `if`, `case`, dan `when` untuk memilih *path*
 eksekusi.

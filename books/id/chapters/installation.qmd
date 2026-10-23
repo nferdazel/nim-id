@@ -2,7 +2,7 @@
 
 Sebagian besar keluhan "Nim tidak jalan" bukan masalah Nim. Penyebabnya biasanya PATH yang belum
 diatur, compiler C yang belum terpasang, atau versi yang berbeda dari yang dipakai buku ini. Bab
-ini memasang Nim 2.2.12 dan memastikan tiga hal benar: perintah `nim` ditemukan, compiler C
+ini memasang Nim 2.2.12 dan memastikan tiga hal benar: *command* `nim` ditemukan, compiler C
 tersedia, dan versinya sesuai.
 
 ::: {.callout-note}
@@ -16,17 +16,17 @@ versinya, dan memperbaiki pesan `command not found`.
 
 Instalasi Nim disebut selesai kalau ketiganya terpenuhi:
 
-1. Shell menemukan perintah `nim`. Uji dengan `nim --version`.
+1. Shell menemukan *command* `nim`. Uji dengan `nim --version`.
 2. Ada compiler C (gcc atau clang). Nim menerjemahkan kode ke C lebih dulu, jadi ini wajib.
 3. Versinya 2.2.12, atau setidaknya 2.x. Buku ini menguji semua contoh di 2.2.12.
 
 Kalau salah satu gagal, perbaikannya ada di bab ini. Periksa dari atas: `nim --version` sekaligus
-menguji syarat pertama dan ketiga. Kalau perintahnya tidak ditemukan, PATH yang salah. Kalau
+menguji syarat pertama dan ketiga. Kalau *command itu* tidak ditemukan, PATH yang salah. Kalau
 ditemukan tetapi versinya lain, tinggal ganti versinya.
 
-## Jalur cepat: `choosenim`
+## *Path* cepat: `choosenim`
 
-Cara resmi yang paling praktis untuk berpindah versi adalah `choosenim`. Perintah berikut memasang
+Cara resmi yang paling praktis untuk berpindah versi adalah `choosenim`. *Command* berikut memasang
 `choosenim`, lalu versi stabil terbaru:
 
 ```{.bash}
@@ -42,7 +42,7 @@ choosenim 2.2.12
 `choosenim stable` memasang versi stabil terbaru, dan `choosenim devel` memasang cabang
 pengembangan. Untuk buku ini, tahan di 2.2.12 supaya keluaran contoh cocok.
 
-Satu keunggulan `choosenim`: semuanya dipasang di direktori home, jadi tidak perlu hak
+Satu keunggulan `choosenim`: semuanya dipasang di *directory* home, jadi tidak perlu hak
 administrator, dan beberapa versi bisa hidup berdampingan. Berpindah versi tidak menghapus versi
 yang lain.
 
@@ -50,7 +50,7 @@ yang lain.
 
 Kalau tidak butuh berpindah versi, pengelola *package* lebih cepat:
 
-| Sistem | Perintah |
+| Sistem | *Command* |
 |---|---|
 | macOS (Homebrew) | `brew install nim` |
 | Debian / Ubuntu | `sudo apt-get install nim` |
@@ -63,8 +63,8 @@ Perhatikan satu hal: versi di repositori distro sering tertinggal. Setelah memas
 
 ## Windows
 
-Unduh *file* zip *release*, ekstrak ke direktori pilihan, lalu jalankan `finish.exe` di dalamnya.
-Program kecil itu menambahkan direktori `bin` ke PATH dan menawarkan pemasangan MinGW. `choosenim`
+Unduh *file* zip *release*, ekstrak ke *directory* pilihan, lalu jalankan `finish.exe` di dalamnya.
+Program kecil itu menambahkan *directory* `bin` ke PATH dan menawarkan pemasangan MinGW. `choosenim`
 juga bekerja di Windows dan jauh lebih sering dipakai karena memudahkan ganti versi.
 
 ## Memastikan PATH
@@ -75,17 +75,17 @@ Setelah memasang, buka terminal **baru**, lalu jalankan:
 nim --version
 ```
 
-Kalau shell belum mengenal perintahnya, jawabannya seperti ini:
+Kalau shell belum mengenal *command itu*, jawabannya seperti ini:
 
 ```{.txt}
 bash: nim: command not found
 ```
 
 Bacalah dari kiri ke kanan. `bash` adalah nama shell yang melaporkan (di zsh tulisannya
-`zsh: command not found: nim`). `nim` adalah perintah yang dicari. Sisanya menjelaskan hasilnya:
-shell menelusuri setiap direktori di PATH, tidak menemukannya, lalu menyerah.
+`zsh: command not found: nim`). `nim` adalah *command* yang dicari. Sisanya menjelaskan hasilnya:
+shell menelusuri setiap *directory* di PATH, tidak menemukannya, lalu menyerah.
 
-Perbaikannya: tambahkan dua direktori ini ke PATH. Direktori `bin` tempat Nim dipasang, dan
+Perbaikannya: tambahkan dua *directory* ini ke PATH. *Directory* `bin` tempat Nim dipasang, dan
 `~/.nimble/bin` tempat `choosenim` dan `nimble` menaruh biner. Untuk `choosenim`, tambahkan baris
 berikut ke *file* profil shell (`.zshrc` atau `.bashrc`):
 
@@ -122,8 +122,8 @@ nomor versi, bukan `command not found`.
 
 ## Memeriksa tiga syarat sekaligus
 
-Ketiga syarat bisa diuji dalam satu baris. Operator `&&` menjalankan perintah berikutnya hanya kalau
-perintah sebelumnya berhasil, jadi rantai ini berhenti tepat di syarat yang gagal:
+Ketiga syarat bisa diuji dalam satu baris. Operator `&&` menjalankan *command* berikutnya hanya kalau
+*command* sebelumnya berhasil, jadi rantai ini berhenti tepat di syarat yang gagal:
 
 ```{.bash}
 nim --version && nimble --version && gcc --version
@@ -150,19 +150,19 @@ Setelah berpindah, jalankan `nim --version` lagi untuk memastikan versinya benar
 1. Pasang Nim, lalu salin keluaran `nim --version` di mesin pembaca.
 2. Jalankan `nim` di terminal yang PATH-nya belum diatur. Tulis pesan yang muncul, dan jelaskan
    arti setiap bagiannya.
-3. Periksa compiler C yang terpasang. Perintah apa yang dipakai untuk memastikan, dan apa
+3. Periksa compiler C yang terpasang. *Command* apa yang dipakai untuk memastikan, dan apa
    keluarannya?
 4. Nim sudah terpasang, tetapi compiler C belum. Apa yang terjadi waktu `nim c hello.nim`
    dijalankan? Jelaskan.
-5. Dengan `choosenim`, tulis urutan perintah untuk berpindah dari versi stabil terbaru ke 2.2.12,
+5. Dengan `choosenim`, tulis urutan *command* untuk berpindah dari versi stabil terbaru ke 2.2.12,
    lalu kembali lagi.
 
 ## Ringkasan
 
 - Tiga syarat: `nim` ada di PATH, compiler C tersedia, versi 2.x.
 - `choosenim` memudahkan berpindah versi; pengelola *package* distro lebih cepat tapi sering tertinggal.
-- PATH perlu memuat direktori `bin` Nim dan `~/.nimble/bin`.
-- `command not found` berarti shell tidak menemukan perintah di PATH, bukan Nim yang rusak.
+- PATH perlu memuat *directory* `bin` Nim dan `~/.nimble/bin`.
+- `command not found` berarti shell tidak menemukan *command* di PATH, bukan Nim yang rusak.
 - Buku ini diuji di Nim 2.2.12; cocokkan versi kalau output berbeda.
 
 ## Selanjutnya

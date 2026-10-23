@@ -16,9 +16,9 @@ serta membaca pesan
 error `can have side effects`.
 :::
 
-## `proc`: rutin yang boleh punya efek samping
+## `proc`: rutin yang boleh punya *side effect*
 
-Tulis daftar parameter bertipe di dalam tanda kurung, lalu tipe **return value** setelah titik dua.
+Tulis daftar parameter bertipe di dalam tanda kurung, lalu *type* **return value** setelah titik dua.
 
 ```{.nim}
 proc greet(name: string): string =
@@ -31,10 +31,10 @@ echo greet("Nim")
 Hello, Nim
 ```
 
-Badan `greet` hanya satu *expression*, dan *expression* terakhir sebuah *procedure* otomatis menjadi nilai
+Badan `greet` hanya satu *expression*, dan *expression* terakhir sebuah *procedure* otomatis menjadi *value*
 baliknya. Jadi `return` tidak wajib.
 
-## `func`: janji tanpa efek samping
+## `func`: janji tanpa *side effect*
 
 Rutin yang hanya menghitung cocok dideklarasikan sebagai `func`.
 
@@ -66,15 +66,15 @@ main.nim(1, 6) Error: 'shout' can have side effects
 Baca dari depan: *file*, posisi `(baris, kolom)`, tingkat, lalu isi pesannya. `(1, 6)` menunjuk
 baris 1 kolom 6, tepat di nama `shout`. Compiler menambahkan `Hint` yang menyebut `echo` sebagai
 penyebabnya. Perbaikan langsungnya: ganti `func` menjadi `proc`, karena `echo` menulis ke layar,
-sebuah efek samping.
+sebuah *side effect*.
 
 Aturan praktisnya: `func` untuk perhitungan murni, `proc` saat rutin memang mencetak, menulis
 *file*, atau mengubah argumennya.
 
 ## `result` dan **return value** yang dibangun bertahap
 
-*Procedure* bertipe **return value** punya variabel implisit bernama `result`. Nilai awalnya adalah
-default tipe (`0` untuk `int`, `""` untuk `string`), dan *expression* terakhir menimpanya.
+*Procedure* bertipe **return value** punya *variable* implisit bernama `result`. *Value* awalnya adalah
+default *type* (`0` untuk `int`, `""` untuk `string`), dan *expression* terakhir menimpanya.
 
 ```{.nim}
 proc total(items: seq[int]): int =
@@ -89,7 +89,7 @@ echo total(@[1, 2, 3, 4])
 ```
 
 `result` berguna saat **return value** dibangun bertahap. Di `total`, tiap putaran menambah `result`
-tanpa variabel tambahan.
+tanpa *variable* tambahan.
 
 ## `return` untuk keluar lebih awal
 
@@ -119,7 +119,7 @@ positif, dan hasilnya menjadi **return value**.
 
 ## Parameter default dan argumen bernama
 
-Parameter boleh punya nilai bawaan. Pemanggil yang melewatkannya memakai nilai itu.
+Parameter boleh punya *value* bawaan. Pemanggil yang melewatkannya memakai *value* itu.
 
 ```{.nim}
 proc greet(name: string, greeting = "Hello"): string =
@@ -151,12 +151,12 @@ echo box(height = 4, width = 3)
 
 Argumen bernama (*named argument*) membuat pemanggilan panjang tetap terbaca, dan urutannya tidak
 lagi penting.
-Satu aturan tetap berlaku: parameter tanpa nilai default harus ditulis sebelum parameter yang punya
-nilai default.
+Satu aturan tetap berlaku: parameter tanpa *default value* harus ditulis sebelum parameter yang punya
+*default value*.
 
 ## `var` parameter: menulis balik ke pemanggil
 
-Parameter biasa dioper sebagai salinan. Untuk mengubah nilai milik pemanggil, tandai parameter
+Parameter biasa dioper sebagai salinan. Untuk mengubah *value* milik pemanggil, tandai parameter
 dengan `var`.
 
 ```{.nim}
@@ -172,7 +172,7 @@ echo count
 42
 ```
 
-Pemanggil harus mengoper variabel, bukan angka atau *expression*. Inilah *pass by reference* di Nim,
+Pemanggil harus mengoper *variable*, bukan angka atau *expression*. Inilah *pass by reference* di Nim,
 dan karena tertulis di deklarasi *procedure*, pembaca tidak perlu menebaknya.
 
 ## `openArray`: satu *procedure* untuk *array* dan *seq*
@@ -197,10 +197,10 @@ echo total(@[10, 20])
 Pemanggilan pertama mengirim *array*, yang kedua mengirim *seq*. Satu *procedure* menangani
 keduanya. Batasnya: `openArray` tidak bisa diubah isinya dari dalam *procedure*.
 
-## Overloading: nama sama, tipe berbeda
+## Overloading: nama sama, *type* berbeda
 
 Beberapa *procedure* boleh memakai nama yang sama asalkan daftar parameternya berbeda. Compiler
-memilih berdasarkan tipe argumen.
+memilih berdasarkan *type* argumen.
 
 ```{.nim}
 proc describe(value: int): string =
@@ -236,8 +236,8 @@ echo hits
 main.nim(6, 5) Error: expression 'bump(hits)' is of type 'int' and has to be used (or discarded)
 ```
 
-Pesannya menyebut dua pilihan: pakai nilainya, atau buang dengan sadar. Karena kita hanya ingin
-efek sampingnya, tulis `discard`.
+Pesannya menyebut dua pilihan: pakai *value itu*, atau buang dengan sadar. Karena kita hanya ingin
+*effect* sampingnya, tulis `discard`.
 
 ```{.nim}
 proc bump(counter: var int): int =
@@ -253,7 +253,7 @@ echo hits
 1
 ```
 
-`discard` bukan formalitas. Ia memaksa penulis kode mengakui bahwa sebuah nilai memang diabaikan.
+`discard` bukan formalitas. Ia memaksa penulis kode mengakui bahwa sebuah *value* memang diabaikan.
 
 ## Latihan
 
@@ -281,13 +281,13 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
 ## Ringkasan
 
-- `proc` boleh punya efek samping; `func` dijamin tidak, dan compiler menolak yang melanggar.
-- *Expression* terakhir menjadi **return value**; `result` untuk nilai bertahap, `return` untuk keluar awal.
+- `proc` boleh punya *side effect*; `func` dijamin tidak, dan compiler menolak yang melanggar.
+- *Expression* terakhir menjadi **return value**; `result` untuk *value* bertahap, `return` untuk keluar awal.
 - Parameter default dan argumen bernama membuat pemanggilan panjang tetap terbaca.
 - `var` parameter menulis balik ke pemanggil; `openArray` menerima *array* dan *seq*.
 - **Return value** yang tidak dipakai ditolak compiler; tulis `discard` kalau memang dibuang.
 
 ## Selanjutnya
 
-Bab berikutnya membahas [tuple](tuples.qmd): menggabungkan beberapa nilai menjadi satu,
+Bab berikutnya membahas [tuple](tuples.qmd): menggabungkan beberapa *value* menjadi satu,
 mengembalikannya dari *procedure*, dan membongkarnya kembali dalam satu baris.

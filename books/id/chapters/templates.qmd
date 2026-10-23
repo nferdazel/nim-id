@@ -2,7 +2,7 @@
 
 *Template* ditulis mirip *procedure*, tapi cara kerjanya berbeda. Compiler tidak memanggilnya; ia
 menyalin badan template ke tempat pemanggilan, lalu *meng-compile* hasil salinan itu. Karena itu
-template bisa menerima argumen yang belum punya tipe, sesuatu yang tidak bisa dilakukan *procedure*.
+template bisa menerima argumen yang belum punya *type*, sesuatu yang tidak bisa dilakukan *procedure*.
 
 Kebebasan ini ada harganya. Kode yang disalin bisa mengevaluasi *expression* lebih dari sekali, dan nama
 di dalam template bisa bertabrakan dengan nama pemanggil. Nim menutup masalah kedua dengan aturan
@@ -19,7 +19,7 @@ jelas.
 ## Template pertama: `swap`
 
 Template dideklarasikan dengan kata kunci `template`. Parameter `untyped` berarti argumennya
-disalin apa adanya, belum diperiksa tipenya.
+disalin apa adanya, belum diperiksa *type itu*.
 
 ```{.nim}
 template swap(a, b: untyped) =
@@ -39,12 +39,12 @@ echo x, " ", y
 
 Compiler menyalin tiga baris badan `swap` ke tempat pemanggilan dengan `a` menjadi `x` dan `b`
 menjadi `y`. Hasilnya sama seperti menulis pertukaran itu langsung. Argumennya tidak disalin
-nilainya, jadi `swap` bekerja untuk variabel `int` maupun `string`.
+*value itu*, jadi `swap` bekerja untuk *variable* `int` maupun `string`.
 
 ## Hygiene: nama di dalam template tidak bocor
 
 `swap` mendeklarasikan `tmp`. Kalau nama itu bocor ke pemanggil, template bisa bentrok dengan
-variabel `tmp` miliknya. Nim mencegahnya lewat hygiene: simbol yang dideklarasikan di dalam template
+*variable* `tmp` miliknya. Nim mencegahnya lewat hygiene: simbol yang dideklarasikan di dalam template
 mendapat nama unik, sehingga tidak mungkin bentrok.
 
 ```{.nim}
@@ -67,10 +67,10 @@ echo p, " ", q, " ", tmp
 `tmp` milik pemanggil tetap `100`. `tmp` di dalam template mendapat nama internal yang berbeda, jadi
 keduanya hidup berdampingan tanpa saling mengganggu.
 
-## Template untuk `min` tiga nilai
+## Template untuk `min` tiga *value*
 
-**Standard library** sudah menyediakan `min` untuk dua nilai, dan itu *procedure*, bukan template. Untuk
-melihat ekspansi template pada perhitungan, kita menulis `min` versi tiga nilai.
+**Standard library** sudah menyediakan `min` untuk dua *value*, dan itu *procedure*, bukan template. Untuk
+melihat ekspansi template pada perhitungan, kita menulis `min` versi tiga *value*.
 
 ```{.nim}
 template min(a, b, c: untyped): untyped =
@@ -88,12 +88,12 @@ echo min(4, 8, 1)
 1
 ```
 
-Tipe balik ditulis `untyped`, karena template tidak menetapkan tipe hasil. *Expression* yang dihasilkan
+*Type* balik ditulis `untyped`, karena template tidak menetapkan *type* hasil. *Expression* yang dihasilkan
 menggantikan seluruh pemanggilan, jadi `echo min(9, 2, 5)` menjadi `echo` atas *expression* `if`.
 
 ## Versi generic dari `min`
 
-*Procedure* generic bisa menyelesaikan pekerjaan yang sama untuk satu tipe per versi.
+*Procedure* generic bisa menyelesaikan pekerjaan yang sama untuk satu *type* per versi.
 
 ```{.nim}
 proc minOf3[T](a, b, c: T): T =
@@ -112,7 +112,7 @@ echo minOf3(4, 8, 1)
 ```
 
 Keluarannya sama. Yang berbeda adalah cara kerjanya, dan perbedaan itu baru terlihat saat argumennya
-punya efek samping.
+punya *side effect*.
 
 ## Ekspansi versus pemanggilan
 
@@ -149,8 +149,8 @@ proc: 1 (calls: 1)
 ```
 
 `a` muncul tiga kali di dalam badan template, jadi `next()` dipanggil tiga kali, dan `calls` naik
-sampai 3. *Procedure* `minOf3` menerima nilainya sebagai argumen, jadi `next()` dipanggil sekali.
-Pelajaran praktisnya: jangan oper *expression* berharga mahal atau punya efek samping ke template.
+sampai 3. *Procedure* `minOf3` menerima *value itu* sebagai argumen, jadi `next()` dipanggil sekali.
+Pelajaran praktisnya: jangan oper *expression* berharga mahal atau punya *side effect* ke template.
 
 ## Membaca pesan error: simbol yang tidak terlihat
 
@@ -173,7 +173,7 @@ main.nim(6, 8) Error: undeclared identifier: 'x'
 
 `x` dibuat di dalam template, dan hygiene memberinya nama unik, jadi `echo x` di `run` tidak
 menemukan apa pun. Ini bukan bug; inilah yang membuat template aman dipakai tanpa harus hafal nama
-variabel internalnya.
+*variable* internalnya.
 
 ## `{.dirty.}`: mematikan hygiene
 
@@ -196,7 +196,7 @@ run()
 ```
 
 Versi `dirty` berjalan karena `x` memakai nama biasa. Harga yang dibayar: `x` sekarang bisa bentrok
-dengan variabel pemanggil. Pakai `{.dirty.}` hanya kalau memang perlu, dan beri nama yang jelas.
+dengan *variable* pemanggil. Pakai `{.dirty.}` hanya kalau memang perlu, dan beri nama yang jelas.
 
 ## `{.inject.}`: membuka satu simbol saja
 
@@ -228,12 +228,12 @@ Pilih berdasarkan kebutuhan, bukan kebiasaan.
 
 | | Template | Generic | *Procedure* |
 |---|---|---|---|
-| Kapan dikerjakan | disalin saat *compile* | dibuat per tipe saat *compile* | dipanggil saat runtime |
-| Tipe argumen | bebas, sering `untyped` | satu tipe per versi | sudah tetap |
-| Efek samping argumen | bisa berulang | sekali | sekali |
+| Kapan dikerjakan | disalin saat *compile* | dibuat per *type* saat *compile* | dipanggil saat runtime |
+| *Type* argumen | bebas, sering `untyped` | satu *type* per versi | sudah tetap |
+| *Side effect* argumen | bisa berulang | sekali | sekali |
 
 Aturan singkatnya: pakai *procedure* untuk pekerjaan biasa, generic kalau algoritmanya sama untuk
-banyak tipe, dan template hanya saat kita butuh bekerja pada level teks kode, misalnya membuat
+banyak *type*, dan template hanya saat kita butuh bekerja pada level teks kode, misalnya membuat
 konstruksi bahasa baru dari potongan yang ada.
 
 ## Latihan
@@ -274,7 +274,7 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 - Argumen template bisa dievaluasi berkali-kali; ini berbeda dari *procedure* yang mengevaluasinya
   sekali.
 - `{.inject.}` membuka satu simbol, `{.dirty.}` mematikan hygiene untuk seluruh template.
-- Pakai *procedure* untuk pekerjaan biasa, generic untuk algoritma lintas tipe, template untuk
+- Pakai *procedure* untuk pekerjaan biasa, generic untuk algoritma lintas *type*, template untuk
   menyusun potongan kode.
 
 ## Selanjutnya

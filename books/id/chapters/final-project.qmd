@@ -1,15 +1,15 @@
 # Proyek akhir: catatan dari terminal
 
-Alat kecil yang berguna hampir selalu punya bentuk yang sama: beberapa modul, satu *file* data,
-beberapa subperintah, dan beberapa *test*. Bagian C sudah menutup setiap potongannya satu per satu.
-Sekarang potongan itu disatukan menjadi satu program yang benar-benar bisa dipakai: `notes`, alat
-baris perintah untuk mencatat hal-hal pendek.
+*Tool* kecil yang berguna hampir selalu punya bentuk yang sama: beberapa *module*, satu *file* data,
+beberapa *subcommand*, dan beberapa *test*. Bagian C sudah menutup setiap potongannya satu per satu.
+Sekarang potongan itu disatukan menjadi satu program yang benar-benar bisa dipakai: `notes`, *tool*
+*command line* untuk mencatat hal-hal pendek.
 
 ::: {.callout-note}
 ## Tujuan bab
 
-Setelah bab ini, pembaca bisa memecah satu alat kecil menjadi modul terpisah, menyimpan data ke
-*file* JSON, membaca subperintah dengan `std/parseopt`, menulis tesnya dengan `std/unittest`, dan
+Setelah bab ini, pembaca bisa memecah satu *tool* kecil menjadi *module* terpisah, menyimpan data ke
+*file* JSON, membaca *subcommand* dengan `std/parseopt`, menulis *test*-nya dengan `std/unittest`, dan
 membaca pesan error ketika JSON diperlakukan seperti object biasa.
 :::
 
@@ -43,16 +43,16 @@ when isMainModule:
 buy milk
 ```
 
-Tiga hal sudah terlihat di sini. `%*` membangun *object* JSON dari pasangan nama dan nilai. `$` pada
-`JsonNode` menghasilkan teks JSON, bukan penjelasan tipe. Dan pasangan `toJson` serta `fromJson`
+Tiga hal sudah terlihat di sini. `%*` membangun *object* JSON dari pasangan nama dan *value*. `$` pada
+`JsonNode` menghasilkan teks JSON, bukan penjelasan *type*. Dan pasangan `toJson` serta `fromJson`
 membuat konversi hanya ditulis sekali, lalu dipakai di mana saja.
 
-Tanda bintang pada `Note` dan kedua *procedure itu* adalah ekspor. Tanpa tanda itu, modul lain tidak
+Tanda bintang pada `Note` dan kedua *procedure*-nya adalah ekspor. Tanpa tanda itu, *module* lain tidak
 bisa memakainya, dan itulah yang kita butuhkan di langkah berikut.
 
-## Langkah 2: modul penyimpanan
+## Langkah 2: *module* penyimpanan
 
-Sekarang pindahkan bagian yang menyentuh *file* ke modulnya sendiri. Simpan sebagai
+Sekarang pindahkan bagian yang menyentuh *file* ke *module itu* sendiri. Simpan sebagai
 `a02_store.nim`.
 
 ```{.nim}
@@ -99,7 +99,7 @@ proc removeNote*(path: string, index: int): bool =
   true
 
 when isMainModule:
-  let path = getTempDir() / "nim_id_notes_demo.json"
+  let path = getTempDir() / ("nim_id_notes_demo_" & $getCurrentProcessId() & ".json")
   removeFile(path)
 
   addNote(path, "buy milk")
@@ -122,19 +122,19 @@ removed: true
 left: 1
 ```
 
-Modul ini adalah seluruh aturan penyimpanan dalam satu tempat. `loadNotes` mengembalikan *seq*
+*Module* ini adalah seluruh aturan penyimpanan dalam satu tempat. `loadNotes` mengembalikan *seq*
 kosong kalau *file itu* belum ada, sehingga pemanggil pertama tidak perlu menanganinya sendiri.
 `removeNote` mengembalikan `bool` sebagai laporan, bukan menghentikan program dengan *exception*,
-karena indeks di luar rentang adalah *error* pemakaian yang wajar.
+karena *index* di luar *range* adalah *error* pemakaian yang wajar.
 
 Blok `when isMainModule` adalah bagian yang hanya berjalan saat *file* ini dijalankan langsung.
-Ketika modul lain mengimpornya, blok itu dilewati. Karena itu modul bisa diuji sendiri, tanpa CLI.
-Contoh ini memakai `getTempDir()` supaya *file* percobaannya tidak tertinggal di direktori kerja,
+Ketika *module* lain mengimpornya, blok itu dilewati. Karena itu *module* bisa diuji sendiri, tanpa CLI.
+Contoh ini memakai `getTempDir()` supaya *file* percobaannya tidak tertinggal di *directory* kerja,
 lalu menghapusnya sendiri di akhir.
 
-## Langkah 3: subperintah
+## Langkah 3: *subcommand*
 
-Lapisan terakhir adalah alat baris perintahnya. Simpan sebagai `a03_main.nim`.
+Lapisan terakhir adalah *tool* baris *command itu*. Simpan sebagai `a03_main.nim`.
 
 ```{.nim}
 import std/[parseopt, os, strutils]
@@ -225,9 +225,9 @@ options:
   -f, --file:path  where the notes are stored
 ```
 
-Dijalankan tanpa argumen, program mencetak teks bantuan. Argumen pertama menjadi nama subperintah,
-sisanya menjadi operand; opsi dikenali dari tanda hubung, dan `std/parseopt` sudah membedakan
-keduanya. Kode keluar dikembalikan sebagai `int`, lalu diteruskan ke `quit`, sehingga skrip lain
+Dijalankan tanpa argumen, program mencetak teks bantuan. Argumen pertama menjadi nama *subcommand*,
+sisanya menjadi operand; *option* dikenali dari tanda hubung, dan `std/parseopt` sudah membedakan
+keduanya. *Exit code* dikembalikan sebagai `int`, lalu diteruskan ke `quit`, sehingga skrip lain
 bisa memeriksa keberhasilannya.
 
 Pemakaian sesungguhnya seperti ini:
@@ -249,12 +249,12 @@ rm -f /tmp/notes-demo.json
 ```
 
 Perhatikan bentuk `--file:/tmp/notes-demo.json`, bukan `--file /tmp/notes-demo.json`. `parseopt`
-mengambil nilai opsi dari bagian yang sama dengan nama opsinya, dipisah titik dua atau tanda sama
-dengan. Kalau nilainya dipisah spasi, jalur itu dianggap argumen biasa.
+mengambil *value* *option* dari bagian yang sama dengan nama *option itu*, dipisah titik dua atau tanda sama
+dengan. Kalau *value itu* dipisah spasi, *path* itu dianggap argumen biasa.
 
 ## Langkah 4: *test*
 
-Modul penyimpanan punya aturan yang jelas, dan itu bahan yang tepat untuk `std/unittest`. Simpan
+*Module* penyimpanan punya aturan yang jelas, dan itu bahan yang tepat untuk `std/unittest`. Simpan
 sebagai `a04_tests.nim`.
 
 ```{.nim}
@@ -262,7 +262,7 @@ import std/[unittest, os]
 import a02_store
 
 proc testPath(): string =
-  getTempDir() / "nim_id_notes_test.json"
+  getTempDir() / ("nim_id_notes_test_" & $getCurrentProcessId() & ".json")
 
 suite "store":
   setup:
@@ -324,39 +324,39 @@ main.nim(6, 10) Error: undeclared field: 'text' for type json.JsonNode [type dec
 ```
 
 Pesan ini menunjuk baris 6 kolom 10, tepat di `.text`, lalu menyebut sebabnya: field bernama `text`
-tidak ada pada `json.JsonNode`. Di dalam tanda kurung, compiler juga menyebut *file* tempat tipe itu
-dideklarasikan, supaya jelas tipe mana yang dimaksud. Perbaikannya memakai indeks seperti *object* JSON
+tidak ada pada `json.JsonNode`. Di dalam tanda kurung, compiler juga menyebut *file* tempat *type* itu
+dideklarasikan, supaya jelas *type* mana yang dimaksud. Perbaikannya memakai *index* seperti *object* JSON
 sesungguhnya: `note["text"]`, lalu diterjemahkan dengan `getStr` menjadi `string`.
 
 ## Latihan
 
-1. Tambahkan subperintah `done <index>` yang menandai catatan sebagai selesai, lalu cetak `[x]` atau
-   `[ ]` di subperintah `list`.
+1. Tambahkan *subcommand* `done <index>` yang menandai catatan sebagai selesai, lalu cetak `[x]` atau
+   `[ ]` di *subcommand* `list`.
 2. Tanpa menjalankan, prediksi keluarannya: `./notes list` pada *file* yang belum ada, lalu
    `./notes add "one"` dan `./notes list` lagi.
 3. Tulis *test* untuk `saveNotes` yang memastikan hasil tulisannya bisa dibaca kembali dan panjangnya
    tetap.
 4. Kode berikut gagal *di-compile*. Perbaiki, lalu jelaskan pesannya: `let notes = parseJson("[]")`
    diikuti `notes.add("buy milk")`.
-5. Sebutkan satu keuntungan menyimpan fungsi penyimpanan di modul terpisah, dan satu pekerjaan yang
-   harus ditambahkan sebelum alat ini dipakai di dua komputer sekaligus.
+5. Sebutkan satu keuntungan menyimpan fungsi penyimpanan di *module* terpisah, dan satu pekerjaan yang
+   harus ditambahkan sebelum *tool* ini dipakai di dua komputer sekaligus.
 
 Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
 ## Ringkasan
 
-- Satu alat kecil layak dipecah: tipe dan konversi, modul penyimpanan, lapisan CLI, lalu *test*.
+- Satu *tool* kecil layak dipecah: *type* dan konversi, *module* penyimpanan, lapisan CLI, lalu *test*.
 - `%*` membangun JSON, `parseJson` membacanya, dan pasangan `toJson` serta `fromJson` mencegah
   konversi ditulis dua kali.
-- `when isMainModule` membuat modul bisa dijalankan sendiri tanpa mengganggu pemakainya.
-- `parseopt` mengambil nilai opsi dengan `:` atau `=`, bukan spasi; kode keluar diteruskan lewat
+- `when isMainModule` membuat *module* bisa dijalankan sendiri tanpa mengganggu pemakainya.
+- `parseopt` mengambil *value* *option* dengan `:` atau `=`, bukan spasi; *exit code* diteruskan lewat
   `quit`.
-- `getTempDir()` dipakai untuk *file* uji supaya contoh tidak meninggalkan apa pun di direktori
+- `getTempDir()` dipakai untuk *file* uji supaya contoh tidak meninggalkan apa pun di *directory*
   kerja.
 
 ## Selanjutnya
 
-Bagian C selesai. Yang tersisa dari buku ini adalah alat bantu: daftar istilah, lembar rangkuman,
+Bagian C selesai. Yang tersisa dari buku ini adalah *tool*: daftar istilah, lembar rangkuman,
 dan catatan untuk pembaca yang datang dari bahasa lain. Mulai dari daftar istilah, karena di
 sanalah setiap kata yang dipakai buku ini dijelaskan satu kali saja. Lanjut ke
 [Glosarium](../appendix/glossary.qmd).

@@ -5,13 +5,13 @@ bisa menolong. Kode yang memakai `0`, `1`, `2` lebih ringkas, tapi setelah sebul
 ingat angka `2` itu apa. Enum menutup dua celah itu: nama yang dibaca manusia, dengan urutan yang
 ditentukan compiler.
 
-Set melangkah lebih jauh. Kalau nilainya sudah menjadi enum, sekumpulan nilai bisa disimpan
+Set melangkah lebih jauh. Kalau *value itu* sudah menjadi enum, sekumpulan *value* bisa disimpan
 sebagai bit, dan pertanyaan "apakah ini termasuk?" dijawab satu operasi.
 
 ::: {.callout-note}
 ## Tujuan bab
 
-Setelah bab ini, pembaca bisa mendefinisikan enum, membaca nilai ordinalnya, mengubah integer
+Setelah bab ini, pembaca bisa mendefinisikan enum, membaca *value* ordinalnya, mengubah integer
 menjadi enum, dan memakai `set` beserta `incl`, `excl`, serta `in`.
 :::
 
@@ -33,9 +33,9 @@ blue
 `echo` mencetak namanya, bukan angkanya. Setiap anggota punya posisi berurutan sesuai urutan
 penulisannya.
 
-## Nilai ordinal dengan `ord`
+## *Value* ordinal dengan `ord`
 
-Posisi itu disebut nilai ordinal, dan `ord` mengambilnya.
+Posisi itu disebut *value* ordinal, dan `ord` mengambilnya.
 
 ```{.nim}
 type Color = enum
@@ -53,7 +53,7 @@ anggota enum juga bisa dibandingkan: `red < blue` bernilai `true`.
 
 ## Mengubah integer menjadi enum
 
-Nilai ordinal bisa dikembalikan menjadi anggota. Bentuk `Color(1)` disebut konversi tipe.
+*Value* ordinal bisa dikembalikan menjadi anggota. Bentuk `Color(1)` disebut konversi *type*.
 
 ```{.nim}
 type Color = enum
@@ -69,11 +69,11 @@ green
 green
 ```
 
-Dua baris terakhir mencetak hal yang sama, karena `echo` memakai `$` yang sama. Kalau nilainya
-literal, rentangnya diperiksa saat *compile*: `Color(9)` ditolak dengan
+Dua baris terakhir mencetak hal yang sama, karena `echo` memakai `$` yang sama. Kalau *value itu*
+literal, *range itu* diperiksa saat *compile*: `Color(9)` ditolak dengan
 `9 can't be converted to Color`.
 
-## Set: *set* nilai
+## Set: *set* *value*
 
 `set[Color]` menyimpan sekumpulan anggota. Literalnya memakai `{}`.
 
@@ -89,12 +89,12 @@ echo palette
 {red, blue}
 ```
 
-*Set* kosong ditulis `{}`, dan tipe dasarnya harus ditulis di anotasi. Tanpa itu compiler
-menolak dengan `cannot infer the type of the set`, karena `{}` bisa berarti set tipe apa pun.
+*Set* kosong ditulis `{}`, dan *type* dasarnya harus ditulis di anotasi. Tanpa itu compiler
+menolak dengan `cannot infer the type of the set`, karena `{}` bisa berarti set *type* apa pun.
 
 ## `incl` dan `excl`: menambah dan membuang
 
-Untuk mengubah isi set, pakai `incl` dan `excl`. Keduanya butuh variabel `var`.
+Untuk mengubah isi set, pakai `incl` dan `excl`. Keduanya butuh *variable* `var`.
 
 ```{.nim}
 type Color = enum
@@ -176,9 +176,9 @@ echo warm * cool
 `warm + cool` adalah gabungan. Karena kedua *set* tidak beririsan, `warm * cool` kosong. `card`
 memberi jumlah anggota, misalnya `card({red, green})` bernilai `2`.
 
-## *Bitset* untuk tipe dasar
+## *Bitset* untuk *type* dasar
 
-Set tidak terbatas pada enum. Tipe ordinal apa pun bisa jadi dasarnya, termasuk `char`.
+Set tidak terbatas pada enum. *Type* ordinal apa pun bisa jadi dasarnya, termasuk `char`.
 
 ```{.nim}
 var seen: set[char] = {}
@@ -195,10 +195,10 @@ false
 4
 ```
 
-Kita membaca teks karakter demi karakter, dan set menyimpan mana yang sudah muncul. `card` bernilai
+Kita membaca teks *character* demi *character*, dan set menyimpan mana yang sudah muncul. `card` bernilai
 4 karena `hello` hanya memuat empat huruf berbeda.
 
-Dasar set harus ordinal dengan paling banyak 2^16 nilai. `set[int]` melewati batas itu, dan
+Dasar set harus ordinal dengan paling banyak 2^16 *value*. `set[int]` melewati batas itu, dan
 compiler menolaknya:
 `set is too large; use std/sets for ordinal types with more than 2^16 elements`. Untuk *set*
 besar, pakai `std/sets`.
@@ -217,7 +217,7 @@ echo c
 main.nim(4, 16) Error: type mismatch: got 'int literal(1)' for '1' but expected 'Color = enum'
 ```
 
-Pesannya menyebut dua tipe yang bertabrakan: nilai `1` bertipe integer, sedangkan tempatnya
+Pesannya menyebut dua *type* yang bertabrakan: *value* `1` bertipe integer, sedangkan tempatnya
 menunggu `Color`. Nim tidak mengubah integer menjadi enum diam-diam. Konversinya harus ditulis
 eksplisit lewat `Color(1)`, dan penulisan itulah tempat pembaca melihat niatnya.
 
@@ -248,14 +248,14 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
 ## Ringkasan
 
-- `enum` memberi nama pada nilai berurutan; `ord` mengambil posisinya, dimulai dari 0.
-- `Color(...)` mengubah integer menjadi enum secara eksplisit; literal di luar rentang ditolak.
+- `enum` memberi nama pada *value* berurutan; `ord` mengambil posisinya, dimulai dari 0.
+- `Color(...)` mengubah integer menjadi enum secara eksplisit; literal di luar *range* ditolak.
 - `set[Color]` menyimpan *set* anggota, ditulis `{red, blue}`; *set* kosong `{}` butuh
-  anotasi tipe.
+  anotasi *type*.
 - `incl`, `excl`, `in`, `+`, `*`, `-`, dan `card` mengolah set; iterasi mengikuti urutan ordinal.
-- Set juga bekerja untuk tipe ordinal lain seperti `char`, sampai 2^16 nilai.
+- Set juga bekerja untuk *type* ordinal lain seperti `char`, sampai 2^16 *value*.
 
 ## Selanjutnya
 
-Bab berikutnya membuka bagian menengah: modul dan `import`, cara memecah kode ke beberapa *file*
+Bab berikutnya membuka bagian menengah: *module* dan `import`, cara memecah kode ke beberapa *file*
 yang bisa dipakai ulang.

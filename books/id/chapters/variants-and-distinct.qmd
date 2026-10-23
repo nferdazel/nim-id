@@ -1,19 +1,19 @@
 # Object varian dan `distinct`
 
-Dua kebutuhan muncul berulang. Pertama, satu tipe yang isinya bergantung pada keadaan: bentuk punya
-`radius`, atau `width` dan `height`, tapi tidak keduanya sekaligus. Kedua, dua nilai yang secara
+Dua kebutuhan muncul berulang. Pertama, satu *type* yang isinya bergantung pada keadaan: bentuk punya
+`radius`, atau `width` dan `height`, tapi tidak keduanya sekaligus. Kedua, dua *value* yang secara
 data sama tetapi tidak boleh tertukar, misalnya id pengguna dan id pesanan.
 
 Nim menjawab keduanya dengan cara berbeda. Object varian menyatukan beberapa bentuk ke dalam satu
-tipe dengan sebuah penanda. `distinct` membuat tipe benar-benar baru, sehingga compiler menolak
+*type* dengan sebuah penanda. `distinct` membuat *type* benar-benar baru, sehingga compiler menolak
 pencampuran. Semua contoh diuji di Nim 2.2.12.
 
 ::: {.callout-note}
 ## Tujuan bab
 
 Setelah bab ini, pembaca bisa mendefinisikan object varian dengan field `case`, membaca error
-konstruksi yang bertentangan, mengenali `FieldDefect`, membuat tipe `distinct`, melakukan konversi
-eksplisit, dan tahu kapan `distinct` lebih baik daripada alias tipe.
+konstruksi yang bertentangan, mengenali `FieldDefect`, membuat *type* `distinct`, melakukan konversi
+eksplisit, dan tahu kapan `distinct` lebih baik daripada alias *type*.
 :::
 
 ## Object varian: field yang bergantung pada penanda
@@ -103,12 +103,12 @@ echo fail.id, " ", fail.code
 ```
 
 `id` tersedia untuk kedua bentuk. Menaruh field bersama di luar `case` mengurangi pengulangan dan
-membuat tipe lebih rapi. Nama field harus unik di seluruh cabang, jadi `height` tidak bisa dipakai di
+membuat *type* lebih rapi. Nama field harus unik di seluruh cabang, jadi `height` tidak bisa dipakai di
 cabang `rect` dan cabang lain sekaligus.
 
 ## Error: mengisi field di luar cabang
 
-Kalau penandanya sudah ditentukan di konstruktor, compiler memeriksa field yang diisi.
+Kalau penandanya sudah ditentukan di *constructor*, compiler memeriksa field yang diisi.
 
 ```{.nim}
 type
@@ -136,8 +136,8 @@ cabang `rect`. Perbaikannya jelas dari isi pesan, yaitu hapus `width` dan isi `r
 ## Error saat runtime: `FieldDefect`
 
 Nim tidak memeriksa akses field varian saat *compile*. Pemeriksaan penanda disisipkan pada setiap
-akses dan berjalan saat program berjalan, bahkan ketika penandanya literal di konstruktor. Yang
-tetap ditolak saat *compile* adalah konstruktor yang mengisi field di cabang yang salah.
+akses dan berjalan saat program berjalan, bahkan ketika penandanya literal di *constructor*. Yang
+tetap ditolak saat *compile* adalah *constructor* yang mengisi field di cabang yang salah.
 
 ```{.nim}
 type
@@ -163,9 +163,9 @@ saat *compile*, jadi Nim menyisipkan pemeriksaan yang berjalan saat akses terjad
 tidak pernah berubah setelah konstruksi, bug ini biasanya berarti ada cabang di kode yang lupa
 diperiksa. Aturannya: akses field variant hanya lewat `case` pada penandanya.
 
-## `distinct`: tipe baru yang tidak tertukar
+## `distinct`: *type* baru yang tidak tertukar
 
-`distinct` membuat tipe turunan dengan identitas sendiri. Nilai dasarnya harus dikonversi secara
+`distinct` membuat *type* turunan dengan identitas sendiri. *Value* dasarnya harus dikonversi secara
 eksplisit ke luar.
 
 ```{.nim}
@@ -179,9 +179,9 @@ echo float(price), " USD"
 10.0 USD
 ```
 
-`Dollars(10.0)` membentuk nilai bertipe `Dollars`. Untuk kembali ke `float`, tulis `float(price)`.
-Tidak ada konversi otomatis ke arah mana pun. Inilah yang mencegah nilai tertukar: `UserId` dan
-`OrderId` yang keduanya di atas `int` tetap dua tipe berbeda.
+`Dollars(10.0)` membentuk *value* bertipe `Dollars`. Untuk kembali ke `float`, tulis `float(price)`.
+Tidak ada konversi otomatis ke arah mana pun. Inilah yang mencegah *value* tertukar: `UserId` dan
+`OrderId` yang keduanya di atas `int` tetap dua *type* berbeda.
 
 ## Konversi eksplisit di kedua arah
 
@@ -198,12 +198,12 @@ echo float(price)
 main.nim(3, 22) Error: type mismatch: got 'float64' for '10.0' but expected 'Dollars = distinct float'
 ```
 
-Compiler menolak `10.0` karena tipenya `float64`, bukan `Dollars`. Tulis `Dollars(10.0)`. Pesan
-errornya menyebut kedua tipe, jadi arah perbaikannya langsung terbaca.
+Compiler menolak `10.0` karena *type itu* `float64`, bukan `Dollars`. Tulis `Dollars(10.0)`. Pesan
+errornya menyebut kedua *type*, jadi arah perbaikannya langsung terbaca.
 
-## `distinct` vs alias tipe
+## `distinct` vs alias *type*
 
-Alias hanya nama lain untuk tipe yang sama; ia tidak memisahkan apa pun.
+Alias hanya nama lain untuk *type* yang sama; ia tidak memisahkan apa pun.
 
 ```{.nim}
 type
@@ -223,14 +223,14 @@ found 4
 found 5
 ```
 
-`Alias(3)` dan `4` sama-sama `int`, jadi keduanya diterima tanpa konversi. `UserId` berbeda: nilainya
-harus ditulis `int(UserId(5))` sebelum masuk. Pakai alias kalau hanya butuh nama pendek untuk tipe
-yang sama. Pakai `distinct` kalau nilainya tidak boleh tertukar, seperti id, satuan, atau nominal
+`Alias(3)` dan `4` sama-sama `int`, jadi keduanya diterima tanpa konversi. `UserId` berbeda: *value itu*
+harus ditulis `int(UserId(5))` sebelum masuk. Pakai alias kalau hanya butuh nama pendek untuk *type*
+yang sama. Pakai `distinct` kalau *value itu* tidak boleh tertukar, seperti id, satuan, atau nominal
 uang.
 
 ## Menambah kembali operasi yang dibutuhkan
 
-Tipe `distinct` tidak mewarisi operasi aritmetika dan `$` dari tipe dasarnya, sementara operasi
+*Type* `distinct` tidak mewarisi operasi aritmetika dan `$` dari *type* dasarnya, sementara operasi
 ordinal seperti `ord` dan `inc` tetap bekerja. Tambahkan lagi yang dibutuhkan, termasuk `$` supaya
 `echo` enak dibaca.
 
@@ -251,9 +251,9 @@ echo total
 ```
 
 `{.borrow.}` meminjam badan `+` dari `float` supaya tidak ditulis ulang. Karena operasinya dipilih
-satu per satu, `distinct` memaksa kita berpikir soal satuan sebelum mencampur nilai.
+satu per satu, `distinct` memaksa kita berpikir soal satuan sebelum mencampur *value*.
 
-## Error: memakai `distinct` sebagai tipe dasarnya
+## Error: memakai `distinct` sebagai *type* dasarnya
 
 Yang membuat `distinct` berguna adalah penolakannya.
 
@@ -269,8 +269,8 @@ echo n
 main.nim(4, 14) Error: type mismatch: got 'UserId' for 'u' but expected 'int'
 ```
 
-`u` tidak bisa dipakai sebagai `int` tanpa `int(u)`. Compiler menyebut kedua tipe, dan itu petunjuk
-perbaikannya. Inilah pengaman yang tidak dimiliki alias tipe.
+`u` tidak bisa dipakai sebagai `int` tanpa `int(u)`. Compiler menyebut kedua *type*, dan itu petunjuk
+perbaikannya. Inilah pengaman yang tidak dimiliki alias *type*.
 
 ## Latihan
 
@@ -278,7 +278,7 @@ perbaikannya. Inilah pengaman yang tidak dimiliki alias tipe.
    `area`.
 2. Tanpa menjalankan, prediksi keluaran bila `Shape(kind: circle, width: 3.0)` diganti menjadi
    `Shape(kind: circle, radius: 3.0)`. Jelaskan.
-3. Tulis tipe `Meters = distinct int` beserta *procedure* `$`-nya, lalu cetak satu nilainya.
+3. Tulis *type* `Meters = distinct int` beserta *procedure* `$`-nya, lalu cetak satu *value itu*.
 4. Ubah `type UserId = distinct int` menjadi alias `int`. Apa yang hilang dari program, dan kenapa
    itu penting?
 5. Jelaskan kenapa `echo Shape(kind: rect, width: 3.0, height: 4.0).radius` gagal saat berjalan,
@@ -289,13 +289,13 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 ## Ringkasan
 
 - Object varian memakai field `case` dengan satu discriminator; hanya field cabang aktif yang ada.
-- Konstruktor yang mengisi field di luar cabang ditolak sebagai error *compile*.
+- *Constructor* yang mengisi field di luar cabang ditolak sebagai error *compile*.
 - Akses field variant tanpa memeriksa penanda berakhir `FieldDefect` saat program berjalan.
-- `distinct` membuat tipe baru; konversi ke dan dari tipe dasar harus eksplisit.
-- Alias tipe tidak memisahkan apa pun; `distinct` cocok untuk id, satuan, dan nilai yang mudah
+- `distinct` membuat *type* baru; konversi ke dan dari *type* dasar harus eksplisit.
+- Alias *type* tidak memisahkan apa pun; `distinct` cocok untuk id, satuan, dan *value* yang mudah
   tertukar.
 
 ## Selanjutnya
 
-Bab berikutnya membahas [referensi dan pointer](refs-and-pointers.qmd): nilai yang menunjuk nilai
+Bab berikutnya membahas [referensi dan pointer](refs-and-pointers.qmd): *value* yang menunjuk *value*
 lain, kapan menyalin dan kapan berbagi, serta bedanya `ref`, `ptr`, dan `nil`.

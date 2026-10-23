@@ -14,7 +14,7 @@ serta menjalankan profiler bawaan Nim 2.2.12.
 
 ## Mengukur satu blok
 
-`std/monotimes` menyediakan `getMonoTime`. Ia membaca jam monotonik: nilainya selalu naik dan tidak
+`std/monotimes` menyediakan `getMonoTime`. Ia membaca jam monotonik: *value itu* selalu naik dan tidak
 terpengaruh penyesuaian jam sistem. Jam ini untuk selang, bukan untuk mencatat tanggal.
 
 ```{.nim}
@@ -45,12 +45,12 @@ elapsed is not negative: true
 
 Pengurangan dua `MonoTime` menghasilkan `Duration`. Angka itu dibaca dalam satuan lain lewat
 `inMilliseconds`, `inMicroseconds`, atau `inSeconds`, dan fungsi-fungsi itu tinggal di `std/times`,
-bukan `std/monotimes`. Karena itu kedua modul diimpor bersama: satu menyediakan jamnya, satu cara
+bukan `std/monotimes`. Karena itu kedua *module* diimpor bersama: satu menyediakan jamnya, satu cara
 membacanya.
 
 Durasinya sendiri tidak pernah muncul di keluaran, dan itu disengaja. Angka waktu berubah di setiap
 mesin dan setiap kali dijalankan, sehingga blok keluaran yang memuatnya tidak mungkin cocok saat
-diperiksa otomatis. Contoh di buku ini dijaga supaya keluarannya sama di mesin mana pun; waktu
+diperiksa otomatis. Contoh di buku ini dijaga supaya keluarannya sama di mesin 64-bit mana pun; waktu
 dipakai untuk membandingkan, hasil perbandingannya yang dicetak.
 
 Baris `discard sumUp(10_000)` adalah *warm-up*. Pada pemanggilan pertama, halaman memori belum
@@ -142,7 +142,7 @@ fast <= slow: true
 
 Kedua *procedure* membentuk string dengan cara berbeda. `result = result & "x"` menyalin seluruh isi
 string lama ke string baru setiap kali, sehingga total penyalinan tumbuh kuadratik. `result.add 'x'`
-menambah karakter ke penyangga yang sudah ada, sehingga biayanya rata-rata tetap. Pada 20.000
+menambah *character* ke penyangga yang sudah ada, sehingga biayanya rata-rata tetap. Pada 20.000
 putaran keduanya menghasilkan teks yang sama, tetapi yang kedua jauh lebih murah.
 
 Keluaran yang dicetak hanya dua boolean: hasilnya sama, dan versi cepat tidak lebih lambat. Boolean
@@ -206,7 +206,7 @@ Expected one of (first mismatch at [position]):
 ```
 
 Pesan ini memuat tiga bagian yang berguna. `Expression:` menunjukkan pemanggilan yang diperiksa.
-Baris `[1] epochTime(): float` menunjukkan tipe yang diberikan: `float`. Blok `Expected one of`
+Baris `[1] epochTime(): float` menunjukkan *type* yang diberikan: `float`. Blok `Expected one of`
 menunjukkan yang diterima: `inMilliseconds(dur: Duration): int64`. Salah satu dari keduanya harus
 berubah. Karena yang diinginkan selang, kurangi dua `MonoTime` lebih dulu, lalu panggil
 `inMilliseconds` pada hasilnya seperti pada contoh pertama.
@@ -221,16 +221,16 @@ nim c -r --profiler:on --stackTrace:on app.nim
 ```
 
 Saat selesai, program mencetak `writing profile_results.txt...`, dan *file* `profile_results.txt`
-muncul di direktori kerja. Isinya daftar *stack trace* yang diurutkan dari yang paling banyak
+muncul di *directory* kerja. Isinya daftar *stack trace* yang diurutkan dari yang paling banyak
 memakai waktu, lengkap dengan persentase per baris. Yang dibaca adalah entri teratas: di situlah
 waktu paling banyak habis.
 
 Profiler ini mengambil sampel, jadi kegunaannya sebanding dengan lamanya program berjalan. Program
 yang selesai dalam sekejap menghasilkan *file* hampir kosong; perbesar bebannya dulu. Dua saklar
-lain: `--stackTraceMsgs:on` menambahkan pesan tiap bingkai, dan `--profileVM:on` memprofilkan kode
-yang berjalan saat *compile*.
+lain: `--stackTraceMsgs:on` menampilkan pesan yang dipasang lewat `setFrameMsg`, dan `--profileVM:on`
+memprofilkan kode yang berjalan saat *compile*.
 
-## Alat sistem: `perf` dan Instruments
+## *Tool* sistem: `perf` dan Instruments
 
 Untuk program yang sudah besar, membungkus satu blok dengan `getMonoTime` tidak praktis. Di Linux,
 `perf` mengambil sampel seluruh proses:

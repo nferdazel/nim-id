@@ -1,8 +1,8 @@
-# String, raw string, dan karakter
+# String, raw string, dan *character*
 
 Hampir setiap program menyentuh teks. Di Nim, `string` adalah *seq* byte yang boleh diubah di
-tempat, berbeda dari bahasa yang memperlakukan string sebagai nilai beku. Perbedaan itu muncul di
-indeks, penggabungan, dan pesan error yang kadang tidak terduga.
+tempat, berbeda dari bahasa yang memperlakukan string sebagai *value* beku. Perbedaan itu muncul di
+*index*, penggabungan, dan pesan error yang kadang tidak terduga.
 
 Bab ini mulai dari menulis teks harfiah, lalu bergerak ke cara mengambil sebagian isinya dan
 mengubahnya dengan aman.
@@ -10,8 +10,8 @@ mengubahnya dengan aman.
 ::: {.callout-note}
 ## Tujuan bab
 
-Setelah bab ini, pembaca bisa menulis escape sequence dan raw string, mengambil karakter dan
-potongan teks dengan indeks dan slicing, membedakan `&` dari `add`, serta menjelaskan kenapa
+Setelah bab ini, pembaca bisa menulis escape sequence dan raw string, mengambil *character* dan
+potongan teks dengan *index* dan slicing, membedakan `&` dari `add`, serta menjelaskan kenapa
 `s[0] = 'N'` ditolak saat `s` dideklarasikan `let`.
 :::
 
@@ -36,7 +36,7 @@ brace: { }
 
 Garis miring terbalik di dalam string membuka *escape sequence*. `\n` menjadi baris baru, `\"`
 menjadi tanda kutip yang tidak menutup string, dan `\\` menjadi satu garis miring. Perhatikan baris
-terakhir: kurung kurawal `{` biasa-biasa saja di string biasa. Karakter itu hanya punya arti
+terakhir: kurung kurawal `{` biasa-biasa saja di string biasa. *Character* itu hanya punya arti
 khusus di dalam *interpolasi* `&"..."` yang dibahas di bab berikutnya.
 
 ## Raw string
@@ -83,13 +83,13 @@ line two
 END
 ```
 
-Perhatikan `len` bernilai 18. Isi string adalah `line one\nline two\n`: 8 + 1 + 8 + 1 karakter.
+Perhatikan `len` bernilai 18. Isi string adalah `line one\nline two\n`: 8 + 1 + 8 + 1 *character*.
 Baris baru setelah `"""` pembuka ikut terhitung, dan itu sering menjadi sumber *error* hitung
 saat pembaca baru memakainya. Raw string tiga kutip juga tidak memproses escape.
 
-## Panjang dan indeks
+## Panjang dan *index*
 
-`len` memberi jumlah byte, dan indeks dimulai dari nol. Memanggil `len` murah: panjang string
+`len` memberi jumlah byte, dan *index* dimulai dari nol. Memanggil `len` murah: panjang string
 disimpan bersama datanya, bukan dihitung ulang setiap kali.
 
 ```{.nim}
@@ -108,14 +108,14 @@ s
 Nim
 ```
 
-`s[^1]` menunjuk elemen terakhir; `^n` adalah gula untuk `s.len - n`. Karena `s[0]` menghasilkan
+`s[^1]` menunjuk *element* terakhir; `^n` adalah gula untuk `s.len - n`. Karena `s[0]` menghasilkan
 `char`, bukan string satu huruf, operator pada `char` (seperti `.ord`) berlaku langsung. Mengambil
-indeks di luar rentang tidak dikembalikan sebagai `nil`; Nim menghentikan program dengan
+*index* di luar *range* tidak dikembalikan sebagai `nil`; Nim menghentikan program dengan
 `IndexDefect` saat runtime.
 
 ## Slicing
 
-Potongan teks diambil dengan rentang di dalam kurung siku. Kedua ujungnya ikut disertakan.
+Potongan teks diambil dengan *range* di dalam kurung siku. Kedua ujungnya ikut disertakan.
 
 ```{.nim}
 let s = "Nim rocks"
@@ -133,8 +133,8 @@ rocks
 im rock
 ```
 
-Rentang `a..b` berarti dari indeks `a` sampai `b`, keduanya masuk. Karena `^n` dihitung dari
-belakang, `s[^5..^1]` mengambil lima karakter terakhir. Slicing menghasilkan string baru; string
+*Range* `a..b` berarti dari *index* `a` sampai `b`, keduanya masuk. Karena `^n` dihitung dari
+belakang, `s[^5..^1]` mengambil lima *character* terakhir. Slicing menghasilkan string baru; string
 aslinya tidak berubah.
 
 ## `&` versus `add`
@@ -158,7 +158,7 @@ Hello, Nim!
 count: 11
 ```
 
-`add` menambahkan langsung ke string yang sudah ada. Karena mengubah nilai, `greeting` harus `var`.
+`add` menambahkan langsung ke string yang sudah ada. Karena mengubah *value*, `greeting` harus `var`.
 Operator `&` membuat string baru dari dua sisi tanpa menyentuh yang lama; karena itu `shout` boleh
 `let`. Untuk menggabung banyak bagian sekaligus, `add` lebih hemat karena tidak menyalin berulang.
 Rangkaian `a & b & c` membuat string perantara di tiap langkah, sedangkan `add` menumbuhkan satu
@@ -179,7 +179,7 @@ echo s
 mutation.nim(2, 2) Error: 's[0]' cannot be assigned to
 ```
 
-Pesan menunjuk baris 2, kolom 2, tepat di `[0]`. Yang ditolak adalah penugasan ke elemen, bukan
+Pesan menunjuk baris 2, kolom 2, tepat di `[0]`. Yang ditolak adalah penugasan ke *element*, bukan
 penulisan string itu sendiri: `s` dibuat dengan `let`, jadi tidak ada bagiannya yang boleh
 diubah. Ganti `let` menjadi `var` dan program berjalan, mencetak `Nim`.
 
@@ -226,7 +226,7 @@ kurung siku dibuat agar spasi tidak terlihat sekilas hilang.
    s.add("d")
    echo s
    ```
-5. Ambil tiga karakter terakhir dari `"programming"` dengan slicing, lalu cetak hasilnya.
+5. Ambil tiga *character* terakhir dari `"programming"` dengan slicing, lalu cetak hasilnya.
 
 Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
@@ -234,11 +234,11 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
 - `\n`, `\"`, dan `\\` adalah escape di string biasa; `r"..."` mematikannya.
 - Tiga kutip membentuk string multi-baris, dan baris baru setelah pembuka ikut terhitung.
-- `len` memberi jumlah byte, indeks mulai dari nol, dan `^n` dihitung dari belakang.
+- `len` memberi jumlah byte, *index* mulai dari nol, dan `^n` dihitung dari belakang.
 - `add` mengubah string di tempat (butuh `var`); `&` membuat string baru.
 - `split` dan `strip` dari `std/strutils` memecah dan membersihkan teks.
 
 ## Selanjutnya
 
-Bab berikutnya membahas cara menampilkan nilai: `echo`, `repr`, interpolasi `&"..."`, format angka,
+Bab berikutnya membahas cara menampilkan *value*: `echo`, `repr`, interpolasi `&"..."`, format angka,
 dan perbedaan `echo` dengan `write`.

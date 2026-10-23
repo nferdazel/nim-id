@@ -1,22 +1,22 @@
 # Tuple dan destructuring
 
-*Procedure* `minMax` perlu mengembalikan dua angka: nilai terkecil dan terbesar. Di banyak bahasa,
+*Procedure* `minMax` perlu mengembalikan dua angka: *value* terkecil dan terbesar. Di banyak bahasa,
 jalan pintasnya adalah mengembalikan *array* atau *object* kecil. Nim punya cara yang lebih langsung:
-tuple, nilai gabungan berukuran tetap yang elemennya boleh berbeda tipe.
+tuple, *value* gabungan berukuran tetap yang *element itu* boleh berbeda *type*.
 
-Tuple itu kecil dan murah. Ia dipakai untuk mengembalikan beberapa nilai sekaligus, menamai
-pasangan, atau menampung data sementara yang belum perlu menjadi tipe penuh.
+Tuple itu kecil dan murah. Ia dipakai untuk mengembalikan beberapa *value* sekaligus, menamai
+pasangan, atau menampung data sementara yang belum perlu menjadi *type* penuh.
 
 ::: {.callout-note}
 ## Tujuan bab
 
 Setelah bab ini, pembaca bisa membuat tuple anonim dan bernama, mengakses fieldnya, membongkar
-nilainya ke beberapa variabel, dan memakai tuple sebagai **return value** *procedure*.
+*value itu* ke beberapa *variable*, dan memakai tuple sebagai **return value** *procedure*.
 :::
 
-## Tuple anonim: nilai yang menempel
+## Tuple anonim: *value* yang menempel
 
-Bentuk paling sederhana adalah tuple anonim. Elemennya diakses lewat indeks.
+Bentuk paling sederhana adalah tuple anonim. *Element itu* diakses lewat *index*.
 
 ```{.nim}
 let pair = (1, "two")
@@ -27,7 +27,7 @@ echo pair[0], " ", pair[1]
 1 two
 ```
 
-Tipe `pair` disimpulkan compiler sebagai `(int, string)`. Setiap elemen boleh berbeda tipe, dan
+*Type* `pair` disimpulkan compiler sebagai `(int, string)`. Setiap *element* boleh berbeda *type*, dan
 ukurannya tetap sejak awal.
 
 ## Tuple bernama: field yang punya nama
@@ -45,12 +45,12 @@ echo corner.x, ",", corner.y
 3,4
 ```
 
-Perhatikan `(x: 3, y: 4)`, bukan `Point(x: 3, y: 4)`. Tuple tidak punya konstruktor seperti
-*object*. Cara membuatnya selalu literal dengan nama field di dalam tanda kurung, dan tipenya
-ditulis lewat anotasi variabel.
+Perhatikan `(x: 3, y: 4)`, bukan `Point(x: 3, y: 4)`. Tuple tidak punya *constructor* seperti
+*object*. Cara membuatnya selalu literal dengan nama field di dalam tanda kurung, dan *type itu*
+ditulis lewat anotasi *variable*.
 
-Bentuk pendek `x, y: int` menamai dua field sekaligus. Nama dan urutannya adalah bagian dari tipe,
-jadi `tuple[x, y: int]` dan `tuple[y, x: int]` adalah dua tipe yang berbeda, dan nilai satu tidak
+Bentuk pendek `x, y: int` menamai dua field sekaligus. Nama dan urutannya adalah bagian dari *type*,
+jadi `tuple[x, y: int]` dan `tuple[y, x: int]` adalah dua *type* yang berbeda, dan *value* satu tidak
 otomatis diterima yang lain.
 
 Tuple bernama juga menerima kombinasi field:
@@ -69,9 +69,9 @@ Ada is 36
 Karena fieldnya punya nama, tuple juga bisa dibandingkan langsung: `(1, "a") == (1, "b")` bernilai
 `false`, sedangkan `(1, "a") < (2, "a")` bernilai `true`.
 
-## Destructuring: satu baris, beberapa variabel
+## Destructuring: satu baris, beberapa *variable*
 
-Tuple bisa dibongkar langsung ke beberapa variabel. Nim menyebutnya *tuple unpacking*.
+Tuple bisa dibongkar langsung ke beberapa *variable*. Nim menyebutnya *tuple unpacking*.
 
 ```{.nim}
 let (a, b) = (1, 2)
@@ -87,7 +87,7 @@ echo x, " ", y
 10 21
 ```
 
-Bentuk `let (a, b) = ...` membuat dua variabel sekaligus. Dengan `var`, keduanya bisa diubah, tapi
+Bentuk `let (a, b) = ...` membuat dua *variable* sekaligus. Dengan `var`, keduanya bisa diubah, tapi
 mengubah `y` tidak menyentuh `x`. Tanpa destructuring, kode yang sama butuh tiga baris.
 
 ## Tuple sebagai **return value**
@@ -113,10 +113,10 @@ echo low, "..", high
 ```
 
 Di dalam *procedure*, field `result` diisi satu per satu. Di sisi pemanggil, hasilnya langsung
-dibongkar dengan `let (low, high) = ...`. Tidak ada tipe bantu, tidak ada *array* sementara.
+dibongkar dengan `let (low, high) = ...`. Tidak ada *type* bantu, tidak ada *array* sementara.
 
-Batas praktisnya: tuple nyaman untuk dua sampai tiga nilai. Begitu field bertambah banyak, atau
-nilainya perlu aturan dan operasi sendiri, *object* lebih tepat, dan itu bab berikutnya.
+Batas praktisnya: tuple nyaman untuk dua sampai tiga *value*. Begitu field bertambah banyak, atau
+*value itu* perlu aturan dan operasi sendiri, *object* lebih tepat, dan itu bab berikutnya.
 
 ## Membongkar di dalam *loop*
 
@@ -134,12 +134,12 @@ for (number, word) in words:
 2 = two
 ```
 
-Setiap elemen *seq* adalah tuple, dan `(number, word)` membongkarnya pada tiap putaran. Tanpa
+Setiap *element* *seq* adalah tuple, dan `(number, word)` membongkarnya pada tiap putaran. Tanpa
 itu, pembaca harus menulis `item[0]` dan `item[1]`, yang tidak menjelaskan apa pun.
 
 ## Melihat semua field sekaligus
 
-`fields` mengembalikan nilai setiap field secara berurutan.
+`fields` mengembalikan *value* setiap field secara berurutan.
 
 ```{.nim}
 type Config = tuple[host: string, port: int]
@@ -160,7 +160,7 @@ Urutannya mengikuti urutan deklarasi.
 
 ## Membaca error: pola yang tidak cocok
 
-Jumlah variabel di kiri harus sama dengan jumlah elemen di kanan.
+Jumlah *variable* di kiri harus sama dengan jumlah *element* di kanan.
 
 ```{.nim}
 let (a, b) = (1, 2, 3)
@@ -171,12 +171,12 @@ echo a, b
 main.nim(1, 5) Error: tuple with 2 elements expected, but got '(int, int, int)' with 3 elements
 ```
 
-Pesan itu menyebut kedua belah pihak: pola menunggu 2 elemen, nilainya punya 3. Solusinya menambah
-variabel atau memakai elemen lain. Posisi `(1, 5)` menunjuk ke awal pola `(a, b)`.
+Pesan itu menyebut kedua belah pihak: pola menunggu 2 *element*, *value itu* punya 3. Solusinya menambah
+*variable* atau memakai *element* lain. Posisi `(1, 5)` menunjuk ke awal pola `(a, b)`.
 
 ## Membaca error: tuple bukan *object*
 
-Tuple tidak punya konstruktor, dan compiler menolaknya dengan jelas.
+Tuple tidak punya *constructor*, dan compiler menolaknya dengan jelas.
 
 ```{.nim}
 type Point = tuple[x, y: int]
@@ -189,7 +189,7 @@ echo corner.x, ",", corner.y
 main.nim(3, 19) Error: object constructor needs an object type
 ```
 
-Pesannya singkat saja: sintaksis konstruktor hanya untuk `object`. Untuk tuple, pakai literal
+Pesannya singkat saja: sintaksis *constructor* hanya untuk `object`. Untuk tuple, pakai literal
 `(x: 3, y: 4)`.
 
 ## Latihan
@@ -214,13 +214,13 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
 ## Ringkasan
 
-- Tuple adalah nilai gabungan berukuran tetap; elemennya boleh berbeda tipe.
-- Tuple anonim diakses lewat indeks, tuple bernama lewat field.
-- Tuple dibuat dengan literal, bukan dengan konstruktor bergaya *object*.
+- Tuple adalah *value* gabungan berukuran tetap; *element itu* boleh berbeda *type*.
+- Tuple anonim diakses lewat *index*, tuple bernama lewat field.
+- Tuple dibuat dengan literal, bukan dengan *constructor* bergaya *object*.
 - `let (a, b) = ...` membongkar tuple dalam satu baris, dan juga bekerja di kepala `for`.
 - *Procedure* bisa mengembalikan tuple, lalu pemanggil membongkarnya.
 
 ## Selanjutnya
 
-Bab berikutnya membahas [*object*](objects.qmd): tipe gabungan dengan field bernama, konstruktor, nilai
-default, dan dua bentuk penyimpanan: nilai dan referensi.
+Bab berikutnya membahas [*object*](objects.qmd): *type* gabungan dengan field bernama, *constructor*, *value*
+default, dan dua bentuk penyimpanan: *value* dan referensi.

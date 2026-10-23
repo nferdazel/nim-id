@@ -1,16 +1,16 @@
 # `echo` dan format keluaran
 
 Program yang tidak menampilkan apa pun sulit dipercaya. Karena itu `echo` biasanya jadi baris
-pertama yang kita tulis dan baris yang paling sering dipakai untuk memeriksa nilai.
+pertama yang kita tulis dan baris yang paling sering dipakai untuk memeriksa *value*.
 
 Masalahnya, `echo` punya aturan yang jarang disadari: ia tidak menambahkan pemisah di antara
-argumen, dan nilai string dicetak apa adanya sementara bentuk lain dicetak berbeda. Bab ini
+argumen, dan *value* string dicetak apa adanya sementara bentuk lain dicetak berbeda. Bab ini
 membahas `echo`, `repr`, interpolasi, dan format angka.
 
 ::: {.callout-note}
 ## Tujuan bab
 
-Setelah bab ini, pembaca bisa menampilkan beberapa nilai dalam satu `echo`, menjelaskan bedanya
+Setelah bab ini, pembaca bisa menampilkan beberapa *value* dalam satu `echo`, menjelaskan bedanya
 `echo` dengan `repr`, menulis interpolasi `&"..."`, mengatur lebar dan presisi angka, serta tahu
 kenapa `echo` dan `stdout.write` berperilaku berbeda soal baris baru.
 :::
@@ -41,13 +41,13 @@ abc
 terakhir: `"a", "b", "c"` tercetak `abc` tanpa spasi. Semua spasi pada output di atas datang dari
 string yang kita tulis sendiri. Setelah semua argumen, `echo` menambahkan tepat satu baris baru.
 
-Karena setiap nilai diubah lewat `$`, `echo` bisa menampilkan hampir semua tipe: bilangan, `char`,
+Karena setiap *value* diubah lewat `$`, `echo` bisa menampilkan hampir semua *type*: bilangan, `char`,
 `bool`, sampai *seq*. *Seq* ditandai `@` di depannya, misalnya `@[1, 2, 3]`, dan bentuk itu
 memudahkan pemeriksaan isi saat memburu bug.
 
 ## `repr` dan `$`
 
-Nilai dicetak dalam bentuk yang berbeda menurut konteks.
+*Value* dicetak dalam bentuk yang berbeda menurut konteks.
 
 ```{.nim}
 let text = "Nim"
@@ -65,16 +65,16 @@ Nim
 score: 42
 ```
 
-`echo` memakai `$` untuk mengubah nilai menjadi string, jadi `"Nim"` tercetak sebagai `Nim` tanpa
+`echo` memakai `$` untuk mengubah *value* menjadi string, jadi `"Nim"` tercetak sebagai `Nim` tanpa
 tanda kutip. `repr` sebaliknya menampilkan bentuk yang bisa dibaca mesin: tanda kutip muncul, dan
-karakter khusus seperti baris baru ditampilkan sebagai `\n`. Karena itu `repr` berguna saat nilai
+*character* khusus seperti baris baru ditampilkan sebagai `\n`. Karena itu `repr` berguna saat *value*
 sulit dibedakan di layar; string kosong tampil sebagai `""`, bukan ruang kosong tanpa jejak. Saat
 menggabung dengan `&`, `$` harus dipanggil manual karena `&` hanya menerima string di kedua
 sisinya.
 
 ## Interpolasi dengan `&"..."`
 
-Menempelkan banyak nilai dengan tanda koma cepat melelahkan. `std/strformat` menyediakan bentuk
+Menempelkan banyak *value* dengan tanda koma cepat melelahkan. `std/strformat` menyediakan bentuk
 yang lebih rapi.
 
 ```{.nim}
@@ -97,7 +97,7 @@ upper: NIM
 ```
 
 Awalan `&` sebelum string membuka interpolasi: apa pun di dalam `{...}` dievaluasi dan hasilnya
-disisipkan. Isinya boleh *expression*, bukan hanya nama variabel. Tanpa awalan itu, kurung kurawal
+disisipkan. Isinya boleh *expression*, bukan hanya nama *variable*. Tanpa awalan itu, kurung kurawal
 tetap teks biasa, jadi `echo "{name}"` mencetak `{name}` apa adanya. Perhatikan
 `float(count) * price`: Nim tidak mencampur `int` dan `float` diam-diam, jadi konversi harus
 ditulis eksplisit.
@@ -130,7 +130,7 @@ total:    12.50
 `04d` mengisi dengan nol sampai empat digit, sedangkan `8.2f` memakai lebar 8 dengan dua angka di
 belakang koma. `fmt"..."` sama dengan `&"..."`; `fmt` hanya menegaskan bahwa string itu memang
 untuk diformat. Aturan format selalu mengikuti pola `{ekspresi:aturan}`, dan aturannya boleh
-dihilangkan kalau nilainya cukup ditampilkan apa adanya.
+dihilangkan kalau *value itu* cukup ditampilkan apa adanya.
 
 ## `echo` versus `write`
 

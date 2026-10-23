@@ -2,7 +2,7 @@
 
 Template sudah menyelesaikan banyak pekerjaan: ia mengganti satu potongan kode dengan potongan
 lain. Tapi template hanya menempel teks. Ia tidak menerima argumen sebagai data AST yang bisa
-dibongkar, dan tidak bisa mengulang atas isi data untuk membangun kode baru. Tipe masih bisa
+dibongkar, dan tidak bisa mengulang atas isi data untuk membangun kode baru. *Type* masih bisa
 diperiksa lewat `when typeof(x) is ...`, tapi itu hanya memilih cabang, bukan membangun bentuk baru.
 Begitu kebutuhan sampai di situ, `macro` mengambil alih: *procedure* yang berjalan saat *compile* dan
 menerima kode sebagai data.
@@ -38,7 +38,7 @@ echo x, " ", y
 2 1
 ```
 
-`swapVals` bekerja untuk tipe apa pun, karena isinya disalin apa adanya. Ini kekuatan template:
+`swapVals` bekerja untuk *type* apa pun, karena isinya disalin apa adanya. Ini kekuatan template:
 ringan, dan tidak menambah apa pun saat program berjalan.
 
 ## Batas template: argumen dievaluasi setiap kali
@@ -97,7 +97,7 @@ calls: 1
 ```
 
 `quote do` menghasilkan AST yang berisi `block`, `let`, dan penjumlahan. Tanda backtick menempelkan
-nilai dari luar ke dalam hasilnya: `` `x` `` menaruh AST argumen di posisi itu. Karena nilainya
+*value* dari luar ke dalam hasilnya: `` `x` `` menaruh AST argumen di posisi itu. Karena *value itu*
 disimpan lebih dulu di `let it`, `bump()` hanya dipanggil sekali. Nama `it` yang dideklarasikan di
 dalam `quote do` juga diberi penanda internal, sehingga tidak bentrok dengan `it` milik kode
 pemanggil.
@@ -113,7 +113,7 @@ Bedanya dengan template:
 ## Melihat AST: `NimNode` dan `treeRepr`
 
 Hasil `quote do`, dan setiap argumen `untyped` atau `typed`, bertipe `NimNode`. Parameter
-`static` berbeda: nilainya diterima sebagai nilai biasa, bukan node. `treeRepr` mencetak node.
+`static` berbeda: *value itu* diterima sebagai *value* biasa, bukan node. `treeRepr` mencetak node.
 
 ```{.nim}
 import std/macros
@@ -162,7 +162,7 @@ sebagai pohon. Kalau pohon itu dipakai di kode yang dihasilkan, barulah compiler
 ## `typed`: kode yang sudah diperiksa
 
 `typed` meminta compiler memeriksa argumen lebih dulu, lalu menyerahkan AST yang sudah bertipe.
-Argumen seperti ini membawa informasi tipe, yang bisa diambil dengan `getType`.
+Argumen seperti ini membawa informasi *type*, yang bisa diambil dengan `getType`.
 
 ```{.nim}
 import std/macros
@@ -181,9 +181,9 @@ int: 3
 string: ab
 ```
 
-`$x.getType` mengubah simpul tipe menjadi teks, misalnya `int` atau `string`, lalu hasilnya
-disisipkan ke keluaran. Template bisa memeriksa tipe lewat `when typeof(x) is ...`, tetapi tidak
-bisa membongkar node tipe untuk disisipkan ke kode yang dibangun.
+`$x.getType` mengubah simpul *type* menjadi teks, misalnya `int` atau `string`, lalu hasilnya
+disisipkan ke keluaran. Template bisa memeriksa *type* lewat `when typeof(x) is ...`, tetapi tidak
+bisa membongkar node *type* untuk disisipkan ke kode yang dibangun.
 
 ## Membangun node sendiri: `newTree`
 
@@ -249,7 +249,7 @@ dengan template tidak mungkin: template tidak bisa mengulang atas data dan membu
 Sebelum menulis macro, tanyakan apakah template sudah cukup. Template lebih sederhana, tidak butuh
 `import std/macros`, dan pesan errornya lebih mudah dibaca.
 
-Kalau yang dibutuhkan hanya nilai yang dihitung saat *compile*, `const` dengan `func` sudah
+Kalau yang dibutuhkan hanya *value* yang dihitung saat *compile*, `const` dengan `func` sudah
 menyelesaikannya.
 
 ```{.nim}
@@ -264,13 +264,13 @@ echo Area
 9
 ```
 
-`square(3)` dihitung compiler, hasilnya tersimpan sebagai konstanta. Tidak ada macro di sini.
+`square(3)` dihitung compiler, hasilnya tersimpan sebagai *constant*. Tidak ada macro di sini.
 
 Aturan praktisnya:
 
 - Ganti kode dengan kode, tanpa membaca bentuk argumen: `template`.
-- Butuh nilai saat *compile*: `const` atau blok `static:`.
-- Butuh membaca AST, tipe, atau membangkitkan kode dari data: `macro`.
+- Butuh *value* saat *compile*: `const` atau blok `static:`.
+- Butuh membaca AST, *type*, atau membangkitkan kode dari data: `macro`.
 
 ## Membaca error: `typed` menuntut argumen yang sah
 
@@ -302,9 +302,9 @@ sendiri di dalam macro.
 
 ## Latihan
 
-1. Tulis template `minOf(a, b)` yang mengembalikan nilai terkecil, lalu cetak `minOf(3, 7)`.
+1. Tulis template `minOf(a, b)` yang mengembalikan *value* terkecil, lalu cetak `minOf(3, 7)`.
 2. Tanpa menjalankan, prediksi keluaran `doubler(bump() + bump())` dengan template dari bagian
-   batas template. Sebutkan nilai `calls` di akhir.
+   batas template. Sebutkan *value* `calls` di akhir.
 3. Tulis macro `triple(x)` yang mengembalikan `x * 3` memakai `quote do`, lalu cetak `triple(4)`.
 4. Macro `echoType` memakai `$x.getType`. Jelaskan kenapa versi itu gagal kalau parameternya diubah
    menjadi `untyped`.
@@ -316,7 +316,7 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
 - `template` menyisipkan kode apa adanya; argumen yang dipakai dua kali dievaluasi dua kali.
 - `macro` adalah *procedure* saat *compile* yang menerima `NimNode` dan mengembalikan `NimNode`.
-- `quote do` membangun AST; backtick menempelkan node atau nilai dari luar, dan nama lokalnya
+- `quote do` membangun AST; backtick menempelkan node atau *value* dari luar, dan nama lokalnya
   aman dari bentrok.
 - `treeRepr` menampilkan AST; `getType` hanya bekerja pada argumen `typed`.
 - `quote do` dan API AST butuh `import std/macros`; macro sederhana yang hanya meneruskan node
@@ -324,5 +324,5 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
 ## Selanjutnya
 
-Bab berikutnya membahas [konsep dan pencocokan tipe](concepts.qmd): membatasi *procedure* generic
-berdasarkan bentuk tipe, bukan namanya.
+Bab berikutnya membahas [konsep dan pencocokan *type*](concepts.qmd): membatasi *procedure* generic
+berdasarkan bentuk *type*, bukan namanya.

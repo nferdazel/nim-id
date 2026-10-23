@@ -1,30 +1,30 @@
 # Cheat sheet {.unnumbered}
 
-Halaman ini merangkum sintaks yang paling sering dipakai. Setiap potongan ditulis dalam bahasa
-Inggris, sama seperti seluruh buku, dan diuji di Nim 2.2.12.
+Halaman ini merangkum sintaks yang paling sering dipakai. Setiap potongan kode ditulis dalam bahasa Inggris, sama seperti seluruh kode di buku ini, dan
+diuji di Nim 2.2.12.
 
 ## Deklarasi
 
 | Konsep | Kode |
 |---|---|
-| nilai yang boleh berubah | `var count = 0` |
+| *value* yang boleh berubah | `var count = 0` |
 | diisi sekali | `let name = "Nim"` |
 | diketahui saat *compile* | `const MaxItems = 128` |
-| tipe ditulis eksplisit | `var age: int8 = 24` |
-| tanpa nilai awal, berisi default tipe | `var flag: bool` |
+| *type* ditulis eksplisit | `var age: int8 = 24` |
+| tanpa *value* awal, berisi default *type* | `var flag: bool` |
 
-## Tipe dasar dan literal
+## *Type* dasar dan literal
 
 | Konsep | Kode |
 |---|---|
 | bilangan bulat | `let n = 42` |
 | bilangan pecahan | `let f = 3.14` |
 | boolean | `let b = true` |
-| karakter | `let c = 'x'` |
+| *character* | `let c = 'x'` |
 | teks | `let s = "text"` |
-| tipe bulat berlebar | `int8`, `int16`, `int32`, `int64`, `int` |
-| tipe pecahan | `float32`, `float64`, `float` |
-| alias tipe | `type UserId = int` |
+| *type* bulat berlebar | `int8`, `int16`, `int32`, `int64`, `int` |
+| *type* pecahan | `float32`, `float64`, `float` |
+| alias *type* | `type UserId = int` |
 | heksadesimal, oktal, biner | `0xFF`, `0o17`, `0b1010` |
 | pemisah digit | `1_000_000` |
 | konversi | `int(3.9)`, `float(2)`, `$42` |
@@ -36,12 +36,12 @@ Inggris, sama seperti seluruh buku, dan diuji di Nim 2.2.12.
 | escape | `"line\n"`, `"tab\t"`, `"quote\""` |
 | interpolasi | `&"{name} has {count}"` |
 | gabung | `"a" & "b"` |
-| indeks | `s[0]`, `s[^1]` |
+| *index* | `s[0]`, `s[^1]` |
 | potong | `s[1 .. 3]`, `s[^3 .. ^1]` |
-| satu karakter bertipe `char` | `s[0]` |
+| satu *character* bertipe `char` | `s[0]` |
 | panjang | `s.len` |
 
-String mentah dan string multi-baris ditulis tanpa escape:
+*Raw string* dan *string* multi-baris ditulis tanpa escape:
 
 ```nim
 let raw = r"C:\temp"
@@ -86,12 +86,12 @@ else:
 
 | Konsep | Kode |
 |---|---|
-| rentang inklusif | `for i in 0 .. 3:` |
-| rentang eksklusif | `for i in 0 ..< 3:` |
+| *range* inklusif | `for i in 0 .. 3:` |
+| *range* eksklusif | `for i in 0 ..< 3:` |
 | dengan langkah | `for i in countup(0, 10, 2):` |
 | mundur | `for i in countdown(5, 1):` |
-| elemen saja | `for value in items:` |
-| indeks dan elemen | `for i, v in items:` |
+| *element* saja | `for value in items:` |
+| *index* dan *element* | `for i, v in items:` |
 | selama | `while n > 0:` |
 | hentikan, lanjut | `break`, `continue` |
 
@@ -100,7 +100,7 @@ else:
 | Konsep | Kode |
 |---|---|
 | *array* ukuran tetap | `var a: array[3, int] = [1, 2, 3]` |
-| *array* tanpa tipe eksplisit | `let a = [1, 2, 3]` |
+| *array* tanpa *type* eksplisit | `let a = [1, 2, 3]` |
 | *seq* | `let s = @[1, 2, 3]` |
 | *seq* kosong bertipe | `var s: seq[int] = @[]` |
 | tambah, buang | `s.add 4`, `s.delete(0)` |
@@ -113,11 +113,11 @@ else:
 
 | Konsep | Kode |
 |---|---|
-| tipe bernama | `type Point = tuple[x, y: int]` |
-| nilai | `let p: Point = (x: 1, y: 2)` |
+| *type* bernama | `type Point = tuple[x, y: int]` |
+| *value* | `let p: Point = (x: 1, y: 2)` |
 | akses field | `p.x` |
 | akses posisi | `p[0]` |
-| bongkar jadi variabel | `let (a, b) = (1, 2)` |
+| bongkar jadi *variable* | `let (a, b) = (1, 2)` |
 
 ## Object dan `ref object`
 
@@ -161,7 +161,7 @@ echo green in flags
 | Konsep | Kode |
 |---|---|
 | **return value** | `proc add(a, b: int): int = a + b` |
-| tanpa efek samping | `func square(x: int): int = x * x` |
+| tanpa *side effect* | `func square(x: int): int = x * x` |
 | parameter default | `proc greet(name: string, punctuation = "!")` |
 | argumen bernama | `greet(punctuation = "?")` |
 | overloading | `proc show(x: int)` dan `proc show(x: string)` |
@@ -181,8 +181,8 @@ echo largest([3, 9, 4])
 
 | Konsep | Kode |
 |---|---|
-| tipe generic | `type Box[T] = object` |
-| batasan tipe | `proc double[T: SomeNumber](x: T): T` |
+| *type* generic | `type Box[T] = object` |
+| batasan *type* | `proc double[T: SomeNumber](x: T): T` |
 
 ## Template
 
@@ -222,7 +222,7 @@ finally:
 |---|---|
 | *exception* sendiri | `type TooLarge = object of CatchableError` |
 | melempar | `raise newException(TooLarge, "too large")` |
-| efek `raises` | `proc risky(): int {.raises: [ValueError].}` |
+| *effect* `raises` | `proc risky(): int {.raises: [ValueError].}` |
 | bersihkan saat keluar | `defer: echo "cleanup"` |
 
 ## Iterator
@@ -241,7 +241,7 @@ for e in evens(6):
 
 | Konsep | Kode |
 |---|---|
-| impor modul | `import std/strutils` |
+| impor *module* | `import std/strutils` |
 | beberapa sekaligus | `import std/[strutils, sequtils]` |
 | impor sebagian | `from std/math import sqrt` |
 | alias | `import std/strutils as str` |
@@ -264,7 +264,7 @@ let doc = """{"city": "Bandung"}""".parseJson
 echo doc["city"].getStr
 ```
 
-| Modul | Fungsi sering dipakai |
+| *Module* | Fungsi sering dipakai |
 |---|---|
 | `strutils` | `strip`, `split`, `join`, `toUpperAscii`, `startsWith`, `replace`, `parseInt` |
 | `sequtils` | `mapIt`, `filterIt`, `foldl` |
@@ -275,11 +275,11 @@ echo doc["city"].getStr
 
 | Konsep | Kode |
 |---|---|
-| variabel lingkungan | `getEnv("HOME", "/")`, `existsEnv("HOME")` |
+| *variable* lingkungan | `getEnv("HOME", "/")`, `existsEnv("HOME")` |
 | argumen program | `paramCount()`, `paramStr(1)`, `commandLineParams()` |
-| direktori | `getCurrentDir()`, `setCurrentDir(dir)` |
+| *directory* | `getCurrentDir()`, `setCurrentDir(dir)` |
 | uji *file* | `fileExists(p)`, `dirExists(p)` |
-| gabung jalur | `"dir" / "file.txt"` |
+| gabung *path* | `"dir" / "file.txt"` |
 | baca, tulis | `readFile(p)`, `writeFile(p, s)` |
 | telusuri | `walkDir(dir)`, `walkFiles("*.txt")` |
 
@@ -330,13 +330,13 @@ echo twice(4)
 int twice(int x) { return x * 2; }
 ```
 
-## Perintah `nim` dan `nimble`
+## *Command* `nim` dan `nimble`
 
-| Perintah | Arti |
+| *Command* | Arti |
 |---|---|
 | `nim c file.nim` | *compile* |
 | `nim r file.nim` | *compile* lalu jalankan |
-| `nim check file.nim` | periksa tipe saja |
+| `nim check file.nim` | periksa *type* saja |
 | `nim c -d:release file.nim` | build teroptimasi |
 | `nim c -o:app file.nim` | tentukan nama biner |
 | `nim c --mm:orc file.nim` | pilih mode memori |

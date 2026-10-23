@@ -2,7 +2,7 @@
 
 Bab *object* berhenti tepat sebelum pertanyaan yang paling sering muncul: di mana datanya sebenarnya
 disimpan? `Person(name: "Ada")` pada `ref object` menaruh data di heap dan menyimpan *pointer* ke
-sana. Pada `object` biasa, data menempel langsung di variabelnya. Bab ini membuka kotak itu:
+sana. Pada `object` biasa, data menempel langsung di *variable itu*. Bab ini membuka kotak itu:
 `ref`, `ptr`, dan `nil`.
 
 ::: {.callout-note}
@@ -15,7 +15,7 @@ beserta risikonya.
 
 ## `ref`: data disimpan di heap
 
-`ref object` menyimpan datanya di heap. Variabelnya hanya memegang *pointer* ke sana.
+`ref object` menyimpan datanya di heap. *Variable itu* hanya memegang *pointer* ke sana.
 
 ```{.nim}
 type Person = ref object
@@ -33,16 +33,16 @@ echo p.name, " is ", p.age
 Ada is 36
 ```
 
-`var p: Person` belum menunjuk ke *object* apa pun; nilainya `nil`. `new(p)` meminta memori di heap,
+`var p: Person` belum menunjuk ke *object* apa pun; *value itu* `nil`. `new(p)` meminta memori di heap,
 membentuk *object* dengan default setiap field, lalu menyimpan alamatnya di `p`. Setelah itu field
 bisa diisi seperti *object* biasa.
 
-Konstruktor literal mempersingkat dua langkah itu. `Person(name: "Ada", age: 36)` mengalokasikan
+*Constructor* literal mempersingkat dua langkah itu. `Person(name: "Ada", age: 36)` mengalokasikan
 dan mengisi fieldnya sekaligus.
 
 ## Dereferensi otomatis
 
-Nilai yang ditunjuk sebuah `ref` diambil dengan `p[]`.
+*Value* yang ditunjuk sebuah `ref` diambil dengan `p[]`.
 
 ```{.nim}
 type Person = ref object
@@ -65,7 +65,7 @@ dan seterusnya, tanpa menulis `[]` setiap kali.
 
 ## `nil` dan `isNil`
 
-`nil` berarti "tidak menunjuk ke *object* mana pun". `ref` yang dideklarasikan tanpa nilai awal
+`nil` berarti "tidak menunjuk ke *object* mana pun". `ref` yang dideklarasikan tanpa *value* awal
 berisi `nil`.
 
 ```{.nim}
@@ -110,7 +110,7 @@ echo x
 100
 ```
 
-`p` menunjuk ke `x`. Membaca `p[]` memberi nilai `x`, dan menulis `p[] = 100` mengubah `x`.
+`p` menunjuk ke `x`. Membaca `p[]` memberi *value* `x`, dan menulis `p[] = 100` mengubah `x`.
 Keduanya berbagi lokasi yang sama, jadi perubahan lewat `p` langsung terlihat di `x`.
 
 `ptr` tidak memiliki memori. Ia hanya mencatat alamat. Nim tidak membebaskan memori yang ditunjuk
@@ -138,7 +138,7 @@ berubah.
 
 ## `addr` dan `unsafeAddr`
 
-`addr` hanya bekerja pada lokasi yang bisa dialamati. Variabel `var` jelas punya alamat; untuk
+`addr` hanya bekerja pada lokasi yang bisa dialamati. *Variable* `var` jelas punya alamat; untuk
 `let` dan parameter, Nim tetap mengizinkannya demi interop dengan C.
 
 ```{.nim}
@@ -158,7 +158,7 @@ untuk kode baru.
 
 ## `cast` singkat
 
-`cast` menafsirkan ulang bit sebuah nilai dalam tipe lain, tanpa mengubah bitnya.
+`cast` menafsirkan ulang bit sebuah *value* dalam *type* lain, tanpa mengubah bitnya.
 
 ```{.nim}
 echo cast[uint8]('A')
@@ -169,8 +169,8 @@ echo cast[uint8]('A')
 ```
 
 `'A'` disimpan sebagai byte `65`, dan `cast[uint8]` membacanya sebagai bilangan. `cast` tidak
-mengubah nilai; ia menafsirkan ulang bit yang sama. Bandingkan `cast[int32](3.5'f32)`, yang
-menghasilkan `1080033280`: bit float itu dibaca sebagai `int32`. Untuk mengubah tipe mengikuti
+mengubah *value*; ia menafsirkan ulang bit yang sama. Bandingkan `cast[int32](3.5'f32)`, yang
+menghasilkan `1080033280`: bit float itu dibaca sebagai `int32`. Untuk mengubah *type* mengikuti
 aturan bahasa, pakai `int(x)`, `float(x)`, atau `$x`; `cast` hanya untuk kode tingkat rendah.
 
 ## Membaca error: *expression* tanpa alamat
@@ -187,22 +187,22 @@ main.nim(1, 14) Error: expression has no address
 ```
 
 Posisi `(1, 14)` menunjuk literal `42` di `addr 42`, bukan token `addr` itu sendiri; pesannya lalu
-menyebut masalahnya: *expression* itu tidak punya alamat. Perbaikannya, simpan dulu nilainya ke sebuah
-variabel, lalu ambil alamat variabel itu.
+menyebut masalahnya: *expression* itu tidak punya alamat. Perbaikannya, simpan dulu *value itu* ke sebuah
+*variable*, lalu ambil alamat *variable* itu.
 
 ## `ref object` vs `object`
 
-Perbedaannya paling terasa saat nilai disalin.
+Perbedaannya paling terasa saat *value* disalin.
 
 | Aspek | `object` | `ref object` |
 |---|---|---|
-| data disimpan di | variabel itu sendiri | heap |
-| isi variabel | data langsung | *pointer* |
+| data disimpan di | *variable* itu sendiri | heap |
+| isi *variable* | data langsung | *pointer* |
 | menyalin berarti | menggandakan data | menggandakan *pointer* |
-| nilai default | default setiap field | `nil` |
+| *default value* | default setiap field | `nil` |
 
-`ref object` dipakai saat beberapa bagian kode harus berbagi satu nilai, atau saat datanya besar.
-`object` dipakai untuk nilai kecil yang memang ingin disalin. Rincian penyalinannya sudah dibahas
+`ref object` dipakai saat beberapa bagian kode harus berbagi satu *value*, atau saat datanya besar.
+`object` dipakai untuk *value* kecil yang memang ingin disalin. Rincian penyalinannya sudah dibahas
 di bab *object*.
 
 ## Kapan `ptr` perlu, dan risikonya
@@ -212,9 +212,9 @@ buffer. Di luar itu, `ref` hampir selalu lebih baik karena memorinya dikelola ot
 
 Risikonya nyata:
 
-- **Menggantung.** Alamat variabel lokal menjadi tidak sah begitu bloknya selesai. `ptr` tidak
+- **Menggantung.** Alamat *variable* lokal menjadi tidak sah begitu bloknya selesai. `ptr` tidak
   tahu itu.
-- **Tanpa pemeriksaan.** `ptr` bisa menunjuk ke mana saja; Nim tidak memeriksa batas atau tipe
+- **Tanpa pemeriksaan.** `ptr` bisa menunjuk ke mana saja; Nim tidak memeriksa batas atau *type*
   saat program berjalan.
 - **`nil` yang tidak diuji.** Mendereferensi `ptr` atau `ref` yang `nil` menghentikan program
   dengan `SIGSEGV`, bukan exception.
@@ -235,7 +235,7 @@ Aturannya sederhana: pakai `ref` kalau bisa, pakai `ptr` hanya saat tidak ada pi
    q.x = 10
    echo p.x, " ", q.x
    ```
-3. Tulis *procedure* `incr(p: ptr int)` yang menaikkan nilai yang ditunjuk `p` sebesar satu.
+3. Tulis *procedure* `incr(p: ptr int)` yang menaikkan *value* yang ditunjuk `p` sebesar satu.
 4. Kenapa `var p: Person` harus melewati `new(p)` dulu sebelum `p.name` diisi?
 5. Kode berikut gagal *di-compile*. Perbaiki, lalu jelaskan pesan error-nya:
    ```{.nim}
@@ -252,10 +252,10 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 - `new(p)` mengalokasikan `ref` yang masih `nil`; `isNil` menguji apakah referensinya kosong.
 - `ptr T` menyimpan alamat, diambil dengan `addr` dan dibaca dengan `p[]`; `unsafeAddr` alias
   usangnya.
-- `cast` menafsirkan ulang bit, bukan mengonversi nilai; pakai hanya di kode tingkat rendah.
+- `cast` menafsirkan ulang bit, bukan mengonversi *value*; pakai hanya di kode tingkat rendah.
 - `ptr` tidak memiliki memori dan tidak diperiksa, jadi pilih `ref` selama mungkin.
 
 ## Selanjutnya
 
-Bab berikutnya membahas apa yang terjadi pada memori setelah sebuah nilai dibuang:
-[manajemen memori](memory-management.qmd), ARC, ORC, dan destruktor `=destroy`.
+Bab berikutnya membahas apa yang terjadi pada memori setelah sebuah *value* dibuang:
+[manajemen memori](memory-management.qmd), ARC, ORC, dan *destructor* `=destroy`.

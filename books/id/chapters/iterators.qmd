@@ -1,8 +1,8 @@
 # Iterator dan `yield`
 
-*Seq* (`seq`) menyimpan semua elemennya di memori. Itu boros kalau elemennya banyak, atau baru
-bisa dihitung saat dibutuhkan. Nim punya iterator: rutin yang menghasilkan nilai satu per satu, saat
-diminta. Nilainya tidak disimpan; yang berpindah adalah posisi iteratornya. Karena itu iterator bisa
+*Seq* (`seq`) menyimpan semua *element itu* di memori. Itu boros kalau *element itu* banyak, atau baru
+bisa dihitung saat dibutuhkan. Nim punya iterator: rutin yang menghasilkan *value* satu per satu, saat
+diminta. *Value itu* tidak disimpan; yang berpindah adalah posisi iteratornya. Karena itu iterator bisa
 melewati data yang sangat besar, atau bahkan data yang belum ada, tanpa menunggu semuanya siap.
 
 ::: {.callout-note}
@@ -10,12 +10,12 @@ melewati data yang sangat besar, atau bahkan data yang belum ada, tanpa menunggu
 
 Setelah bab ini, pembaca bisa menulis iterator dengan `yield`, memakainya di dalam `for`, memakai
 `items` dan `pairs`, membuat iterator closure yang bisa dilanjutkan, serta membaca pesan error saat
-iterator inline diperlakukan sebagai nilai.
+iterator inline diperlakukan sebagai *value*.
 :::
 
 ## `iterator` dan `yield`
 
-Iterator dideklarasikan dengan `iterator`, dan `yield` mengeluarkan satu nilai.
+Iterator dideklarasikan dengan `iterator`, dan `yield` mengeluarkan satu *value*.
 
 ```{.nim}
 iterator countTo(n: int): int =
@@ -34,8 +34,8 @@ for value in countTo(3):
 3
 ```
 
-`for` menjalankan iterator sampai habis. Setiap `yield` menyerahkan satu nilai, lalu iterator
-berhenti sebentar dan dilanjutkan pada putaran berikutnya. Karena nilai keluar satu per satu,
+`for` menjalankan iterator sampai habis. Setiap `yield` menyerahkan satu *value*, lalu iterator
+berhenti sebentar dan dilanjutkan pada putaran berikutnya. Karena *value* keluar satu per satu,
 pemanggil bisa berhenti kapan saja tanpa menghitung sisanya.
 
 Iterator tanpa penanda khusus default-nya inline: compiler menyalin badannya ke tempat pemakaian.
@@ -85,7 +85,7 @@ Grace
 1: Grace
 ```
 
-`items` mengeluarkan elemen, `pairs` mengeluarkan indeks bersama elemen. Bentuk `for name in names`
+`items` mengeluarkan *element*, `pairs` mengeluarkan *index* bersama *element*. Bentuk `for name in names`
 sebenarnya singkatan dari `for name in items(names)`; menulis `items` dan `pairs` secara eksplisit
 kadang memperjelas mana yang sedang dipakai.
 
@@ -117,13 +117,13 @@ while true:
 
 `countBetween` adalah fungsi yang bisa dilanjutkan. `var it = countBetween` menyiapkan iteratornya,
 dan argumen `(3, 5)` diberikan pada tiap pemanggilan. `finished(it)` bernilai `true` setelah iterator
-selesai. Perhatikan urutannya: panggil dulu, periksa `finished`, baru pakai nilainya. Manual Nim
-memperingatkan bahwa `finished` baru bernilai `true` satu putaran setelah nilai terakhir keluar, jadi
-nilai pada putaran itu harus dibuang.
+selesai. Perhatikan urutannya: panggil dulu, periksa `finished`, baru pakai *value itu*. Manual Nim
+memperingatkan bahwa `finished` baru bernilai `true` satu putaran setelah *value* terakhir keluar, jadi
+*value* pada putaran itu harus dibuang.
 
 ## Factory: *procedure* yang mengembalikan iterator
 
-Iterator closure adalah nilai, jadi sebuah *procedure* bisa mengembalikannya.
+Iterator closure adalah *value*, jadi sebuah *procedure* bisa mengembalikannya.
 
 ```{.nim}
 proc countTo(n: int): iterator (): int =
@@ -145,9 +145,9 @@ for n in numbers():
 ```
 
 `countTo` menangkap `n`, lalu mengembalikan iterator anonim yang memakainya. Pola ini memisahkan
-penyiapan dari pengambilan nilai, dan hasilnya bisa langsung dipakai di `for`.
+penyiapan dari pengambilan *value*, dan hasilnya bisa langsung dipakai di `for`.
 
-## Membaca error: iterator inline bukan nilai
+## Membaca error: iterator inline bukan *value*
 
 Iterator inline hanya boleh dipakai di dalam `for`.
 
@@ -165,16 +165,16 @@ let it = countTo
 main.nim(7, 5) Error: invalid type: 'iterator (n: int): int{.inline, noSideEffect, gcsafe.}' for let
 ```
 
-Pesannya menuliskan tipe lengkapnya, termasuk penanda `{.inline.}`, dan menolak `let`. Solusinya:
+Pesannya menuliskan *type* lengkapnya, termasuk penanda `{.inline.}`, dan menolak `let`. Solusinya:
 pakai langsung di `for`, atau tandai iteratornya `{.closure.}` kalau memang perlu disimpan sebagai
-nilai.
+*value*.
 
 ## Iterator atau *seq*?
 
-Iterator tidak menyimpan elemen, jadi ia hemat memori dan bisa berhenti lebih awal. Harganya: satu
-elemen hanya bisa dilewati sekali. Tidak ada indeks acak, tidak ada `.len`, dan tidak bisa diurutkan.
+Iterator tidak menyimpan *element*, jadi ia hemat memori dan bisa berhenti lebih awal. Harganya: satu
+*element* hanya bisa dilewati sekali. Tidak ada *index* acak, tidak ada `.len`, dan tidak bisa diurutkan.
 
-*Seq* menampilkan semua elemen di memori. Ia cocok kalau elemennya perlu diindeks, diurutkan, atau
+*Seq* menampilkan semua *element* di memori. Ia cocok kalau *element itu* perlu diindeks, diurutkan, atau
 dipakai berkali-kali.
 
 Aturan praktisnya: pilih iterator kalau alirannya besar atau tak terbatas, dan kalau pencarian sering
@@ -201,20 +201,20 @@ membangun *seq* yang hanya dilewati sekali.
      sum = sum + n
    echo sum
    ```
-3. Tulis `proc countdown(n: int): iterator (): int` yang mengeluarkan nilai dari `n` turun sampai 1.
+3. Tulis `proc countdown(n: int): iterator (): int` yang mengeluarkan *value* dari `n` turun sampai 1.
 4. Jelaskan kapan memilih iterator dan kapan memilih *seq* untuk data yang sama.
 
 Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
 ## Ringkasan
 
-- `iterator` dan `yield` menghasilkan nilai satu per satu, hanya saat diminta.
-- Iterator inline (default) tidak menyimpan nilai dan dipakai langsung di dalam `for`.
-- `items` mengeluarkan elemen, `pairs` mengeluarkan indeks dan elemen.
+- `iterator` dan `yield` menghasilkan *value* satu per satu, hanya saat diminta.
+- Iterator inline (default) tidak menyimpan *value* dan dipakai langsung di dalam `for`.
+- `items` mengeluarkan *element*, `pairs` mengeluarkan *index* dan *element*.
 - Iterator closure bisa disimpan dan dilanjutkan; `finished` menandai akhirnya.
 - Pilih iterator untuk aliran besar atau berhenti awal, *seq* untuk koleksi utuh.
 
 ## Selanjutnya
 
-Bab berikutnya membahas [tuple](tuples.qmd): menggabungkan beberapa nilai menjadi satu, dan
+Bab berikutnya membahas [tuple](tuples.qmd): menggabungkan beberapa *value* menjadi satu, dan
 membongkarnya kembali dalam satu baris.

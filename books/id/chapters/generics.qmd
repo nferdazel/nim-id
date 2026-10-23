@@ -1,24 +1,24 @@
-# Generic: tipe dan *procedure*
+# Generic: *type* dan *procedure*
 
 Menulis satu *procedure* untuk `int`, lalu menyalinnya untuk `string`, lalu lagi untuk `float`, cepat
 melelahkan. Nim menyelesaikan ini dengan *generic*: satu deklarasi yang ditulis sekali, lalu
-compiler membuat versinya untuk setiap tipe yang dipakai.
+compiler membuat versinya untuk setiap *type* yang dipakai.
 
-Bagian yang mudah salah bukan penulisannya, tapi batasannya. Tanpa batasan, compiler menerima tipe
-apa pun dan baru mengeluh jauh di dalam. Dengan batasan, tipe yang salah ditolak di tempat
+Bagian yang mudah salah bukan penulisannya, tapi batasannya. Tanpa batasan, compiler menerima *type*
+apa pun dan baru mengeluh jauh di dalam. Dengan batasan, *type* yang salah ditolak di tempat
 pemanggilan, lengkap dengan alasan.
 
 ::: {.callout-note}
 ## Tujuan bab
 
-Setelah bab ini, pembaca bisa menulis *procedure* dan tipe generic, memasang batasan pada parameter
-tipe, membaca pesan error saat batasannya tidak dipenuhi, serta membedakan inferensi otomatis dan
-argumen tipe eksplisit.
+Setelah bab ini, pembaca bisa menulis *procedure* dan *type* generic, memasang batasan pada parameter
+*type*, membaca pesan error saat batasannya tidak dipenuhi, serta membedakan inferensi otomatis dan
+argumen *type* eksplisit.
 :::
 
-## Satu *procedure* untuk banyak tipe
+## Satu *procedure* untuk banyak *type*
 
-Parameter tipe ditulis dalam tanda kurung siku setelah nama *procedure*.
+Parameter *type* ditulis dalam tanda kurung siku setelah nama *procedure*.
 
 ```{.nim}
 proc identity[T](value: T): T =
@@ -33,19 +33,19 @@ echo identity("nim")
 nim
 ```
 
-`T` adalah nama untuk tipe yang belum ditentukan. Saat `identity(42)` dipanggil, compiler mengisi
+`T` adalah nama untuk *type* yang belum ditentukan. Saat `identity(42)` dipanggil, compiler mengisi
 `T` dengan `int`; saat `identity("nim")` dipanggil, `T` menjadi `string`. Proses mengisi `T` ini
 disebut instansiasi, dan hasilnya dua *procedure* berbeda yang sama-sama bernama `identity`.
 
 Nama `T` hanya berlaku di dalam deklarasi itu, dan dua *procedure* hasil instansiasi tidak berbagi
 kode: yang satu bekerja dengan `int`, yang lain dengan `string`. Karena itu, *error* di dalam
 badan generic baru terlihat saat salah satu versinya dibuat. Compiler memeriksa tiap versi secara
-terpisah, dan pesan errornya sering menyebut tipe yang sedang disimpulkan.
+terpisah, dan pesan errornya sering menyebut *type* yang sedang disimpulkan.
 
-## Batasan tipe: `T: SomeInteger`
+## Batasan *type*: `T: SomeInteger`
 
-Tanpa batasan, `T` boleh tipe apa saja di dalam badan *procedure*. Kalau badan *procedure* hanya masuk
-akal untuk sebagian tipe, batasi `T` setelah titik dua.
+Tanpa batasan, `T` boleh *type* apa saja di dalam badan *procedure*. Kalau badan *procedure* hanya masuk
+akal untuk sebagian *type*, batasi `T` setelah titik dua.
 
 ```{.nim}
 proc double[T: SomeInteger](value: T): T =
@@ -60,9 +60,9 @@ echo double(5'i8)
 10
 ```
 
-`SomeInteger` adalah *set* tipe bilangan bulat: yang bertanda (`int`, `int8` sampai `int64`)
+`SomeInteger` adalah *set* *type* bilangan bulat: yang bertanda (`int`, `int8` sampai `int64`)
 maupun yang tak bertanda (`uint` dan kawan-kawan). Selama `T` ada di dalamnya, `value * 2` sah.
-Tipe di luar *set* itu ditolak, dan pesannya menjelaskan kenapa.
+*Type* di luar *set* itu ditolak, dan pesannya menjelaskan kenapa.
 
 ```{.nim}
 proc double[T: SomeInteger](value: T): T =
@@ -84,10 +84,10 @@ Baris terakhir menampilkan satu-satunya kandidat, yaitu `double` dengan syarat `
 `float64` tidak termasuk `SomeInteger`, jadi tidak ada versi `double` yang cocok. Tanpa batasan,
 pesan seperti ini baru muncul di dalam badan, saat `T` sudah dipakai.
 
-## Generic pada tipe
+## Generic pada *type*
 
-Batasan `[T]` juga berlaku untuk tipe, bukan hanya *procedure*. Sebuah `object` bisa diberi parameter
-tipe, sehingga isinya menyesuaikan.
+Batasan `[T]` juga berlaku untuk *type*, bukan hanya *procedure*. Sebuah `object` bisa diberi parameter
+*type*, sehingga isinya menyesuaikan.
 
 ```{.nim}
 type Box[T] = object
@@ -105,14 +105,14 @@ echo boxed("text").value
 text
 ```
 
-`Box[int]` dan `Box[string]` adalah dua tipe berbeda yang dibuat dari satu deklarasi. Konstruktornya
-ditulis `Box[T](value: value)`, dan `T` di situ disesuaikan dari nilai yang dioper.
+`Box[int]` dan `Box[string]` adalah dua *type* berbeda yang dibuat dari satu deklarasi. *Constructor itu*
+ditulis `Box[T](value: value)`, dan `T` di situ disesuaikan dari *value* yang dioper.
 
-*Procedure* yang bekerja pada `Box[T]` juga harus membawa parameter tipe yang sama. Itulah sebabnya
-`boxed` ditulis `boxed[T]`, bukan sekadar `boxed`. Tanpa `[T]`, compiler tidak tahu tipe mana yang
+*Procedure* yang bekerja pada `Box[T]` juga harus membawa parameter *type* yang sama. Itulah sebabnya
+`boxed` ditulis `boxed[T]`, bukan sekadar `boxed`. Tanpa `[T]`, compiler tidak tahu *type* mana yang
 dimaksud di dalam `Box[T]`.
 
-## Inferensi dan argumen tipe eksplisit
+## Inferensi dan argumen *type* eksplisit
 
 Compiler menyimpulkan `T` dari argumen yang bertipe `T`. Kalau tidak ada argumen seperti itu, `T`
 harus disebut sendiri.
@@ -132,12 +132,12 @@ echo makeSeq[string](2)
 ```
 
 Di sini `T` tidak muncul di daftar parameter, jadi `makeSeq(3)` tidak cukup: compiler tidak mungkin
-menebak tipe isinya. Argumen tipe ditulis di dalam kurung siku setelah nama: `makeSeq[int](3)`.
-`default(T)` menghasilkan nilai kosong tipe `T`, yaitu `0` untuk `int` dan `""` untuk `string`.
+menebak *type* isinya. Argumen *type* ditulis di dalam kurung siku setelah nama: `makeSeq[int](3)`.
+`default(T)` menghasilkan *value* kosong *type* `T`, yaitu `0` untuk `int` dan `""` untuk `string`.
 
-## `typedesc`: menerima tipe sebagai argumen
+## `typedesc`: menerima *type* sebagai argumen
 
-Kadang yang dioper bukan nilai, melainkan tipenya. Parameter bertipe `typedesc` menerima tipe itu.
+Kadang yang dioper bukan *value*, melainkan *type itu*. Parameter bertipe `typedesc` menerima *type* itu.
 
 ```{.nim}
 proc nameOf(T: typedesc): string =
@@ -152,12 +152,12 @@ int
 string
 ```
 
-`nameOf(int)` tidak mengoper nilai `int`, melainkan tipe `int` itu sendiri. Panggilan seperti ini
+`nameOf(int)` tidak mengoper *value* `int`, melainkan *type* `int` itu sendiri. Panggilan seperti ini
 umum di **standard library**, misalnya untuk membuat koleksi kosong bertipe tertentu.
 
-## `static[T]`: nilai yang diketahui saat *compile*
+## `static[T]`: *value* yang diketahui saat *compile*
 
-Parameter tipe bisa diberi batas `static`. Artinya nilainya harus diketahui saat *compile*, bukan
+Parameter *type* bisa diberi batas `static`. Artinya *value itu* harus diketahui saat *compile*, bukan
 saat program berjalan.
 
 ```{.nim}
@@ -175,14 +175,14 @@ echo fill[int, 2](9)
 ```
 
 `N` dipakai sebagai ukuran `array[N, T]`, dan ukuran *array* harus tetap, jadi `N` wajib diketahui
-compiler. Karena `N` tidak muncul di daftar parameter nilai, keduanya ditulis eksplisit:
-`fill[char, 3]`. Hasil `fill[char, 3]('z')` adalah *array* tiga karakter. Ukuran `N` menjadi bagian
-dari tipe hasil, jadi `fill[int, 2](9)` menghasilkan `array[2, int]`, tipe yang berbeda dari
+compiler. Karena `N` tidak muncul di daftar parameter *value*, keduanya ditulis eksplisit:
+`fill[char, 3]`. Hasil `fill[char, 3]('z')` adalah *array* tiga *character*. Ukuran `N` menjadi bagian
+dari *type* hasil, jadi `fill[int, 2](9)` menghasilkan `array[2, int]`, *type* yang berbeda dari
 `fill[int, 3](9)`.
 
 ## Latihan
 
-1. Tulis `proc largest[T](items: openArray[T]): T` yang mengembalikan nilai terbesar, lalu panggil
+1. Tulis `proc largest[T](items: openArray[T]): T` yang mengembalikan *value* terbesar, lalu panggil
    dengan *array* `int` dan dengan *seq* `string`.
 2. Tanpa menjalankan, prediksi keluarannya:
    ```{.nim}
@@ -206,11 +206,11 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
 ## Ringkasan
 
-- Parameter tipe ditulis `[T]` setelah nama; compiler membuat satu versi per tipe yang dipakai.
-- Batasan seperti `T: SomeInteger` menolak tipe yang tidak sesuai di tempat pemanggilan.
+- Parameter *type* ditulis `[T]` setelah nama; compiler membuat satu versi per *type* yang dipakai.
+- Batasan seperti `T: SomeInteger` menolak *type* yang tidak sesuai di tempat pemanggilan.
 - `[T]` juga dipakai pada `type`, bukan hanya *procedure*.
-- `T` disimpulkan dari argumen yang bertipe `T`; kalau tidak ada, tulis argumen tipe eksplisit.
-- `typedesc` menerima tipe sebagai argumen, dan `static` menuntut nilai yang diketahui saat
+- `T` disimpulkan dari argumen yang bertipe `T`; kalau tidak ada, tulis argumen *type* eksplisit.
+- `typedesc` menerima *type* sebagai argumen, dan `static` menuntut *value* yang diketahui saat
   *compile*.
 
 ## Selanjutnya

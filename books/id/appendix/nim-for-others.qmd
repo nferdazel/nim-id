@@ -6,7 +6,7 @@ sering dipakai bergantian dengan Nim: Python, Go, dan Rust. Tidak ada contoh yan
 fokusnya memetakan kebiasaan yang sudah ada supaya perpindahan terasa ringan. Setiap bagian dimulai
 dari tabel padanan, lalu dijelaskan singkat apa yang sama dan apa yang perlu disesuaikan.
 
-## Variabel
+## *Variable*
 
 | Bahasa | Deklarasi |
 |---|---|
@@ -15,8 +15,8 @@ dari tabel padanan, lalu dijelaskan singkat apa yang sama dan apa yang perlu dis
 | Rust | `let x = 1;`, `let mut y = 2;` |
 | Nim | `var x = 1`, `let y = 2`, `const Z = 3` |
 
-Ketiganya menyimpulkan tipe dari nilai awal, dan Nim mengikuti kebiasaan yang sama. Kebiasaan
-Python menulis `x = 1` tanpa tipe tetap jalan, sedangkan pemeriksaan tipe tetap ketat seperti di Go
+Ketiganya menyimpulkan *type* dari *value* awal, dan Nim mengikuti kebiasaan yang sama. Kebiasaan
+Python menulis `x = 1` tanpa *type* tetap jalan, sedangkan pemeriksaan *type* tetap ketat seperti di Go
 dan Rust. Yang berbeda: Nim memberi tiga tingkat, dari `var` yang bebas berubah sampai `const` yang
 dihitung saat *compile*.
 
@@ -29,7 +29,7 @@ dihitung saat *compile*.
 | Rust | `fn f(a: i32, b: i32) -> i32 { a + b }` |
 | Nim | `proc f(a, b: int): int = a + b` |
 
-Tipe parameter ditulis seperti Go dan Rust, dan nilai default seperti Python. *Expression* terakhir
+*Type* parameter ditulis seperti Go dan Rust, dan *default value* seperti Python. *Expression* terakhir
 badan *procedure* menjadi **return value**, jadi `return` jarang perlu. Overloading diizinkan, jadi
 beberapa *procedure* boleh bernama sama asalkan daftar parameternya berbeda; ini tidak ada di Python
 dan Rust, tetapi terasa akrab bagi penulis Java.
@@ -44,9 +44,9 @@ dan Rust, tetapi terasa akrab bagi penulis Java.
 | Nim | `type Point = object` berisi field |
 
 Nim memisahkan data dari perilaku. Method adalah *procedure* biasa yang parameter pertamanya bertipe
-itu, dipanggil dengan titik seperti di Python. Object nilai disalin utuh saat ditugaskan, sedangkan
+itu, dipanggil dengan titik seperti di Python. Object *value* disalin utuh saat ditugaskan, sedangkan
 `ref object` disalin sebagai *pointer*. Warisan class dibatasi, sebab Nim lebih mengandalkan generik
-dan konsep untuk menyusun tipe.
+dan konsep untuk menyusun *type*.
 
 ## Interface dan konsep
 
@@ -58,8 +58,9 @@ dan konsep untuk menyusun tipe.
 | Nim | `concept`, batasan generic, atau `interface` nim lama |
 
 Konsep Nim tidak dikenali saat program berjalan; ia diperiksa saat overloading di *compile*. Ini
-lebih dekat ke `trait` Rust daripada ke `interface` Go yang dinamis. Konsep memeriksa bentuk tipe,
-misalnya keberadaan field atau *procedure*, tanpa menuntut deklarasi pewarisan. Karena itu tipe dari
+lebih dekat ke `interface` Go daripada ke `trait` Rust: keduanya struktural, jadi *type* yang
+kebetulan punya *procedure* yang cocok otomatis memenuhi, tanpa `impl` eksplisit seperti di Rust. Konsep memeriksa bentuk *type*,
+misalnya keberadaan field atau *procedure*, tanpa menuntut deklarasi pewarisan. Karena itu *type* dari
 *library* lain bisa memenuhinya tanpa diubah sedikit pun.
 
 ## Penanganan error
@@ -69,7 +70,7 @@ misalnya keberadaan field atau *procedure*, tanpa menuntut deklarasi pewarisan. 
 | Python | `try`/`except`/`raise` untuk semua *error* |
 | Go | `if err != nil` dengan **return value** ganda |
 | Rust | `Result[T, E]` dan operator `?` |
-| Nim | `try`/`except`/`raise`, efek `raises` diperiksa compiler |
+| Nim | `try`/`except`/`raise`, *effect* `raises` diperiksa compiler |
 
 Nim memakai *exception* seperti Python, tetapi menaikkan pemeriksaannya ke *compile*. *Procedure*
 bisa menyatakan jenis *exception* yang mungkin keluar, dan compiler menolak janji yang dipatahkan.
@@ -88,7 +89,7 @@ bagian dari kontrak yang bisa dibaca.
 
 Perannya sama: memasang dan mengunci dependensi proyek. Satu proyek biasanya punya satu *file*
 `.nimble` di akar, sepadan dengan `Cargo.toml` atau `go.mod`. Nim juga punya `nimble.directory`
-sebagai indeks *package* publik.
+sebagai *index* *package* publik.
 
 ## Build
 
@@ -115,7 +116,7 @@ hasilnya.
 
 Bentuknya dekat ke Rust dan Go: blok *test* ditulis di *file* yang sama atau terpisah, lalu dijalankan
 oleh compiler sebagai program biasa. `check` menguji satu *expression* boolean, dan `expect` memastikan
-sebuah *exception* benar-benar dilempar. Keduanya melaporkan kegagalan dengan kode keluar bukan
+sebuah *exception* benar-benar dilempar. Keduanya melaporkan kegagalan dengan *exit code* bukan
 nol, jadi ramah untuk CI.
 
 ## Konkurensi
@@ -127,25 +128,26 @@ nol, jadi ramah untuk CI.
 | Rust | *thread* dengan `Send`/`Sync`, `async`/`await` lewat tokio |
 | Nim | `{.async.}` di `std/asyncdispatch`, *thread*, dan `spawn` |
 
-Nim punya dua jalur: `async`/`await` untuk IO dalam satu *thread*, dan *thread* sungguhan dengan
-`--threads:on`. Model async memakai satu *event loop*, dan tugas menunggu tanpa memblokir
-*thread*. Untuk pekerjaan CPU berat, *thread* dan `spawn` lebih cocok, dengan saluran komunikasi eksplisit.
-Tidak ada padanan langsung untuk channel Go, yang menyatukan goroutine ringan dan saluran dalam
-satu model.
+Nim punya dua *path*: `async`/`await` untuk IO dalam satu *thread*, dan *thread* sungguhan. Sejak
+Nim 2.x, *thread* aktif secara bawaan (`compileOption("threads")` bernilai `true`), jadi
+`--threads:on` tidak lagi diperlukan. Model async memakai satu *event loop*, dan tugas menunggu
+tanpa memblokir *thread*. Untuk komunikasi antar-*thread* ada `Channel[T]`; `std/threadpool` dan
+`spawn` masih ada tetapi sudah ditandai usang. Yang tidak ada adalah model goroutine Go, yaitu
+goroutine ringan dengan `select` di atas banyak saluran.
 
 ## Yang mirip
 
-Tipe statis dengan inferensi, generic, closure, dan modul terasa akrab dari ketiga bahasa. *Procedure*
+*Type* statis dengan inferensi, generic, closure, dan *module* terasa akrab dari ketiga bahasa. *Procedure*
 bisa dipanggil dengan gaya metode, jadi `teks.len` sama dengan `len(teks)`. Nim juga menawarkan
 `let` dan `const` sebagai bawaan tidak berubah, sejalan dengan `let` Rust dan `const` Go. Fungsi
-adalah nilai, sehingga bisa dikirim dan dikembalikan. Pengelola *package* berperan sama
+adalah *value*, sehingga bisa dikirim dan dikembalikan. Pengelola *package* berperan sama
 seperti pip, Go modules, dan cargo.
 
-Overloading dan nilai default parameter terasa alami bagi penulis Python; penulisan tipe pada tanda
-tangan akrab bagi penulis Go dan Rust. Nim mengenal rentang, irisan, dan
-penyisipan nilai ke dalam teks seperti f-string Python, walau sintaksnya berbeda. Iterasi dengan
+Overloading dan *default value* parameter terasa alami bagi penulis Python; penulisan *type* pada tanda
+tangan akrab bagi penulis Go dan Rust. Nim mengenal *range*, irisan, dan
+penyisipan *value* ke dalam teks seperti f-string Python, walau sintaksnya berbeda. Iterasi dengan
 `for` dan penghitungan dengan `len` ada di semua bahasa, jadi tidak ada yang benar-benar perlu
-dipelajari ulang. Yang juga melegakan, *error* umum seperti salah indeks atau lupa menutup blok
+dipelajari ulang. Yang juga melegakan, *error* umum seperti salah *index* atau lupa menutup blok
 terasa mirip, sehingga refleks lama tetap berguna. Operator aritmetika dan perbandingan hampir
 sama, jadi *expression* lama sering bisa disalin dengan sedikit penyesuaian saja.
 
@@ -153,17 +155,19 @@ sama, jadi *expression* lama sering bisa disalin dengan sedikit penyesuaian saja
 
 Nim *di-compile* menjadi biner lewat C, C++, atau JavaScript; tidak ada mesin virtual yang menafsir
 kode saat berjalan. Indentasi menentukan blok, seperti Python, tanpa kurung kurawal. Manajemen
-memori memakai ARC atau ORC dengan destruktor deterministik, bukan garbage collector berhenti-dunia.
-`nil` hanya berlaku untuk `ref`, `ptr`, dan *procedure*; object nilai tidak pernah `nil`. Efek
-`raises` diperiksa compiler. Rentang `0 .. 5` inklusif, sedangkan `range` Python eksklusif. `and`,
+memori memakai ARC atau ORC dengan *destructor* deterministik, bukan garbage collector berhenti-dunia.
+`nil` berlaku untuk `ref`, `ptr`, `cstring`, `pointer`, dan *procedure*; object *value* tidak
+pernah `nil`. *Effect*
+`raises` diperiksa compiler. *Range* `0 .. 5` inklusif, sedangkan `range` Python eksklusif. `and`,
 `or`, dan `not` menggantikan `&&`, `||`, dan `!`. Tidak ada kata kunci `async`/`await` bawaan; async
-dibangun lewat makro `{.async.}`. Integer bertipe lebar tetap dan diperiksa saat meluap, bukan
-presisi sembarang seperti di Python.
+dibangun lewat makro `{.async.}`. Integer punya lebar tetap, bukan presisi sembarang seperti di Python. Luapan bertipe signed
+memicu `OverflowDefect` bahkan di `-d:release`; integer unsigned membungkus; baru `-d:danger`
+mematikan pemeriksaan itu.
 
-Object nilai disalin saat ditugaskan, bukan dibagi lewat referensi seperti `class` Python. Untuk
+Object *value* disalin saat ditugaskan, bukan dibagi lewat referensi seperti `class` Python. Untuk
 berbagi, pakai `ref object`. Tidak ada dekorator seperti di Python; peran serupa diambil pragma
 dalam `{.kurung.}` dan makro. Warisan class dihindari; generik, konsep, dan object varian lebih
-sering dipakai untuk menyusun tipe.
+sering dipakai untuk menyusun *type*.
 
 Nim juga tidak memakai operator `?` Rust untuk meneruskan error; *exception* ditulis eksplisit
 dengan blok `try`/`except`. Sebaliknya, pemeriksaan lengkap pada `case` membuat compiler sering
@@ -173,26 +177,26 @@ biasa dipakai Rust dan Go digantikan oleh titik dua dan indentasi.
 ## Jebakan
 
 Indentasi signifikan, dan tab tidak boleh dipakai untuk menjorok. Campur spasi dan tab membuat
-compiler menolak atau salah membaca. Parameter `var` membuat *procedure* bisa mengubah variabel
+compiler menolak atau salah membaca. Parameter `var` membuat *procedure* bisa mengubah *variable*
 pemanggil tanpa pointer eksplisit. Identifier Nim mengabaikan besar-kecil dan garis bawah kecuali
 huruf pertama, jadi `get_name` sama dengan `getName`, tetapi `GetName` berbeda. `var n: Node` untuk
 `ref object` berisi `nil`, sehingga perlu `new(n)` sebelum dipakai. Menyalin `ref` menyalin
-penunjuknya, bukan isinya, jadi dua nama bisa menunjuk object yang sama. `case` pada enum harus
-lengkap, dan compiler menolak cabang yang kurang. Tidak ada konversi otomatis dari `int` ke
-`float`. `if` berjalan saat program berjalan, sedangkan `when` diselesaikan saat *compile*;
+*pointer*-nya, bukan isinya, jadi dua nama bisa menunjuk object yang sama. `case` pada enum harus
+lengkap, dan compiler menolak cabang yang kurang. Tidak ada konversi otomatis dari *variable* `int` ke
+`float`; literal seperti `1` masih diterima. `if` berjalan saat program berjalan, sedangkan `when` diselesaikan saat *compile*;
 tertukar keduanya berarti artinya berubah. String bukan *seq* `char`, dan `s[0]` bertipe `char`.
 Terakhir, `echo` tidak menambahkan pemisah antar argumen.
 
-Bila compiler mengeluh soal efek `raises`, jangan buru-buru mematikannya; biasanya ada *exception*
+Bila compiler mengeluh soal *effect* `raises`, jangan buru-buru mematikannya; biasanya ada *exception*
 yang memang perlu ditangani. `discard` juga bukan basa-basi: memanggil *procedure* yang mengembalikan
-nilai tanpa memakainya akan ditolak, dan itu justru menangkap *error* yang mudah luput di bahasa
+*value* tanpa memakainya akan ditolak, dan itu justru menangkap *error* yang mudah luput di bahasa
 dinamis. Pada object varian, field yang sama tidak boleh muncul di dua cabang `case`, jadi nama
 field perlu dipilih dengan hati-hati sejak awal.
 
-Satu hal lagi, penamaan tipe dan variabel dibedakan oleh huruf pertama saja; gaya resmi Nim adalah
-`PascalCase` untuk tipe dan `camelCase` untuk nama lain. Menjaga satu gaya sejak awal menghindari
+Satu hal lagi, penamaan *type* dan *variable* dibedakan oleh huruf pertama saja; gaya resmi Nim adalah
+`PascalCase` untuk *type* dan `camelCase` untuk nama lain. Menjaga satu gaya sejak awal menghindari
 kejutan saat compiler menganggap dua nama yang berbeda sebagai identifier yang sama.
 
 Pindah ke Nim tidak menuntut membuang kebiasaan lama. Yang perlu disesuaikan terutama tiga hal:
-indentasi yang menentukan blok, efek yang diperiksa compiler, dan pengelolaan memori tanpa garbage
+indentasi yang menentukan blok, *effect* yang diperiksa compiler, dan pengelolaan memori tanpa garbage
 collector berhenti-dunia.

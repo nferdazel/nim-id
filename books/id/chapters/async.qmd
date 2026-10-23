@@ -15,7 +15,7 @@ marked as 'async'" saat salah menempatkan `await`.
 
 ## *Procedure* async dan `Future`
 
-*Procedure* async tidak mengembalikan nilai secara langsung. Ia mengembalikan `Future`, wadah yang
+*Procedure* async tidak mengembalikan *value* secara langsung. Ia mengembalikan `Future`, wadah yang
 nanti berisi hasilnya. Simpan kode berikut sebagai `main.nim`, lalu jalankan `nim c -r main.nim`.
 
 ```{.nim}
@@ -37,14 +37,14 @@ hello, Nim
 
 Perhatikan tiga hal. Pragma `{.async.}` mengubah *procedure* sehingga `return` di dalamnya mengisi
 `Future`. Di dalam `main`, `await greeting("Nim")` menunggu sampai hasilnya siap lalu membuka
-nilainya. Di luar *procedure* async, `waitFor` yang menjalankan mesin async sampai tugasnya selesai.
+*value itu*. Di luar *procedure* async, `waitFor` yang menjalankan mesin async sampai tugasnya selesai.
 
 `waitFor` memulai *event loop*, yaitu mekanisme yang menggilir tugas-tugas yang sedang
 menunggu. Biasanya cukup satu `waitFor` di tingkat teratas program; memanggilnya dua kali tetap
 berjalan, tetapi jarang diperlukan.
 
-`Future` adalah tipe generik. `Future[string]` berisi string, `Future[int]` berisi bilangan bulat.
-`waitFor` mengembalikan nilai yang sama dengan isi `Future` itu, jadi `let total = waitFor sum()`
+`Future` adalah *type* generik. `Future[string]` berisi string, `Future[int]` berisi bilangan bulat.
+`waitFor` mengembalikan *value* yang sama dengan isi `Future` itu, jadi `let total = waitFor sum()`
 memberi `int` biasa, bukan wadah lagi.
 
 Kenapa tidak memakai *thread* saja? *Thread* mahal dan berbagi memori, sehingga butuh penguncian dan
@@ -192,5 +192,5 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 ## Selanjutnya
 
 Bab berikutnya menghubungkan Nim dengan kode C yang sudah ada: *meng-compile* *file* C bersama
-program, mendeklarasikan fungsi dengan `{.importc.}`, dan memakai tipe C dengan benar. Lanjut ke
+program, mendeklarasikan fungsi dengan `{.importc.}`, dan memakai *type* C dengan benar. Lanjut ke
 [FFI ke C](ffi-c.qmd).

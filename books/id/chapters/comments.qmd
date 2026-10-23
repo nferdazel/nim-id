@@ -97,8 +97,8 @@ echo area(3.0, 4.0)
 12.0
 ```
 
-Terhadap program, `##` sama saja dengan `#`: tidak berpengaruh apa pun. Yang berbeda, perintah
-`nim doc area.nim` mengumpulkan semua doc comment dan menghasilkan *file* HTML di direktori
+Terhadap program, `##` sama saja dengan `#`: tidak berpengaruh apa pun. Yang berbeda, *command*
+`nim doc area.nim` mengumpulkan semua doc comment dan menghasilkan *file* HTML di *directory*
 `htmldocs/`, di sini `htmldocs/area.html`. Isinya persis dua baris penjelasan di atas *procedure* tadi.
 
 Bedanya dengan `#` penting. Doc comment harus memakai `##`; komentar `#` di atas deklarasi tidak ikut
@@ -124,8 +124,8 @@ echo double(21)
 42
 ```
 
-Jalankan `nim doc double.nim`. Perintah itu *meng-compile* blok contoh dan menjalankannya; kalau
-`doAssert` gagal, `nim doc` berhenti dengan kode keluar bukan nol. Artinya, contoh di dokumentasi
+Jalankan `nim doc double.nim`. *Command* itu *meng-compile* blok contoh dan menjalankannya; kalau
+`doAssert` gagal, `nim doc` berhenti dengan *exit code* bukan nol. Artinya, contoh di dokumentasi
 tidak bisa "basi": dia ikut gagal begitu perilaku *procedure itu* berubah. Ini alasan penulis *library*
 Nim banyak memakai `runnableExamples` ketimbang contoh statis yang tak pernah diuji.
 
@@ -159,7 +159,7 @@ Setelah ketiga bentuk ini, pertanyaannya kapan menulis komentar. Tiga patokan ya
 
 ## Ringkasan
 
-- `#` mengabaikan sisa baris; `#[ ... ]#` mengabaikan rentang dan boleh bersarang.
+- `#` mengabaikan sisa baris; `#[ ... ]#` mengabaikan *range* dan boleh bersarang.
 - Komentar blok yang tidak ditutup dilaporkan di posisi akhir *file*, bukan di tempat `#[`.
 - `##` adalah doc comment; hanya bentuk ini yang masuk keluaran `nim doc` ke `htmldocs/`.
 - `runnableExamples` di dalam doc comment *di-compile* dan dijalankan `nim doc`.
@@ -167,5 +167,5 @@ Setelah ketiga bentuk ini, pertanyaannya kapan menulis komentar. Tiga patokan ya
 
 ## Selanjutnya
 
-Bab berikutnya kembali ke kode: [variabel dan tiga kata kunci](variables.qmd) `var`, `let`, dan
+Bab berikutnya kembali ke kode: [*variable* dan tiga kata kunci](variables.qmd) `var`, `let`, dan
 `const`, beserta cara memilih di antara ketiganya.
