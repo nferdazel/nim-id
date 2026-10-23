@@ -1,0 +1,303 @@
+# CLI tools with `parseopt`
+
+A command line tool almost always starts from the same problem: splitting the `seq[string]` from
+`commandLineParams()` into options and arguments. Without help, that code fills up with `if`
+branches and index checks that are easy to get wrong. Nim ships the parser in its standard
+library: `std/parseopt`.
+
+::: {.callout-note}
+## What you will be able to do
+
+After this chapter you can read arguments with `initOptParser`, tell `cmdLongOption`,
+`cmdShortOption`, `cmdArgument`, and `cmdEnd` apart, handle options that take values, use the
+`getopt` iterator, write `usage` text with exit codes, and read an `undeclared identifier` message
+when the import is missing.
+:::
+
+## One turn, one token
+
+`initOptParser` takes a sequence of arguments and returns a parser. Each call to `next` advances
+the parser by one token. To keep the output stable, the example passes fixed arguments instead of
+reading `commandLineParams()`. Save it as `main.nim`, then run `nim c -r main.nim`.
+
+```{.nim}
+import std/parseopt
+
+# Fixed arguments keep the example reproducible.
+let args = @["--verbose", "-n", "3", "input.txt"]
+
+var parser = initOptParser(args)
+while true:
+  parser.next()
+  if parser.kind == cmdEnd:
+    echo "end of command line: ", parser.kind
+    break
+  echo "[", parser.kind, "] key=", parser.key, " val=", repr(parser.val)
+```
+
+```{.txt}
+[cmdLongOption] key=verbose val=""
+[cmdShortOption] key=n val=""
+[cmdArgument] key=3 val=""
+[cmdArgument] key=input.txt val=""
+end of command line: cmdEnd
+```
+
+The parser reports each token's type through `kind`. There are four values:
+
+| `kind` | Meaning | Example |
+|---|---|---|
+| `cmdLongOption` | long option | `--verbose` |
+| `cmdShortOption` | short option | `-n` |
+| `cmdArgument` | plain argument | `input.txt` |
+| `cmdEnd` | arguments exhausted | end of sequence |
+
+For options, `key` holds the name without the dashes, and `val` holds the value. For
+`cmdArgument`, `key` holds the argument itself. `repr` is applied to `val` so an empty string shows
+up as `""` instead of invisible blank space.
+
+## Options with values and the `getopt` iterator
+
+Turning the parser by hand with `next` gets long quickly. For the common case there is the `getopt`
+iterator, which runs the loop for you. It also stops on its own before `cmdEnd`, so the loop is
+shorter.
+
+```{.nim}
+import std/[parseopt, strutils]
+
+let args = @["--verbose", "--output=report.txt", "--count", "2", "input.txt"]
+
+var verbose = false
+var output = ""
+var count = 0
+
+# verbose and -v are flags; every other option may take a value.
+for kind, key, val in getopt(args, shortNoVal = {'v'},
+                             longNoVal = @["verbose"]):
+  case kind
+  of cmdLongOption, cmdShortOption:
+    case key
+    of "verbose", "v": verbose = true
+    of "output", "o": output = val
+    of "count", "c": count = parseInt(val)
+    else: discard
+  of cmdArgument:
+    echo "argument: ", key
+  of cmdEnd:
+    discard
+
+echo "verbose=", verbose
+echo "output=", output, " count=", count
+```
+
+```{.txt}
+argument: input.txt
+verbose=true
+output=report.txt count=2
+```
+
+An option value is written with the `=` or `:` separator, for example `--output=report.txt` or
+`-o:report.txt`. Both are accepted by the default `NimMode`. Options that take no value are listed
+in `shortNoVal` and `longNoVal`. Here `--verbose` and `-v` are marked as flags, so the next token is
+not swallowed. An option not listed in `longNoVal` may take the next token as its value, which is
+what happens with `--count 2`. Since `val` is always a `string`, the number is converted with
+`parseInt` from `std/strutils`.
+
+## A simple subcommand
+
+Many tools have subcommands such as `add` and `list`. `parseopt` has no concept of them, but a
+subcommand is just the first argument that does not start with a dash. Recognize it through the
+first `cmdArgument`.
+
+```{.nim}
+import std/parseopt
+
+let args = @["add", "--force", "notes.txt"]
+
+var command = ""
+var force = false
+var files: seq[string]
+
+# force is a flag, so it never swallows the next argument.
+for kind, key, val in getopt(args, longNoVal = @["force"]):
+  case kind
+  of cmdArgument:
+    if command == "":
+      command = key
+    else:
+      files.add key
+  of cmdLongOption, cmdShortOption:
+    if key == "force":
+      force = true
+  of cmdEnd:
+    discard
+
+echo "command: ", command
+echo "force: ", force
+echo "files: ", files
+```
+
+```{.txt}
+command: add
+force: true
+files: @["notes.txt"]
+```
+
+The first argument becomes `command`; the rest are collected into `files`. `--force` is listed in
+`longNoVal` so `notes.txt` is not mistaken for its value. This pattern holds up to about five
+subcommands; beyond that, move each subcommand into its own procedure.
+
+## `usage`, `--help`, and exit codes
+
+A good program explains itself on request and reports an exit code that other scripts can read. An
+exit code of `0` means success; a non-zero number marks a failure. The example returns the code as
+an `int` so the result is predictable, then calls `quit` in the real program.
+
+```{.nim}
+import std/parseopt
+
+const usage = "usage: notes [--help] <command> [<file>...]"
+
+proc status(args: seq[string]): int =
+  ## Returns the exit code the program would use.
+  var command = ""
+  for kind, key, val in getopt(args):
+    case kind
+    of cmdLongOption, cmdShortOption:
+      if key == "help" or key == "h":
+        echo usage
+        return 0
+    of cmdArgument:
+      if command == "":
+        command = key
+    of cmdEnd:
+      discard
+  if command in ["add", "list"]:
+    return 0
+  2
+
+echo "exit code: ", status(@["--help"])
+echo "exit code: ", status(@["list"])
+echo "exit code: ", status(@["drop"])
+```
+
+```{.txt}
+usage: notes [--help] <command> [<file>...]
+exit code: 0
+exit code: 0
+exit code: 2
+```
+
+In a real program you call `status` once at the end: `quit(status(commandLineParams()))`. The names
+`help` and `h` are deliberately merged, so `--help` and `-h` behave the same. One `usage` constant
+becomes the only place the help text is written, so there are no two lists that can drift apart.
+
+```bash
+$ ./notes --help
+usage: notes [--help] <command> [<file>...]
+```
+
+## Extra arguments after `--`
+
+Sometimes a file name starts with a dash, for example `-draft.txt`. The parser will think it is an
+option. The `--` marker closes the options section: every token after it is treated as a plain
+argument. Arguments that have not been read yet are taken with `remainingArgs`.
+
+```{.nim}
+import std/parseopt
+
+let args = @["--tag=work", "--", "file one.txt", "file two.txt"]
+
+var tag = ""
+var parser = initOptParser(args)
+
+# Everything after "--" is a plain argument, including names that start with "-".
+for kind, key, val in parser.getopt():
+  if kind == cmdLongOption:
+    if key == "tag":
+      tag = val
+    elif key == "":
+      break
+
+echo "tag: ", tag
+echo "files: ", parser.remainingArgs
+```
+
+```{.txt}
+tag: work
+files: @["file one.txt", "file two.txt"]
+```
+
+The `--` marker shows up as a `cmdLongOption` with an empty `key`. As soon as it is found, the loop
+stops and `remainingArgs` returns the rest of the sequence. The `cmdLineRest` variant returns that
+rest as a single string instead of a sequence.
+
+## Intentional error: forgetting to import `std/parseopt`
+
+The names from `parseopt` do not appear out of nowhere. Drop the `import`, and the compiler stops at
+the first token.
+
+```{.nim}
+let parser = initOptParser(@["--flag"])
+echo parser.kind
+```
+
+```{.txt}
+main.nim(1, 14) Error: undeclared identifier: 'initOptParser'
+```
+
+Read it from the left: file, position `(line, column)`, severity, then the message. The position
+`(1, 14)` is the start of the unknown name, right after `let parser = `. `undeclared identifier`
+means the name is used without ever being declared or imported. The `candidates` line below offers
+the closest names the compiler could think of. The shortest fix: add `import std/parseopt` on the
+first line.
+
+## When `parseopt` is enough
+
+`parseopt` is deliberately small. It does not check types for you, does not generate a help page,
+and has no built-in subcommands. For a tool that takes ten options or fewer, that is the whole
+point: no configuration, no extra files, and clear behavior. When the need grows into many
+subcommands with generated help, there is the `cligen` package outside the standard library. This
+chapter does not use it because one set of examples serves both books, and the standard library is
+always available with the compiler.
+
+## Exercises
+
+1. Add a `--quiet` option to the first example so the loop stops printing tokens and prints only
+   `quiet mode` at the end.
+2. Without running it, predict the output: which tokens come out of this sequence, and what do
+   `key` and `val` hold for each?
+   ```{.nim}
+   import std/parseopt
+
+   for kind, key, val in getopt(@["-ab", "--name=ana"]):
+     echo "[", kind, "] key=", key, " val=", val
+   ```
+3. Write from scratch: a tool that takes `--count N` and then prints `count` N times, with a
+   default of N equal to 3.
+4. The code below fails to compile. Fix it, then explain its message:
+   ```{.nim}
+   import std/parseopt
+
+   for kind, key, val in getopt(@["--one"]):
+     case kind
+     of cmdLongOption:
+       echo key
+   ```
+5. When is `--` needed? Give one file name that makes it necessary.
+
+Answers are in [Appendix A](../appendix/answers.qmd).
+
+## Summary
+
+- `initOptParser` and `next` split arguments one token at a time.
+- Four token types: `cmdLongOption`, `cmdShortOption`, `cmdArgument`, and `cmdEnd`.
+- The `getopt` iterator hides the manual loop; `shortNoVal` and `longNoVal` mark options that take
+  no value.
+- An exit code of `0` means success; return an `int` and then call `quit`.
+- `--` stops option processing; the remaining arguments are taken with `remainingArgs`.
+
+## Next
+
+The next chapter raises the stakes: from a tool that reads arguments to a service that receives
+requests. Continue to [an HTTP API with `asynchttpserver`](http-api.qmd).

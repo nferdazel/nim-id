@@ -1,0 +1,3 @@
+[cmdShortOption] key=a val=
+[cmdShortOption] key=b val=
+[cmdLongOption] key=name val=ana

@@ -1,0 +1,304 @@
+# CLI dengan `parseopt`
+
+Alat baris perintah hampir selalu dimulai dari masalah yang sama: membongkar `seq[string]` dari
+`commandLineParams()` menjadi opsi dan argumen. Tanpa bantuan, kode itu penuh `if` dan pemeriksaan
+indeks yang mudah salah. Nim mengirim pemecahnya di pustaka standar: `std/parseopt`.
+
+::: {.callout-note}
+## Tujuan bab
+
+Setelah bab ini, pembaca bisa membaca argumen dengan `initOptParser`, membedakan `cmdLongOption`,
+`cmdShortOption`, `cmdArgument`, dan `cmdEnd`, menangani opsi bernilai, memakai iterator `getopt`,
+menulis teks `usage` beserta kode keluar, serta membaca pesan `undeclared identifier` saat lupa
+mengimpor.
+:::
+
+## Satu putaran, satu token
+
+`initOptParser` menerima barisan argumen dan mengembalikan parser. Tiap panggilan `next` memajukan
+parser ke satu token. Supaya keluarannya tetap sama setiap kali, contoh memberi argumen tetap,
+bukan mengambil dari `commandLineParams()`. Simpan sebagai `main.nim`, lalu jalankan
+`nim c -r main.nim`.
+
+```{.nim}
+import std/parseopt
+
+# Fixed arguments keep the example reproducible.
+let args = @["--verbose", "-n", "3", "input.txt"]
+
+var parser = initOptParser(args)
+while true:
+  parser.next()
+  if parser.kind == cmdEnd:
+    echo "end of command line: ", parser.kind
+    break
+  echo "[", parser.kind, "] key=", parser.key, " val=", repr(parser.val)
+```
+
+```{.txt}
+[cmdLongOption] key=verbose val=""
+[cmdShortOption] key=n val=""
+[cmdArgument] key=3 val=""
+[cmdArgument] key=input.txt val=""
+end of command line: cmdEnd
+```
+
+Parser memberi tahu jenis tiap token lewat `kind`. Empat nilainya:
+
+| `kind` | Arti | Contoh |
+|---|---|---|
+| `cmdLongOption` | opsi panjang | `--verbose` |
+| `cmdShortOption` | opsi pendek | `-n` |
+| `cmdArgument` | argumen biasa | `input.txt` |
+| `cmdEnd` | argumen habis | akhir barisan |
+
+Untuk opsi, `key` berisi nama tanpa tanda hubung, dan `val` berisi nilainya. Untuk `cmdArgument`,
+`key` berisi argumen itu sendiri. `repr` dipakai pada `val` supaya string kosong terlihat sebagai
+`""`, bukan ruang kosong yang tak kelihatan.
+
+## Opsi bernilai dan iterator `getopt`
+
+Berputar manual dengan `next` cepat menjadi panjang. Untuk kasus biasa, ada iterator `getopt` yang
+mengurus putarannya. Iterator ini berhenti sendiri sebelum `cmdEnd`, jadi perulangannya lebih
+ringkas.
+
+```{.nim}
+import std/[parseopt, strutils]
+
+let args = @["--verbose", "--output=report.txt", "--count", "2", "input.txt"]
+
+var verbose = false
+var output = ""
+var count = 0
+
+# verbose and -v are flags; every other option may take a value.
+for kind, key, val in getopt(args, shortNoVal = {'v'},
+                             longNoVal = @["verbose"]):
+  case kind
+  of cmdLongOption, cmdShortOption:
+    case key
+    of "verbose", "v": verbose = true
+    of "output", "o": output = val
+    of "count", "c": count = parseInt(val)
+    else: discard
+  of cmdArgument:
+    echo "argument: ", key
+  of cmdEnd:
+    discard
+
+echo "verbose=", verbose
+echo "output=", output, " count=", count
+```
+
+```{.txt}
+argument: input.txt
+verbose=true
+output=report.txt count=2
+```
+
+Nilai opsi ditulis dengan pemisah `=` atau `:`, misalnya `--output=report.txt` atau
+`-o:report.txt`. Keduanya diterima mode bawaan `NimMode`. Opsi yang tidak punya nilai diisi lewat
+`shortNoVal` dan `longNoVal`. Untuk `--verbose` dan `-v`, keduanya ditandai sebagai *flag*, sehingga
+token berikutnya tidak ikut diserap. Opsi yang tidak disebut di `longNoVal` boleh mengambil token
+berikutnya sebagai nilainya, dan itulah yang terjadi pada `--count 2`. Karena `val` selalu bertipe
+`string`, angkanya diubah dengan `parseInt` dari `std/strutils`.
+
+## Subperintah sederhana
+
+Banyak alat punya subperintah seperti `add` dan `list`. `parseopt` tidak mengenal konsep itu, tetapi
+subperintah hanyalah argumen pertama yang tidak diawali tanda hubung. Kenali lewat `cmdArgument`
+pertama.
+
+```{.nim}
+import std/parseopt
+
+let args = @["add", "--force", "notes.txt"]
+
+var command = ""
+var force = false
+var files: seq[string]
+
+# force is a flag, so it never swallows the next argument.
+for kind, key, val in getopt(args, longNoVal = @["force"]):
+  case kind
+  of cmdArgument:
+    if command == "":
+      command = key
+    else:
+      files.add key
+  of cmdLongOption, cmdShortOption:
+    if key == "force":
+      force = true
+  of cmdEnd:
+    discard
+
+echo "command: ", command
+echo "force: ", force
+echo "files: ", files
+```
+
+```{.txt}
+command: add
+force: true
+files: @["notes.txt"]
+```
+
+Argumen pertama menjadi `command`; sisanya dikumpulkan ke `files`. `--force` ditandai lewat
+`longNoVal` supaya `notes.txt` tidak dianggap nilainya. Pola ini cukup sampai sekitar lima
+subperintah; di atas itu, pisahkan tiap subperintah ke prosedur sendiri.
+
+## `usage`, `--help`, dan kode keluar
+
+Program yang baik menjelaskan dirinya saat diminta, dan memberi kode keluar yang bisa dibaca skrip
+lain. Kode keluar `0` berarti sukses; angka bukan nol menandai kegagalan. Contoh mengembalikan kode
+sebagai `int` supaya hasilnya bisa diprediksi, lalu memanggil `quit` di program sungguhan.
+
+```{.nim}
+import std/parseopt
+
+const usage = "usage: notes [--help] <command> [<file>...]"
+
+proc status(args: seq[string]): int =
+  ## Returns the exit code the program would use.
+  var command = ""
+  for kind, key, val in getopt(args):
+    case kind
+    of cmdLongOption, cmdShortOption:
+      if key == "help" or key == "h":
+        echo usage
+        return 0
+    of cmdArgument:
+      if command == "":
+        command = key
+    of cmdEnd:
+      discard
+  if command in ["add", "list"]:
+    return 0
+  2
+
+echo "exit code: ", status(@["--help"])
+echo "exit code: ", status(@["list"])
+echo "exit code: ", status(@["drop"])
+```
+
+```{.txt}
+usage: notes [--help] <command> [<file>...]
+exit code: 0
+exit code: 0
+exit code: 2
+```
+
+Di program nyata, `status` dipanggil sekali di akhir: `quit(status(commandLineParams()))`. Nama
+`help` dan `h` sengaja digabung, sehingga `--help` dan `-h` berperilaku sama. Satu blok `usage`
+menjadi satu-satunya tempat teks bantuan ditulis, jadi tidak ada dua daftar yang bisa saling
+berbeda.
+
+```bash
+$ ./notes --help
+usage: notes [--help] <command> [<file>...]
+```
+
+## Argumen tambahan setelah `--`
+
+Terkadang sebuah nama berkas dimulai dengan tanda hubung, misalnya `-draft.txt`. Parser akan
+mengira itu sebuah opsi. Tanda `--` menutup bagian opsi: semua token sesudahnya diperlakukan sebagai
+argumen biasa. Argumen yang belum dibaca diambil dengan `remainingArgs`.
+
+```{.nim}
+import std/parseopt
+
+let args = @["--tag=work", "--", "file one.txt", "file two.txt"]
+
+var tag = ""
+var parser = initOptParser(args)
+
+# Everything after "--" is a plain argument, including names that start with "-".
+for kind, key, val in parser.getopt():
+  if kind == cmdLongOption:
+    if key == "tag":
+      tag = val
+    elif key == "":
+      break
+
+echo "tag: ", tag
+echo "files: ", parser.remainingArgs
+```
+
+```{.txt}
+tag: work
+files: @["file one.txt", "file two.txt"]
+```
+
+Tanda `--` muncul sebagai `cmdLongOption` dengan `key` kosong. Begitu ditemukan, putaran berhenti,
+dan `remainingArgs` mengembalikan sisa barisan. Varian `cmdLineRest` mengembalikan sisa itu sebagai
+satu string, bukan barisan.
+
+## Error sengaja: lupa mengimpor `std/parseopt`
+
+Nama dari `parseopt` tidak tersedia begitu saja. Lupakan `import`, dan compiler berhenti di token
+pertama.
+
+```{.nim}
+let parser = initOptParser(@["--flag"])
+echo parser.kind
+```
+
+```{.txt}
+main.nim(1, 14) Error: undeclared identifier: 'initOptParser'
+```
+
+Baca dari kiri: berkas, posisi `(baris, kolom)`, tingkat, lalu pesannya. Posisi `(1, 14)` adalah
+awal nama yang tidak dikenal, tepat setelah `let parser = `. `undeclared identifier` berarti nama
+itu dipakai tanpa pernah dideklarasikan atau diimpor. Baris `candidates` di bawahnya menawarkan nama
+terdekat yang mungkin dimaksud. Perbaikan terpendek: tambahkan `import std/parseopt` di baris
+pertama.
+
+## Kapan `parseopt` cukup
+
+`parseopt` sengaja kecil. Ia tidak memeriksa tipe secara otomatis, tidak membuat halaman bantuan,
+dan tidak mendukung subperintah bawaan. Untuk alat yang menerima sepuluh opsi atau kurang, itu justru
+kelebihannya: tidak ada konfigurasi, tidak ada berkas tambahan, dan perilakunya jelas. Kalau
+kebutuhan tumbuh menjadi banyak subperintah dengan bantuan otomatis, ada paket `cligen` di luar
+pustaka standar. Bab ini tidak memakainya karena satu set contoh dipakai kedua buku, dan pustaka
+standar selalu tersedia bersama compiler.
+
+## Latihan
+
+1. Tambahkan opsi `--quiet` pada contoh pertama supaya perulangannya berhenti mencetak token dan
+   hanya mencetak `quiet mode` di akhir.
+2. Tanpa menjalankan, prediksi keluarannya: token apa saja yang muncul dari barisan ini, dan apa
+   isi `key` serta `val` masing-masing?
+   ```{.nim}
+   import std/parseopt
+
+   for kind, key, val in getopt(@["-ab", "--name=ana"]):
+     echo "[", kind, "] key=", key, " val=", val
+   ```
+3. Tulis dari nol: alat yang menerima `--count N` lalu mencetak `count` sebanyak N kali, dengan
+   nilai bawaan N sama dengan 3.
+4. Kode berikut gagal dikompilasi. Perbaiki, lalu jelaskan isi pesannya:
+   ```{.nim}
+   import std/parseopt
+
+   for kind, key, val in getopt(@["--one"]):
+     case kind
+     of cmdLongOption:
+       echo key
+   ```
+5. Kapan `--` perlu dipakai? Sebutkan satu nama berkas yang membuatnya wajib.
+
+Jawaban ada di [Lampiran A](../appendix/answers.qmd).
+
+## Ringkasan
+
+- `initOptParser` dan `next` membongkar argumen satu token demi satu token.
+- Empat jenis token: `cmdLongOption`, `cmdShortOption`, `cmdArgument`, dan `cmdEnd`.
+- Iterator `getopt` menyembunyikan putaran manual; `shortNoVal` dan `longNoVal` menandai opsi tanpa
+  nilai.
+- Kode keluar `0` berarti sukses; kembalikan `int` lalu panggil `quit`.
+- `--` menghentikan pemrosesan opsi; sisa argumen diambil dengan `remainingArgs`.
+
+## Selanjutnya
+
+Bab berikutnya menaikkan taruhan: dari alat yang membaca argumen menjadi layanan yang menerima
+permintaan. Lanjut ke [HTTP API dengan `asynchttpserver`](http-api.qmd).

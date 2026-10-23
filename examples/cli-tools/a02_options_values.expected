@@ -1,0 +1,3 @@
+argument: input.txt
+verbose=true
+output=report.txt count=2

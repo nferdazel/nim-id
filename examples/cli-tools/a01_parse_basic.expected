@@ -1,0 +1,5 @@
+[cmdLongOption] key=verbose val=""
+[cmdShortOption] key=n val=""
+[cmdArgument] key=3 val=""
+[cmdArgument] key=input.txt val=""
+end of command line: cmdEnd
