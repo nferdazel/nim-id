@@ -207,31 +207,31 @@ echo name
 
 ## Chapter: Primitive types and literals
 
-1. `echo 0xFF` prints `255`, `echo 0b1010` prints `10`, and `echo 1_000` prints `1000`. The prefix
+**1.** `echo 0xFF` prints `255`, `echo 0b1010` prints `10`, and `echo 1_000` prints `1000`. The prefix
    sets the base; the underscore is ignored.
 
-2. The program stops with an `OverflowDefect`. The value is only known at runtime, so the compiler
+**2.** The program stops with an `OverflowDefect`. The value is only known at runtime, so the compiler
    cannot evaluate it ahead of time. When the line `n = n + 1` runs, 128 does not fit in an `int8`
    and the overflow check halts the program:
    ```{.txt}
    Error: unhandled exception: over- or underflow [OverflowDefect]
    ```
 
-3. Because 0.1 has no exact binary form. The `0.1` on the right is a `float64`, while
+**3.** Because 0.1 has no exact binary form. The `0.1` on the right is a `float64`, while
    `float32(0.1)` keeps only about seven significant digits. Compared side by side, `float32(0.1)`
    differs from `0.1` in the digits you cannot see. Compare the difference against a tolerance, not
    with `==`.
 
-4. The result is 2. The `int(...)` conversion truncates toward zero; it does not round.
+**4.** The result is 2. The `int(...)` conversion truncates toward zero; it does not round.
 
-5. `200` is past the `int8` limit (127). The clean fix is a type wide enough to hold it:
+**5.** `200` is past the `int8` limit (127). The clean fix is a type wide enough to hold it:
    ```{.nim}
    const Big: int16 = 200
    ```
 
 ## Chapter: Strings, raw strings, and characters
 
-1. The double quote and the backslash have to be escaped:
+**1.** The double quote and the backslash have to be escaped:
    ```{.nim}
    echo "quote: \" and slash: \\"
    ```
@@ -240,20 +240,20 @@ echo name
    quote: " and slash: \
    ```
 
-2. Both print `ab`, then `3`:
+**2.** Both print `ab`, then `3`:
    ```{.txt}
    ab
    ab
    3
    ```
 
-3. A Windows path is cleanest as a raw string:
+**3.** A Windows path is cleanest as a raw string:
    ```{.nim}
    echo r"C:\temp\new"
    ```
    Output: `C:\temp\new`.
 
-4. It fails because `s` was declared with `let`. `add` changes the string in place and requires the
+**4.** It fails because `s` was declared with `let`. `add` changes the string in place and requires the
    receiver to be a `var`. The message says `expression 's' is immutable, not 'var'`. The fix:
    ```{.nim}
    var s = "abc"
@@ -261,7 +261,7 @@ echo name
    echo s
    ```
 
-5. The last three characters are taken with `^`:
+**5.** The last three characters are taken with `^`:
    ```{.nim}
    echo "programming"[^3..^1]
    ```
@@ -269,25 +269,25 @@ echo name
 
 ## Chapter: Printing and formatting output
 
-1. `echo "total: ", 42` prints `total: 42`. The gap after the colon comes from the string, not from
+**1.** `echo "total: ", 42` prints `total: 42`. The gap after the colon comes from the string, not from
    `echo`.
 
-2. Both print `ab`. The comma version uses two arguments; the `&` version joins them into one
+**2.** Both print `ab`. The comma version uses two arguments; the `&` version joins them into one
    string first. The result is the same:
    ```{.txt}
    ab
    ab
    ```
 
-3. The expression inside `{...}` is evaluated, so the sum is actually computed:
+**3.** The expression inside `{...}` is evaluated, so the sum is actually computed:
    ```{.nim}
    echo &"{3 + 4}"
    ```
    Output: `7`.
 
-4. `echo fmt"{7:>4}"` prints three spaces and then `7`, that is `   7`.
+**4.** `echo fmt"{7:>4}"` prints three spaces and then `7`, that is `   7`.
 
-5. To print without moving to the next line, use `write`:
+**5.** To print without moving to the next line, use `write`:
    ```{.nim}
    stdout.write "loading"
    stdout.write "..."
@@ -296,19 +296,19 @@ echo name
 
 ## Chapter: Arithmetic, comparison, and logic operators
 
-1. `17 div 5` is `3` (integer division, truncated), and `17 mod 5` is `2` (the remainder).
+**1.** `17 div 5` is `3` (integer division, truncated), and `17 mod 5` is `2` (the remainder).
 
-2. `2 + 3 * 4` is `14` because `*` binds tighter; `(2 + 3) * 4` is `20`.
+**2.** `2 + 3 * 4` is `14` because `*` binds tighter; `(2 + 3) * 4` is `20`.
 
-3. `mod` takes its sign from the dividend. `-9 mod 4` is the same as `-(9 mod 4)`, so the result
+**3.** `mod` takes its sign from the dividend. `-9 mod 4` is the same as `-(9 mod 4)`, so the result
    is `-1`.
 
-4. The two comparisons must be joined with `and`:
+**4.** The two comparisons must be joined with `and`:
    ```{.nim}
    echo 1 <= x and x <= 100
    ```
 
-5. It fails because `in` turns into `contains("4", n)`, and no `contains` accepts a `string` on one
+**5.** It fails because `in` turns into `contains("4", n)`, and no `contains` accepts a `string` on one
    side and an `int` on the other. Match the operand types first:
    ```{.nim}
    import std/strutils
