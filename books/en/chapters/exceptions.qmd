@@ -128,7 +128,9 @@ being handled.
 ## The `raises` effect: who may throw
 
 Nim tracks the exceptions that may leave a procedure. This is the `raises` effect, and the compiler
-checks it like an ordinary type. A procedure with `raises: []` promises to throw no exception at all.
+checks it like an ordinary type. A procedure with `raises: []` promises to throw no
+`CatchableError`. `Defect` is not tracked by this effect, so `raises: []` is not a guarantee that an
+out-of-bounds index or a division by zero cannot stop the program.
 
 ```{.nim}
 proc risky(): int =
@@ -237,7 +239,7 @@ Answers are in [Appendix A](../appendix/answers.qmd).
 - `raise` throws, `try` catches, `as e` gives access to the message through `e.msg`.
 - Several `except` clauses are tried in order; `finally` always runs.
 - Exceptions inherit from each other; build your own from `CatchableError`, not `Defect`.
-- The `raises` effect is checked at compile time; `raises: []` means nothing is thrown.
+- The `raises` effect is checked at compile time; `raises: []` means no `CatchableError`.
 - `defer` runs cleanup at the end of a block, no matter what happens.
 
 ## Next

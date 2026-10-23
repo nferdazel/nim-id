@@ -76,6 +76,10 @@ Hello, Grace
 The practical difference: `import` opens all names, `from ... import` opens only the ones named. In
 a large module, the second form makes the dependency list readable from a single line.
 
+The module name itself stays bound. After `from a01_greeting import greet`,
+`a01_greeting.version` is still valid. When you actually want to force qualification, use
+`from a01_greeting import nil`.
+
 ## `export`: forwarding symbols to another module
 
 A module may forward symbols from another module, so callers do not need to know the original. This
@@ -192,8 +196,10 @@ main.nim(1, 8) Error: cannot open file: not_a_real_module
 
 The position `(1, 8)` points at the module name on the `import` line. The compiler cannot tell
 whether the file truly does not exist or was just misspelled, so the message is literal: the file
-cannot be opened. Check the file name and its location. For standard library modules, write the
-`std/` prefix so the search path is clear: `import std/strutils`, not `import strutils`.
+cannot be opened. Check the file name and its location. For standard library modules, the `std/`
+prefix is a convention that makes the module's origin clear: `import std/strutils`. The form without
+the prefix is still recognised by the compiler, it just does not show that the module belongs to the
+standard library.
 
 ## Exercises
 

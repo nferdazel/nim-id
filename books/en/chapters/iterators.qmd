@@ -177,7 +177,9 @@ A sequence reveals every element in memory. It fits when elements must be indexe
 several times.
 
 The rule of thumb: choose an iterator for a large or unbounded stream, and when a search often stops
-early. Choose a sequence when you need the whole collection.
+early. Choose a sequence when you need the whole collection. Reading a huge log file while looking
+for one pattern is a common case: the iterator stops as soon as the pattern is found, without
+loading the whole file.
 
 On speed, an inline iterator is folded into the caller's code with no extra cost. A closure iterator
 involves a function call, so it is a little more expensive. Both still save more memory than building

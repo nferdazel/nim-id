@@ -43,8 +43,8 @@ nilainya, jadi `swap` bekerja untuk variabel `int` maupun `string`.
 
 ## Hygiene: nama di dalam template tidak bocor
 
-`swap` mendeklarasikan `tmp`. Kalau nama itu bocor ke pemanggil, setiap variabel bernama `tmp` di
-luar akan tertimpa. Nim mencegahnya lewat hygiene: simbol yang dideklarasikan di dalam template
+`swap` mendeklarasikan `tmp`. Kalau nama itu bocor ke pemanggil, template bisa bentrok dengan
+variabel `tmp` miliknya. Nim mencegahnya lewat hygiene: simbol yang dideklarasikan di dalam template
 mendapat nama unik, sehingga tidak mungkin bentrok.
 
 ```{.nim}
@@ -219,8 +219,8 @@ count: 5
 ```
 
 `count` disuntikkan ke lingkup pemanggil, sehingga blok di bawah `countTo:` bisa menambahnya.
-Blok itu adalah argumen `body`, yang ikut disalin ke tempatnya. Cara ini dipakai serangkaian
-template di pustaka standar, misalnya untuk mengukur waktu sebuah blok kode.
+Blok itu adalah argumen `body`, yang ikut disalin ke tempatnya. Pustaka standar memakai cara ini:
+`test` di `std/unittest` menerima blok sebagai badan tes, lalu menjalankannya di dalam suite.
 
 ## Template, generic, atau prosedur
 

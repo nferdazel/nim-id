@@ -119,10 +119,11 @@ echo current()
 `current` melaporkan `n`, sedangkan `increment` menaikkannya. Karena keduanya menunjuk `n` yang
 sama, pemanggilan `current()` yang terakhir sudah melihat perubahan dari `increment`.
 
-## Menangkap `var` dan `let`: menunjuk atau menyalin
+## Menangkap `var` dan `let`
 
-Aturan yang perlu dipegang: `var` ditangkap dengan menunjuk, sedangkan `let` ditangkap dengan
-menyalin nilainya.
+Aturan yang perlu dipegang: closure menangkap variabelnya, bukan nilainya. Baik `var` maupun `let`
+diakses lewat variabel yang sama dengan ruang lingkup luarnya; bedanya, `let` tidak bisa diisi ulang
+setelah closure dibuat.
 
 ```{.nim}
 var message = "hello"
@@ -139,7 +140,8 @@ changed
 `show` tidak menyimpan teks `"hello"`, melainkan menunjuk variabel `message`. Begitu `message`
 diganti, `show` melihat nilai barunya.
 
-Untuk `let`, salinan dibuat saat closure dibentuk.
+Kalau variabelnya `let`, isinya tidak bisa diganti. Closure tetap membaca variabel yang sama, dan
+karena variabel itu tidak berubah, hasilnya tetap.
 
 ```{.nim}
 proc demo() =
@@ -159,9 +161,12 @@ demo()
 1
 ```
 
-`readVar` menunjuk `x`, jadi ia melihat `99`. `readLet` memegang salinan nilai `frozen` pada saat
-closure dibuat, jadi ia tetap melihat `1`. Karena `let` tidak bisa diisi ulang, menyalinnya selalu
-aman.
+`readVar` dan `readLet` sama-sama membaca variabelnya lewat referensi. Bedanya, `x` diubah menjadi
+`99` sebelum kedua closure dipanggil, sedangkan `frozen` tidak pernah diisi ulang, jadi `readLet`
+tetap melihat `1`.
+
+Ini penting untuk `let` yang berisi `ref`: variabelnya tetap, tetapi objek yang ditunjuk masih bisa
+berubah, dan closure melihat perubahan itu.
 
 ## Closure di dalam perulangan
 

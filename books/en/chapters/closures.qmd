@@ -120,10 +120,11 @@ echo current()
 `current` reports `n`, while `increment` raises it. Because both refer to the same `n`, the last
 `current()` already sees the change made by `increment`.
 
-## Capturing `var` and `let`: refer or copy
+## Capturing `var` and `let`
 
-The rule to keep in mind: `var` is captured by reference, while `let` is captured by copying its
-value.
+The rule to keep in mind: a closure captures the variable, not its value. Both `var` and `let` are
+read through the same variable as the enclosing scope; the difference is that a `let` cannot be
+reassigned once the closure exists.
 
 ```{.nim}
 var message = "hello"
@@ -140,7 +141,8 @@ changed
 `show` does not store the text `"hello"`; it refers to the variable `message`. Once `message` is
 replaced, `show` sees the new value.
 
-For `let`, the copy is made when the closure is created.
+When the variable is a `let`, its contents cannot be replaced. The closure still reads the same
+variable, and since that variable never changes, the result stays put.
 
 ```{.nim}
 proc demo() =
@@ -160,8 +162,12 @@ demo()
 1
 ```
 
-`readVar` refers to `x`, so it sees `99`. `readLet` holds a copy of `frozen` taken when the closure
-was created, so it still sees `1`. Since a `let` cannot be reassigned, copying it is always safe.
+`readVar` and `readLet` both read their variable by reference. The difference is that `x` is
+changed to `99` before either closure is called, while `frozen` is never reassigned, so `readLet`
+still sees `1`.
+
+This matters for a `let` holding a `ref`: the variable stays fixed, but the object it points at can
+still change, and the closure sees that change.
 
 ## Closures inside a loop
 

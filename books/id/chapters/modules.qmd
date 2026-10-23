@@ -10,7 +10,7 @@ boleh memakainya.
 ## Tujuan bab
 
 Setelah bab ini, pembaca bisa memecah kode menjadi beberapa modul, memakai `import`,
-`from ... import`, dan `export`, menaruh modul di dalam folder, serta membaca pesan error
+`from ... import`, dan `export`, menaruh modul di dalam direktori, serta membaca pesan error
 `cannot open file` dan `invalid module name`.
 :::
 
@@ -79,6 +79,9 @@ Hello, Grace
 Bedanya praktis: `import` membuka semua nama, `from ... import` membuka yang disebut saja. Pada
 modul besar, bentuk kedua membuat daftar ketergantungan terbaca dari satu baris.
 
+Nama modulnya sendiri tetap terikat. Setelah `from a01_greeting import greet`, `a01_greeting.version`
+masih bisa ditulis. Kalau justru ingin memaksa kualifikasi, pakai `from a01_greeting import nil`.
+
 ## `export`: meneruskan simbol ke modul lain
 
 Sebuah modul boleh meneruskan simbol dari modul lain, sehingga pemanggil tidak perlu tahu modul
@@ -127,9 +130,9 @@ Error: invalid module name: '3d_helpers'; a module name must be a valid Nim iden
 Pesan itu tidak menyebut baris, karena masalahnya ada di nama berkas, bukan di kode. Berkas di atas
 dinamai `3d_helpers.nim`, dan itulah yang ditolak.
 
-## Modul di dalam folder
+## Modul di dalam direktori
 
-Modul boleh dikelompokkan di dalam folder. Isi `textutils/format.nim` seperti berikut.
+Modul boleh dikelompokkan di dalam direktori. Isi `textutils/format.nim` seperti berikut.
 
 ```{.nim}
 import std/strutils
@@ -152,7 +155,7 @@ HELLO
 
 Garis miring menunjuk letak berkas, bukan nama modul. Modul di atas tetap bernama `format`, jadi
 akses lengkapnya `format.upper`, bukan `textutils/format.upper`. Aturan yang sama berlaku untuk
-pustaka standar: `import std/strutils` mengambil modul bernama `strutils` dari folder `std`.
+pustaka standar: `import std/strutils` mengambil modul bernama `strutils` dari direktori `std`.
 
 ## `include`: menyisipkan berkas, bukan mengimpor
 
@@ -195,8 +198,9 @@ main.nim(1, 8) Error: cannot open file: not_a_real_module
 
 Posisi `(1, 8)` menunjuk nama modul di baris `import`. Compiler tidak tahu berkas itu memang tidak
 ada atau hanya salah ketik, jadi pesannya literal: berkas tidak bisa dibuka. Periksa kembali nama
-berkas dan letaknya. Untuk pustaka standar, tulis awalan `std/` supaya jalur pencariannya jelas:
-`import std/strutils`, bukan `import strutils`.
+berkas dan letaknya. Untuk pustaka standar, awalan `std/` adalah konvensi yang membuat asal modul
+jelas: `import std/strutils`. Bentuk tanpa awalan masih dikenali compiler, tetapi tidak menunjukkan
+bahwa modul itu bagian dari pustaka standar.
 
 ## Latihan
 
@@ -219,7 +223,7 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 - Satu berkas Nim adalah satu modul; nama berkas menjadi nama modul, dan harus identifier yang sah.
 - Tanpa tanda `*`, simbol tidak keluar dari modulnya.
 - `import` membuka semua ekspor, `from ... import` membuka sebagian, `export` meneruskan.
-- Modul di folder tetap bernama berkasnya, bukan jalurnya.
+- Modul di direktori tetap bernama berkasnya, bukan jalurnya.
 - `include` menyalin teks dan tidak membuat modul; pakai `import` untuk memisahkan kode.
 
 ## Selanjutnya

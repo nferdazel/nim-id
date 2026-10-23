@@ -1,4 +1,4 @@
-# Exception dan efek `raises`
+# Pengecualian dan efek `raises`
 
 Operasi bisa gagal di tengah jalan: berkas tidak ada, isi berkas bukan angka, jaringan putus.
 Membiarkan program berhenti mendadak bukan pilihan. Nim memakai pengecualian, dan menambahkan satu hal
@@ -129,7 +129,8 @@ pengecualian yang sedang ditangani.
 
 Nim melacak pengecualian yang mungkin keluar dari sebuah prosedur. Ini disebut efek `raises`, dan
 compiler memeriksanya seperti tipe biasa. Prosedur dengan `raises: []` berjanji tidak melempar
-pengecualian apa pun.
+`CatchableError`. `Defect` tidak dilacak efek ini, jadi `raises: []` bukan jaminan program tidak
+akan berhenti karena indeks di luar batas atau pembagian dengan nol.
 
 ```{.nim}
 proc risky(): int =
@@ -240,7 +241,7 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 - `raise` melempar, `try` menangkap, `as e` memberi akses pesan lewat `e.msg`.
 - Beberapa `except` dicek berurutan; `finally` selalu jalan.
 - Pengecualian saling mewarisi; buat tipe sendiri dari `CatchableError`, bukan `Defect`.
-- Efek `raises` memeriksa saat kompilasi; `raises: []` berarti tidak melempar apa pun.
+- Efek `raises` memeriksa saat kompilasi; `raises: []` berarti tidak ada `CatchableError`.
 - `defer` menjalankan pembersihan di akhir blok, apa pun yang terjadi.
 
 ## Selanjutnya

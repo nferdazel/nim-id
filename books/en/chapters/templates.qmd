@@ -43,8 +43,8 @@ by value, so `swap` works for `int` variables as well as `string` variables.
 
 ## Hygiene: names inside a template do not leak
 
-`swap` declares `tmp`. If that name leaked to the caller, every variable named `tmp` outside would
-be overwritten. Nim prevents this with hygiene: a symbol declared inside a template gets a unique
+`swap` declares `tmp`. If that name leaked to the caller, the template could clash with the
+caller's own `tmp` variable. Nim prevents this with hygiene: a symbol declared inside a template gets a unique
 name, so a clash is impossible.
 
 ```{.nim}
@@ -219,8 +219,8 @@ count: 5
 ```
 
 `count` is injected into the caller's scope, so the block under `countTo:` can add to it. That block
-is the `body` argument, which is copied into place. A family of standard library templates uses this
-technique, for example to time a block of code.
+is the `body` argument, which is copied into place. The standard library uses this technique:
+`test` in `std/unittest` takes a block as the test body and runs it inside the suite.
 
 ## Template, generic, or procedure
 
