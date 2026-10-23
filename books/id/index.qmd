@@ -1,6 +1,6 @@
 # Dasar Pemrograman Nim {.unnumbered}
 
-Buku ini mengajarkan bahasa [Nim](https://nim-lang.org) dalam Bahasa Indonesia, untuk pembaca
+Buku ini mengajarkan bahasa [Nim](https://nim-lang.org) dalam bahasa Indonesia, untuk pembaca
 yang sudah pernah menulis program di bahasa lain (Python, JavaScript, PHP, Go) tapi belum pernah
 menyentuh bahasa yang dikompilasi ke native.
 
@@ -16,7 +16,7 @@ lebih cepat.
 - **Kode yang sengaja salah.** Beberapa contoh memang gagal dikompilasi, dan itu disengaja:
   pembaca dilatih membaca pesan compiler, bukan menghindarinya.
 - **Output ditulis, bukan difoto.** Semua keluaran program berupa teks yang bisa dicari dan
-  dicopy, dan tetap terbaca oleh pembaca layar.
+  disalin, dan tetap terbaca oleh pembaca layar.
 
 ## Versi
 

@@ -68,11 +68,11 @@ Compiler menolaknya:
 main.nim(3, 1) Error: end of multiline comment expected
 ```
 
-Bacalah pesannya. `main.nim` adalah berkasnya, `(3, 1)` baris 3 kolom 1, dan `Error` berarti build
+Bacalah pesannya. `main.nim` adalah berkasnya, `(3, 1)` baris 3, kolom 1, dan `Error` berarti build
 berhenti. Isinya, "end of multiline comment expected", artinya compiler mencapai akhir berkas
 sebelum menemukan `]#`.
 
-Ada pelajaran penting di posisinya. Kita menulis `#[` di baris 1, tetapi compiler menunjuk baris 3 —
+Ada pelajaran penting di posisinya. Kita menulis `#[` di baris 1, tetapi compiler menunjuk baris 3:
 baris kosong setelah baris terakhir. Compiler baru tahu komentarnya tidak pernah ditutup waktu
 mencapai akhir berkas. Jadi posisi yang dilaporkan adalah tempat compiler *menyadari* masalahnya,
 bukan selalu tempat kesalahannya ditulis. Karena itu, saat menemui error yang menunjuk di luar
@@ -154,7 +154,7 @@ Setelah ketiga bentuk ini, pertanyaannya kapan menulis komentar. Tiga patokan ya
    di baris tempat `#[` ditulis?
 4. Sebuah prosedur diberi keterangan dengan `#` alih-alih `##` tepat di atasnya. Apakah keterangan
    itu muncul di `htmldocs/`? Jelaskan.
-5. Tulis prosedur berbagi pakai (diekspor) dengan doc comment dan satu blok `runnableExamples`, lalu
+5. Tulis prosedur yang diekspor dengan doc comment dan satu blok `runnableExamples`, lalu
    buktikan `nim doc` gagal kalau isi blok itu salah.
 
 ## Ringkasan

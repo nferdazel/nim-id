@@ -49,16 +49,16 @@ nim, is, fast
 Di Windows namanya `join.exe`. Nama biner mengikuti nama berkas sumber; ubah dengan `-o:program`.
 Tambahkan `-r` pada `nim c` untuk sekaligus menjalankannya: `nim c -r join.nim`.
 
-## Build rilis
+## Release build
 
 Secara bawaan, `nim c` membuat *debug build*: cepat dikompilasi, tetapi lambat dijalankan dan masih
-penuh pemeriksaan. Untuk hasil akhir, pakai build rilis:
+penuh pemeriksaan. Untuk hasil akhir, pakai *release build*:
 
 ```{.bash}
 nim c -d:release join.nim
 ```
 
-Build rilis mengaktifkan optimasi dan mematikan sebagian pemeriksaan, seperti pemeriksaan rentang
+Release build mengaktifkan optimasi dan mematikan sebagian pemeriksaan, seperti pemeriksaan rentang
 larik. Karena itu program berjalan lebih cepat, dengan catatan kesalahan yang seharusnya ditangkap
 pemeriksaan tadi bisa lolos. Jangan memakai `-d:release` sebelum logikanya benar.
 
@@ -101,7 +101,7 @@ Bacalah dari baris pertama:
 | Bagian | Arti |
 |---|---|
 | `main.nim` | berkas yang bermasalah |
-| `(4, 12)` | baris 4, kolom 12 — posisi argumen yang salah |
+| `(4, 12)` | baris 4, kolom 12: posisi argumen yang salah |
 | `Error` | tingkat keparahan; build berhenti |
 | `type mismatch` | kategori masalahnya: tipe tidak cocok |
 
@@ -124,7 +124,7 @@ nim check square.nim
 
 `nim check` menjalankan pemeriksaan tipe dan semantik, lalu berhenti. Pada berkas di atas, keluaran
 pertamanya sama dengan sebelumnya, yaitu `type mismatch` di baris 4, dan kode keluarnya bukan nol.
-Ini perintah yang dipakai editor di latar belakang karena jauh lebih ringan dari `nim c`.
+Ini perintah yang dipakai editor di latar belakang karena jauh lebih ringan daripada `nim c`.
 
 ## `nimble`: proyek dan paket
 

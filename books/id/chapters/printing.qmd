@@ -168,7 +168,7 @@ missing_import.nim(1, 6) Error: undeclared identifier: 'fmt'
 ```
 
 Pesan menunjukkan kolom 6, tepat di huruf pertama `fmt`. Compiler tidak menemukan simbol bernama
-`fmt` di scope mana pun. Solusinya satu baris di atas kode: `import std/strformat`. Kesalahan yang
+`fmt` di ruang lingkup mana pun. Solusinya satu baris di atas kode: `import std/strformat`. Kesalahan yang
 sama bisa muncul untuk `&"..."`, hanya saja pesannya berbentuk `type mismatch` karena compiler
 mengira `&` adalah operator penggabung string biasa. Pesan `undeclared identifier` selalu berarti
 hal yang sama: nama itu belum diperkenalkan ke berkas, biasanya lewat `import` yang terlupa.

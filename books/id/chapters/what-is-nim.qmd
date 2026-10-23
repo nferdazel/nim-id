@@ -73,7 +73,7 @@ Bacalah dari kiri ke kanan:
 
 Tidak ada output, karena tidak ada program yang berjalan. Bagi pemula ini terasa seperti halangan.
 Lama-lama ini jadi keuntungan: kesalahan yang sama di Python baru muncul ketika baris itu
-diekeskusi, mungkin setelah data pengguna masuk.
+dieksekusi, mungkin setelah data pengguna masuk.
 
 ## Prosedur dan perulangan
 
@@ -123,7 +123,7 @@ collector yang menghentikan seluruh program untuk menyapu memori. Untuk kode seh
 penting: kita tidak memanggil `free`, dan lupa tidak membebaskan memori bukan kesalahan fatal.
 
 Nim juga punya *template* dan *macro*: kode yang dijalankan saat kompilasi untuk menghasilkan kode
-lain. Karena itu Nim bisa punya sintaks khusus bidang (*domain-specific language*) dan boilerplate
+lain. Karena itu Nim bisa punya sintaks khusus bidang (*domain-specific language*) dan *boilerplate*
 tipis tanpa mengorbankan performa. Kita akan membahasnya jauh nanti, karena keduanya butuh
 pemahaman tipe yang lebih dulu.
 
@@ -133,7 +133,7 @@ Nim cocok ketika kita butuh biner native, pemakaian memori yang bisa diprediksi,
 enak dibaca. Alat baris perintah, layanan jaringan, pengolah data, dan program yang dibagikan
 sebagai satu berkas semuanya masuk hitungan.
 
-Nim bukan pilihan pertama kalau ekosistem yang menentukan. Untuk machine learning, pustaka Python
+Nim bukan pilihan pertama kalau ekosistem yang menentukan. Untuk *machine learning*, pustaka Python
 jauh lebih lengkap. Untuk aplikasi web dengan lowongan kerja terbanyak, JavaScript dan Go lebih
 aman. Jujur soal ini lebih berguna daripada menjual satu bahasa sebagai jawaban untuk segalanya.
 
@@ -152,7 +152,7 @@ aman. Jujur soal ini lebih berguna daripada menjual satu bahasa sebagai jawaban 
 - Tipe diperiksa saat kompilasi, jadi kesalahan tipe menghentikan build sebelum ada output.
 - `echo` mencetak ke stdout; prosedur memakai `proc` dengan ekspresi terakhir sebagai nilai balik.
 - Backend bisa diganti (C, C++, Objective-C, JavaScript); pengelola memori bawaan adalah ORC.
-- Ekosistem Nim lebih kecil dari Python atau JavaScript; pilih Nim karena kebutuhan, bukan tren.
+- Ekosistem Nim lebih kecil daripada Python atau JavaScript; pilih Nim karena kebutuhan, bukan tren.
 
 ## Selanjutnya
 

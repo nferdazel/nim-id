@@ -1,6 +1,6 @@
 # Tipe data primitif dan literal
 
-Di bahasa lain, satu tipe `int` cukup untuk semua bilangan. Di Nim bilangan bulat dipecah menurut
+Di bahasa lain, satu tipe `int` cukup untuk semua bilangan. Di Nim, bilangan bulat dipecah menurut
 lebar bit, dan pilihan itu menentukan rentang nilai sekaligus jumlah memori yang dipakai.
 
 Pilih terlalu sempit, program berhenti dengan `OverflowDefect` di tengah jalan. Pilih terlalu
@@ -77,7 +77,7 @@ echo 2e3          # scientific notation is a float
 
 Awalan `0x` menandai heksadesimal, `0b` biner, dan `0o` oktal. Garis bawah di dalam angka hanya
 alat bantu mata; compiler mengabaikannya. Baris terakhir terlihat seperti bilangan bulat, tapi
-`2e3` adalah `float` — karena itu hasilnya `2000.0`, bukan `2000`.
+`2e3` adalah `float`; karena itu hasilnya `2000.0`, bukan `2000`.
 
 ## Ketika nilai melewati batas
 
@@ -138,7 +138,7 @@ echo 0.1 + 0.2 == 0.3
 false
 ```
 
-`float32` menyimpan sekitar tujuh angka penting, `float64` sekitar lima belas. Konsekuensinya
+`float32` menyimpan sekitar tujuh angka penting, `float64` sekitar lima belas. Konsekuensinya,
 `1.0 / 3.0` berbeda presisi saat dihitung sebagai `float32`. Akhiran `'f32` memaksa sebuah literal
 menjadi `float32`. Baris terakhir memperlihatkan hal yang sering mengejutkan: `0.1 + 0.2` dan `0.3`
 bukan nilai yang sama persis, karena keduanya tidak bisa disimpan dengan tepat dalam biner. Karena
@@ -172,7 +172,7 @@ echo $ratio
 
 `int(ratio)` membuang bagian pecahan; hasilnya 2, bukan 3, karena pemotongan terjadi ke arah nol.
 Sebaliknya `$` mengubah nilai menjadi string, dan `parseInt` melakukan arah kebalikannya. Perhatikan
-bahwa `int("128")` tidak bekerja — teks harus melewati `parseInt` lebih dulu.
+bahwa `int("128")` tidak bekerja; teks harus melewati `parseInt` lebih dulu.
 
 ## `bool` dan `char`
 
@@ -208,7 +208,7 @@ operator logika di bab operator.
 
 ## Latihan
 
-1. Tulis tiga liter yaitu `0xFF`, `0b1010`, dan `1_000`. Prediksi output `echo` untuk masing-masing
+1. Tulis tiga literal, yaitu `0xFF`, `0b1010`, dan `1_000`. Prediksi output `echo` untuk masing-masing
    sebelum menjalankannya.
 2. Apa yang terjadi pada kode ini, dan mengapa pesannya muncul saat runtime, bukan saat kompilasi?
    ```{.nim}

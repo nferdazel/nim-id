@@ -1,7 +1,7 @@
 # String, raw string, dan karakter
 
 Hampir setiap program menyentuh teks. Di Nim, `string` adalah barisan byte yang boleh diubah di
-tempat — berbeda dari bahasa yang memperlakukan string sebagai nilai beku. Perbedaan itu muncul di
+tempat, berbeda dari bahasa yang memperlakukan string sebagai nilai beku. Perbedaan itu muncul di
 indeks, penggabungan, dan pesan error yang kadang tidak terduga.
 
 Bab ini mulai dari menulis teks harfiah, lalu bergerak ke cara mengambil sebagian isinya dan
