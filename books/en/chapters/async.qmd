@@ -39,8 +39,8 @@ Notice three things. The `{.async.}` pragma rewrites the procedure so that `retu
 `Future`. Inside `main`, `await greeting("Nim")` waits until the result is ready, then unwraps it.
 Outside an async procedure, `waitFor` drives the async machinery until the task finishes.
 
-`waitFor` starts the event loop, the mechanism that cycles through tasks that are waiting. That is
-why it is called once, at the top level of the program.
+`waitFor` starts the event loop, the mechanism that cycles through tasks that are waiting. One
+`waitFor` at the top level is usually enough; calling it twice still works, but is rarely needed.
 
 `Future` is a generic type. `Future[string]` holds a string, `Future[int]` holds an integer.
 `waitFor` returns the same value as the contents of that `Future`, so `let total = waitFor sum()`
@@ -117,8 +117,8 @@ milliseconds, not 40. For two tasks the gap is small; for two hundred network re
 As long as the tasks do not depend on each other, grouping them is almost always faster than waiting
 for them one at a time.
 
-One easy mistake: plain `sleep` blocks the entire event loop, whereas `sleepAsync` hands control back
-to the async machinery. Inside an `{.async.}` procedure, use the async version of every waiting
+One easy mistake: plain `sleep` (from `std/os`) blocks the entire event loop, whereas `sleepAsync`
+hands control back to the async machinery. Inside an `{.async.}` procedure, use the async version of every waiting
 operation. Otherwise the tasks run in sequence again without you noticing.
 
 An error inside an async procedure surfaces when its `Future` is awaited. That means `try` and
@@ -147,15 +147,16 @@ main.nim(7, 25) Error: Can only 'await' inside a proc marked as 'async'. Use 'wa
 ```
 
 The message has two parts. The first states the rule. The second hands you the way out: use
-`waitFor` when the caller is not an async procedure. `(7, 25)` points at the line and column where
-`await` sits.
+`waitFor` when the caller is not an async procedure. `(7, 25)` points at the `work()` call being
+awaited, not at the `await` token itself.
 
 There are two reasonable fixes. Turn `main` into an async procedure and call it with `waitFor`, or
 leave `main` synchronous and call `waitFor work()` inside it.
 
-There is also `asyncCheck` for starting a task without waiting for it. Be careful with it: if that
-task fails and nothing waits for the result, the error is seen by nobody. Use `await` while the
-result or the error actually matters.
+There is also `asyncCheck`, which attaches a check to a `Future` so an error nobody waits for is
+still reported. Be careful with it: if that task fails, the error is raised on the event loop and
+the program can stop with an unhandled exception. When the error really should be ignored, the
+`discard` on the `Future` is what swallows it. Use `await` while the result or the error matters.
 
 ## Exercises
 
@@ -182,7 +183,7 @@ Answers are in [Appendix A](../appendix/answers.qmd).
 ## Summary
 
 - An `{.async.}` procedure returns a `Future`; `await` unwraps its result.
-- `waitFor` drives the async machinery from synchronous code and is called once at the top level.
+- `waitFor` drives the async machinery from synchronous code; one call at the top level is usually enough.
 - Sequential `await` adds delays; `all` overlaps them and keeps argument order.
 - The examples keep their output fixed by relying on `await` order, not on time.
 - `await` outside an async procedure is rejected at compile time.

@@ -200,8 +200,9 @@ saat kuncinya hilang.
 ## Modul lain punya babnya sendiri
 
 Pustaka standar jauh lebih luas dari empat modul ini. `std/os` dibahas di bab berkas dan operasi
-sistem, `std/strformat` di bab variabel, dan modul seperti `std/math`, `std/algorithm`,
-`std/random`, serta `std/times` menyusul di bagian lain. Pola impornya sama: `import std/nama`.
+sistem, `std/strformat` di bab variabel, dan `std/math` serta `std/algorithm` muncul di bab operasi
+dan berkas. `std/random` dan `std/times` tidak punya bab khusus di buku ini; dokumentasi resmi jadi
+rujukan berikutnya. Pola impornya sama: `import std/nama`.
 
 ## Latihan
 

@@ -23,6 +23,11 @@ Bedanya satu: ORC menambahkan pendeteksi siklus. Dua objek yang saling menunjuk 
 turun ke nol dengan penghitungan biasa; ORC menemukan pasangan seperti itu dan membebaskannya.
 ARC tidak, sehingga siklus menjadi kebocoran memori.
 
+Pendeteksian itu tidak berjalan setiap saat. ORC baru menyisir siklus setelah jumlah objek yang
+dialokasikan melewati ambang bawaan (128), atau saat `GC_fullCollect()` dipanggil. Pada program
+kecil, siklus bisa belum terkumpul waktu program selesai, jadi jangan menyimpulkan ORC gagal hanya
+dari satu percobaan singkat.
+
 Sejak Nim 2.x, mode bawaan adalah ORC.
 
 ## Memeriksa mode yang aktif
@@ -96,8 +101,10 @@ Bacalah urutannya. `make()` mencetak `make`, lalu mengembalikan sebuah `Box`; ni
 Dari urutan di atas, aturannya jelas:
 
 - **Akhir ruang lingkup.** `y` dibuang saat bloknya selesai, `x` saat `main()` selesai.
-- **Nilai sementara.** Nilai yang dibuat lalu langsung dikonsumsi dibuang setelah dipakai.
-- **Penimpaan.** Saat sebuah variabel ditimpa nilai baru, nilai lamanya dibuang lebih dulu.
+- **Nilai sementara.** Dibuang paling cepat di akhir pernyataan yang memakainya, dan sering baru
+  di akhir ruang lingkup. Jangan bergantung pada momen persisnya.
+- **Penimpaan.** Saat sebuah variabel ditimpa nilai baru, nilai lamanya dibuang lebih dulu, kecuali
+  tipenya punya hook `=copy` atau `=sink` sendiri: hook itulah yang bertanggung jawab.
 
 Yang tidak terjadi: `=destroy` tidak dipanggil tepat saat nilai dibuat, dan tidak dipanggil untuk
 `ptr` yang menunjuk ke nilai itu.
@@ -128,6 +135,11 @@ b = a
 fieldnya secara dangkal. Untuk tipe yang memegang berkas atau penunjuk, `=copy` perlu membuat
 salinan yang benar-benar terpisah, bukan menyalin penunjuknya.
 
+Hook di atas juga belum membuang nilai lama di `dest`. Itu disengaja supaya contohnya pendek:
+begitu kita menulis `=copy` sendiri, tanggung jawab itu pindah ke kita. Pada tipe pemilik sumber
+daya, awali hook dengan `=destroy(dest)`, kalau tidak sumber daya lama bocor setiap kali nilai
+ditimpa.
+
 ## `=sink`: menyerap nilai sementara
 
 Kalau sumbernya nilai sementara yang tidak dipakai lagi, compiler memilih `=sink`, bukan `=copy`.
@@ -151,7 +163,10 @@ d = temp
 ```
 
 `Box(name: "temp")` adalah nilai sementara; menugaskannya ke `d` bisa memindahkan isinya, jadi
-`=sink` dipanggil. Kalau sumbernya variabel biasa, jalur yang dipakai `=copy`.
+`=sink` dipanggil. Kalau sumbernya variabel biasa, jalur yang dipakai `=copy`. Sama seperti
+`=copy`, hook ini mengambil alih tanggung jawab membuang nilai lama: `d` berisi `old` sebelum
+ditimpa, dan contoh di atas tidak memanggil `=destroy(dest)`, jadi tipe pemilik sumber daya perlu
+menambahkannya sendiri.
 
 ## `move`: memindahkan tanpa hook
 

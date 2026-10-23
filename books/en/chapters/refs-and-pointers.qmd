@@ -87,7 +87,8 @@ false
 
 `isNil` returns `true` while the reference is empty. Once it is filled in, the result is `false`.
 Test `isNil` before using a reference that may not be set yet. Dereferencing `nil` stops the
-program while it runs, not while it compiles.
+program while it runs, not while it compiles: on macOS and Linux the process dies with `SIGSEGV`,
+not with a Nim exception you can catch in `try`.
 
 ## `ptr`: an address, not an owner
 
@@ -136,12 +137,12 @@ echo c.hits
 
 ## `addr` and `unsafeAddr`
 
-`addr` only works on addressable locations. For `let` and parameters, Nim allows it for better
-interop with C.
+`addr` only works on addressable locations. A `var` plainly has one; for `let` and parameters, Nim
+still allows it for better interop with C.
 
 ```{.nim}
 let year = 2008
-let p = unsafeAddr year
+let p = addr year
 
 echo p[]
 ```
@@ -150,8 +151,9 @@ echo p[]
 2008
 ```
 
-In Nim 2.2.12, `unsafeAddr` is an old alias for `addr`; the `system.nim` docs already mark it
-deprecated. Use `addr` in new code.
+`unsafeAddr` is an old alias for `addr`, and the `system.nim` docs in 2.2.12 already mark it
+deprecated. The compiler does not always emit a warning when you use it, so prefer `addr` in new
+code.
 
 ## `cast` in brief
 
@@ -183,8 +185,9 @@ echo p[]
 main.nim(1, 14) Error: expression has no address
 ```
 
-The message names the line and column of `addr`, then the problem: the expression `42` has no
-address. The fix is to store the value in a variable first, then take the address of that variable.
+Position `(1, 14)` points at the literal `42` in `addr 42`, not at the `addr` token itself; the
+message then states the problem: that expression has no address. The fix is to store the value in a
+variable first, then take the address of that variable.
 
 ## `ref object` vs `object`
 
@@ -212,7 +215,8 @@ The risks are real:
   `ptr` does not know that.
 - **Unchecked.** A `ptr` can point anywhere; Nim does not check bounds or types while the program
   runs.
-- **`nil` left untested.** Dereferencing a `ptr` or `ref` that is `nil` stops the program.
+- **`nil` left untested.** Dereferencing a `ptr` or `ref` that is `nil` stops the program with
+  `SIGSEGV`, not with an exception.
 
 So the rule is simple: use `ref` when you can, and reach for `ptr` only when there is no choice.
 

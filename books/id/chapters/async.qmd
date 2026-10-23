@@ -40,7 +40,8 @@ Perhatikan tiga hal. Pragma `{.async.}` mengubah prosedur sehingga `return` di d
 nilainya. Di luar prosedur async, `waitFor` yang menjalankan mesin async sampai tugasnya selesai.
 
 `waitFor` memulai putaran peristiwa, yaitu mekanisme yang menggilir tugas-tugas yang sedang
-menunggu. Karena itu ia dipanggil sekali saja, di tingkat teratas program.
+menunggu. Biasanya cukup satu `waitFor` di tingkat teratas program; memanggilnya dua kali tetap
+berjalan, tetapi jarang diperlukan.
 
 `Future` adalah tipe generik. `Future[string]` berisi string, `Future[int]` berisi bilangan bulat.
 `waitFor` mengembalikan nilai yang sama dengan isi `Future` itu, jadi `let total = waitFor sum()`
@@ -116,8 +117,8 @@ bukan 40. Untuk dua tugas, bedanya kecil; untuk dua ratus permintaan jaringan, b
 Selama tugas-tugas itu tidak saling bergantung, menggabungkannya hampir selalu lebih cepat daripada
 menunggu satu per satu.
 
-Satu hal yang mudah salah: `sleep` biasa memblokir seluruh putaran peristiwa, sedangkan `sleepAsync`
-mengembalikan kendali ke mesin async. Di dalam prosedur `{.async.}`, pakai versi async dari setiap
+Satu hal yang mudah salah: `sleep` biasa (dari `std/os`) memblokir seluruh putaran peristiwa,
+sedangkan `sleepAsync` mengembalikan kendali ke mesin async. Di dalam prosedur `{.async.}`, pakai versi async dari setiap
 operasi yang menunggu. Kalau tidak, tugas-tugas itu berjalan berurutan lagi tanpa disadari.
 
 Kesalahan di dalam prosedur async muncul saat `Future`-nya di-`await`. Artinya `try` dan `except`
@@ -146,15 +147,17 @@ main.nim(7, 25) Error: Can only 'await' inside a proc marked as 'async'. Use 'wa
 ```
 
 Pesan itu punya dua bagian. Bagian pertama menyebut aturannya. Bagian kedua langsung memberi jalan
-keluar: pakai `waitFor` kalau pemanggilnya bukan prosedur async. `(7, 25)` menunjuk baris dan kolom
-tempat `await` berada.
+keluar: pakai `waitFor` kalau pemanggilnya bukan prosedur async. `(7, 25)` menunjuk panggilan
+`work()` yang di-`await`, bukan token `await` itu sendiri.
 
 Ada dua perbaikan yang wajar. Ubah `main` menjadi prosedur async lalu panggil dengan `waitFor`,
 atau biarkan `main` sinkron dan panggil `waitFor work()` di dalamnya.
 
-Ada juga `asyncCheck` untuk memulai tugas tanpa menunggunya. Hati-hati memakainya: kalau tugas itu
-gagal dan tidak ada yang menunggu hasilnya, kesalahannya tidak dilihat siapa pun. Pakai `await`
-selama hasil atau kesalahannya memang penting.
+Ada juga `asyncCheck`, yang memasang pemeriksa pada `Future` supaya kesalahan yang tidak ditunggu
+tetap dilaporkan. Hati-hati memakainya: kalau tugas itu gagal, kesalahannya di-raise di putaran
+peristiwa dan program bisa berhenti dengan unhandled exception. Kalau kesalahan memang ingin
+diabaikan, `discard` pada `Future` itulah yang menelannya. Pakai `await` selama hasil atau
+kesalahannya penting.
 
 ## Latihan
 
@@ -181,7 +184,7 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 ## Ringkasan
 
 - Prosedur `{.async.}` mengembalikan `Future`; `await` membuka hasilnya.
-- `waitFor` menjalankan mesin async dari kode sinkron dan dipanggil sekali di tingkat teratas.
+- `waitFor` menjalankan mesin async dari kode sinkron; biasanya cukup sekali di tingkat teratas.
 - `await` berurutan menjumlahkan jeda; `all` menumpuknya sambil menjaga urutan argumen.
 - Keluaran contoh dijaga pasti dengan mengandalkan urutan `await`, bukan waktu.
 - `await` di luar prosedur async ditolak saat kompilasi.

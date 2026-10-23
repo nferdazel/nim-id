@@ -23,6 +23,11 @@ They differ in one thing: ORC adds cycle detection. Two objects pointing at each
 to zero under plain counting; ORC finds such pairs and frees them. ARC does not, so cycles become
 a memory leak.
 
+That detection does not run all the time. ORC only sweeps for cycles after the number of allocated
+objects crosses a default threshold (128), or when `GC_fullCollect()` is called. In a small
+program, cycles may still be alive when the program ends, so do not conclude from one short run
+that ORC failed.
+
 Since Nim 2.x the default mode is ORC.
 
 ## Checking which mode is active
@@ -95,8 +100,10 @@ before `after block`. `x` is only dropped at the end of `main()`, so `destroy ou
 From the order above, the rule is clear:
 
 - **End of scope.** `y` is dropped when its block ends, `x` when `main()` ends.
-- **Temporary values.** A value created and consumed right away is dropped after use.
-- **Overwrite.** When a variable is overwritten, the old value is dropped first.
+- **Temporary values.** Dropped no earlier than the end of the statement that uses them, and often
+  only at the end of the enclosing scope. Do not rely on the exact moment.
+- **Overwrite.** When a variable is overwritten, the old value is dropped first, unless its type has
+  its own `=copy` or `=sink` hook: that hook is then responsible.
 
 What does not happen: `=destroy` is not called the instant a value is created, and it is not
 called for a `ptr` that points at the value.
@@ -126,6 +133,11 @@ b = a
 `var b = a` copies from a variable, so `=copy` is the one called. The definition above copies the
 field shallowly. For a type that owns a file or a pointer, `=copy` must make a truly separate
 copy, not duplicate the pointer.
+
+The hook above also never frees the old value in `dest`. That is deliberate, to keep the example
+short: once we write `=copy` ourselves, that responsibility moves to us. For resource-owning types,
+start the hook with `=destroy(dest)`; otherwise the old resource leaks every time the value is
+overwritten.
 
 ## `=sink`: absorbing a temporary
 

@@ -1,4 +1,4 @@
 let year = 2008
-let p = unsafeAddr year
+let p = addr year
 
 echo p[]

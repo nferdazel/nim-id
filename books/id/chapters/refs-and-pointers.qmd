@@ -88,7 +88,8 @@ false
 
 `isNil` mengembalikan `true` selama referensinya kosong. Setelah diisi, hasilnya `false`. Uji
 `isNil` sebelum memakai referensi yang mungkin belum diisi. Mendereferensi `nil` menghentikan
-program saat berjalan, bukan saat kompilasi.
+program saat berjalan, bukan saat kompilasi: di macOS dan Linux prosesnya mati dengan `SIGSEGV`,
+bukan exception Nim yang bisa ditangkap `try`.
 
 ## `ptr`: alamat, bukan pemilik
 
@@ -137,12 +138,12 @@ berubah.
 
 ## `addr` dan `unsafeAddr`
 
-`addr` hanya bekerja pada lokasi yang bisa dialamati. Untuk `let` dan parameter, Nim
-mengizinkannya demi interop dengan C.
+`addr` hanya bekerja pada lokasi yang bisa dialamati. Variabel `var` jelas punya alamat; untuk
+`let` dan parameter, Nim tetap mengizinkannya demi interop dengan C.
 
 ```{.nim}
 let year = 2008
-let p = unsafeAddr year
+let p = addr year
 
 echo p[]
 ```
@@ -151,8 +152,9 @@ echo p[]
 2008
 ```
 
-Di Nim 2.2.12, `unsafeAddr` adalah alias lama untuk `addr`; dokumentasi `system.nim` sudah
-menandainya usang. Pakai `addr` untuk kode baru.
+`unsafeAddr` adalah alias lama untuk `addr`, dan dokumentasi `system.nim` di 2.2.12 sudah
+menandainya usang. Compiler tidak selalu memunculkan peringatan saat memakainya, jadi pakai `addr`
+untuk kode baru.
 
 ## `cast` singkat
 
@@ -184,8 +186,9 @@ echo p[]
 main.nim(1, 14) Error: expression has no address
 ```
 
-Pesan itu menyebut baris dan kolom `addr`, lalu masalahnya: ekspresi `42` tidak punya alamat.
-Perbaikannya, simpan dulu nilainya ke sebuah variabel, lalu ambil alamat variabel itu.
+Posisi `(1, 14)` menunjuk literal `42` di `addr 42`, bukan token `addr` itu sendiri; pesannya lalu
+menyebut masalahnya: ekspresi itu tidak punya alamat. Perbaikannya, simpan dulu nilainya ke sebuah
+variabel, lalu ambil alamat variabel itu.
 
 ## `ref object` vs `object`
 
@@ -213,7 +216,8 @@ Risikonya nyata:
   tahu itu.
 - **Tanpa pemeriksaan.** `ptr` bisa menunjuk ke mana saja; Nim tidak memeriksa batas atau tipe
   saat program berjalan.
-- **`nil` yang tidak diuji.** Mendereferensi `ptr` atau `ref` yang `nil` menghentikan program.
+- **`nil` yang tidak diuji.** Mendereferensi `ptr` atau `ref` yang `nil` menghentikan program
+  dengan `SIGSEGV`, bukan exception.
 
 Aturannya sederhana: pakai `ref` kalau bisa, pakai `ptr` hanya saat tidak ada pilihan.
 
