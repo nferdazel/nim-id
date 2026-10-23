@@ -1,0 +1,280 @@
+# Concept dan pencocokan tipe
+
+Prosedur generic dengan `[T]` menerima tipe apa saja. Itu sering terlalu longgar: badan prosedur
+memakai `x.name`, tapi tidak ada yang mencegah pemanggilan dengan `int`. Batasan seperti
+`[T: SomeInteger]` membantu, tapi daftarnya sudah ditentukan bahasa. Concept menutup celah itu:
+batasan yang ditulis sendiri, berdasarkan bentuk tipe.
+
+Bab ini membangun concept dari yang sederhana sampai yang digabung, memakainya untuk memilih
+overload, dan membaca pesan error ketika syaratnya tidak terpenuhi. Semua contoh diuji di Nim
+2.2.12.
+
+::: {.callout-note}
+## Tujuan bab
+
+Setelah bab ini, pembaca bisa menulis `concept`, memakainya sebagai batasan generic, menggabung
+syarat dengan `and` dan `or`, memakai concept untuk memilih overload, dan membaca pesan
+`concept predicate failed`.
+:::
+
+## Batasan bawaan: `SomeNumber`
+
+Nim sudah menyediakan beberapa batasan siap pakai.
+
+```{.nim}
+proc total[T: SomeNumber](xs: seq[T]): T =
+  for x in xs:
+    result += x
+
+echo total(@[1, 2, 3])
+echo total(@[1.5, 2.5])
+```
+
+```{.txt}
+6
+4.0
+```
+
+`SomeNumber` mencakup tipe bilangan. Satu prosedur, dua tipe berbeda, tanpa menulis ulang. Batasan
+seperti ini berguna selama bentuk yang diinginkan sudah ada di pustaka standar. Begitu yang
+dibutuhkan adalah "punya field `name`", tidak ada nama bawaan yang menolong.
+
+## Concept: syarat yang ditulis sendiri
+
+Concept mendaftar syarat dalam bentuk ekspresi yang harus benar untuk tipe itu.
+
+```{.nim}
+type
+  Named = concept x
+    x.name is string
+
+  Person = object
+    name: string
+
+  Robot = object
+    name: string
+    model: int
+
+proc greet[T: Named](x: T): string =
+  "Hello, " & x.name
+
+echo greet(Person(name: "Ada"))
+echo greet(Robot(name: "R2", model: 2))
+```
+
+```{.txt}
+Hello, Ada
+Hello, R2
+```
+
+`x.name is string` adalah syaratnya: tipe apa pun yang punya field `name` bertipe `string` cocok.
+Perhatikan bahwa `Person` dan `Robot` tidak berhubungan sama sekali. Concept mencocokkan **bentuk**,
+bukan keturunan atau nama tipe.
+
+## Dua syarat berarti keduanya harus benar
+
+Beberapa baris di dalam satu concept digabung dengan `and` secara implisit.
+
+```{.nim}
+type
+  Person = concept x
+    x.name is string
+    x.age is int
+
+type Employee = object
+  name: string
+  age: int
+
+proc show[T: Person](x: T): string =
+  x.name & " is " & $x.age
+
+echo show(Employee(name: "Ada", age: 36))
+```
+
+```{.txt}
+Ada is 36
+```
+
+`Employee` cocok karena memenuhi kedua syarat. Kalau salah satu saja tidak terpenuhi, misalnya
+`age` bertipe `string`, maka tipe itu ditolak.
+
+## Concept menentukan overload mana yang dipakai
+
+Karena concept menyaring tipe, beberapa prosedur bernama sama bisa hidup berdampingan dan masing
+masing menangkap kelompok tipe yang berbeda.
+
+```{.nim}
+type
+  Named = concept x
+    x.name is string
+  Sized = concept x
+    x.size is int
+
+type
+  Label = object
+    name: string
+  Box = object
+    size: int
+
+proc describe[T: Named](x: T): string = "named " & x.name
+proc describe[T: Sized](x: T): string = "sized " & $x.size
+
+echo describe(Label(name: "kit"))
+echo describe(Box(size: 3))
+```
+
+```{.txt}
+named kit
+sized 3
+```
+
+`Label` hanya cocok dengan `Named`, `Box` hanya cocok dengan `Sized`, jadi compiler tidak ragu.
+Kalau satu tipe memenuhi keduanya, pemanggilan menjadi ambigu dan harus diselesaikan dengan cara
+lain. Karena itu, jaga agar concept tetap sempit.
+
+## Menggabungkan concept dengan `and`
+
+Dua concept bisa disatukan dengan `and` pada posisi batasan.
+
+```{.nim}
+type
+  Named = concept x
+    x.name is string
+  Aged = concept x
+    x.age is int
+
+type Employee = object
+  name: string
+  age: int
+
+proc show[T: Named and Aged](x: T): string =
+  x.name & " (" & $x.age & ")"
+
+echo show(Employee(name: "Ada", age: 36))
+```
+
+```{.txt}
+Ada (36)
+```
+
+`Named and Aged` menuntut kedua syarat sekaligus. Bedanya dengan dua baris di dalam satu concept:
+`and` di sini menggabungkan concept yang bisa dipakai ulang secara terpisah.
+
+## Menggabungkan concept dengan `or`
+
+`or` melonggarkan syarat: cukup salah satu terpenuhi.
+
+```{.nim}
+type
+  HasName = concept x
+    x.name is string
+  HasSize = concept x
+    x.size is int
+  Describable = HasName or HasSize
+
+proc describe[T: Describable](x: T): string =
+  when x is HasName:
+    "name: " & x.name
+  else:
+    "size: " & $x.size
+
+type
+  Label = object
+    name: string
+  Box = object
+    size: int
+
+echo describe(Label(name: "kit"))
+echo describe(Box(size: 3))
+```
+
+```{.txt}
+name: kit
+size: 3
+```
+
+Karena satu tipe yang cocok mungkin hanya punya salah satu field, badan prosedur harus memeriksa
+cabang mana yang berlaku. `when x is HasName` memilih saat kompilasi, dan tiap cabang hanya mengakses
+field yang dijamin ada. Ini pola yang sering muncul begitu `or` dipakai.
+
+## Membaca error: predicate gagal
+
+Memanggil prosedur dengan tipe yang tidak memenuhi concept ditolak compiler.
+
+```{.nim}
+type
+  Named = concept x
+    x.name is string
+
+proc greet[T: Named](x: T): string =
+  "Hello, " & x.name
+
+echo greet(42)
+```
+
+```{.txt}
+main.nim(8, 11) Error: type mismatch
+Expression: greet(42)
+  [1] 42: int literal(42)
+
+Expected one of (first mismatch at [position]):
+[1] proc greet[T: Named](x: T): string
+main.nim(3, 6) Named: undeclared field: 'name'
+main.nim(3, 6) Named: undeclared field: '.'
+main.nim(3, 6) Named: undeclared field: '.'
+main.nim(3, 6) Named: expression '' has no type (or is ambiguous)
+main.nim(3, 5) Named: concept predicate failed
+```
+
+Bacalah dari bawah. Baris terakhir, `concept predicate failed`, menyebut penyebab sebenarnya. Baris
+di atasnya menunjuk berkas dan baris concept, yaitu `Named` di baris 3, lalu merinci ekspresi mana
+yang gagal. Compiler mencoba `x.name` pada `int`, menemukan tidak ada field `name`, dan melaporkannya
+berulang untuk tiap bagian ekspresi. Pesannya panjang, tapi arahnya jelas: periksa concept di baris
+yang ditunjuk.
+
+## Batas concept
+
+Concept adalah alat pencocokan, bukan tipe biasa. Ia tidak bisa dipakai untuk mendeklarasikan
+variabel.
+
+```{.nim}
+type
+  Named = concept x
+    x.name is string
+
+var value: Named
+echo value
+```
+
+```{.txt}
+main.nim(5, 5) Error: invalid type: 'Named' for var
+```
+
+Selain itu, pencocokan bersifat struktural: tipe yang kebetulan punya field `name` ikut cocok,
+meskipun penulisnya tidak pernah berniat begitu. Concept juga tidak memeriksa makna, hanya bentuk.
+Untuk tipe yang benar benar harus terdaftar, warisan atau `distinct` lebih tepat daripada concept.
+
+## Latihan
+
+1. Tulis concept `Sized` yang menuntut `x.size is int`, lalu prosedur yang mencetak ukurannya untuk
+   tipe `Box`.
+2. Apakah `type Num = object` dengan field `name: int` cocok dengan `Named`? Jalankan untuk membuktikan.
+3. Gabungkan dua concept dengan `and`, lalu pakai sebagai batasan satu prosedur.
+4. Jelaskan kenapa `var value: Named` ditolak compiler, lalu tulis deklarasi setara yang memakai
+   tipe konkret dengan field `name`.
+
+Jawaban ada di [Lampiran A](../appendix/answers.qmd).
+
+## Ringkasan
+
+- `concept` menyaring tipe berdasarkan bentuk, misalnya `x.name is string`.
+- Beberapa baris di dalam satu concept digabung dengan `and` secara implisit.
+- `and` dan `or` menyatukan concept; `or` menuntut badan prosedur memeriksa cabang dengan `when`.
+- Concept bisa memilih overload selama tiap tipe hanya cocok dengan satu kandidat.
+- Concept bukan tipe: `var x: Named` ditolak, dan pesan gagalnya berbentuk
+  `concept predicate failed`.
+
+## Selanjutnya
+
+Bab berikutnya membahas [object variant dan `distinct`](variants-and-distinct.qmd): satu tipe objek
+yang bentuk fieldnya berubah sesuai penanda, dan tipe baru yang tidak bisa tertukar.

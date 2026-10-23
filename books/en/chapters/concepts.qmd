@@ -1,0 +1,278 @@
+# Concepts and type matching
+
+A generic procedure with `[T]` accepts any type. That is often too loose: the body uses `x.name`,
+but nothing stops a caller from passing an `int`. Constraints such as `[T: SomeInteger]` help, yet
+the list is fixed by the language. A concept fills the gap: a constraint you write yourself, based
+on the shape of a type.
+
+This chapter builds concepts from the simple to the combined, uses them to pick overloads, and reads
+error messages when a requirement is not met. Every example is tested on Nim 2.2.12.
+
+::: {.callout-note}
+## What you will be able to do
+
+After this chapter you can write a `concept`, use it as a generic constraint, combine requirements
+with `and` and `or`, use a concept to select an overload, and read the message
+`concept predicate failed`.
+:::
+
+## Built-in constraints: `SomeNumber`
+
+Nim ships with a few ready-made constraints.
+
+```{.nim}
+proc total[T: SomeNumber](xs: seq[T]): T =
+  for x in xs:
+    result += x
+
+echo total(@[1, 2, 3])
+echo total(@[1.5, 2.5])
+```
+
+```{.txt}
+6
+4.0
+```
+
+`SomeNumber` covers the numeric types. One procedure, two different types, no rewriting. Constraints
+like this are useful as long as the shape you want already exists in the standard library. Once what
+you need is "has a `name` field", no built-in name helps.
+
+## Concepts: a requirement you write yourself
+
+A concept lists its requirements as expressions that must hold for the type.
+
+```{.nim}
+type
+  Named = concept x
+    x.name is string
+
+  Person = object
+    name: string
+
+  Robot = object
+    name: string
+    model: int
+
+proc greet[T: Named](x: T): string =
+  "Hello, " & x.name
+
+echo greet(Person(name: "Ada"))
+echo greet(Robot(name: "R2", model: 2))
+```
+
+```{.txt}
+Hello, Ada
+Hello, R2
+```
+
+`x.name is string` is the requirement: any type with a `name` field of type `string` matches. Note
+that `Person` and `Robot` are unrelated. A concept matches the **shape**, not inheritance or a type's
+name.
+
+## Two requirements mean both must hold
+
+Several lines inside one concept are joined with `and` implicitly.
+
+```{.nim}
+type
+  Person = concept x
+    x.name is string
+    x.age is int
+
+type Employee = object
+  name: string
+  age: int
+
+proc show[T: Person](x: T): string =
+  x.name & " is " & $x.age
+
+echo show(Employee(name: "Ada", age: 36))
+```
+
+```{.txt}
+Ada is 36
+```
+
+`Employee` matches because it satisfies both requirements. If even one fails, say `age` has type
+`string`, the type is rejected.
+
+## A concept selects which overload is used
+
+Because a concept filters types, several procedures with the same name can coexist, each catching a
+different group of types.
+
+```{.nim}
+type
+  Named = concept x
+    x.name is string
+  Sized = concept x
+    x.size is int
+
+type
+  Label = object
+    name: string
+  Box = object
+    size: int
+
+proc describe[T: Named](x: T): string = "named " & x.name
+proc describe[T: Sized](x: T): string = "sized " & $x.size
+
+echo describe(Label(name: "kit"))
+echo describe(Box(size: 3))
+```
+
+```{.txt}
+named kit
+sized 3
+```
+
+`Label` matches only `Named`, `Box` only `Sized`, so the compiler is not in doubt. If one type
+satisfies both, the call becomes ambiguous and must be resolved some other way. Keep concepts narrow
+for that reason.
+
+## Combining concepts with `and`
+
+Two concepts can be joined with `and` in the constraint position.
+
+```{.nim}
+type
+  Named = concept x
+    x.name is string
+  Aged = concept x
+    x.age is int
+
+type Employee = object
+  name: string
+  age: int
+
+proc show[T: Named and Aged](x: T): string =
+  x.name & " (" & $x.age & ")"
+
+echo show(Employee(name: "Ada", age: 36))
+```
+
+```{.txt}
+Ada (36)
+```
+
+`Named and Aged` requires both at once. The difference from two lines inside one concept: here `and`
+joins concepts that can be reused separately.
+
+## Combining concepts with `or`
+
+`or` loosens the requirement: satisfying either one is enough.
+
+```{.nim}
+type
+  HasName = concept x
+    x.name is string
+  HasSize = concept x
+    x.size is int
+  Describable = HasName or HasSize
+
+proc describe[T: Describable](x: T): string =
+  when x is HasName:
+    "name: " & x.name
+  else:
+    "size: " & $x.size
+
+type
+  Label = object
+    name: string
+  Box = object
+    size: int
+
+echo describe(Label(name: "kit"))
+echo describe(Box(size: 3))
+```
+
+```{.txt}
+name: kit
+size: 3
+```
+
+Since a matching type may have only one of the fields, the procedure body must check which branch
+applies. `when x is HasName` picks at compile time, and each branch touches only the field it is
+guaranteed to have. This pattern shows up often as soon as `or` is used.
+
+## Reading the error: predicate failed
+
+Calling a procedure with a type that does not meet the concept is rejected by the compiler.
+
+```{.nim}
+type
+  Named = concept x
+    x.name is string
+
+proc greet[T: Named](x: T): string =
+  "Hello, " & x.name
+
+echo greet(42)
+```
+
+```{.txt}
+main.nim(8, 11) Error: type mismatch
+Expression: greet(42)
+  [1] 42: int literal(42)
+
+Expected one of (first mismatch at [position]):
+[1] proc greet[T: Named](x: T): string
+main.nim(3, 6) Named: undeclared field: 'name'
+main.nim(3, 6) Named: undeclared field: '.'
+main.nim(3, 6) Named: undeclared field: '.'
+main.nim(3, 6) Named: expression '' has no type (or is ambiguous)
+main.nim(3, 5) Named: concept predicate failed
+```
+
+Read it from the bottom. The last line, `concept predicate failed`, names the actual cause. The lines
+above point at the file and line of the concept, `Named` on line 3, then detail which expression
+failed. The compiler tries `x.name` on `int`, finds no `name` field, and reports it once per piece of
+the expression. The message is long, but its direction is clear: inspect the concept on the line it
+names.
+
+## The limits of a concept
+
+A concept is a matching tool, not an ordinary type. It cannot be used to declare a variable.
+
+```{.nim}
+type
+  Named = concept x
+    x.name is string
+
+var value: Named
+echo value
+```
+
+```{.txt}
+main.nim(5, 5) Error: invalid type: 'Named' for var
+```
+
+Beyond that, matching is structural: a type that happens to have a `name` field matches too, even
+when its author never intended it. A concept also does not check meaning, only shape. For a type
+that truly must be listed explicitly, inheritance or `distinct` is a better fit than a concept.
+
+## Exercises
+
+1. Write a concept `Sized` that requires `x.size is int`, then a procedure that prints the size for a
+   type `Box`.
+2. Does `type Num = object` with a `name: int` field match `Named`? Run it to prove your answer.
+3. Combine two concepts with `and`, then use the result as the constraint of one procedure.
+4. Explain why `var value: Named` is rejected by the compiler, then write the equivalent declaration
+   using a concrete type that has a `name` field.
+
+Answers are in [Appendix A](../appendix/answers.qmd).
+
+## Summary
+
+- A `concept` filters types by shape, for example `x.name is string`.
+- Several lines inside one concept are joined with `and` implicitly.
+- `and` and `or` combine concepts; `or` forces the procedure body to branch with `when`.
+- A concept can select an overload as long as each type matches only one candidate.
+- A concept is not a type: `var x: Named` is rejected, and a failed match appears as
+  `concept predicate failed`.
+
+## Next
+
+The next chapter covers [variant objects and `distinct`](variants-and-distinct.qmd): one object type
+whose fields change with a tag, and a new type that cannot be mixed up.
