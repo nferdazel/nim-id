@@ -1,0 +1,256 @@
+# `ref`, `ptr`, and `nil`
+
+The objects chapter stopped right before the question that comes up most often: where is the data
+actually stored? `Person(name: "Ada")` on a `ref object` puts the data on the heap and keeps a
+pointer to it. On a plain `object`, the data sits directly inside the variable. This chapter opens
+that box: `ref`, `ptr`, and `nil`.
+
+::: {.callout-note}
+## What you will be able to do
+
+After this chapter you can allocate a `ref` with `new`, read fields through automatic
+dereferencing, use `ptr` with `addr`, test for `nil` with `isNil`, and explain when `ptr` is needed
+and what it risks.
+:::
+
+## `ref`: data lives on the heap
+
+A `ref object` stores its data on the heap. The variable only holds a pointer to it.
+
+```{.nim}
+type Person = ref object
+  name: string
+  age: int
+
+var p: Person
+new(p)
+p.name = "Ada"
+p.age = 36
+echo p.name, " is ", p.age
+```
+
+```{.txt}
+Ada is 36
+```
+
+`var p: Person` does not point at any object yet; its value is `nil`. `new(p)` asks the heap for
+memory, builds an object with every field at its default, then stores the address in `p`. After
+that the fields can be assigned like any object.
+
+The constructor literal shortens those two steps. `Person(name: "Ada", age: 36)` allocates and
+fills the fields at once.
+
+## Automatic dereferencing
+
+The value a `ref` points at is reached with `p[]`.
+
+```{.nim}
+type Person = ref object
+  name: string
+
+var p = Person(name: "Ada")
+
+echo p.name
+echo p[].name
+```
+
+```{.txt}
+Ada
+Ada
+```
+
+Both lines do the same thing. The compiler inserts a dereference when you write `p.name` on a
+`ref`. `p[]` is the explicit form, and the rule is general: `p.age`, `p.name`, and so on, without
+writing `[]` every time.
+
+## `nil` and `isNil`
+
+`nil` means "pointing at no object". A `ref` declared without an initial value holds `nil`.
+
+```{.nim}
+type Node = ref object
+  value: int
+
+var a: Node
+echo a.isNil
+
+a = Node(value: 7)
+echo a.isNil
+echo a.value
+```
+
+```{.txt}
+true
+false
+7
+```
+
+`isNil` returns `true` while the reference is empty. Once it is filled in, the result is `false`.
+Test `isNil` before using a reference that may not be set yet. Dereferencing `nil` stops the
+program while it runs, not while it compiles.
+
+## `ptr`: an address, not an owner
+
+`ptr T` holds the address of a location of type `T`. The `addr` operator takes the address, and
+`p[]` reads it.
+
+```{.nim}
+var x = 42
+var p: ptr int = addr x
+
+echo p[]
+p[] = 100
+echo x
+```
+
+```{.txt}
+42
+100
+```
+
+`p` points at `x`. Reading `p[]` gives the value of `x`, and writing `p[] = 100` changes `x`. Both
+share the same location, so a change through `p` is visible in `x` at once.
+
+A `ptr` owns no memory. It only records an address. Nim does not free the memory a `ptr` points
+at, because ownership lives somewhere else.
+
+`ptr` works on objects too:
+
+```{.nim}
+type Counter = object
+  hits: int
+
+var c = Counter(hits: 0)
+var pc = addr c
+
+pc[].hits = 3
+echo c.hits
+```
+
+```{.txt}
+3
+```
+
+`addr c` takes the address of `c`; `pc[].hits = 3` changes the field through the pointer, and
+`c.hits` changes with it.
+
+## `addr` and `unsafeAddr`
+
+`addr` only works on addressable locations. For `let` and parameters, Nim allows it for better
+interop with C.
+
+```{.nim}
+let year = 2008
+let p = unsafeAddr year
+
+echo p[]
+```
+
+```{.txt}
+2008
+```
+
+In Nim 2.2.12, `unsafeAddr` is an old alias for `addr`; the `system.nim` docs already mark it
+deprecated. Use `addr` in new code.
+
+## `cast` in brief
+
+`cast` reinterprets the bits of a value as another type, without changing the bits.
+
+```{.nim}
+echo cast[uint8]('A')
+```
+
+```{.txt}
+65
+```
+
+`'A'` is stored as the byte `65`, and `cast[uint8]` reads it as a number. `cast` does not change
+the value; it reinterprets the same bits. Compare `cast[int32](3.5'f32)`, which yields
+`1080033280`, the float's bits read as an `int32`. To convert with the language's rules, use
+`int(x)`, `float(x)`, or `$x`; save `cast` for low-level code.
+
+## Reading an error: expression has no address
+
+`addr` demands a fixed location. A literal has none, so its address cannot be taken.
+
+```{.nim}
+var p = addr 42
+echo p[]
+```
+
+```{.txt}
+main.nim(1, 14) Error: expression has no address
+```
+
+The message names the line and column of `addr`, then the problem: the expression `42` has no
+address. The fix is to store the value in a variable first, then take the address of that variable.
+
+## `ref object` vs `object`
+
+The difference shows up most clearly when a value is copied.
+
+| Aspect | `object` | `ref object` |
+|---|---|---|
+| data is stored in | the variable itself | the heap |
+| what the variable holds | the data directly | a pointer |
+| copying means | duplicating the data | duplicating the pointer |
+| default value | each field's default | `nil` |
+
+`ref object` is used when several parts of the code must share one value, or when the data is
+large. `object` is used for small values that are meant to be copied. The copying details were
+covered in the objects chapter.
+
+## When `ptr` is needed, and its risks
+
+`ptr` is needed to talk to C, to write low-level procedures, or to point into a buffer. Beyond
+that, `ref` is almost always better because its memory is managed automatically.
+
+The risks are real:
+
+- **Dangling.** The address of a local variable becomes invalid the moment its block ends. The
+  `ptr` does not know that.
+- **Unchecked.** A `ptr` can point anywhere; Nim does not check bounds or types while the program
+  runs.
+- **`nil` left untested.** Dereferencing a `ptr` or `ref` that is `nil` stops the program.
+
+So the rule is simple: use `ref` when you can, and reach for `ptr` only when there is no choice.
+
+## Exercises
+
+1. Allocate a `ref object` `Book` with a `title` field, create two instances with `new`, then print
+   both titles.
+2. Without running it, predict the output:
+   ```{.nim}
+   type Point = ref object
+     x, y: int
+
+   var p = Point(x: 1, y: 2)
+   var q = p
+   q.x = 10
+   echo p.x, " ", q.x
+   ```
+3. Write a procedure `incr(p: ptr int)` that increases the value pointed at by `p` by one.
+4. Why must `var p: Person` go through `new(p)` before `p.name` can be assigned?
+5. The code below fails to compile. Fix it, then explain the error message:
+   ```{.nim}
+   var x = 5
+   var p: ptr int = x
+   echo p[]
+   ```
+
+Answers are in [Appendix A](../appendix/answers.qmd).
+
+## Summary
+
+- A `ref object` stores data on the heap; `p.name` already dereferences for you.
+- `new(p)` allocates a `ref` that was still `nil`; `isNil` tests whether the reference is empty.
+- `ptr T` holds an address, taken with `addr` and read with `p[]`; `unsafeAddr` is its deprecated
+  alias.
+- `cast` reinterprets bits, it does not convert the value; use it only in low-level code.
+- A `ptr` owns no memory and is unchecked, so prefer `ref` whenever you can.
+
+## Next
+
+The next chapter covers what happens to memory after a value is thrown away:
+[memory management](memory-management.qmd), ARC, ORC, and the `=destroy` destructor.

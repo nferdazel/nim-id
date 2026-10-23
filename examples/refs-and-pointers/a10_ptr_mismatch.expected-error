@@ -1,0 +1,1 @@
+type mismatch: got 'int' for 'x' but expected 'ptr int'

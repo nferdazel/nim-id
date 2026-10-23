@@ -1,0 +1,257 @@
+# `ref`, `ptr`, dan `nil`
+
+Bab objek berhenti tepat sebelum pertanyaan yang paling sering muncul: di mana datanya sebenarnya
+disimpan? `Person(name: "Ada")` pada `ref object` menaruh data di heap dan menyimpan penunjuk ke
+sana. Pada `object` biasa, data menempel langsung di variabelnya. Bab ini membuka kotak itu:
+`ref`, `ptr`, dan `nil`.
+
+::: {.callout-note}
+## Tujuan bab
+
+Setelah bab ini, pembaca bisa mengalokasikan `ref` dengan `new`, membaca field lewat dereferensi
+otomatis, memakai `ptr` bersama `addr`, menguji `nil` dengan `isNil`, dan tahu kapan `ptr` perlu
+beserta risikonya.
+:::
+
+## `ref`: data disimpan di heap
+
+`ref object` menyimpan datanya di heap. Variabelnya hanya memegang penunjuk ke sana.
+
+```{.nim}
+type Person = ref object
+  name: string
+  age: int
+
+var p: Person
+new(p)
+p.name = "Ada"
+p.age = 36
+echo p.name, " is ", p.age
+```
+
+```{.txt}
+Ada is 36
+```
+
+`var p: Person` belum menunjuk ke objek apa pun; nilainya `nil`. `new(p)` meminta memori di heap,
+membentuk objek dengan default setiap field, lalu menyimpan alamatnya di `p`. Setelah itu field
+bisa diisi seperti objek biasa.
+
+Konstruktor literal mempersingkat dua langkah itu. `Person(name: "Ada", age: 36)` mengalokasikan
+dan mengisi fieldnya sekaligus.
+
+## Dereferensi otomatis
+
+Nilai yang ditunjuk sebuah `ref` diambil dengan `p[]`.
+
+```{.nim}
+type Person = ref object
+  name: string
+
+var p = Person(name: "Ada")
+
+echo p.name
+echo p[].name
+```
+
+```{.txt}
+Ada
+Ada
+```
+
+Kedua baris menghasilkan hal yang sama. Compiler menyisipkan dereferensi saat pembaca menulis
+`p.name` pada sebuah `ref`. `p[]` adalah bentuk eksplisitnya, dan berlaku umum: `p.age`, `p.name`,
+dan seterusnya, tanpa menulis `[]` setiap kali.
+
+## `nil` dan `isNil`
+
+`nil` berarti "tidak menunjuk ke objek mana pun". `ref` yang dideklarasikan tanpa nilai awal
+berisi `nil`.
+
+```{.nim}
+type Node = ref object
+  value: int
+
+var a: Node
+echo a.isNil
+
+a = Node(value: 7)
+echo a.isNil
+echo a.value
+```
+
+```{.txt}
+true
+false
+7
+```
+
+`isNil` mengembalikan `true` selama referensinya kosong. Setelah diisi, hasilnya `false`. Uji
+`isNil` sebelum memakai referensi yang mungkin belum diisi. Mendereferensi `nil` menghentikan
+program saat berjalan, bukan saat kompilasi.
+
+## `ptr`: alamat, bukan pemilik
+
+`ptr T` menyimpan alamat sebuah lokasi bertipe `T`. Operator `addr` mengambil alamat, dan `p[]`
+membacanya.
+
+```{.nim}
+var x = 42
+var p: ptr int = addr x
+
+echo p[]
+p[] = 100
+echo x
+```
+
+```{.txt}
+42
+100
+```
+
+`p` menunjuk ke `x`. Membaca `p[]` memberi nilai `x`, dan menulis `p[] = 100` mengubah `x`.
+Keduanya berbagi lokasi yang sama, jadi perubahan lewat `p` langsung terlihat di `x`.
+
+`ptr` tidak memiliki memori. Ia hanya mencatat alamat. Nim tidak membebaskan memori yang ditunjuk
+sebuah `ptr`, karena kepemilikannya ada di tempat lain.
+
+`ptr` bekerja juga pada objek:
+
+```{.nim}
+type Counter = object
+  hits: int
+
+var c = Counter(hits: 0)
+var pc = addr c
+
+pc[].hits = 3
+echo c.hits
+```
+
+```{.txt}
+3
+```
+
+`addr c` mengambil alamat `c`; `pc[].hits = 3` mengubah field lewat penunjuk, dan `c.hits` ikut
+berubah.
+
+## `addr` dan `unsafeAddr`
+
+`addr` hanya bekerja pada lokasi yang bisa dialamati. Untuk `let` dan parameter, Nim
+mengizinkannya demi interop dengan C.
+
+```{.nim}
+let year = 2008
+let p = unsafeAddr year
+
+echo p[]
+```
+
+```{.txt}
+2008
+```
+
+Di Nim 2.2.12, `unsafeAddr` adalah alias lama untuk `addr`; dokumentasi `system.nim` sudah
+menandainya usang. Pakai `addr` untuk kode baru.
+
+## `cast` singkat
+
+`cast` menafsirkan ulang bit sebuah nilai dalam tipe lain, tanpa mengubah bitnya.
+
+```{.nim}
+echo cast[uint8]('A')
+```
+
+```{.txt}
+65
+```
+
+`'A'` disimpan sebagai byte `65`, dan `cast[uint8]` membacanya sebagai bilangan. `cast` tidak
+mengubah nilai; ia menafsirkan ulang bit yang sama. Bandingkan `cast[int32](3.5'f32)`, yang
+menghasilkan `1080033280`: bit float itu dibaca sebagai `int32`. Untuk mengubah tipe mengikuti
+aturan bahasa, pakai `int(x)`, `float(x)`, atau `$x`; `cast` hanya untuk kode tingkat rendah.
+
+## Membaca error: ekspresi tanpa alamat
+
+`addr` menuntut lokasi yang tetap. Literal tidak punya lokasi, jadi tidak bisa dialamati.
+
+```{.nim}
+var p = addr 42
+echo p[]
+```
+
+```{.txt}
+main.nim(1, 14) Error: expression has no address
+```
+
+Pesan itu menyebut baris dan kolom `addr`, lalu masalahnya: ekspresi `42` tidak punya alamat.
+Perbaikannya, simpan dulu nilainya ke sebuah variabel, lalu ambil alamat variabel itu.
+
+## `ref object` vs `object`
+
+Perbedaannya paling terasa saat nilai disalin.
+
+| Aspek | `object` | `ref object` |
+|---|---|---|
+| data disimpan di | variabel itu sendiri | heap |
+| isi variabel | data langsung | penunjuk |
+| menyalin berarti | menggandakan data | menggandakan penunjuk |
+| nilai default | default setiap field | `nil` |
+
+`ref object` dipakai saat beberapa bagian kode harus berbagi satu nilai, atau saat datanya besar.
+`object` dipakai untuk nilai kecil yang memang ingin disalin. Rincian penyalinannya sudah dibahas
+di bab objek.
+
+## Kapan `ptr` perlu, dan risikonya
+
+`ptr` diperlukan untuk berbicara dengan C, menulis prosedur tingkat rendah, atau menunjuk ke dalam
+buffer. Di luar itu, `ref` hampir selalu lebih baik karena memorinya dikelola otomatis.
+
+Risikonya nyata:
+
+- **Menggantung.** Alamat variabel lokal menjadi tidak sah begitu bloknya selesai. `ptr` tidak
+  tahu itu.
+- **Tanpa pemeriksaan.** `ptr` bisa menunjuk ke mana saja; Nim tidak memeriksa batas atau tipe
+  saat program berjalan.
+- **`nil` yang tidak diuji.** Mendereferensi `ptr` atau `ref` yang `nil` menghentikan program.
+
+Aturannya sederhana: pakai `ref` kalau bisa, pakai `ptr` hanya saat tidak ada pilihan.
+
+## Latihan
+
+1. Alokasikan `ref object` `Book` berisi field `title`, buat dua instance dengan `new`, lalu cetak
+   kedua judulnya.
+2. Tanpa menjalankan, prediksi outputnya:
+   ```{.nim}
+   type Point = ref object
+     x, y: int
+
+   var p = Point(x: 1, y: 2)
+   var q = p
+   q.x = 10
+   echo p.x, " ", q.x
+   ```
+3. Tulis prosedur `incr(p: ptr int)` yang menaikkan nilai yang ditunjuk `p` sebesar satu.
+4. Kenapa `var p: Person` harus melewati `new(p)` dulu sebelum `p.name` diisi?
+5. Kode berikut gagal dikompilasi. Perbaiki, lalu jelaskan pesan error-nya:
+   ```{.nim}
+   var x = 5
+   var p: ptr int = x
+   echo p[]
+   ```
+
+Jawaban ada di [Lampiran A](../appendix/answers.qmd).
+
+## Ringkasan
+
+- `ref object` menyimpan data di heap; `p.name` sudah melakukan dereferensi otomatis.
+- `new(p)` mengalokasikan `ref` yang masih `nil`; `isNil` menguji apakah referensinya kosong.
+- `ptr T` menyimpan alamat, diambil dengan `addr` dan dibaca dengan `p[]`; `unsafeAddr` alias
+  usangnya.
+- `cast` menafsirkan ulang bit, bukan mengonversi nilai; pakai hanya di kode tingkat rendah.
+- `ptr` tidak memiliki memori dan tidak diperiksa, jadi pilih `ref` selama mungkin.
+
+## Selanjutnya
+
+Bab berikutnya membahas apa yang terjadi pada memori setelah sebuah nilai dibuang:
+[manajemen memori](memory-management.qmd), ARC, ORC, dan destruktor `=destroy`.
