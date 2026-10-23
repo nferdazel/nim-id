@@ -1,59 +1,59 @@
-# Berkontribusi
+# Contributing
 
-Buku ini tumbuh dari koreksi pembaca. Yang paling berguna justru laporan kecil: contoh yang tidak
-jalan, istilah yang membingungkan, atau kalimat yang salah eja.
+This book grows from reader corrections. The most useful reports are the small ones: an example
+that stopped working, a confusing term, or a sentence with a typo.
 
-## Yang bisa dikirim
+## What you can send
 
-| Jenis | Cara |
+| Type | How |
 |---|---|
-| Contoh gagal di versi Nim terbaru | buka issue, sertakan versi Nim dan keluaran `nim r` |
-| Salah ketik, kalimat rancu, istilah tidak konsisten | pull request kecil, satu berkas satu PR |
-| Usul bab baru | issue dulu, supaya tidak dua orang menulis bab yang sama |
-| Terjemahan | issue dulu; bahasa ketiga butuh keputusan struktur, bukan sekadar menerjemahkan |
+| Example fails on the latest Nim | open an issue, include the Nim version and the `nim r` output |
+| Typos, unclear sentences, inconsistent terms | small pull request, one file per PR |
+| Proposal for a new chapter | issue first, so two people do not write the same chapter |
+| Translation | issue first; a third language needs a structural decision, not just translation |
 
-## Sebelum mengirim
+## Before you send
 
 ```sh
 QUARTO=$HOME/.local/opt/bin/quarto ./task check
 ```
 
-Perintah itu mengompilasi semua contoh di `examples/`, membandingkan keluarannya, lalu merender
-kedua buku. Kalau merah, perbaiki dulu. CI menjalankan pemeriksaan yang sama.
+That command compiles every example in `examples/`, compares the output, then renders both books.
+If it fails, fix it first. CI runs the same checks.
 
-## Menulis bab
+## Writing a chapter
 
-1. Baca [`docs/writing-guide.md`](docs/writing-guide.md): template bab, aturan kalimat, dan
-   Definition of Done.
-2. Istilah baru masuk [`docs/glossary.md`](docs/glossary.md) dulu, baru dipakai.
-3. Setiap blok `{.nim}` di bab harus punya pasangan di `examples/<bab>/aNN_nama.nim`, lengkap
-   dengan `.expected` atau `.expected-error`. Konvensinya di `tools/verify-examples.sh`.
-4. Tulis versi Indonesia di `books/id/chapters/` dan English di `books/en/chapters/` dengan nama
-   berkas yang sama, struktur yang sama, dan blok kode yang identik.
-5. Kode selalu bahasa Inggris: identifier, komentar, dan teks di dalam string.
+1. Read [`docs/writing-guide.md`](docs/writing-guide.md): chapter template, sentence rules, and
+   the Definition of Done.
+2. Add new terms to [`docs/glossary.md`](docs/glossary.md) first, then use them.
+3. Every `{.nim}` block in a chapter must have a match in `examples/<chapter>/aNN_name.nim`, with
+   `.expected` or `.expected-error`. The conventions are in `tools/verify-examples.sh`.
+4. Write the Indonesian version in `books/id/chapters/` and the English version in
+   `books/en/chapters/`, with the same file name, the same structure, and identical code blocks.
+5. Code is always English: identifiers, comments, and text inside strings.
 
-## Gaya commit
+## Commit style
 
-Pesan commit memakai awalan Conventional Commits, karena `./task release` membacanya untuk menentukan
-naik versi:
+Commit messages use Conventional Commits prefixes, because `./task release` reads them to decide
+the version bump:
 
 ```
-feat: bab modules
-fix: contoh loops salah keluaran di Nim 2.2.12
-docs: perjelas bagian closure
-chore: rapikan skrip build
+feat: modules chapter
+fix: loops example prints the wrong output on Nim 2.2.12
+docs: clarify the closure section
+chore: tidy the build scripts
 ```
 
-`feat!:` atau baris `BREAKING CHANGE:` menandai perubahan besar. Aturan lengkapnya di
+`feat!:` or a `BREAKING CHANGE:` line marks a breaking change. The full rules are in
 [`docs/release.md`](docs/release.md).
 
-## Cabang dan pull request
+## Branches and pull requests
 
-Jangan push langsung ke `main`; push ke `main` langsung terbit ke produksi lewat webhook deploy.
-Buat cabang, kirim pull request, tunggu CI hijau.
+Do not push directly to `main`; a push to `main` goes straight to production through the deploy
+webhook. Create a branch, open a pull request, and wait for CI to pass.
 
-## Lisensi kontribusi
+## Contribution license
 
-Dengan mengirim kontribusi, kamu setuju kontribusimu dilisensikan dengan lisensi yang sama:
-teks buku CC BY-SA 4.0 ([`LICENSE`](LICENSE)), kode contoh MIT ([`LICENSE-CODE`](LICENSE-CODE)).
-Jangan mengirim teks atau kode yang hak ciptanya bukan milikmu.
+By sending a contribution, you agree that it is licensed under the same license as the project:
+book text under CC BY-SA 4.0 ([`LICENSE`](LICENSE)), code samples under MIT
+([`LICENSE-CODE`](LICENSE-CODE)). Do not send text or code whose copyright is not yours.

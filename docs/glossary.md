@@ -28,7 +28,6 @@ diterjemahkan ke bahasa Indonesia secara paksa; kolom **Jangan** mencatat varian
 | barisan | sequence | kumpulan elemen bertipe sama, ukuran dinamis (`seq`) | sequence (kecuali penjelasan awal) | — |
 | objek | object | tipe gabungan dengan field bernama | object (kecuali saat merujuk kata kunci) | — |
 | pengecualian | exception | kondisi error yang bisa ditangkap | exception | — |
-
 | iterator | iterator | objek yang menghasilkan nilai satu per satu (`yield`) | — | loops |
 | rentang | range | batas nilai dari awal sampai akhir (`a..b`, `a..<b`) | range (kecuali di kode) | loops |
 | indeks | index | posisi elemen di dalam koleksi, mulai dari 0 | index | collections |
@@ -42,7 +41,6 @@ diterjemahkan ke bahasa Indonesia secara paksa; kolom **Jangan** mencatat varian
 | eksklusif | exclusive | batas akhir tidak ikut dihitung (`0..<5` berhenti di 4) | — | loops |
 | tipe ordinal | ordinal type | tipe yang nilainya bisa diurutkan dan dihitung (`int`, `char`, `enum`) | — | enums-and-sets |
 | stack trace | stack trace | daftar pemanggilan yang ditampilkan saat program berhenti karena defect | jejak tumpukan | collections |
-
 | biner | binary | berkas hasil kompilasi yang bisa dijalankan mesin | binary | what-is-nim |
 | mesin virtual | virtual machine | lapisan perangkat lunak yang menjalankan kode di atas CPU | VM | what-is-nim |
 | backend | backend | target keluaran compiler (C, C++, JavaScript) | back-end | what-is-nim |
@@ -57,7 +55,6 @@ diterjemahkan ke bahasa Indonesia secara paksa; kolom **Jangan** mencatat varian
 | package manager | package manager | alat yang memasang dan mengelola dependensi (`nimble`) | pengelola paket | installation |
 | pustaka standar | standard library | kumpulan modul bawaan compiler | library standar | installation |
 | scaffold | project scaffold | kerangka berkas yang dibuat `nimble init` | scaffolding | installation |
-
 | escape sequence | escape sequence | pasangan `\` + huruf yang mewakili karakter khusus (`\n`, `\t`) | escape sequence | strings |
 | raw string | raw string | string `r"..."` yang tidak memproses escape | string mentah | strings |
 | string multi-baris | multiline string | string `"""..."""` yang mempertahankan baris baru | string multiline | strings |
@@ -69,7 +66,6 @@ diterjemahkan ke bahasa Indonesia secara paksa; kolom **Jangan** mencatat varian
 | presisi | precision | jumlah digit signifikan yang dijamin tipe float | — | primitive-types |
 | konversi tipe | type conversion | mengubah nilai ke tipe lain (`int()`, `float()`, `$`) | casting (hindari) | primitive-types |
 | baris baru | newline | karakter `\n` yang memindahkan keluaran ke baris berikutnya | newline | printing |
-
 | tuple | tuple | kumpulan nilai bertipe berbeda dengan urutan tetap | — | tuples |
 | destructuring | destructuring | membongkar tuple menjadi variabel terpisah | unpacking (kecuali penyebutan) | tuples |
 | enum | enum | tipe dengan daftar nilai bernama yang sudah pasti | enumerasi | enums-and-sets |
@@ -83,7 +79,6 @@ diterjemahkan ke bahasa Indonesia secara paksa; kolom **Jangan** mencatat varian
 | argumen bernama | named argument | argumen yang ditulis bersama nama parameternya | — | procedures |
 | referensi | reference | nilai yang menunjuk object di heap (`ref object`) | reference | objects |
 | salinan nilai | value copy | penyalinan isi nilai, bukan alamatnya | — | objects |
-
 | closure | closure | prosedur yang membawa variabel di sekitarnya | — | closures |
 | prosedur anonim | anonymous procedure | prosedur tanpa nama yang dipakai sebagai nilai | — | closures |
 | menangkap | capture | closure memakai variabel dari scope luar | — | closures |
@@ -92,21 +87,18 @@ diterjemahkan ke bahasa Indonesia secara paksa; kolom **Jangan** mencatat varian
 | ekspansi template | template expansion | kode template yang disalin compiler ke tempat pemanggilan | — | templates |
 | instansiasi generic | generic instantiation | pembentukan tipe konkret dari generic pada pemakaian | — | generics |
 | typedesc | typedesc | tipe sebagai nilai, dipakai untuk overloading berbasis tipe | — | generics |
-
 | pointer | pointer | nilai yang menyimpan alamat memori (`ptr`) | penunjuk | refs-and-pointers |
 | alamat | address | lokasi nilai di memori, diperoleh lewat `addr` | — | refs-and-pointers |
 | dereferensi | dereference | mengambil nilai yang ditunjuk sebuah pointer | — | refs-and-pointers |
 | penghitungan referensi | reference counting | menghitung pemakai sebuah nilai untuk tahu kapan dibebaskan | ref counting | memory-management |
 | mode memori | memory management mode | pilihan pengelola memori compiler (`--mm:arc`, `--mm:orc`) | — | memory-management |
 | sumber daya | resource | hal yang harus dibebaskan setelah dipakai (berkas, socket) | resource | files-and-os |
-
 | modul | module | berkas atau folder yang berisi kode dan bisa diimpor | module | modules |
 | ruang nama | namespace | wilayah nama yang dipisahkan modul | namespace | modules |
 | mengimpor | import | memakai isi modul lain | impor (kecuali di kode) | modules |
 | mengekspor | export | menandai simbol modul yang boleh dipakai dari luar | ekspor (verba) | modules |
 | efek | effect | sifat prosedur yang dapat diperiksa compiler (`raises`) | — | exceptions |
 | fasad | facade | modul tipis yang menyatukan beberapa modul lain | facade | modules |
-
 | macro | macro | prosedur compile-time yang menerima dan menghasilkan AST | — | macros |
 | pohon sintaksis | abstract syntax tree | struktur pohon yang mewakili kode sumber | AST (kecuali penjelasan awal) | macros |
 | `quote do` | quote do | blok macro yang menulis kode seperti biasa | — | macros |
@@ -115,7 +107,6 @@ diterjemahkan ke bahasa Indonesia secara paksa; kolom **Jangan** mencatat varian
 | object varian | variant object | object yang field-nya bergantung pada satu penanda | — | variants-and-distinct |
 | distinct | distinct | tipe baru dengan representasi sama tetapi tidak saling tukar | — | variants-and-distinct |
 | alias tipe | type alias | nama lain untuk tipe yang sudah ada, tanpa tipe baru | — | variants-and-distinct |
-
 | berkas | file | satuan penyimpanan di sistem berkas | file | files-and-os |
 | direktori | directory | wadah berkas dan direktori lain | folder (kecuali sehari-hari) | files-and-os |
 | jalur | path | lokasi berkas dalam sistem berkas | path | files-and-os |
@@ -127,7 +118,6 @@ diterjemahkan ke bahasa Indonesia secara paksa; kolom **Jangan** mencatat varian
 | FFI | foreign function interface | cara memanggil kode bahasa lain, di sini C | — | ffi-c |
 | ABI | application binary interface | aturan tata letak dan pemanggilan di tingkat biner | — | ffi-c |
 | peramban | browser | program yang menjalankan hasil kompilasi JavaScript | browser (kecuali di kode) | js-backend |
-
 | subperintah | subcommand | perintah kedua di dalam satu alat CLI (`tool add`) | — | cli-tools |
 | opsi | option | argumen bernama yang mengubah perilaku perintah (`--count=4`) | — | cli-tools |
 | kode keluar | exit code | angka yang dikembalikan proses ke pemanggilnya | exit status | cli-tools |
