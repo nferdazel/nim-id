@@ -86,5 +86,11 @@ ls -1dt "$RILIS_DIR"/*/ 2>/dev/null | tail -n +"$((SIMPAN + 1))" | while read -r
   rm -rf "$lama"
 done
 
+# 8. Self-update: skrip ini ikut repo, salin versi terbaru untuk deploy berikutnya.
+if [ -f "$MONO_DIR/ops/scripts/deploy-static.sh" ] && ! cmp -s "$MONO_DIR/ops/scripts/deploy-static.sh" "$APP_DIR/scripts/deploy-static.sh"; then
+  install -m 755 "$MONO_DIR/ops/scripts/deploy-static.sh" "$APP_DIR/scripts/deploy-static.sh"
+  log "==> skrip deploy diperbarui dari repo"
+fi
+
 printf '%s\n' "$REV" >"$APP_DIR/.deployed_rev"
 log "==> selesai: $REV"
