@@ -343,12 +343,12 @@ int twice(int x) { return x * 2; }
 | `nim js file.nim` | kompilasi ke JavaScript |
 | `nim doc file.nim` | buat dokumentasi |
 | `nim c --hints:off file.nim` | senyapkan hint |
-| `nimble test` | jalankan tes |
+| `nimble test` | jalankan *test* |
 | `nimble add pkg` | tambah dependensi |
-| `nimble init` | buat perancah proyek |
+| `nimble init` | buat *scaffold* |
 | `nimble build` | bangun proyek |
 | `nimble run` | bangun lalu jalankan |
-| `nimble install nama` | pasang paket |
+| `nimble install nama` | pasang *package* |
 
 Isi halaman ini diuji di Nim 2.2.12. Untuk penjelasan lebih panjang, setiap bagian punya babnya
 sendiri di buku ini.

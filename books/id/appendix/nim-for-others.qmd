@@ -29,7 +29,7 @@ dihitung saat kompilasi.
 | Rust | `fn f(a: i32, b: i32) -> i32 { a + b }` |
 | Nim | `proc f(a, b: int): int = a + b` |
 
-Tipe parameter ditulis seperti Go dan Rust, dan nilai default seperti Python. Ekspresi terakhir
+Tipe parameter ditulis seperti Go dan Rust, dan nilai default seperti Python. *Expression* terakhir
 badan prosedur menjadi nilai balik, jadi `return` jarang perlu. Overloading diizinkan, jadi
 beberapa prosedur boleh bernama sama asalkan daftar parameternya berbeda; ini tidak ada di Python
 dan Rust, tetapi terasa akrab bagi penulis Java.
@@ -45,7 +45,7 @@ dan Rust, tetapi terasa akrab bagi penulis Java.
 
 Nim memisahkan data dari perilaku. Method adalah prosedur biasa yang parameter pertamanya bertipe
 itu, dipanggil dengan titik seperti di Python. Object nilai disalin utuh saat ditugaskan, sedangkan
-`ref object` disalin sebagai penunjuk. Warisan class dibatasi, sebab Nim lebih mengandalkan generik
+`ref object` disalin sebagai *pointer*. Warisan class dibatasi, sebab Nim lebih mengandalkan generik
 dan konsep untuk menyusun tipe.
 
 ## Interface dan konsep
@@ -73,11 +73,11 @@ pustaka lain bisa memenuhinya tanpa diubah sedikit pun.
 
 Nim memakai pengecualian seperti Python, tetapi menaikkan pemeriksaannya ke kompilasi. Prosedur
 bisa menyatakan jenis pengecualian yang mungkin keluar, dan compiler menolak janji yang dipatahkan.
-Kesalahan yang tidak tertangani menghentikan program dengan jejak tumpukan, mirip Python. Bedanya,
+Kesalahan yang tidak tertangani menghentikan program dengan *stack trace*, mirip Python. Bedanya,
 tanda tangan prosedur bisa membatasi jenis yang mungkin keluar, sehingga penanganan error menjadi
 bagian dari kontrak yang bisa dibaca.
 
-## Paket
+## *Package*
 
 | Bahasa | Bentuk |
 |---|---|
@@ -88,7 +88,7 @@ bagian dari kontrak yang bisa dibaca.
 
 Perannya sama: memasang dan mengunci dependensi proyek. Satu proyek biasanya punya satu berkas
 `.nimble` di akar, sepadan dengan `Cargo.toml` atau `go.mod`. Nim juga punya `nimble.directory`
-sebagai indeks paket publik.
+sebagai indeks *package* publik.
 
 ## Build
 
@@ -113,8 +113,8 @@ hasilnya.
 | Rust | `cargo test`, atribut `#[test]` |
 | Nim | `std/unittest`, `suite`, `test`, `check` |
 
-Bentuknya dekat ke Rust dan Go: blok tes ditulis di berkas yang sama atau terpisah, lalu dijalankan
-oleh compiler sebagai program biasa. `check` menguji satu ekspresi boolean, dan `expect` memastikan
+Bentuknya dekat ke Rust dan Go: blok *test* ditulis di berkas yang sama atau terpisah, lalu dijalankan
+oleh compiler sebagai program biasa. `check` menguji satu *expression* boolean, dan `expect` memastikan
 sebuah pengecualian benar-benar dilempar. Keduanya melaporkan kegagalan dengan kode keluar bukan
 nol, jadi ramah untuk CI.
 
@@ -124,12 +124,12 @@ nol, jadi ramah untuk CI.
 |---|---|
 | Python | `asyncio` dengan `await`, dibatasi GIL |
 | Go | goroutine dan channel dengan `select` |
-| Rust | utas dengan `Send`/`Sync`, `async`/`await` lewat tokio |
-| Nim | `{.async.}` di `std/asyncdispatch`, utas, dan `spawn` |
+| Rust | *thread* dengan `Send`/`Sync`, `async`/`await` lewat tokio |
+| Nim | `{.async.}` di `std/asyncdispatch`, *thread*, dan `spawn` |
 
-Nim punya dua jalur: `async`/`await` untuk IO dalam satu utas, dan utas sungguhan dengan
-`--threads:on`. Model async memakai satu putaran peristiwa, dan tugas menunggu tanpa memblokir
-utas. Untuk pekerjaan CPU berat, utas dan `spawn` lebih cocok, dengan saluran komunikasi eksplisit.
+Nim punya dua jalur: `async`/`await` untuk IO dalam satu *thread*, dan *thread* sungguhan dengan
+`--threads:on`. Model async memakai satu *event loop*, dan tugas menunggu tanpa memblokir
+*thread*. Untuk pekerjaan CPU berat, *thread* dan `spawn` lebih cocok, dengan saluran komunikasi eksplisit.
 Tidak ada padanan langsung untuk channel Go, yang menyatukan goroutine ringan dan saluran dalam
 satu model.
 
@@ -138,16 +138,16 @@ satu model.
 Tipe statis dengan inferensi, generic, closure, dan modul terasa akrab dari ketiga bahasa. Prosedur
 bisa dipanggil dengan gaya metode, jadi `teks.len` sama dengan `len(teks)`. Nim juga menawarkan
 `let` dan `const` sebagai bawaan tidak berubah, sejalan dengan `let` Rust dan `const` Go. Fungsi
-adalah nilai, sehingga bisa dikirim dan dikembalikan. Pengelola paket memainkan peran yang sama
+adalah nilai, sehingga bisa dikirim dan dikembalikan. Pengelola *package* berperan sama
 seperti pip, Go modules, dan cargo.
 
-Selain itu, overloading dan nilai default parameter terasa alami bagi penulis Python, sementara
-penulisan tipe pada tanda tangan akrab bagi penulis Go dan Rust. Nim mengenal rentang, irisan, dan
+Overloading dan nilai default parameter terasa alami bagi penulis Python; penulisan tipe pada tanda
+tangan akrab bagi penulis Go dan Rust. Nim mengenal rentang, irisan, dan
 penyisipan nilai ke dalam teks seperti f-string Python, walau sintaksnya berbeda. Iterasi dengan
 `for` dan penghitungan dengan `len` ada di semua bahasa, jadi tidak ada yang benar-benar perlu
 dipelajari ulang. Yang juga melegakan, kesalahan umum seperti salah indeks atau lupa menutup blok
 terasa mirip, sehingga refleks lama tetap berguna. Operator aritmetika dan perbandingan hampir
-sama, jadi ekspresi lama sering bisa disalin dengan sedikit penyesuaian saja.
+sama, jadi *expression* lama sering bisa disalin dengan sedikit penyesuaian saja.
 
 ## Yang berbeda
 
