@@ -1,0 +1,252 @@
+# Memory management: ARC, ORC, and `=destroy`
+
+A program that allocates without ever cleaning up grows until it runs out of memory. In languages
+with a garbage collector that is handled for you; in Nim 2.x the decision is made at compile time
+through the memory mode. This chapter explains ARC and ORC, then the hooks the compiler calls at
+the right moment: `=destroy`, `=copy`, and `=sink`.
+
+::: {.callout-note}
+## What you will be able to do
+
+After this chapter you can explain how ARC and ORC differ, verify which memory mode is active, use
+`--mm:arc` and `--mm:orc`, write `=destroy` for a type that owns a resource, and read the error for
+a hook with the wrong signature.
+:::
+
+## Two memory modes: ARC and ORC
+
+ARC and ORC both count references. Every time a `ref` is copied, the number of pointers goes up;
+every time one disappears, it goes down. When that number reaches zero, the memory is freed right
+then. There is no pause as with a classic garbage collector.
+
+They differ in one thing: ORC adds cycle detection. Two objects pointing at each other never drop
+to zero under plain counting; ORC finds such pairs and frees them. ARC does not, so cycles become
+a memory leak.
+
+Since Nim 2.x the default mode is ORC.
+
+## Checking which mode is active
+
+The compiler defines symbols that can be tested with `when`.
+
+```{.nim}
+when defined(gcOrc):
+  echo "orc"
+elif defined(gcArc):
+  echo "arc"
+else:
+  echo "other"
+```
+
+```{.txt}
+orc
+```
+
+## Switching modes with `--mm`
+
+To choose a different mode, pass a flag to the compiler. The example file `a06_mm_arc.nim` holds
+the same code as above, with an `a06_mm_arc.mode` file containing `--mm:arc`. Run it with
+`nim c -r --mm:arc main.nim`, and the output becomes `arc`, because the flag defines `gcArc`
+instead of `gcOrc`. Change the flag to `--mm:orc` to return to the default mode. Verifying like
+this is more convincing than memorizing which mode applies.
+
+## `=destroy`: cleaning up when a value is dropped
+
+When a type owns a resource outside managed memory, define `=destroy` so the resource is released.
+Here is the order in which it is called.
+
+```{.nim}
+type Box = object
+  name: string
+
+proc `=destroy`(b: var Box) =
+  echo "destroy ", b.name
+
+proc make(): Box =
+  echo "make"
+  Box(name: "temp")
+
+proc main() =
+  var x = Box(name: "outer")
+  echo "before block"
+  block:
+    let y = make()
+    echo "inside block: ", y.name
+  echo "after block"
+
+main()
+```
+
+```{.txt}
+before block
+make
+inside block: temp
+destroy temp
+after block
+destroy outer
+```
+
+Read the order. `make()` prints `make`, then returns a `Box`; that value is stored in `y`. At the
+end of the block, `y` leaves scope and `=destroy` is called for it, so `destroy temp` appears
+before `after block`. `x` is only dropped at the end of `main()`, so `destroy outer` comes last.
+
+## When the destructor is called
+
+From the order above, the rule is clear:
+
+- **End of scope.** `y` is dropped when its block ends, `x` when `main()` ends.
+- **Temporary values.** A value created and consumed right away is dropped after use.
+- **Overwrite.** When a variable is overwritten, the old value is dropped first.
+
+What does not happen: `=destroy` is not called the instant a value is created, and it is not
+called for a `ptr` that points at the value.
+
+## `=copy`: copying by your own rules
+
+Copying from an existing location uses `=copy`.
+
+```{.nim}
+type Box = object
+  name: string
+
+proc `=copy`(dest: var Box; src: Box) =
+  echo "copying ", src.name
+  dest.name = src.name
+
+var a = Box(name: "a")
+var b = a
+echo "b = ", b.name
+```
+
+```{.txt}
+copying a
+b = a
+```
+
+`var b = a` copies from a variable, so `=copy` is the one called. The definition above copies the
+field shallowly. For a type that owns a file or a pointer, `=copy` must make a truly separate
+copy, not duplicate the pointer.
+
+## `=sink`: absorbing a temporary
+
+When the source is a temporary value that will not be used again, the compiler picks `=sink`
+instead of `=copy`.
+
+```{.nim}
+type Box = object
+  name: string
+
+proc `=sink`(dest: var Box; src: Box) =
+  echo "sinking ", src.name
+  dest.name = src.name
+
+var d = Box(name: "old")
+d = Box(name: "temp")
+echo "d = ", d.name
+```
+
+```{.txt}
+sinking temp
+d = temp
+```
+
+`Box(name: "temp")` is a temporary value; assigning it to `d` can move its contents, so `=sink` is
+called. When the source is an ordinary variable, the path taken is `=copy`.
+
+## `move`: moving without hooks
+
+`move` tells the compiler that the source may indeed be emptied.
+
+```{.nim}
+type Box = object
+  name: string
+
+var a = Box(name: "a")
+var b = move(a)
+echo "b = ", b.name
+echo "a = ", repr(a.name)
+```
+
+```{.txt}
+b = a
+a = ""
+```
+
+`move(a)` moves the value without calling `=copy` or `=sink`, then empties `a` through `=wasMoved`;
+a `string` goes back to `""`. After a `move`, the contents of `a` must not be relied on.
+
+## Reading an error: a hook with the wrong signature
+
+Every hook has a signature fixed by the compiler.
+
+```{.nim}
+type Box = object
+  name: string
+
+proc `=copy`(dest: var Box; src: string) =
+  dest.name = src
+
+var a = Box(name: "a")
+var b = a
+echo b.name
+```
+
+```{.txt}
+main.nim(4, 1) Error: signature for '=copy' must be proc[T: object](x: var T; y: T)
+```
+
+The second parameter must have the same type as the value itself. The message spells out the
+expected form completely: `proc[T: object](x: var T; y: T)`. Match the signature to that form.
+
+## Rule of thumb
+
+Leave the default hooks alone when a type only holds ordinary data; the compiler already provides
+correct `=destroy`, `=copy`, and `=sink`. Write your own hooks only when the type owns a resource
+outside managed memory, such as a file, a socket, or manually allocated memory.
+
+## Exercises
+
+1. Write a type `Handle` with a `=destroy` that prints `close`; allocate one inside a block and
+   note when the message appears.
+2. Without running it, predict the output:
+   ```{.nim}
+   type Box = object
+     name: string
+
+   proc `=destroy`(b: var Box) =
+     echo "drop ", b.name
+
+   block:
+     var a = Box(name: "a")
+     echo "in block"
+   echo "end"
+   ```
+3. Why does `move(a)` empty `a` but not call `=sink`?
+4. Explain why ORC can free two objects pointing at each other, while ARC cannot.
+5. The code below fails to compile. Fix it, then explain the error message:
+   ```{.nim}
+   type Person = ref object
+     name: string
+
+   proc `=destroy`(p: var Person) =
+     echo "destroy ", p.name
+
+   var x = Person(name: "a")
+   echo x.name
+   ```
+
+Answers are in [Appendix A](../appendix/answers.qmd).
+
+## Summary
+
+- Nim 2.x uses ORC by default; ARC is the same without cycle detection.
+- `defined(gcOrc)` and `defined(gcArc)` detect the mode; `--mm:arc` and `--mm:orc` select it.
+- `=destroy` is called at the end of scope, when a temporary is spent, and when a value is
+  overwritten.
+- `=copy` copies from a variable, `=sink` absorbs a temporary, and `move` moves without either.
+- Write hooks only when a type owns a resource outside managed memory.
+
+## Next
+
+The next chapter tours the [standard library](standard-library.qmd): `strutils`, `sequtils`,
+`tables`, and `json`, and when to choose each.

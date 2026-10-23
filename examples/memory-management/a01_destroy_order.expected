@@ -1,0 +1,6 @@
+before block
+make
+inside block: temp
+destroy temp
+after block
+destroy outer

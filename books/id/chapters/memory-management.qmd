@@ -1,0 +1,253 @@
+# Manajemen memori: ARC, ORC, dan `=destroy`
+
+Program yang mengalokasikan tanpa pernah membersihkan akan tumbuh sampai kehabisan memori. Di
+bahasa dengan garbage collector, itu diurus otomatis; di Nim 2.x, keputusannya diambil saat
+kompilasi lewat mode memori. Bab ini menjelaskan ARC dan ORC, lalu hook yang dipanggil compiler
+pada saat yang tepat: `=destroy`, `=copy`, dan `=sink`.
+
+::: {.callout-note}
+## Tujuan bab
+
+Setelah bab ini, pembaca bisa menjelaskan perbedaan ARC dan ORC, memverifikasi mode memori yang
+aktif, memakai `--mm:arc` dan `--mm:orc`, menulis `=destroy` untuk tipe yang memegang sumber daya,
+serta membaca error tanda tangan hook yang salah.
+:::
+
+## Dua mode memori: ARC dan ORC
+
+ARC dan ORC sama-sama menghitung referensi. Setiap kali sebuah `ref` disalin, jumlah penunjuknya
+bertambah; setiap kali satu hilang, jumlahnya berkurang. Ketika angka itu mencapai nol, memorinya
+dibebaskan saat itu juga. Tidak ada jeda seperti pada garbage collector klasik.
+
+Bedanya satu: ORC menambahkan pendeteksi siklus. Dua objek yang saling menunjuk tidak akan pernah
+turun ke nol dengan penghitungan biasa; ORC menemukan pasangan seperti itu dan membebaskannya.
+ARC tidak, sehingga siklus menjadi kebocoran memori.
+
+Sejak Nim 2.x, mode bawaan adalah ORC.
+
+## Memeriksa mode yang aktif
+
+Compiler mendefinisikan simbol yang bisa diuji dengan `when`.
+
+```{.nim}
+when defined(gcOrc):
+  echo "orc"
+elif defined(gcArc):
+  echo "arc"
+else:
+  echo "other"
+```
+
+```{.txt}
+orc
+```
+
+## Mengubah mode dengan `--mm`
+
+Untuk memilih mode lain, berikan flag ke compiler. Berkas contoh `a06_mm_arc.nim` berisi kode yang
+sama dengan di atas, dengan berkas `a06_mm_arc.mode` berisi `--mm:arc`. Jalankan dengan
+`nim c -r --mm:arc main.nim`, dan keluarannya menjadi `arc`, karena flag itu mendefinisikan
+`gcArc` dan bukan `gcOrc`. Ganti flag menjadi `--mm:orc` untuk kembali ke mode bawaan. Verifikasi
+seperti ini lebih meyakinkan daripada menghafal mana yang berlaku.
+
+## `=destroy`: membersihkan saat nilai dibuang
+
+Kalau tipe memegang sumber daya di luar memori terkelola, definisikan `=destroy` agar sumber daya
+itu dilepas. Berikut urutan pemanggilannya.
+
+```{.nim}
+type Box = object
+  name: string
+
+proc `=destroy`(b: var Box) =
+  echo "destroy ", b.name
+
+proc make(): Box =
+  echo "make"
+  Box(name: "temp")
+
+proc main() =
+  var x = Box(name: "outer")
+  echo "before block"
+  block:
+    let y = make()
+    echo "inside block: ", y.name
+  echo "after block"
+
+main()
+```
+
+```{.txt}
+before block
+make
+inside block: temp
+destroy temp
+after block
+destroy outer
+```
+
+Bacalah urutannya. `make()` mencetak `make`, lalu mengembalikan sebuah `Box`; nilai itu disimpan di
+`y`. Di akhir blok, `y` keluar dari ruang lingkup dan `=destroy` dipanggil untuknya, jadi
+`destroy temp` muncul sebelum `after block`. `x` baru dibuang di akhir `main()`, jadi
+`destroy outer` paling akhir.
+
+## Kapan destruktor dipanggil
+
+Dari urutan di atas, aturannya jelas:
+
+- **Akhir ruang lingkup.** `y` dibuang saat bloknya selesai, `x` saat `main()` selesai.
+- **Nilai sementara.** Nilai yang dibuat lalu langsung dikonsumsi dibuang setelah dipakai.
+- **Penimpaan.** Saat sebuah variabel ditimpa nilai baru, nilai lamanya dibuang lebih dulu.
+
+Yang tidak terjadi: `=destroy` tidak dipanggil tepat saat nilai dibuat, dan tidak dipanggil untuk
+`ptr` yang menunjuk ke nilai itu.
+
+## `=copy`: menyalin dengan aturan sendiri
+
+Menyalin dari lokasi yang sudah ada memakai `=copy`.
+
+```{.nim}
+type Box = object
+  name: string
+
+proc `=copy`(dest: var Box; src: Box) =
+  echo "copying ", src.name
+  dest.name = src.name
+
+var a = Box(name: "a")
+var b = a
+echo "b = ", b.name
+```
+
+```{.txt}
+copying a
+b = a
+```
+
+`var b = a` menyalin dari sebuah variabel, jadi `=copy` yang dipanggil. Definisi di atas menyalin
+fieldnya secara dangkal. Untuk tipe yang memegang berkas atau penunjuk, `=copy` perlu membuat
+salinan yang benar-benar terpisah, bukan menyalin penunjuknya.
+
+## `=sink`: menyerap nilai sementara
+
+Kalau sumbernya nilai sementara yang tidak dipakai lagi, compiler memilih `=sink`, bukan `=copy`.
+
+```{.nim}
+type Box = object
+  name: string
+
+proc `=sink`(dest: var Box; src: Box) =
+  echo "sinking ", src.name
+  dest.name = src.name
+
+var d = Box(name: "old")
+d = Box(name: "temp")
+echo "d = ", d.name
+```
+
+```{.txt}
+sinking temp
+d = temp
+```
+
+`Box(name: "temp")` adalah nilai sementara; menugaskannya ke `d` bisa memindahkan isinya, jadi
+`=sink` dipanggil. Kalau sumbernya variabel biasa, jalur yang dipakai `=copy`.
+
+## `move`: memindahkan tanpa hook
+
+`move` memberi tahu compiler bahwa sumbernya memang boleh dikosongkan.
+
+```{.nim}
+type Box = object
+  name: string
+
+var a = Box(name: "a")
+var b = move(a)
+echo "b = ", b.name
+echo "a = ", repr(a.name)
+```
+
+```{.txt}
+b = a
+a = ""
+```
+
+`move(a)` memindahkan nilai tanpa memanggil `=copy` maupun `=sink`, lalu mengosongkan `a` lewat
+`=wasMoved`; sebuah `string` kembali menjadi `""`. Setelah `move`, isi `a` tidak boleh diandalkan
+lagi.
+
+## Membaca error: tanda tangan hook yang salah
+
+Setiap hook punya tanda tangan yang ditetapkan compiler.
+
+```{.nim}
+type Box = object
+  name: string
+
+proc `=copy`(dest: var Box; src: string) =
+  dest.name = src
+
+var a = Box(name: "a")
+var b = a
+echo b.name
+```
+
+```{.txt}
+main.nim(4, 1) Error: signature for '=copy' must be proc[T: object](x: var T; y: T)
+```
+
+Parameter kedua harus bertipe sama dengan parameternya sendiri. Pesan itu menuliskan bentuk yang
+diharapkan lengkap: `proc[T: object](x: var T; y: T)`. Samakan tanda tangannya dengan bentuk itu.
+
+## Aturan praktis
+
+Biarkan hook bawaan kalau tipe hanya berisi data biasa; compiler sudah menyediakan `=destroy`,
+`=copy`, dan `=sink` yang benar. Tulis hook sendiri hanya saat tipe memegang sumber daya di luar
+memori terkelola, misalnya berkas, soket, atau memori yang dialokasikan manual.
+
+## Latihan
+
+1. Tulis tipe `Handle` dengan `=destroy` yang mencetak `close`; alokasikan di dalam sebuah blok dan
+   amati kapan pesannya muncul.
+2. Tanpa menjalankan, prediksi outputnya:
+   ```{.nim}
+   type Box = object
+     name: string
+
+   proc `=destroy`(b: var Box) =
+     echo "drop ", b.name
+
+   block:
+     var a = Box(name: "a")
+     echo "in block"
+   echo "end"
+   ```
+3. Kenapa `move(a)` mengosongkan `a` tetapi tidak memanggil `=sink`?
+4. Jelaskan kenapa ORC bisa membebaskan dua objek yang saling menunjuk, sedangkan ARC tidak.
+5. Kode berikut gagal dikompilasi. Perbaiki, lalu jelaskan pesan error-nya:
+   ```{.nim}
+   type Person = ref object
+     name: string
+
+   proc `=destroy`(p: var Person) =
+     echo "destroy ", p.name
+
+   var x = Person(name: "a")
+   echo x.name
+   ```
+
+Jawaban ada di [Lampiran A](../appendix/answers.qmd).
+
+## Ringkasan
+
+- Nim 2.x memakai ORC secara bawaan; ARC sama tanpa pendeteksi siklus.
+- `defined(gcOrc)` dan `defined(gcArc)` mendeteksi mode; `--mm:arc` dan `--mm:orc` memilihnya.
+- `=destroy` dipanggil di akhir ruang lingkup, saat nilai sementara habis, dan saat nilai ditimpa.
+- `=copy` menyalin dari variabel, `=sink` menyerap nilai sementara, `move` memindahkan tanpa
+  keduanya.
+- Tulis hook hanya kalau tipe memegang sumber daya di luar memori terkelola.
+
+## Selanjutnya
+
+Bab berikutnya menelusuri [pustaka standar](standard-library.qmd): `strutils`, `sequtils`, `tables`,
+dan `json`, lalu kapan memilih masing-masing.

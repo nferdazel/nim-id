@@ -1,0 +1,1 @@
+signature for '=destroy' must be proc[T: object](x: var T) or proc[T: object](x: T)
