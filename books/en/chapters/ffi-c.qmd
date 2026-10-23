@@ -1,0 +1,185 @@
+# FFI to C
+
+Some work is already done for you in C libraries: parsing dates, compressing data, or calling a
+system function with no Nim equivalent. Rewriting all of it is expensive. FFI, the *foreign function
+interface*, lets Nim call C functions directly, with no wrapper in between. This chapter starts with
+one small function, then reads the error you get when a pragma lands in the wrong place.
+
+::: {.callout-note}
+## What you will be able to do
+
+After this chapter you can compile a C file together with a Nim program, declare a C function with
+`{.importc.}`, use the `cint`, `csize_t`, and `cstring` types, and read the `invalid pragma: compile`
+error.
+:::
+
+## Calling a function from a C file
+
+Set up two files in the same directory. `helper.c` holds a plain C function:
+
+```{.c}
+int triple(int x) {
+  return x * 3;
+}
+```
+
+Then the Nim code, saved as `main.nim`:
+
+```{.nim}
+{.compile: "helper.c".}
+
+proc triple(x: cint): cint {.importc.}
+
+echo triple(14)
+```
+
+```{.txt}
+42
+```
+
+`{.compile: "helper.c".}` tells the C compiler to compile that file too. The path is resolved
+relative to the Nim file that carries the pragma, so `helper.c` is looked up in the same directory.
+
+`{.importc.}` states that `triple` is not a Nim procedure but a name that already exists in the C
+binary. The name must match exactly; the pragma translates nothing.
+
+The parameter type is `cint`, not `int`. `cint` is the counterpart of C's `int`, and using it lets
+Nim talk to the C ABI without guessing the width. Nim's `int` follows the machine, while a C function
+expects a fixed width.
+
+When the C function lives in a separate library rather than a file you wrote, link that library with
+`{.passL: "-lm".}`. The pragma forwards options to the linker, and the library name follows the
+system's convention, `-lm` for the math library in this case.
+
+There is no build script to write. `nim c main.nim` reads the `{.compile.}`, compiles `helper.c`, and
+links the two in a single command.
+
+## Functions from a system header
+
+If the function already lives in a system header, nothing needs compiling. Just name the header.
+
+```{.nim}
+proc strlen(s: cstring): csize_t {.importc, header: "<string.h>".}
+
+echo strlen("hello")
+```
+
+```{.txt}
+5
+```
+
+`header: "<string.h>"` makes the compiler include that header, and `strlen` is taken from there. The
+result type is `csize_t`, C's size type, not `int`. Using the right type avoids needless conversions
+and keeps the program portable. If the result feeds a Nim computation, convert it explicitly with
+`int(strlen(s))` instead of letting the compiler guess.
+
+For a combined type, declare an `object` with `{.importc, header: "<time.h>".}` and the same field
+names as in C. Because the C header is included, Nim uses the same layout as the C compiler does.
+
+## Nim strings and `cstring`
+
+A Nim string and a C string are not the same thing. A Nim string stores its own length and is not
+always terminated by a zero byte.
+
+```{.nim}
+proc strlen(s: cstring): csize_t {.importc, header: "<string.h>".}
+
+let text = "ab\0cd"
+
+echo text.len
+echo strlen(text.cstring)
+```
+
+```{.txt}
+5
+2
+```
+
+`text.len` reports the length Nim records, which is 5 bytes, including the `\0` in the middle. But C's
+`strlen` counts up to the first zero byte, so it returns 2. That is the difference: a `cstring` is a
+pointer to bytes, while a Nim string is a value that knows its length.
+
+When Nim converts a string to a `cstring`, it appends a zero terminator. That is why `text.cstring`
+is safe to hand to a C function. What still needs remembering: the C function stops at the first
+zero, whatever follows it.
+
+## Variadic functions
+
+Some C functions accept a free number of arguments, such as `printf`. Nim marks them with the
+`varargs` pragma.
+
+```{.nim}
+proc printf(format: cstring): cint {.importc, header: "<stdio.h>", varargs.}
+
+discard printf("pi is about %.2f\n", 3.14159)
+```
+
+```{.txt}
+pi is about 3.14
+```
+
+`printf` returns a `cint` we do not use, so the result is dropped with `discard`. The `%.2f` format is
+still a C rule, not a Nim one; Nim only forwards the arguments. From this point on, type safety is
+the caller's job, and a bad format shows up only at runtime.
+
+## Deliberate error: a misplaced pragma
+
+`{.compile.}` is not a pragma that attaches to a procedure. It stands on its own, and putting it in a
+procedure's pragma list is rejected.
+
+```{.nim}
+proc triple(x: cint): cint {.compile: "helper.c", importc.}
+
+echo triple(14)
+```
+
+```{.txt}
+main.nim(1, 37) Error: invalid pragma: compile: "helper.c"
+```
+
+The compiler points at column 37, exactly where `compile` sits inside the pragma list. The message is
+short: `invalid pragma: compile`. It means `{.compile.}` is not valid in that position. Merging it
+with `{.importc.}` does not help; even alone, the pragma is rejected as long as it hangs off a
+procedure.
+
+The fix moves it. `{.compile: "helper.c".}` stands on its own line, and `{.importc.}` goes on the
+procedure declaration. A more general rule: every pragma has its place, and `compile` does not belong
+next to a procedure name.
+
+FFI moves the safety guarantees to your side. Nim cannot check whether a buffer is long enough or
+whether a pointer is still valid. That is why a thin wrapper around a C function is often better than
+calling the raw function throughout the program. The wrapper checks arguments and turns C types back
+into Nim types, so the rest of the code stays ordinary Nim.
+
+## Exercises
+
+1. Add a `half` function to `helper.c` that divides by two, then call it from Nim.
+2. Without running it, predict the output:
+   ```{.nim}
+   proc abs(x: cint): cint {.importc, header: "<stdlib.h>".}
+
+   echo abs(-7)
+   ```
+3. Explain why `strlen("hello")` returns 5, not 6, even though a `cstring` is always zero-terminated.
+4. The code below fails to compile. Fix it and explain the message:
+   ```{.nim}
+   proc triple(x: cint): cint {.importc, compile: "helper.c".}
+
+   echo triple(2)
+   ```
+
+Answers are in [Appendix A](../appendix/answers.qmd).
+
+## Summary
+
+- `{.compile.}` compiles a C file too; the path is relative to the Nim file.
+- `{.importc.}` connects a Nim declaration to a C symbol of the same name.
+- `header: "<...>"` pulls a function from a system header without compiling an extra file.
+- `cint`, `csize_t`, and `cstring` keep types matched to C.
+- `{.compile.}` stands on its own; it cannot attach to a procedure declaration.
+
+## Next
+
+The next chapter switches the output target from a binary to JavaScript: compiling the same Nim
+program with `nim js`, running it in Node.js or the browser, and recognizing modules that are not
+available there. Continue to [Compiling to JavaScript](js-backend.qmd).
