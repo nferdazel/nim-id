@@ -32,6 +32,25 @@ book:
         - chapters/tuples.qmd
         - chapters/objects.qmd
         - chapters/enums-and-sets.qmd
+    - part: "Part B: Intermediate"
+      chapters:
+        - chapters/modules.qmd
+        - chapters/exceptions.qmd
+        - chapters/iterators.qmd
+        - chapters/closures.qmd
+        - chapters/generics.qmd
+        - chapters/templates.qmd
+        - chapters/macros.qmd
+        - chapters/concepts.qmd
+        - chapters/variants-and-distinct.qmd
+        - chapters/refs-and-pointers.qmd
+        - chapters/memory-management.qmd
+        - chapters/standard-library.qmd
+        - chapters/files-and-os.qmd
+        - chapters/unit-testing.qmd
+        - chapters/async.qmd
+        - chapters/ffi-c.qmd
+        - chapters/js-backend.qmd
   appendices:
     - appendix/answers.qmd
   search: true
