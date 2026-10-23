@@ -1,0 +1,121 @@
+# Glossary {.unnumbered}
+
+This appendix lists the terms used throughout the book: one term, one spelling, one definition.
+The Term column holds the English word and the Indonesian column holds the Indonesian word, and
+every row names the chapter where the term appears. When the chapter has its own page, its name
+becomes a link.
+
+| Term | Indonesian | Definition | Chapter |
+|---|---|---|---|
+| `compiler` | compiler | a program that translates source code into a binary | [Variables: `var`, `let`, `const`](../chapters/variables.qmd) |
+| `compile time` | compile-time | while compilation runs; before the program starts | [Variables: `var`, `let`, `const`](../chapters/variables.qmd) |
+| `runtime` | runtime | while the program is running | [Variables: `var`, `let`, `const`](../chapters/variables.qmd) |
+| `value` | nilai | the content stored in a variable | [Variables: `var`, `let`, `const`](../chapters/variables.qmd) |
+| `variable` | variabel | a name for a value | [Variables: `var`, `let`, `const`](../chapters/variables.qmd) |
+| `constant` | konstanta | a value that does not change | [Variables: `var`, `let`, `const`](../chapters/variables.qmd) |
+| `data type` | tipe data | the kind of a value; it decides which operations are valid and how much memory it uses | [Variables: `var`, `let`, `const`](../chapters/variables.qmd) |
+| `declaration` | deklarasi | a statement that introduces a new name | [Variables: `var`, `let`, `const`](../chapters/variables.qmd) |
+| `initialization` | inisialisasi | filling in the first value | [Variables: `var`, `let`, `const`](../chapters/variables.qmd) |
+| `string interpolation` | interpolasi string | inserting values into text | [Variables: `var`, `let`, `const`](../chapters/variables.qmd) |
+| `identifier` | identifier | a name for a variable, type, procedure, or module | [Variables: `var`, `let`, `const`](../chapters/variables.qmd) |
+| `error message` | pesan error | compiler output that explains a problem | [Variables: `var`, `let`, `const`](../chapters/variables.qmd) |
+| `procedure` | prosedur | a routine that may have side effects (`proc`) | - |
+| `function` | fungsi | a routine with no side effects (`func`) | - |
+| `loop` | perulangan | a construct that repeats a block of code | - |
+| `branching` | percabangan | choosing which path to execute (`if`, `case`, `when`) | - |
+| `array` | larik | a fixed-size collection of elements of the same type | - |
+| `sequence` | barisan | a dynamically sized collection of elements of the same type (`seq`) | - |
+| `object` | objek | a composite type with named fields | - |
+| `exception` | pengecualian | an error condition that can be caught | - |
+| `iterator` | iterator | an object that yields values one at a time (`yield`) | [Loops: `for`, `while`, `break`, `continue`](../chapters/loops.qmd) |
+| `range` | rentang | the bounds from start to end (`a..b`, `a..<b`) | [Loops: `for`, `while`, `break`, `continue`](../chapters/loops.qmd) |
+| `index` | indeks | the position of an element in a collection, starting at 0 | [`array`, `seq`, and `openArray`](../chapters/collections.qmd) |
+| `element` | elemen | a single value inside a collection | [`array`, `seq`, and `openArray`](../chapters/collections.qmd) |
+| `literal` | literal | a value written directly in code (`42`, `"text"`, `@[1, 2]`) | [Primitive types and literals](../chapters/primitive-types.qmd) |
+| `expression` | ekspresi | a piece of code that produces a value | [Branching: `if`, `case`, `when`](../chapters/conditionals.qmd) |
+| `statement` | pernyataan | a unit of code that does something, not always producing a value | [Branching: `if`, `case`, `when`](../chapters/conditionals.qmd) |
+| `parameter` | parameter | the name of a value a procedure receives | [Procedures, parameters, and return values](../chapters/procedures.qmd) |
+| `default value` | nilai default | the value used when an argument is not given | [Procedures, parameters, and return values](../chapters/procedures.qmd) |
+| `inclusive` | inklusif | the end bound counts (`0..5` includes 5) | [Loops: `for`, `while`, `break`, `continue`](../chapters/loops.qmd) |
+| `exclusive` | eksklusif | the end bound does not count (`0..<5` stops at 4) | [Loops: `for`, `while`, `break`, `continue`](../chapters/loops.qmd) |
+| `ordinal type` | tipe ordinal | a type whose values can be ordered and counted (`int`, `char`, `enum`) | [Enums and sets](../chapters/enums-and-sets.qmd) |
+| `stack trace` | jejak tumpukan | the list of calls shown when the program stops on a defect | [`array`, `seq`, and `openArray`](../chapters/collections.qmd) |
+| `binary` | biner | the compiled file a machine can run | [What Nim is and why](../chapters/what-is-nim.qmd) |
+| `virtual machine` | mesin virtual | a software layer that runs code on top of the CPU | [What Nim is and why](../chapters/what-is-nim.qmd) |
+| `backend` | backend | a compiler output target (C, C++, JavaScript) | [What Nim is and why](../chapters/what-is-nim.qmd) |
+| `debug build` | debug build | a build with all checks on, used while developing | [Workflow: `nim r`, `nimble`, editor](../chapters/workflow.qmd) |
+| `release build` | release build | an optimized build, used when shipping the program | [Workflow: `nim r`, `nimble`, editor](../chapters/workflow.qmd) |
+| `garbage collector` | garbage collector | the automatic memory manager in the classic GC mode | [What Nim is and why](../chapters/what-is-nim.qmd) |
+| `destructor` | destruktor | a `=destroy` procedure called when a value is dropped | [What Nim is and why](../chapters/what-is-nim.qmd) |
+| `scope` | ruang lingkup | the region of code where a name can be used | [Comments and doc comments](../chapters/comments.qmd) |
+| `line comment` | komentar baris | a `#` comment to the end of the line | [Comments and doc comments](../chapters/comments.qmd) |
+| `block comment` | komentar blok | a `#[ ... ]#` comment that can nest | [Comments and doc comments](../chapters/comments.qmd) |
+| `doc comment` | doc comment | a `##` comment that `nim doc` reads | [Comments and doc comments](../chapters/comments.qmd) |
+| `package manager` | pengelola paket | a tool that installs and manages dependencies (`nimble`) | [Installing Nim](../chapters/installation.qmd) |
+| `standard library` | pustaka standar | the set of modules that ship with the compiler | [Installing Nim](../chapters/installation.qmd) |
+| `project scaffold` | perancah proyek | the file skeleton that `nimble init` creates | [Installing Nim](../chapters/installation.qmd) |
+| `escape sequence` | escape sequence | a `\` plus a letter that stands for a special character (`\n`, `\t`) | [Strings, raw strings, and characters](../chapters/strings.qmd) |
+| `raw string` | raw string | an `r"..."` string that does not process escapes | [Strings, raw strings, and characters](../chapters/strings.qmd) |
+| `multiline string` | string multi-baris | a `"""..."""` string that keeps line breaks | [Strings, raw strings, and characters](../chapters/strings.qmd) |
+| `slicing` | slicing | taking a piece of a string or collection by an index range | [Strings, raw strings, and characters](../chapters/strings.qmd) |
+| `overflow` | overflow | a value that crosses a type bound and ends in `OverflowDefect` | [Primitive types and literals](../chapters/primitive-types.qmd) |
+| `short-circuit evaluation` | evaluasi singkat | `and`/`or` stop as soon as the result is settled | [Arithmetic, comparison, and logic operators](../chapters/operators.qmd) |
+| `bitwise` | bitwise | a per-bit operation (`and`, `or`, `xor`, `shl`, `shr`) | [Arithmetic, comparison, and logic operators](../chapters/operators.qmd) |
+| `membership` | keanggotaan | an `in`/`notin` test on a collection or a range | [Arithmetic, comparison, and logic operators](../chapters/operators.qmd) |
+| `precision` | presisi | the number of significant digits a float type guarantees | [Primitive types and literals](../chapters/primitive-types.qmd) |
+| `type conversion` | konversi tipe | changing a value into another type (`int()`, `float()`, `$`) | [Primitive types and literals](../chapters/primitive-types.qmd) |
+| `newline` | baris baru | the `\n` character that moves output to the next line | [Printing and formatting output](../chapters/printing.qmd) |
+| `tuple` | tuple | a fixed-order collection of values of different types | [Tuples and destructuring](../chapters/tuples.qmd) |
+| `destructuring` | destructuring | taking a tuple apart into separate variables | [Tuples and destructuring](../chapters/tuples.qmd) |
+| `enum` | enum | a type with a fixed list of named values | [Enums and sets](../chapters/enums-and-sets.qmd) |
+| `set` | himpunan | a collection of distinct values of an ordinal type (`set[Color]`) | [Enums and sets](../chapters/enums-and-sets.qmd) |
+| `ordinal value` | nilai ordinal | the numeric position of an enum value (`ord(green)`) | [Enums and sets](../chapters/enums-and-sets.qmd) |
+| `bitset` | himpunan bit | a set stored as bits, used for flags | [Enums and sets](../chapters/enums-and-sets.qmd) |
+| `constructor` | konstruktor | the expression that builds an object value (`Person(name: ...)`) | [Objects and constructors](../chapters/objects.qmd) |
+| `overloading` | overloading | several same-named procedures with different parameter lists | [Procedures, parameters, and return values](../chapters/procedures.qmd) |
+| `return value` | nilai balik | the value a procedure returns | [Procedures, parameters, and return values](../chapters/procedures.qmd) |
+| `side effect` | efek samping | a change beyond the return value (`echo`, writing a file, mutating a `var`) | [Procedures, parameters, and return values](../chapters/procedures.qmd) |
+| `named argument` | argumen bernama | an argument written together with its parameter name | [Procedures, parameters, and return values](../chapters/procedures.qmd) |
+| `reference` | referensi | a value that points to an object on the heap (`ref object`) | [Objects and constructors](../chapters/objects.qmd) |
+| `value copy` | salinan nilai | copying the contents of a value, not its address | [Objects and constructors](../chapters/objects.qmd) |
+| `closure` | closure | a procedure that carries the variables around it | [Closures and captured variables](../chapters/closures.qmd) |
+| `anonymous procedure` | prosedur anonim | a nameless procedure used as a value | [Closures and captured variables](../chapters/closures.qmd) |
+| `capture` | menangkap | a closure using a variable from an outer scope | [Closures and captured variables](../chapters/closures.qmd) |
+| `calling convention` | konvensi pemanggilan | the rules for how a procedure is called (`nimcall`, `closure`) | [Closures and captured variables](../chapters/closures.qmd) |
+| `hygienic` | higienis | a macro or template that does not leak names to the caller | [Templates: code expanded by the compiler](../chapters/templates.qmd) |
+| `template expansion` | ekspansi template | template code copied by the compiler to the call site | [Templates: code expanded by the compiler](../chapters/templates.qmd) |
+| `generic instantiation` | instansiasi generic | forming a concrete type from a generic at the point of use | [Generics: types and procedures](../chapters/generics.qmd) |
+| `typedesc` | typedesc | a type as a value, used for type-based overloading | [Generics: types and procedures](../chapters/generics.qmd) |
+| `pointer` | penunjuk | a value that stores a memory address (`ptr`) | [`ref`, `ptr`, and `nil`](../chapters/refs-and-pointers.qmd) |
+| `address` | alamat | the location of a value in memory, obtained with `addr` | [`ref`, `ptr`, and `nil`](../chapters/refs-and-pointers.qmd) |
+| `dereference` | dereferensi | reading the value a pointer points to | [`ref`, `ptr`, and `nil`](../chapters/refs-and-pointers.qmd) |
+| `reference counting` | penghitungan referensi | counting the users of a value to know when to free it | [Memory management: ARC, ORC, and `=destroy`](../chapters/memory-management.qmd) |
+| `memory management mode` | mode memori | the compiler's choice of memory manager (`--mm:arc`, `--mm:orc`) | [Memory management: ARC, ORC, and `=destroy`](../chapters/memory-management.qmd) |
+| `resource` | sumber daya | something that must be released after use (a file, a socket) | [Files, directories, and OS](../chapters/files-and-os.qmd) |
+| `module` | modul | a file or folder that holds code and can be imported | [Modules, `import`, and `export`](../chapters/modules.qmd) |
+| `namespace` | ruang nama | a region of names kept apart by module | [Modules, `import`, and `export`](../chapters/modules.qmd) |
+| `import` | mengimpor | using the contents of another module | [Modules, `import`, and `export`](../chapters/modules.qmd) |
+| `export` | mengekspor | marking a module symbol that may be used from outside | [Modules, `import`, and `export`](../chapters/modules.qmd) |
+| `effect` | efek | a procedure trait the compiler can check (`raises`) | [Exceptions and the `raises` effect](../chapters/exceptions.qmd) |
+| `facade` | fasad | a thin module that unites several other modules | [Modules, `import`, and `export`](../chapters/modules.qmd) |
+| `macro` | macro | a compile-time procedure that takes and produces an AST | [Macros: code that builds code](../chapters/macros.qmd) |
+| `abstract syntax tree` | pohon sintaksis | a tree structure that represents source code | [Macros: code that builds code](../chapters/macros.qmd) |
+| `quote do` | `quote do` | a macro block that writes code as usual | [Macros: code that builds code](../chapters/macros.qmd) |
+| `untyped` | untyped | a macro parameter received before type checking | [Macros: code that builds code](../chapters/macros.qmd) |
+| `concept` | konsep | a requirement on the shape of a type, checked during overloading | [Concepts and type matching](../chapters/concepts.qmd) |
+| `variant object` | object varian | an object whose fields depend on a single tag | [Variant objects and `distinct`](../chapters/variants-and-distinct.qmd) |
+| `distinct` | distinct | a new type with the same representation that does not interchange | [Variant objects and `distinct`](../chapters/variants-and-distinct.qmd) |
+| `type alias` | alias tipe | another name for an existing type, with no new type | [Variant objects and `distinct`](../chapters/variants-and-distinct.qmd) |
+| `file` | berkas | a unit of storage in the file system | [Files, directories, and OS](../chapters/files-and-os.qmd) |
+| `directory` | direktori | a container for files and other directories | [Files, directories, and OS](../chapters/files-and-os.qmd) |
+| `path` | jalur | the location of a file in the file system | [Files, directories, and OS](../chapters/files-and-os.qmd) |
+| `environment variable` | variabel lingkungan | a configuration value from the parent process | [Files, directories, and OS](../chapters/files-and-os.qmd) |
+| `thread` | utas | a path of execution inside one process | [`async`/`await` and IO](../chapters/async.qmd) |
+| `event loop` | putaran peristiwa | the scheduler of async tasks in one thread | [`async`/`await` and IO](../chapters/async.qmd) |
+| `suite` | suite | a group of tests in `unittest` | [`unittest` and test discipline](../chapters/unit-testing.qmd) |
+| `test case` | kasus uji | one check inside a suite | [`unittest` and test discipline](../chapters/unit-testing.qmd) |
+| `foreign function interface` | FFI | a way to call code from another language, here C | [FFI to C](../chapters/ffi-c.qmd) |
+| `application binary interface` | ABI | the rules for layout and calls at the binary level | [FFI to C](../chapters/ffi-c.qmd) |
+| `browser` | peramban | the program that runs the output of a JavaScript build | [Compiling to JavaScript](../chapters/js-backend.qmd) |
+
+New terms go into the master list first, and only then into a chapter.

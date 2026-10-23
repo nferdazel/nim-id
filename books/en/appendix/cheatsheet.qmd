@@ -1,0 +1,354 @@
+# Cheat sheet {.unnumbered}
+
+This page gathers the syntax used most often. Every snippet is written in English, as in the whole
+book, and tested on Nim 2.2.12.
+
+## Declarations
+
+| Concept | Code |
+|---|---|
+| value that can change | `var count = 0` |
+| assigned once | `let name = "Nim"` |
+| known at compile time | `const MaxItems = 128` |
+| explicit type | `var age: int8 = 24` |
+| no initial value, holds the type default | `var flag: bool` |
+
+## Primitive types and literals
+
+| Concept | Code |
+|---|---|
+| integer | `let n = 42` |
+| floating point | `let f = 3.14` |
+| boolean | `let b = true` |
+| character | `let c = 'x'` |
+| text | `let s = "text"` |
+| fixed-width integers | `int8`, `int16`, `int32`, `int64`, `int` |
+| floating-point types | `float32`, `float64`, `float` |
+| type alias | `type UserId = int` |
+| hexadecimal, octal, binary | `0xFF`, `0o17`, `0b1010` |
+| digit separator | `1_000_000` |
+| conversion | `int(3.9)`, `float(2)`, `$42` |
+
+## Strings and `&`
+
+| Concept | Code |
+|---|---|
+| escape | `"line\n"`, `"tab\t"`, `"quote\""` |
+| interpolation | `&"{name} has {count}"` |
+| concatenation | `"a" & "b"` |
+| index | `s[0]`, `s[^1]` |
+| slice | `s[1 .. 3]`, `s[^3 .. ^1]` |
+| one character, of type `char` | `s[0]` |
+| length | `s.len` |
+
+A raw string and a multiline string are written without escapes:
+
+```nim
+let raw = r"C:\temp"
+let ml = """line one
+line two"""
+```
+
+## `if`, `case`, `when`
+
+```nim
+let x = 3
+if x > 0:
+  echo "positive"
+elif x == 0:
+  echo "zero"
+else:
+  echo "negative"
+```
+
+```nim
+case 0
+of 0: echo "none"
+of 1, 2: echo "few"
+else: echo "many"
+```
+
+```nim
+case 'a'
+of 'a' .. 'z': echo "lower"
+of '0' .. '9': echo "digit"
+else: echo "other"
+```
+
+```nim
+when defined(windows):
+  echo "windows"
+else:
+  echo "other"
+```
+
+## Loops
+
+| Concept | Code |
+|---|---|
+| inclusive range | `for i in 0 .. 3:` |
+| exclusive range | `for i in 0 ..< 3:` |
+| with a step | `for i in countup(0, 10, 2):` |
+| downward | `for i in countdown(5, 1):` |
+| values only | `for value in items:` |
+| index and value | `for i, v in items:` |
+| while | `while n > 0:` |
+| stop, skip | `break`, `continue` |
+
+## `array`, `seq`, and `openArray`
+
+| Concept | Code |
+|---|---|
+| fixed-size array | `var a: array[3, int] = [1, 2, 3]` |
+| array without an explicit type | `let a = [1, 2, 3]` |
+| sequence | `let s = @[1, 2, 3]` |
+| empty typed sequence | `var s: seq[int] = @[]` |
+| append, remove | `s.add 4`, `s.delete(0)` |
+| insert | `s.insert(1, 0)` |
+| length | `s.len` |
+| slice | `s[0 .. ^2]` |
+| flexible parameter | `proc total(xs: openArray[int]): int` |
+
+## Tuples and destructuring
+
+| Concept | Code |
+|---|---|
+| named type | `type Point = tuple[x, y: int]` |
+| value | `let p: Point = (x: 1, y: 2)` |
+| field access | `p.x` |
+| positional access | `p[0]` |
+| unpack into variables | `let (a, b) = (1, 2)` |
+
+## Objects and `ref object`
+
+```nim
+type
+  Person = object
+    name: string
+    age: int
+
+let p = Person(name: "Ada", age: 36)
+echo p.name
+```
+
+```nim
+type Node = ref object
+  value: int
+  next: Node
+
+var n: Node
+new(n)
+n.value = 1
+echo n.value
+```
+
+## Enums and sets
+
+```nim
+type Color = enum
+  red, green, blue
+
+echo ord(green)
+
+var flags: set[Color] = {red, blue}
+flags.incl green
+flags.excl red
+echo green in flags
+```
+
+## Procedures and parameters
+
+| Concept | Code |
+|---|---|
+| return value | `proc add(a, b: int): int = a + b` |
+| no side effects | `func square(x: int): int = x * x` |
+| default parameter | `proc greet(name: string, punctuation = "!")` |
+| named argument | `greet(punctuation = "?")` |
+| overloading | `proc show(x: int)` and `proc show(x: string)` |
+| `var` parameter | `proc double(x: var int) = x = x * 2` |
+
+## Generics
+
+```nim
+proc largest[T](items: openArray[T]): T =
+  result = items[0]
+  for item in items:
+    if item > result:
+      result = item
+
+echo largest([3, 9, 4])
+```
+
+| Concept | Code |
+|---|---|
+| generic type | `type Box[T] = object` |
+| type constraint | `proc double[T: SomeNumber](x: T): T` |
+
+## Templates
+
+```nim
+template twice(body: untyped) =
+  body
+  body
+
+twice:
+  echo "ping"
+```
+
+## Macros
+
+```nim
+import std/macros
+
+macro triple(x: untyped): untyped =
+  result = quote do:
+    `x` * 3
+
+echo triple(4)
+```
+
+## Exceptions and `raises`
+
+```nim
+try:
+  raise newException(ValueError, "bad")
+except ValueError as e:
+  echo e.msg
+finally:
+  echo "done"
+```
+
+| Concept | Code |
+|---|---|
+| custom exception | `type TooLarge = object of CatchableError` |
+| raise | `raise newException(TooLarge, "too large")` |
+| `raises` effect | `proc risky(): int {.raises: [ValueError].}` |
+| clean up on exit | `defer: echo "cleanup"` |
+
+## Iterators
+
+```nim
+iterator evens(n: int): int =
+  for i in 0 .. n:
+    if i mod 2 == 0:
+      yield i
+
+for e in evens(6):
+  echo e
+```
+
+## `import` and `export`
+
+| Concept | Code |
+|---|---|
+| import a module | `import std/strutils` |
+| several at once | `import std/[strutils, sequtils]` |
+| partial import | `from std/math import sqrt` |
+| alias | `import std/strutils as str` |
+| use a qualifier | `str.strip(s)` |
+| re-export | `export mymodule` |
+
+## `strutils`, `sequtils`, `tables`, `json`
+
+```nim
+import std/[strutils, sequtils, tables, json]
+
+echo "  Ada  ".strip.split(' ')
+echo @[1, 2, 3].filterIt(it > 1).mapIt(it * 2)
+
+var ages = initTable[string, int]()
+ages["ada"] = 36
+echo ages.getOrDefault("linus", 0)
+
+let doc = """{"city": "Bandung"}""".parseJson
+echo doc["city"].getStr
+```
+
+| Module | Frequently used functions |
+|---|---|
+| `strutils` | `strip`, `split`, `join`, `toUpperAscii`, `startsWith`, `replace`, `parseInt` |
+| `sequtils` | `mapIt`, `filterIt`, `foldl` |
+| `tables` | `initTable`, `hasKey`, `getOrDefault`, `t["k"]` |
+| `json` | `parseJson`, `%*`, `getStr`, `getInt`, `pretty`, `to(Thing)` |
+
+## `os`
+
+| Concept | Code |
+|---|---|
+| environment variable | `getEnv("HOME", "/")`, `existsEnv("HOME")` |
+| program arguments | `paramCount()`, `paramStr(1)`, `commandLineParams()` |
+| directory | `getCurrentDir()`, `setCurrentDir(dir)` |
+| file test | `fileExists(p)`, `dirExists(p)` |
+| join a path | `"dir" / "file.txt"` |
+| read, write | `readFile(p)`, `writeFile(p, s)` |
+| walk | `walkDir(dir)`, `walkFiles("*.txt")` |
+
+## `unittest`
+
+```nim
+import std/unittest
+
+suite "add":
+  test "two plus two":
+    check 2 + 2 == 4
+```
+
+```nim
+import std/[unittest, strutils]
+
+expect ValueError:
+  discard parseInt("x")
+```
+
+## `async`
+
+```nim
+import std/asyncdispatch
+
+proc fetch(n: int): Future[int] {.async.} =
+  return n * 2
+
+proc main() {.async.} =
+  let a = await fetch(3)
+  let b = await fetch(4)
+  echo a + b
+
+waitFor main()
+```
+
+## FFI
+
+```nim
+{.compile: "helper.c".}
+
+proc twice(x: cint): cint {.importc.}
+
+echo twice(4)
+```
+
+```c
+int twice(int x) { return x * 2; }
+```
+
+## The `nim` and `nimble` commands
+
+| Command | Meaning |
+|---|---|
+| `nim c file.nim` | compile |
+| `nim r file.nim` | compile and run |
+| `nim check file.nim` | type check only |
+| `nim c -d:release file.nim` | optimized build |
+| `nim c -o:app file.nim` | set the binary name |
+| `nim c --mm:orc file.nim` | pick the memory mode |
+| `nim js file.nim` | compile to JavaScript |
+| `nim doc file.nim` | build documentation |
+| `nim c --hints:off file.nim` | silence hints |
+| `nimble test` | run the tests |
+| `nimble add pkg` | add a dependency |
+| `nimble init` | create a project scaffold |
+| `nimble build` | build the project |
+| `nimble run` | build and run |
+| `nimble install name` | install a package |
+
+The contents of this page are tested on Nim 2.2.12. For longer explanations, each part has its own
+chapter in this book.

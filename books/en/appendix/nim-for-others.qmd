@@ -1,0 +1,196 @@
+# Nim for Python, Go, and Rust programmers {.unnumbered}
+
+This book is written for readers who already write programs in another language but have never used
+Nim. This page collects the word equivalents and habits for the three languages most often used
+alongside Nim: Python, Go, and Rust. There are no examples to run; the focus is mapping the habits
+already in place, so the switch feels light. Each part starts from a table of equivalents, then
+briefly explains what stays the same and what needs adjusting.
+
+## Variables
+
+| Language | Declaration |
+|---|---|
+| Python | `x = 1` |
+| Go | `var x int = 1`, `x := 1` |
+| Rust | `let x = 1;`, `let mut y = 2;` |
+| Nim | `var x = 1`, `let y = 2`, `const Z = 3` |
+
+All three infer the type from the initial value, and Nim follows the same habit. The Python habit of
+writing `x = 1` with no type still works, while type checking stays as strict as in Go and Rust.
+What differs: Nim offers three levels, from `var` that can change freely to `const` computed at
+compile time.
+
+## Functions
+
+| Language | Form |
+|---|---|
+| Python | `def f(a, b=1): return a + b` |
+| Go | `func f(a, b int) int { return a + b }` |
+| Rust | `fn f(a: i32, b: i32) -> i32 { a + b }` |
+| Nim | `proc f(a, b: int): int = a + b` |
+
+Parameter types are written as in Go and Rust, and defaults as in Python. The last expression of a
+procedure body becomes the return value, so `return` is rarely needed. Overloading is allowed, so
+several procedures may share a name as long as their parameter lists differ; Python and Rust do not
+have this, but Java programmers will find it familiar.
+
+## Structs and objects
+
+| Language | Form |
+|---|---|
+| Python | `class Point` with `__init__` |
+| Go | `type Point struct { X int }` |
+| Rust | `struct Point { x: i32 }` |
+| Nim | `type Point = object` with fields |
+
+Nim separates data from behavior. A method is an ordinary procedure whose first parameter has that
+type, called with a dot as in Python. A value object is copied whole on assignment, while a `ref
+object` is copied as a pointer. Class inheritance is limited, since Nim leans more on generics and
+concepts to compose types.
+
+## Interfaces and concepts
+
+| Language | Form |
+|---|---|
+| Python | duck typing and `typing.Protocol` |
+| Go | `type Shape interface { Area() float64 }` |
+| Rust | `trait Shape { fn area(&self) -> f64; }` |
+| Nim | `concept`, generic bounds, or the old `interface` |
+
+A Nim concept is not recognized at program runtime; it is checked during overloading at compile
+time. That is closer to a Rust `trait` than to a Go `interface`, which is dynamic. A concept checks
+the shape of a type, such as the presence of a field or a procedure, without demanding an
+inheritance declaration. A type from another library can therefore satisfy it untouched.
+
+## Error handling
+
+| Language | Form |
+|---|---|
+| Python | `try`/`except`/`raise` for all errors |
+| Go | `if err != nil` with multiple return values |
+| Rust | `Result[T, E]` and the `?` operator |
+| Nim | `try`/`except`/`raise`, the `raises` effect checked by the compiler |
+
+Nim uses exceptions as Python does, but it moves the checking up to compile time. A procedure can
+state which exception types may leave it, and the compiler rejects a promise that is broken. An
+unhandled error stops the program with a stack trace, much like Python. The difference is that a
+procedure signature can restrict which types may escape, so error handling becomes part of a
+readable contract.
+
+## Packages
+
+| Language | Form |
+|---|---|
+| Python | pip, PyPI, `requirements.txt` |
+| Go | Go modules, `go get` |
+| Rust | cargo, crates.io, `Cargo.toml` |
+| Nim | nimble, the `.nimble` file, `nimble install` |
+
+The role is the same: install and pin the project dependencies. A project usually has a single
+`.nimble` file at its root, matching `Cargo.toml` or `go.mod`. Nim also has `nimble.directory` as a
+public package index.
+
+## Build
+
+| Language | Form |
+|---|---|
+| Python | run by the interpreter, with no build step |
+| Go | `go build`, `go run` |
+| Rust | `cargo build`, `cargo run` |
+| Nim | `nim c`, `nim r`, `nimble build` |
+
+Nim translates code to C or C++ and then calls the C compiler. The resulting binary therefore
+stands alone, with no language runtime to install alongside it. Another target is picked with `nim
+cpp` or `nim js`. During development, `nim r` skips naming the binary and runs the result right
+away.
+
+## Testing
+
+| Language | Form |
+|---|---|
+| Python | `unittest`, `pytest` |
+| Go | `go test`, `_test.go` files |
+| Rust | `cargo test`, the `#[test]` attribute |
+| Nim | `std/unittest`, `suite`, `test`, `check` |
+
+The shape is close to Rust and Go: test blocks live in the same or a separate file, then run by the
+compiler as an ordinary program. `check` tests one boolean expression, and `expect` makes sure an
+exception is actually raised. Both report failure with a non-zero exit code, so they suit CI.
+
+## Concurrency
+
+| Language | Form |
+|---|---|
+| Python | `asyncio` with `await`, bounded by the GIL |
+| Go | goroutines and channels with `select` |
+| Rust | threads with `Send`/`Sync`, `async`/`await` via tokio |
+| Nim | `{.async.}` in `std/asyncdispatch`, threads, and `spawn` |
+
+Nim has two tracks: `async`/`await` for IO in one thread, and real threads with `--threads:on`. The
+async model uses a single event loop, and tasks wait without blocking the thread. For heavy CPU
+work, threads and `spawn` fit better, with explicit communication channels. There is no direct
+equivalent of a Go channel, which unites lightweight goroutines and channels in one model.
+
+## What is similar
+
+Static types with inference, generics, closures, and modules feel familiar from all three
+languages. A procedure can be called in method style, so `text.len` equals `len(text)`. Nim also
+offers `let` and `const` as immutable by default, in line with Rust `let` and Go `const`. Functions
+are values, so they can be passed and returned. The package manager plays the same role as pip, Go
+modules, and cargo.
+
+Beyond that, overloading and default parameter values feel natural to Python writers, while types in
+signatures feel natural to Go and Rust writers. Nim knows ranges, slices, and inserting values into
+text like a Python f-string, though the syntax differs. Iterating with `for` and counting with `len`
+exist in every language, so nothing truly has to be learned twice. Another relief is that common
+mistakes such as an off-by-one index or an unclosed block feel similar, so old reflexes still pay
+off. Arithmetic and comparison operators are nearly the same, so old expressions can often be
+copied with only a small adjustment.
+
+## What is different
+
+Nim compiles to a binary through C, C++, or JavaScript; there is no virtual machine interpreting
+code at runtime. Indentation delimits blocks, as in Python, with no curly braces. Memory management
+uses ARC or ORC with deterministic destructors, not a stop-the-world garbage collector. `nil` only
+applies to `ref`, `ptr`, and procedures; value objects are never `nil`. The `raises` effect is
+checked by the compiler. The range `0 .. 5` is inclusive, while Python `range` is exclusive. `and`,
+`or`, and `not` replace `&&`, `||`, and `!`. There is no built-in `async`/`await` keyword; async is
+built with the `{.async.}` macro. Integers have fixed widths and are checked on overflow, not
+arbitrary-precision as in Python.
+
+A value object is copied on assignment, not shared through a reference as a Python `class` is. To
+share, use a `ref object`. There are no decorators as in Python; pragmas in `{.braces.}` and macros
+take over that role. Class inheritance is avoided; generics, concepts, and variant objects are used
+more often to compose types.
+
+Nim also does not use the Rust `?` operator to forward errors; exceptions are written explicitly
+with `try`/`except`. On the other hand, the exhaustive check on `case` means the compiler often
+catches a mismatch before the program runs. The opening and closing braces common in Rust and Go
+are replaced by a colon and indentation.
+
+## Pitfalls
+
+Indentation is significant, and tabs may not be used to indent. Mixing spaces and tabs makes the
+compiler reject the file or read it wrongly. A `var` parameter lets a procedure mutate the caller
+variable with no explicit pointer. Nim identifiers ignore case and underscores except for the
+first letter, so `get_name` equals `getName`, but `GetName` differs. `var n: Node` for a `ref
+object` holds `nil`, so `new(n)` is needed before use. Copying a `ref` copies the pointer, not the
+contents, so two names can point to the same object. A `case` on an enum must be complete, and the
+compiler rejects a missing branch. There is no automatic conversion from `int` to `float`. `if`
+runs while the program runs, whereas `when` is settled at compile time; swapping them changes the
+meaning. A string is not a sequence of `char`, and `s[0]` has type `char`. Finally, `echo` adds no
+separator between arguments.
+
+If the compiler complains about the `raises` effect, do not rush to turn it off; usually there is an
+exception that truly needs handling. `discard` is not idle ceremony either: calling a procedure that
+returns a value without using it is rejected, and that catches mistakes easily missed in a dynamic
+language. In a variant object, the same field may not appear in two `case` branches, so field names
+need careful choosing from the start.
+
+One more thing, type and variable names are told apart by the first letter only; the official Nim
+style is `PascalCase` for types and `camelCase` for other names. Keeping one style from the start
+avoids a surprise when the compiler treats two different names as the same identifier.
+
+Moving to Nim does not require discarding old habits. What needs adjusting is mainly three things:
+indentation that delimits blocks, effects checked by the compiler, and memory management without a
+stop-the-world garbage collector.

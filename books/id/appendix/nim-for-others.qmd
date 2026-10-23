@@ -1,0 +1,198 @@
+# Nim untuk programmer Python, Go, dan Rust {.unnumbered}
+
+Buku ini ditulis untuk pembaca yang sudah menulis program di bahasa lain, tetapi belum pernah
+memakai Nim. Halaman ini mengumpulkan padanan istilah dan kebiasaan untuk tiga bahasa yang paling
+sering dipakai bergantian dengan Nim: Python, Go, dan Rust. Tidak ada contoh yang harus dijalankan;
+fokusnya memetakan kebiasaan yang sudah ada supaya perpindahan terasa ringan. Setiap bagian dimulai
+dari tabel padanan, lalu dijelaskan singkat apa yang sama dan apa yang perlu disesuaikan.
+
+## Variabel
+
+| Bahasa | Deklarasi |
+|---|---|
+| Python | `x = 1` |
+| Go | `var x int = 1`, `x := 1` |
+| Rust | `let x = 1;`, `let mut y = 2;` |
+| Nim | `var x = 1`, `let y = 2`, `const Z = 3` |
+
+Ketiganya menyimpulkan tipe dari nilai awal, dan Nim mengikuti kebiasaan yang sama. Kebiasaan
+Python menulis `x = 1` tanpa tipe tetap jalan, sedangkan pemeriksaan tipe tetap ketat seperti di Go
+dan Rust. Yang berbeda: Nim memberi tiga tingkat, dari `var` yang bebas berubah sampai `const` yang
+dihitung saat kompilasi.
+
+## Fungsi
+
+| Bahasa | Bentuk |
+|---|---|
+| Python | `def f(a, b=1): return a + b` |
+| Go | `func f(a, b int) int { return a + b }` |
+| Rust | `fn f(a: i32, b: i32) -> i32 { a + b }` |
+| Nim | `proc f(a, b: int): int = a + b` |
+
+Tipe parameter ditulis seperti Go dan Rust, dan nilai default seperti Python. Ekspresi terakhir
+badan prosedur menjadi nilai balik, jadi `return` jarang perlu. Overloading diizinkan, jadi
+beberapa prosedur boleh bernama sama asalkan daftar parameternya berbeda; ini tidak ada di Python
+dan Rust, tetapi terasa akrab bagi penulis Java.
+
+## Struct dan object
+
+| Bahasa | Bentuk |
+|---|---|
+| Python | `class Point` dengan `__init__` |
+| Go | `type Point struct { X int }` |
+| Rust | `struct Point { x: i32 }` |
+| Nim | `type Point = object` berisi field |
+
+Nim memisahkan data dari perilaku. Method adalah prosedur biasa yang parameter pertamanya bertipe
+itu, dipanggil dengan titik seperti di Python. Object nilai disalin utuh saat ditugaskan, sedangkan
+`ref object` disalin sebagai penunjuk. Warisan class dibatasi, sebab Nim lebih mengandalkan generik
+dan konsep untuk menyusun tipe.
+
+## Interface dan konsep
+
+| Bahasa | Bentuk |
+|---|---|
+| Python | *duck typing* dan `typing.Protocol` |
+| Go | `type Shape interface { Area() float64 }` |
+| Rust | `trait Shape { fn area(&self) -> f64; }` |
+| Nim | `concept`, batasan generic, atau `interface` nim lama |
+
+Konsep Nim tidak dikenali saat program berjalan; ia diperiksa saat overloading di kompilasi. Ini
+lebih dekat ke `trait` Rust daripada ke `interface` Go yang dinamis. Konsep memeriksa bentuk tipe,
+misalnya keberadaan field atau prosedur, tanpa menuntut deklarasi pewarisan. Karena itu tipe dari
+pustaka lain bisa memenuhinya tanpa diubah sedikit pun.
+
+## Penanganan error
+
+| Bahasa | Bentuk |
+|---|---|
+| Python | `try`/`except`/`raise` untuk semua kesalahan |
+| Go | `if err != nil` dengan nilai balik ganda |
+| Rust | `Result[T, E]` dan operator `?` |
+| Nim | `try`/`except`/`raise`, efek `raises` diperiksa compiler |
+
+Nim memakai pengecualian seperti Python, tetapi menaikkan pemeriksaannya ke kompilasi. Prosedur
+bisa menyatakan jenis pengecualian yang mungkin keluar, dan compiler menolak janji yang dipatahkan.
+Kesalahan yang tidak tertangani menghentikan program dengan jejak tumpukan, mirip Python. Bedanya,
+tanda tangan prosedur bisa membatasi jenis yang mungkin keluar, sehingga penanganan error menjadi
+bagian dari kontrak yang bisa dibaca.
+
+## Paket
+
+| Bahasa | Bentuk |
+|---|---|
+| Python | pip, PyPI, `requirements.txt` |
+| Go | Go modules, `go get` |
+| Rust | cargo, crates.io, `Cargo.toml` |
+| Nim | nimble, berkas `.nimble`, `nimble install` |
+
+Perannya sama: memasang dan mengunci dependensi proyek. Satu proyek biasanya punya satu berkas
+`.nimble` di akar, sepadan dengan `Cargo.toml` atau `go.mod`. Nim juga punya `nimble.directory`
+sebagai indeks paket publik.
+
+## Build
+
+| Bahasa | Bentuk |
+|---|---|
+| Python | dijalankan interpreter, tanpa langkah build |
+| Go | `go build`, `go run` |
+| Rust | `cargo build`, `cargo run` |
+| Nim | `nim c`, `nim r`, `nimble build` |
+
+Nim menerjemahkan kode ke C atau C++ lalu memanggil compiler C. Karena itu biner yang dihasilkan
+berdiri sendiri, tanpa runtime bahasa yang perlu ikut dipasang. Target lain dipilih dengan `nim cpp`
+atau `nim js`. Untuk pengembangan, `nim r` melewati penamaan biner dan langsung menjalankan
+hasilnya.
+
+## Testing
+
+| Bahasa | Bentuk |
+|---|---|
+| Python | `unittest`, `pytest` |
+| Go | `go test`, berkas `_test.go` |
+| Rust | `cargo test`, atribut `#[test]` |
+| Nim | `std/unittest`, `suite`, `test`, `check` |
+
+Bentuknya dekat ke Rust dan Go: blok tes ditulis di berkas yang sama atau terpisah, lalu dijalankan
+oleh compiler sebagai program biasa. `check` menguji satu ekspresi boolean, dan `expect` memastikan
+sebuah pengecualian benar-benar dilempar. Keduanya melaporkan kegagalan dengan kode keluar bukan
+nol, jadi ramah untuk CI.
+
+## Konkurensi
+
+| Bahasa | Bentuk |
+|---|---|
+| Python | `asyncio` dengan `await`, dibatasi GIL |
+| Go | goroutine dan channel dengan `select` |
+| Rust | utas dengan `Send`/`Sync`, `async`/`await` lewat tokio |
+| Nim | `{.async.}` di `std/asyncdispatch`, utas, dan `spawn` |
+
+Nim punya dua jalur: `async`/`await` untuk IO dalam satu utas, dan utas sungguhan dengan
+`--threads:on`. Model async memakai satu putaran peristiwa, dan tugas menunggu tanpa memblokir
+utas. Untuk pekerjaan CPU berat, utas dan `spawn` lebih cocok, dengan saluran komunikasi eksplisit.
+Tidak ada padanan langsung untuk channel Go, yang menyatukan goroutine ringan dan saluran dalam
+satu model.
+
+## Yang mirip
+
+Tipe statis dengan inferensi, generic, closure, dan modul terasa akrab dari ketiga bahasa. Prosedur
+bisa dipanggil dengan gaya metode, jadi `teks.len` sama dengan `len(teks)`. Nim juga menawarkan
+`let` dan `const` sebagai bawaan tidak berubah, sejalan dengan `let` Rust dan `const` Go. Fungsi
+adalah nilai, sehingga bisa dikirim dan dikembalikan. Pengelola paket memainkan peran yang sama
+seperti pip, Go modules, dan cargo.
+
+Selain itu, overloading dan nilai default parameter terasa alami bagi penulis Python, sementara
+penulisan tipe pada tanda tangan akrab bagi penulis Go dan Rust. Nim mengenal rentang, irisan, dan
+penyisipan nilai ke dalam teks seperti f-string Python, walau sintaksnya berbeda. Iterasi dengan
+`for` dan penghitungan dengan `len` ada di semua bahasa, jadi tidak ada yang benar-benar perlu
+dipelajari ulang. Yang juga melegakan, kesalahan umum seperti salah indeks atau lupa menutup blok
+terasa mirip, sehingga refleks lama tetap berguna. Operator aritmetika dan perbandingan hampir
+sama, jadi ekspresi lama sering bisa disalin dengan sedikit penyesuaian saja.
+
+## Yang berbeda
+
+Nim dikompilasi menjadi biner lewat C, C++, atau JavaScript; tidak ada mesin virtual yang menafsir
+kode saat berjalan. Indentasi menentukan blok, seperti Python, tanpa kurung kurawal. Manajemen
+memori memakai ARC atau ORC dengan destruktor deterministik, bukan garbage collector berhenti-dunia.
+`nil` hanya berlaku untuk `ref`, `ptr`, dan prosedur; object nilai tidak pernah `nil`. Efek
+`raises` diperiksa compiler. Rentang `0 .. 5` inklusif, sedangkan `range` Python eksklusif. `and`,
+`or`, dan `not` menggantikan `&&`, `||`, dan `!`. Tidak ada kata kunci `async`/`await` bawaan; async
+dibangun lewat makro `{.async.}`. Integer bertipe lebar tetap dan diperiksa saat meluap, bukan
+presisi sembarang seperti di Python.
+
+Object nilai disalin saat ditugaskan, bukan dibagi lewat referensi seperti `class` Python. Untuk
+berbagi, pakai `ref object`. Tidak ada dekorator seperti di Python; peran serupa diambil pragma
+dalam `{.kurung.}` dan makro. Warisan class dihindari; generik, konsep, dan object varian lebih
+sering dipakai untuk menyusun tipe.
+
+Nim juga tidak memakai operator `?` Rust untuk meneruskan error; pengecualian ditulis eksplisit
+dengan blok `try`/`except`. Sebaliknya, pemeriksaan lengkap pada `case` membuat compiler sering
+menangkap ketidaksinkronan sebelum program dijalankan. Kurung kurawal pembuka dan penutup yang
+biasa dipakai Rust dan Go digantikan oleh titik dua dan indentasi.
+
+## Jebakan
+
+Indentasi signifikan, dan tab tidak boleh dipakai untuk menjorok. Campur spasi dan tab membuat
+compiler menolak atau salah membaca. Parameter `var` membuat prosedur bisa mengubah variabel
+pemanggil tanpa pointer eksplisit. Identifier Nim mengabaikan besar-kecil dan garis bawah kecuali
+huruf pertama, jadi `get_name` sama dengan `getName`, tetapi `GetName` berbeda. `var n: Node` untuk
+`ref object` berisi `nil`, sehingga perlu `new(n)` sebelum dipakai. Menyalin `ref` menyalin
+penunjuknya, bukan isinya, jadi dua nama bisa menunjuk object yang sama. `case` pada enum harus
+lengkap, dan compiler menolak cabang yang kurang. Tidak ada konversi otomatis dari `int` ke
+`float`. `if` berjalan saat program berjalan, sedangkan `when` diselesaikan saat kompilasi;
+tertukar keduanya berarti artinya berubah. String bukan barisan `char`, dan `s[0]` bertipe `char`.
+Terakhir, `echo` tidak menambahkan pemisah antar argumen.
+
+Bila compiler mengeluh soal efek `raises`, jangan buru-buru mematikannya; biasanya ada pengecualian
+yang memang perlu ditangani. `discard` juga bukan basa-basi: memanggil prosedur yang mengembalikan
+nilai tanpa memakainya akan ditolak, dan itu justru menangkap kesalahan yang mudah luput di bahasa
+dinamis. Pada object varian, field yang sama tidak boleh muncul di dua cabang `case`, jadi nama
+field perlu dipilih dengan hati-hati sejak awal.
+
+Satu hal lagi, penamaan tipe dan variabel dibedakan oleh huruf pertama saja; gaya resmi Nim adalah
+`PascalCase` untuk tipe dan `camelCase` untuk nama lain. Menjaga satu gaya sejak awal menghindari
+kejutan saat compiler menganggap dua nama yang berbeda sebagai identifier yang sama.
+
+Pindah ke Nim tidak menuntut membuang kebiasaan lama. Yang perlu disesuaikan terutama tiga hal:
+indentasi yang menentukan blok, efek yang diperiksa compiler, dan pengelolaan memori tanpa garbage
+collector berhenti-dunia.

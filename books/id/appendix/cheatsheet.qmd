@@ -1,0 +1,354 @@
+# Cheat sheet {.unnumbered}
+
+Halaman ini merangkum sintaks yang paling sering dipakai. Setiap potongan ditulis dalam bahasa
+Inggris, sama seperti seluruh buku, dan diuji di Nim 2.2.12.
+
+## Deklarasi
+
+| Konsep | Kode |
+|---|---|
+| nilai yang boleh berubah | `var count = 0` |
+| diisi sekali | `let name = "Nim"` |
+| diketahui saat kompilasi | `const MaxItems = 128` |
+| tipe ditulis eksplisit | `var age: int8 = 24` |
+| tanpa nilai awal, berisi default tipe | `var flag: bool` |
+
+## Tipe dasar dan literal
+
+| Konsep | Kode |
+|---|---|
+| bilangan bulat | `let n = 42` |
+| bilangan pecahan | `let f = 3.14` |
+| boolean | `let b = true` |
+| karakter | `let c = 'x'` |
+| teks | `let s = "text"` |
+| tipe bulat berlebar | `int8`, `int16`, `int32`, `int64`, `int` |
+| tipe pecahan | `float32`, `float64`, `float` |
+| alias tipe | `type UserId = int` |
+| heksadesimal, oktal, biner | `0xFF`, `0o17`, `0b1010` |
+| pemisah digit | `1_000_000` |
+| konversi | `int(3.9)`, `float(2)`, `$42` |
+
+## String dan `&`
+
+| Konsep | Kode |
+|---|---|
+| escape | `"line\n"`, `"tab\t"`, `"quote\""` |
+| interpolasi | `&"{name} has {count}"` |
+| gabung | `"a" & "b"` |
+| indeks | `s[0]`, `s[^1]` |
+| potong | `s[1 .. 3]`, `s[^3 .. ^1]` |
+| satu karakter bertipe `char` | `s[0]` |
+| panjang | `s.len` |
+
+String mentah dan string multi-baris ditulis tanpa escape:
+
+```nim
+let raw = r"C:\temp"
+let ml = """line one
+line two"""
+```
+
+## `if`, `case`, `when`
+
+```nim
+let x = 3
+if x > 0:
+  echo "positive"
+elif x == 0:
+  echo "zero"
+else:
+  echo "negative"
+```
+
+```nim
+case 0
+of 0: echo "none"
+of 1, 2: echo "few"
+else: echo "many"
+```
+
+```nim
+case 'a'
+of 'a' .. 'z': echo "lower"
+of '0' .. '9': echo "digit"
+else: echo "other"
+```
+
+```nim
+when defined(windows):
+  echo "windows"
+else:
+  echo "other"
+```
+
+## Perulangan
+
+| Konsep | Kode |
+|---|---|
+| rentang inklusif | `for i in 0 .. 3:` |
+| rentang eksklusif | `for i in 0 ..< 3:` |
+| dengan langkah | `for i in countup(0, 10, 2):` |
+| mundur | `for i in countdown(5, 1):` |
+| elemen saja | `for value in items:` |
+| indeks dan elemen | `for i, v in items:` |
+| selama | `while n > 0:` |
+| hentikan, lanjut | `break`, `continue` |
+
+## `array`, `seq`, dan `openArray`
+
+| Konsep | Kode |
+|---|---|
+| larik ukuran tetap | `var a: array[3, int] = [1, 2, 3]` |
+| larik tanpa tipe eksplisit | `let a = [1, 2, 3]` |
+| barisan | `let s = @[1, 2, 3]` |
+| barisan kosong bertipe | `var s: seq[int] = @[]` |
+| tambah, buang | `s.add 4`, `s.delete(0)` |
+| sisip | `s.insert(1, 0)` |
+| panjang | `s.len` |
+| potong | `s[0 .. ^2]` |
+| parameter fleksibel | `proc total(xs: openArray[int]): int` |
+
+## Tuple dan destructuring
+
+| Konsep | Kode |
+|---|---|
+| tipe bernama | `type Point = tuple[x, y: int]` |
+| nilai | `let p: Point = (x: 1, y: 2)` |
+| akses field | `p.x` |
+| akses posisi | `p[0]` |
+| bongkar jadi variabel | `let (a, b) = (1, 2)` |
+
+## Object dan `ref object`
+
+```nim
+type
+  Person = object
+    name: string
+    age: int
+
+let p = Person(name: "Ada", age: 36)
+echo p.name
+```
+
+```nim
+type Node = ref object
+  value: int
+  next: Node
+
+var n: Node
+new(n)
+n.value = 1
+echo n.value
+```
+
+## Enum dan set
+
+```nim
+type Color = enum
+  red, green, blue
+
+echo ord(green)
+
+var flags: set[Color] = {red, blue}
+flags.incl green
+flags.excl red
+echo green in flags
+```
+
+## Prosedur dan parameter
+
+| Konsep | Kode |
+|---|---|
+| nilai balik | `proc add(a, b: int): int = a + b` |
+| tanpa efek samping | `func square(x: int): int = x * x` |
+| parameter default | `proc greet(name: string, punctuation = "!")` |
+| argumen bernama | `greet(punctuation = "?")` |
+| overloading | `proc show(x: int)` dan `proc show(x: string)` |
+| parameter `var` | `proc double(x: var int) = x = x * 2` |
+
+## Generic
+
+```nim
+proc largest[T](items: openArray[T]): T =
+  result = items[0]
+  for item in items:
+    if item > result:
+      result = item
+
+echo largest([3, 9, 4])
+```
+
+| Konsep | Kode |
+|---|---|
+| tipe generic | `type Box[T] = object` |
+| batasan tipe | `proc double[T: SomeNumber](x: T): T` |
+
+## Template
+
+```nim
+template twice(body: untyped) =
+  body
+  body
+
+twice:
+  echo "ping"
+```
+
+## Macro
+
+```nim
+import std/macros
+
+macro triple(x: untyped): untyped =
+  result = quote do:
+    `x` * 3
+
+echo triple(4)
+```
+
+## Exception dan `raises`
+
+```nim
+try:
+  raise newException(ValueError, "bad")
+except ValueError as e:
+  echo e.msg
+finally:
+  echo "done"
+```
+
+| Konsep | Kode |
+|---|---|
+| pengecualian sendiri | `type TooLarge = object of CatchableError` |
+| melempar | `raise newException(TooLarge, "too large")` |
+| efek `raises` | `proc risky(): int {.raises: [ValueError].}` |
+| bersihkan saat keluar | `defer: echo "cleanup"` |
+
+## Iterator
+
+```nim
+iterator evens(n: int): int =
+  for i in 0 .. n:
+    if i mod 2 == 0:
+      yield i
+
+for e in evens(6):
+  echo e
+```
+
+## `import` dan `export`
+
+| Konsep | Kode |
+|---|---|
+| impor modul | `import std/strutils` |
+| beberapa sekaligus | `import std/[strutils, sequtils]` |
+| impor sebagian | `from std/math import sqrt` |
+| alias | `import std/strutils as str` |
+| pakai kualifikasi | `str.strip(s)` |
+| ekspor ulang | `export mymodule` |
+
+## `strutils`, `sequtils`, `tables`, `json`
+
+```nim
+import std/[strutils, sequtils, tables, json]
+
+echo "  Ada  ".strip.split(' ')
+echo @[1, 2, 3].filterIt(it > 1).mapIt(it * 2)
+
+var ages = initTable[string, int]()
+ages["ada"] = 36
+echo ages.getOrDefault("linus", 0)
+
+let doc = """{"city": "Bandung"}""".parseJson
+echo doc["city"].getStr
+```
+
+| Modul | Fungsi sering dipakai |
+|---|---|
+| `strutils` | `strip`, `split`, `join`, `toUpperAscii`, `startsWith`, `replace`, `parseInt` |
+| `sequtils` | `mapIt`, `filterIt`, `foldl` |
+| `tables` | `initTable`, `hasKey`, `getOrDefault`, `t["k"]` |
+| `json` | `parseJson`, `%*`, `getStr`, `getInt`, `pretty`, `to(Tipe)` |
+
+## `os`
+
+| Konsep | Kode |
+|---|---|
+| variabel lingkungan | `getEnv("HOME", "/")`, `existsEnv("HOME")` |
+| argumen program | `paramCount()`, `paramStr(1)`, `commandLineParams()` |
+| direktori | `getCurrentDir()`, `setCurrentDir(dir)` |
+| uji berkas | `fileExists(p)`, `dirExists(p)` |
+| gabung jalur | `"dir" / "file.txt"` |
+| baca, tulis | `readFile(p)`, `writeFile(p, s)` |
+| telusuri | `walkDir(dir)`, `walkFiles("*.txt")` |
+
+## `unittest`
+
+```nim
+import std/unittest
+
+suite "add":
+  test "two plus two":
+    check 2 + 2 == 4
+```
+
+```nim
+import std/[unittest, strutils]
+
+expect ValueError:
+  discard parseInt("x")
+```
+
+## `async`
+
+```nim
+import std/asyncdispatch
+
+proc fetch(n: int): Future[int] {.async.} =
+  return n * 2
+
+proc main() {.async.} =
+  let a = await fetch(3)
+  let b = await fetch(4)
+  echo a + b
+
+waitFor main()
+```
+
+## FFI
+
+```nim
+{.compile: "helper.c".}
+
+proc twice(x: cint): cint {.importc.}
+
+echo twice(4)
+```
+
+```c
+int twice(int x) { return x * 2; }
+```
+
+## Perintah `nim` dan `nimble`
+
+| Perintah | Arti |
+|---|---|
+| `nim c file.nim` | kompilasi |
+| `nim r file.nim` | kompilasi lalu jalankan |
+| `nim check file.nim` | periksa tipe saja |
+| `nim c -d:release file.nim` | build teroptimasi |
+| `nim c -o:app file.nim` | tentukan nama biner |
+| `nim c --mm:orc file.nim` | pilih mode memori |
+| `nim js file.nim` | kompilasi ke JavaScript |
+| `nim doc file.nim` | buat dokumentasi |
+| `nim c --hints:off file.nim` | senyapkan hint |
+| `nimble test` | jalankan tes |
+| `nimble add pkg` | tambah dependensi |
+| `nimble init` | buat perancah proyek |
+| `nimble build` | bangun proyek |
+| `nimble run` | bangun lalu jalankan |
+| `nimble install nama` | pasang paket |
+
+Isi halaman ini diuji di Nim 2.2.12. Untuk penjelasan lebih panjang, setiap bagian punya babnya
+sendiri di buku ini.
