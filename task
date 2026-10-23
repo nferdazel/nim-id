@@ -53,7 +53,6 @@ case "${1:-help}" in
     ;;
   site)
     perlu "$QUARTO"
-    sh tools/gen-version.sh
     QUARTO="$QUARTO" bash tools/build-site.sh
     ;;
   id)
@@ -88,7 +87,6 @@ case "${1:-help}" in
   check)
     perlu nim
     perlu "$QUARTO"
-    sh tools/gen-version.sh
     bash tools/verify-examples.sh
     QUARTO="$QUARTO" bash tools/build-site.sh
     ;;

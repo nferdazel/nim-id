@@ -8,6 +8,10 @@ root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 quarto="${QUARTO:-quarto}"
 cd "$root"
 
+# Versi dari VERSION → books/*/_variables.yml. Wajib di sini, bukan hanya di ./task, karena
+# deploy VPS memanggil skrip ini langsung.
+sh tools/gen-version.sh
+
 rm -rf public
 
 # CSS bersama satu sumber (assets/ku.css). Quarto hanya menyalin berkas yang benar-benar ada
