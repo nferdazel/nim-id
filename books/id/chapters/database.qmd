@@ -1,0 +1,302 @@
+# Menyimpan data: `Table`, JSON, dan SQLite
+
+Data yang disimpan di variabel hilang begitu program ditutup. Database ada untuk menutup celah itu:
+menyimpan baris sampai program berikutnya dijalankan. Kabar buruknya, sejak Nim 2.0 modul
+`std/db_sqlite` tidak lagi ikut compiler. Modul basis data dipindahkan ke paket terpisah,
+`db_connector`. Karena buku ini hanya memakai pustaka standar, kita belajar polanya dengan yang
+sudah tersedia, lalu memetakannya ke SQLite.
+
+::: {.callout-note}
+## Tujuan bab
+
+Setelah bab ini, pembaca bisa menyimpan baris ke berkas, menyaring dan mengurutkan hasilnya,
+menulis pembaruan yang tidak berhenti setengah jalan, membaca error `IOError`, dan tahu kapan
+SQLite lebih tepat daripada berkas JSON.
+:::
+
+## Baris di memori
+
+Kita mulai dari bentuk yang paling sederhana: data yang hidup selama program berjalan.
+
+```{.nim}
+import std/[tables, algorithm]
+
+type Book = object
+  title: string
+  year: int
+
+var shelf = @[
+  Book(title: "Neuromancer", year: 1984),
+  Book(title: "Dune", year: 1965),
+  Book(title: "Emma", year: 1815),
+]
+
+var index = initTable[string, int]()
+for position, book in shelf:
+  index[book.title] = position
+
+echo "rows: ", shelf.len
+echo "Dune is at row ", index["Dune"]
+
+shelf.sort(proc (a, b: Book): int = cmp(a.year, b.year))
+for book in shelf:
+  echo book.year, " ", book.title
+```
+
+```{.txt}
+rows: 3
+Dune is at row 1
+1815 Emma
+1965 Dune
+1984 Neuromancer
+```
+
+`seq[Book]` menyimpan baris dalam urutan penulisan. `Table[string, int]` menyimpan indeks: dari
+judul buku ke posisinya. Di dunia basis data, keduanya berperan seperti tabel dan indeks.
+
+Perhatikan baris `shelf.sort`. Data ditulis dalam urutan 1984, 1965, 1815, lalu dicetak menaik
+menurut tahun. Di SQL, pekerjaan itu dilakukan `ORDER BY year`; di Nim, `sort`. Tanpa langkah ini,
+urutan baris tidak dijamin, dan keluaran yang berubah setiap kali dijalankan tidak bisa diuji.
+
+## Menyimpan ke berkas
+
+Agar data bertahan setelah program berhenti, baris itu harus meninggalkan memori.
+
+```{.nim}
+import std/[json, os]
+
+type Book = object
+  title: string
+  year: int
+
+let shelf = @[
+  Book(title: "Neuromancer", year: 1984),
+  Book(title: "Dune", year: 1965),
+]
+
+var rows = newJArray()
+for book in shelf:
+  rows.add %*{"title": book.title, "year": book.year}
+
+let path = getTempDir() / "nim_id_shelf.json"
+writeFile(path, rows.pretty)
+
+let loaded = parseJson(readFile(path))
+echo "rows on disk: ", loaded.len
+echo "first title: ", loaded[0]["title"].getStr
+
+removeFile(path)
+```
+
+```{.txt}
+rows on disk: 2
+first title: Neuromancer
+```
+
+`%*{...}` mengubah objek menjadi `JsonNode`, dan `newJArray` menyusunnya menjadi larik. `pretty`
+mencetak JSON dengan indentasi; untuk berkas, `toUgly` lebih hemat karena tidak menyisipkan spasi.
+`writeFile` menulis semuanya sekaligus, `readFile` membacanya kembali, dan `parseJson` mengubah teks
+menjadi struktur yang bisa ditelusuri.
+
+Tiga langkah itu, buka, tulis, tutup, sama bentuknya dengan alur `db_sqlite`: `open` untuk
+membuka koneksi, `exec` untuk menjalankan perintah, `close` untuk menutupnya. Bedanya, di sini koneksi
+kita adalah berkas biasa.
+
+## Kueri: saring lalu urutkan
+
+Kebutuhan sehari-hari sebuah database biasanya dua: ambil sebagian baris, lalu susun urutannya.
+
+```{.nim}
+import std/[json, algorithm]
+
+let rows = parseJson("""
+[
+  {"title": "Dune", "year": 1965},
+  {"title": "Emma", "year": 1815},
+  {"title": "Neuromancer", "year": 1984}
+]
+""")
+
+type Match = tuple[year: int, title: string]
+
+var result: seq[Match]
+for row in rows:
+  if row["year"].getInt >= 1900:
+    result.add (row["year"].getInt, row["title"].getStr)
+
+result.sort(proc (a, b: Match): int = cmp(a.year, b.year))
+for item in result:
+  echo item.year, " ", item.title
+```
+
+```{.txt}
+1965 Dune
+1984 Neuromancer
+```
+
+`row["year"].getInt` mengambil satu field dan menuntut tipenya `int`. Perulangan itu berperan
+seperti klausa `WHERE`: hanya baris yang lolos syarat ikut dikumpulkan. `sort` berperan seperti
+`ORDER BY`.
+
+Kebiasaan yang menyelamatkan: urutkan selalu di tempat yang memutuskan keluaran, bukan bergantung
+pada urutan berkas. Sama seperti di SQL, `ORDER BY` bukan hiasan, melainkan bagian dari jawaban.
+
+## Transaksi: semua atau tidak sama sekali
+
+Pembaruan yang berhenti di tengah lebih berbahaya daripada pembaruan yang gagal sejak awal. Berkas
+bisa tertinggal separuh terisi.
+
+```{.nim}
+import std/[json, os]
+
+let path = getTempDir() / "nim_id_atomic.json"
+
+proc save(path: string, rows: JsonNode) =
+  let tmp = path & ".tmp"
+  writeFile(tmp, rows.pretty)
+  moveFile(tmp, path)
+
+proc load(path: string): JsonNode =
+  parseJson(readFile(path))
+
+save(path, %*[{"title": "Dune"}])
+save(path, %*[{"title": "Dune"}, {"title": "Emma"}])
+echo load(path).len, " rows after commit"
+
+# An update that fails before writing leaves the file unchanged.
+try:
+  raise newException(ValueError, "validation failed")
+except ValueError:
+  echo "update rejected"
+
+echo load(path).len, " rows after rollback"
+removeFile(path)
+```
+
+```{.txt}
+2 rows after commit
+update rejected
+2 rows after rollback
+```
+
+Triknya ada di `save`: seluruh data baru ditulis ke berkas sementara, baru dipindahkan menimpa
+berkas lama dengan `moveFile`. Pemindahan itu satu langkah, jadi pembaca tidak pernah melihat berkas
+setengah jadi. Kalau validasi gagal sebelum `writeFile`, berkas lama tidak tersentuh sama sekali.
+Itulah arti *commit* dan *rollback* di sini.
+
+SQLite menyediakan keduanya secara eksplisit. Bungkus beberapa perintah dengan
+`db.exec(sql"BEGIN")`, lalu tutup dengan `db.exec(sql"COMMIT")`. Kalau ada yang salah di tengah,
+`db.exec(sql"ROLLBACK")` membatalkan semuanya. Tanpa `BEGIN`, setiap perintah langsung tersimpan,
+dan pembatalan tidak mungkin.
+
+## Bila berkasnya belum ada
+
+Berbeda dengan C yang mengembalikan kode error, Nim melempar pengecualian. Program yang mengabaikannya
+akan berhenti.
+
+```{.nim}
+import std/os
+
+let path = getTempDir() / "nim_id_absent.json"
+
+try:
+  let text = readFile(path)
+  echo "loaded ", text.len, " bytes"
+except IOError:
+  echo "no database yet"
+```
+
+```{.txt}
+no database yet
+```
+
+`readFile` melempar `IOError` kalau berkasnya tidak ada; `parseJson` melempar `JsonParsingError`
+kalau isinya rusak. Keduanya harus ditangani di tempat yang tahu apa yang harus dilakukan, misalnya
+memulai berkas kosong. Pola ini persis pola `DbError` di `db_sqlite`: kesalahan yang tidak bisa
+diabaikan muncul sebagai pengecualian, bukan sebagai nilai balik.
+
+## Error sengaja: modul yang sudah pindah
+
+Kode yang mengimpor modul basis data langsung dari pustaka standar kini gagal di baris pertama.
+
+```{.nim}
+import std/db_sqlite
+```
+
+```{.txt}
+main.nim(1, 11) Error: cannot open file: std/db_sqlite
+```
+
+Bacanya dari kiri: `main.nim` adalah berkasnya, `(1, 11)` berarti baris 1 kolom 11, dan `Error`
+berarti kompilasi berhenti. Kolom 11 adalah awal nama `std/db_sqlite`. `cannot open file` bukan
+berarti berkasnya rusak, tetapi modulnya memang tidak ada di jalur pencarian.
+
+## Kapan SQLite tepat
+
+Berkas JSON cukup untuk data kecil yang dibaca dan ditulis utuh. Ia mulai menyusahkan ketika tiga
+hal muncul bersamaan: datanya besar, kueri harus cepat pada sebagian kecil baris, dan beberapa
+program menulis ke berkas yang sama. Di titik itu pergantian ke SQLite masuk akal.
+
+Untuk memakainya, pasang `db_connector`, lalu impor `db_connector/db_sqlite`. Modul itu memerlukan
+`libsqlite3` pada sistem. Bentuk pemakaiannya sama, hanya lebih banyak:
+
+| Kebutuhan | Di bab ini | Di `db_sqlite` |
+|---|---|---|
+| membuka | `readFile(path)` | `open("data.db", "", "", "")` |
+| menutup | berkas ditutup otomatis | `db.close()` |
+| menjalankan perintah | `writeFile` | `db.exec(sql"CREATE TABLE ...")` |
+| jumlah baris terpengaruh | tidak ada | `db.execAffectedRows` |
+| semua hasil | `parseJson` lalu `for` | `db.getAllRows(sql"SELECT ...")` |
+| satu baris | `rows[0]` | `db.getRow(sql"SELECT ...")` |
+| menyisipkan nilai | `%*{...}` | `db.exec(sql"INSERT ... VALUES (?)", value)` |
+| transaksi | berkas sementara lalu `moveFile` | `BEGIN`, `COMMIT`, `ROLLBACK` |
+
+Perintahnya ditulis sebagai `sql"SELECT ..."`, yang menghasilkan nilai `SqlQuery`. Parameter `?` di
+dalamnya itu penting: jangan menyambung nilai ke dalam string SQL, karena lewat `?` nilai dikirim
+terpisah sehingga tanda kutip di dalamnya tidak merusak perintah. Untuk pengujian, SQLite
+menerima nama basis data `:memory:` sehingga seluruh data hidup di memori dan tidak meninggalkan
+berkas. Selalu tulis `ORDER BY` pada kueri yang hasilnya dicetak, dengan alasan yang sama seperti
+`sort` di bab ini.
+
+## Latihan
+
+1. Tambahkan satu buku lagi ke contoh pertama, lalu pastikan keluarannya tetap menaik menurut tahun.
+2. Tanpa menjalankan, prediksi keluarannya:
+   ```{.nim}
+   import std/json
+
+   let rows = parseJson("""[{"year": 1999}, {"year": 2001}, {"year": 1980}]""")
+   var years: seq[int]
+   for row in rows:
+     if row["year"].getInt > 1990:
+       years.add row["year"].getInt
+   echo years
+   ```
+3. Simpan tiga baris ke sebuah berkas JSON di `getTempDir()`, baca kembali, cetak jumlah barisnya,
+   lalu hapus berkasnya.
+4. Kode berikut berhenti saat dijalankan. Perbaiki, lalu jelaskan pengecualian yang muncul:
+   ```{.nim}
+   import std/json
+
+   let row = parseJson("""{"title": "Dune"}""")
+   echo row["year"].getInt
+   ```
+5. Sebutkan dua alasan berkas JSON tidak lagi cukup, dan pekerjaan apa yang harus pindah ke SQLite.
+
+Jawaban ada di [Lampiran A](../appendix/answers.qmd).
+
+## Ringkasan
+
+- `seq` dan `Table` menyimpan baris selama program berjalan; keduanya hilang saat proses ditutup.
+- `%*` dan `pretty` membangun JSON, `parseJson` membacanya kembali; urutkan sendiri sebelum mencetak.
+- Pembaruan yang aman menulis ke berkas sementara lalu memindahkannya, pola yang sama dengan
+  `COMMIT`.
+- `readFile` melempar `IOError` dan `parseJson` melempar `JsonParsingError`, seperti `DbError` di
+  `db_sqlite`.
+- `std/db_sqlite` sudah pindah ke paket `db_connector`; pakai SQLite saat data membesar atau butuh
+  kueri dan transaksi sungguhan.
+
+## Selanjutnya
+
+Data punya tempat tetap. Pekerjaan berikutnya adalah mengemas kode supaya bisa dipakai ulang dan
+dibagikan: [membuat dan menerbitkan paket nimble](nimble-packages.qmd).

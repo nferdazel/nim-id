@@ -1,0 +1,294 @@
+# Storing data: `Table`, JSON, and SQLite
+
+Data kept in a variable disappears the moment the program exits. Databases close that gap: they keep
+rows until the next run. The bad news is that since Nim 2.0 the `std/db_sqlite` module no longer
+ships with the compiler; the database modules moved to the separate `db_connector` package. Because
+this book uses only the standard library, we learn the pattern with what is available, then map it
+onto SQLite.
+
+::: {.callout-note}
+## What you will be able to do
+
+After this chapter you can store rows in a file, filter and sort the result, write an update that
+does not stop half way, read an `IOError`, and explain when SQLite beats a JSON file.
+:::
+
+## Rows in memory
+
+We start from the simplest shape: data that lives only while the program runs.
+
+```{.nim}
+import std/[tables, algorithm]
+
+type Book = object
+  title: string
+  year: int
+
+var shelf = @[
+  Book(title: "Neuromancer", year: 1984),
+  Book(title: "Dune", year: 1965),
+  Book(title: "Emma", year: 1815),
+]
+
+var index = initTable[string, int]()
+for position, book in shelf:
+  index[book.title] = position
+
+echo "rows: ", shelf.len
+echo "Dune is at row ", index["Dune"]
+
+shelf.sort(proc (a, b: Book): int = cmp(a.year, b.year))
+for book in shelf:
+  echo book.year, " ", book.title
+```
+
+```{.txt}
+rows: 3
+Dune is at row 1
+1815 Emma
+1965 Dune
+1984 Neuromancer
+```
+
+`seq[Book]` keeps rows in insertion order. `Table[string, int]` keeps an index: from a book title to
+its position. In database terms, the two play the role of a table and an index.
+
+Note the `shelf.sort` line. The data was written in the order 1984, 1965, 1815, then printed ascending
+by year. In SQL that job belongs to `ORDER BY year`; in Nim, to `sort`. Without it, row order is not
+guaranteed, and output that changes on every run cannot be tested.
+
+## Saving to a file
+
+For the data to outlive the program, the rows have to leave memory.
+
+```{.nim}
+import std/[json, os]
+
+type Book = object
+  title: string
+  year: int
+
+let shelf = @[
+  Book(title: "Neuromancer", year: 1984),
+  Book(title: "Dune", year: 1965),
+]
+
+var rows = newJArray()
+for book in shelf:
+  rows.add %*{"title": book.title, "year": book.year}
+
+let path = getTempDir() / "nim_id_shelf.json"
+writeFile(path, rows.pretty)
+
+let loaded = parseJson(readFile(path))
+echo "rows on disk: ", loaded.len
+echo "first title: ", loaded[0]["title"].getStr
+
+removeFile(path)
+```
+
+```{.txt}
+rows on disk: 2
+first title: Neuromancer
+```
+
+`%*{...}` turns an object into a `JsonNode`, and `newJArray` stacks them. `pretty` prints JSON with
+indentation; for a file, `toUgly` is leaner. `writeFile` writes it all at once, `readFile` reads it
+back, and `parseJson` turns the text into a structure you can traverse.
+
+Those three steps, open, write, close, mirror the `db_sqlite` flow: `open` for the connection,
+`exec` to run a statement, `close` to end it. Here the connection is an ordinary file.
+
+## Queries: filter, then sort
+
+Two jobs cover most daily database work: fetch part of the rows, then arrange their order.
+
+```{.nim}
+import std/[json, algorithm]
+
+let rows = parseJson("""
+[
+  {"title": "Dune", "year": 1965},
+  {"title": "Emma", "year": 1815},
+  {"title": "Neuromancer", "year": 1984}
+]
+""")
+
+type Match = tuple[year: int, title: string]
+
+var result: seq[Match]
+for row in rows:
+  if row["year"].getInt >= 1900:
+    result.add (row["year"].getInt, row["title"].getStr)
+
+result.sort(proc (a, b: Match): int = cmp(a.year, b.year))
+for item in result:
+  echo item.year, " ", item.title
+```
+
+```{.txt}
+1965 Dune
+1984 Neuromancer
+```
+
+`row["year"].getInt` reads one field and insists its type is `int`. The loop acts like a `WHERE`
+clause: only rows that pass the test get collected. `sort` acts like `ORDER BY`.
+
+Always sort where the output is decided, never rely on file order: as in SQL, `ORDER BY` is part of
+the answer.
+
+## Transactions: all or nothing
+
+An update that stops half way is more dangerous than one that fails at the start. The file can be
+left half written.
+
+```{.nim}
+import std/[json, os]
+
+let path = getTempDir() / "nim_id_atomic.json"
+
+proc save(path: string, rows: JsonNode) =
+  let tmp = path & ".tmp"
+  writeFile(tmp, rows.pretty)
+  moveFile(tmp, path)
+
+proc load(path: string): JsonNode =
+  parseJson(readFile(path))
+
+save(path, %*[{"title": "Dune"}])
+save(path, %*[{"title": "Dune"}, {"title": "Emma"}])
+echo load(path).len, " rows after commit"
+
+# An update that fails before writing leaves the file unchanged.
+try:
+  raise newException(ValueError, "validation failed")
+except ValueError:
+  echo "update rejected"
+
+echo load(path).len, " rows after rollback"
+removeFile(path)
+```
+
+```{.txt}
+2 rows after commit
+update rejected
+2 rows after rollback
+```
+
+The trick is inside `save`: the whole new document goes to a temporary file first, then moves over
+the old one with `moveFile`. That move is a single step, so no reader ever sees a half-written file.
+If validation fails before `writeFile`, the old file is untouched. That is *commit* and *rollback*
+here.
+
+SQLite offers both explicitly. Wrap several statements in `db.exec(sql"BEGIN")`, then close with
+`db.exec(sql"COMMIT")`. If something goes wrong in between, `db.exec(sql"ROLLBACK")` undoes all of
+it. Without `BEGIN`, every statement is stored immediately, and undoing is impossible.
+
+## When the file is not there
+
+Unlike C, which returns an error code, Nim raises an exception. A program that ignores it stops.
+
+```{.nim}
+import std/os
+
+let path = getTempDir() / "nim_id_absent.json"
+
+try:
+  let text = readFile(path)
+  echo "loaded ", text.len, " bytes"
+except IOError:
+  echo "no database yet"
+```
+
+```{.txt}
+no database yet
+```
+
+`readFile` raises `IOError` when the file is missing; `parseJson` raises `JsonParsingError` when the
+contents are broken. Both must be handled where the program knows what to do next. This is the
+`DbError` pattern in `db_sqlite`: an error that cannot be ignored shows up as an exception, not a
+return value.
+
+## Deliberate error: the module that moved
+
+Code that imports the database module straight from the standard library now fails on the first line.
+
+```{.nim}
+import std/db_sqlite
+```
+
+```{.txt}
+main.nim(1, 11) Error: cannot open file: std/db_sqlite
+```
+
+`main.nim` is the file, `(1, 11)` is line 1 column 11, and `Error` means compilation stopped. Column
+11 is where `std/db_sqlite` begins. `cannot open file` does not mean the file is corrupt, it means the
+module is not on the search path.
+
+## When SQLite is the right choice
+
+A JSON file is enough for small data that is read and written whole. It starts to hurt when three
+things show up together: the data is large, queries must be fast over a small slice of rows, and
+several programs write to the same file. At that point moving to SQLite makes sense.
+
+To use it, install `db_connector`, then import `db_connector/db_sqlite`. That module needs
+`libsqlite3` on the system. The shape of the code is the same, only richer:
+
+| Need | In this chapter | In `db_sqlite` |
+|---|---|---|
+| open | `readFile(path)` | `open("data.db", "", "", "")` |
+| close | file closes automatically | `db.close()` |
+| run a statement | `writeFile` | `db.exec(sql"CREATE TABLE ...")` |
+| affected row count | none | `db.execAffectedRows` |
+| all results | `parseJson` then `for` | `db.getAllRows(sql"SELECT ...")` |
+| one row | `rows[0]` | `db.getRow(sql"SELECT ...")` |
+| insert a value | `%*{...}` | `db.exec(sql"INSERT ... VALUES (?)", value)` |
+| transaction | temp file then `moveFile` | `BEGIN`, `COMMIT`, `ROLLBACK` |
+
+Statements are written as `sql"SELECT ..."`, which yields a `SqlQuery`. Its `?` parameters matter:
+never splice values into an SQL string, because with `?` the value travels separately and a quote
+inside it cannot break the statement. For tests, SQLite accepts `:memory:` so
+everything lives in memory and no file is left behind. Always write `ORDER BY` on a query whose
+output is printed, for the same reason we called `sort` here.
+
+## Exercises
+
+1. Add one more book to the first example and confirm the output is still ascending by year.
+2. Without running it, predict the output:
+   ```{.nim}
+   import std/json
+
+   let rows = parseJson("""[{"year": 1999}, {"year": 2001}, {"year": 1980}]""")
+   var years: seq[int]
+   for row in rows:
+     if row["year"].getInt > 1990:
+       years.add row["year"].getInt
+   echo years
+   ```
+3. Save three rows to a JSON file in `getTempDir()`, read them back, print the row count, then
+   remove the file.
+4. The code below stops at runtime. Fix it, then explain which exception appears:
+   ```{.nim}
+   import std/json
+
+   let row = parseJson("""{"title": "Dune"}""")
+   echo row["year"].getInt
+   ```
+5. Name two reasons a JSON file stops being enough, and say what work should move to SQLite.
+
+Answers are in [Appendix A](../appendix/answers.qmd).
+
+## Summary
+
+- `seq` and `Table` hold rows while the program runs; both are lost when the process exits.
+- `%*` and `pretty` build JSON, `parseJson` reads it back; sort before printing.
+- A safe update writes to a temporary file and moves it into place, the same pattern as `COMMIT`.
+- `readFile` raises `IOError` and `parseJson` raises `JsonParsingError`, like `DbError` in
+  `db_sqlite`.
+- `std/db_sqlite` has moved to the `db_connector` package; reach for SQLite when the data grows or
+  you need real queries and transactions.
+
+## Next
+
+The data now has a stable home. The next job is packaging code so it can be reused and shared:
+[building and publishing a nimble package](nimble-packages.qmd).
