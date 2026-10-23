@@ -1697,7 +1697,8 @@ for kind, key, val in getopt(args, longNoVal = @["quiet"]):
     if key == "quiet":
       quiet = true
   of cmdArgument:
-    echo "argument: ", key
+    if not quiet:
+      echo "argument: ", key
   of cmdEnd:
     discard
 
@@ -1706,7 +1707,6 @@ if quiet:
 ```
 
 ```{.txt}
-argument: input.txt
 quiet mode
 ```
 
@@ -1721,16 +1721,16 @@ quiet mode
 `-ab` adalah dua opsi pendek yang dibundel: `a` dan `b`, masing-masing tanpa nilai. `--name=ana`
 memberi `key` sama dengan `name` dan `val` sama dengan `ana`.
 
-**3.** `--count` di sini ditulis dengan pemisah `=` supaya nilainya pasti terbaca, karena tanpa
-`longNoVal` bentuk `--opt val` tidak menyerap token berikutnya:
+**3.** Agar `--count 4` menyerap `4`, `longNoVal` harus tidak kosong. Di sini `--help` dipakai
+sebagai penanda yang sudah dipakai alat ini, sehingga `count` tidak termasuk di dalamnya:
 
 ```{.nim}
 import std/[parseopt, strutils]
 
-let args = @["--count=4"]
+let args = @["--count", "4"]
 
 var count = 3
-for kind, key, val in getopt(args):
+for kind, key, val in getopt(args, longNoVal = @["help"]):
   if key == "count" and val != "":
     count = parseInt(val)
 
@@ -1969,9 +1969,10 @@ dengan nama berkas yang benar, misalnya `import notes`, atau memberi berkas modu
 `notes_helpers.nim`.
 
 **5.** (a) `0.2.0`, karena ada tambahan dan belum ada yang rusak; (b) `0.1.1`, karena hanya memperbaiki
-pesan tanpa mengubah cara pakai; (c) `1.0.0` kalau *package* sudah mencapai `1.0.0` sebelumnya, karena
-mengganti nama prosedur memutus kode pemakai. Selama *package* masih di bawah `1.0.0`, perubahan ketiga
-itu cukup ditandai `0.2.0` dengan catatan di riwayat perubahan.
+pesan tanpa mengubah cara pakai; (c) `2.0.0` kalau *package* sudah mencapai `1.0.0`, karena mengganti
+nama prosedur memutus kode pemakai dan perubahan yang memutus wajib menaikkan angka major. Selama
+*package* masih di bawah `1.0.0`, perubahan ketiga itu cukup ditandai `0.2.0` dengan catatan di
+riwayat perubahan.
 
 ## Bab: Benchmark dan profiling
 

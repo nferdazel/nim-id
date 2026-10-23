@@ -1691,7 +1691,8 @@ for kind, key, val in getopt(args, longNoVal = @["quiet"]):
     if key == "quiet":
       quiet = true
   of cmdArgument:
-    echo "argument: ", key
+    if not quiet:
+      echo "argument: ", key
   of cmdEnd:
     discard
 
@@ -1700,7 +1701,6 @@ if quiet:
 ```
 
 ```{.txt}
-argument: input.txt
 quiet mode
 ```
 
@@ -1715,16 +1715,16 @@ quiet mode
 `-ab` is two short options bundled together: `a` and `b`, each with no value. `--name=ana` gives a
 `key` of `name` and a `val` of `ana`.
 
-**3.** Here `--count` is written with the `=` separator so its value is read for sure, because
-without `longNoVal` the `--opt val` form does not swallow the next token:
+**3.** For `--count 4` to swallow the `4`, `longNoVal` must not be empty. Here `--help` is listed as
+the one option that takes no value, which leaves `count` free to absorb the next token:
 
 ```{.nim}
 import std/[parseopt, strutils]
 
-let args = @["--count=4"]
+let args = @["--count", "4"]
 
 var count = 3
-for kind, key, val in getopt(args):
+for kind, key, val in getopt(args, longNoVal = @["help"]):
   if key == "count" and val != "":
     count = parseInt(val)
 
@@ -1962,8 +1962,8 @@ import to the real file name, for example `import notes`, or to name the module 
 `notes_helpers.nim`.
 
 **5.** (a) `0.2.0`, because something was added and nothing broke; (b) `0.1.1`, because only the
-message changed; (c) `1.0.0` if the package had already reached `1.0.0`, because renaming a procedure
-breaks user code. While the package is below `1.0.0`, the third change may simply be marked `0.2.0`
+message changed; (c) `2.0.0` if the package had already reached `1.0.0`, because renaming a procedure
+breaks user code and a breaking change must raise the major number. While the package is below `1.0.0`, the third change may simply be marked `0.2.0`
 with a note in the changelog.
 
 ## Chapter: Benchmarks and profiling
