@@ -1,0 +1,359 @@
+# Final project: notes from the terminal
+
+A small useful tool almost always has the same shape: a few modules, one data file, a handful of
+subcommands, and some tests. Part C has closed each piece one by one. Now the pieces are put together
+into one program that can genuinely be used: `notes`, a command line tool for writing short things
+down.
+
+::: {.callout-note}
+## What you will be able to do
+
+After this chapter you can split a small tool into separate modules, store data in a JSON file, read
+subcommands with `std/parseopt`, write its tests with `std/unittest`, and read the error message you
+get when JSON is treated like an ordinary object.
+:::
+
+## Step 1: one note as JSON
+
+Start from the smallest part: a single note and its JSON form. Save it as `a01_note_json.nim`.
+
+```{.nim}
+import std/json
+
+type Note* = object
+  text*: string
+  done*: bool
+
+proc toJson*(note: Note): JsonNode =
+  ## Turns one note into a JSON object.
+  %*{"text": note.text, "done": note.done}
+
+proc fromJson*(node: JsonNode): Note =
+  ## Rebuilds one note from a JSON object.
+  Note(text: node["text"].getStr, done: node["done"].getBool)
+
+when isMainModule:
+  let note = Note(text: "buy milk", done: false)
+  echo $note.toJson
+  echo note.toJson.fromJson.text
+```
+
+```{.txt}
+{"text":"buy milk","done":false}
+buy milk
+```
+
+Three things are already visible here. `%*` builds a JSON object from name and value pairs. `$` on a
+`JsonNode` produces JSON text, not a description of the type. And the pair `toJson` plus `fromJson`
+means the conversion is written once and used everywhere.
+
+The star on `Note` and both procedures is the export marker. Without it, other modules cannot use
+them, and that is exactly what the next step needs.
+
+## Step 2: the storage module
+
+Now move the part that touches files into a module of its own. Save it as `a02_store.nim`.
+
+```{.nim}
+import std/[json, os]
+
+type Note* = object
+  text*: string
+  done*: bool
+
+proc toJson*(note: Note): JsonNode =
+  ## Turns one note into a JSON object.
+  %*{"text": note.text, "done": note.done}
+
+proc fromJson*(node: JsonNode): Note =
+  ## Rebuilds one note from a JSON object.
+  Note(text: node["text"].getStr, done: node["done"].getBool)
+
+proc loadNotes*(path: string): seq[Note] =
+  ## Returns an empty sequence when the file does not exist yet.
+  if not fileExists(path):
+    return @[]
+  let root = parseJson(readFile(path))
+  for item in root:
+    result.add fromJson(item)
+
+proc saveNotes*(path: string, notes: seq[Note]) =
+  var items = newJArray()
+  for note in notes:
+    items.add note.toJson
+  writeFile(path, $items)
+
+proc addNote*(path, text: string) =
+  var notes = loadNotes(path)
+  notes.add Note(text: text, done: false)
+  saveNotes(path, notes)
+
+proc removeNote*(path: string, index: int): bool =
+  ## Removes the note at `index`; returns false when the index is out of range.
+  var notes = loadNotes(path)
+  if index < 0 or index >= notes.len:
+    return false
+  notes.delete index
+  saveNotes(path, notes)
+  true
+
+when isMainModule:
+  let path = getTempDir() / "nim_id_notes_demo.json"
+  removeFile(path)
+
+  addNote(path, "buy milk")
+  addNote(path, "write the chapter")
+
+  let notes = loadNotes(path)
+  echo "notes: ", notes.len
+  echo "first: ", notes[0].text
+
+  echo "removed: ", removeNote(path, 0)
+  echo "left: ", loadNotes(path).len
+
+  removeFile(path)
+```
+
+```{.txt}
+notes: 2
+first: buy milk
+removed: true
+left: 1
+```
+
+This module holds the entire storage rule in one place. `loadNotes` returns an empty sequence when the
+file does not exist yet, so the first caller does not have to handle that case itself. `removeNote`
+returns a `bool` as a report instead of stopping the program with an exception, because an index out
+of range is ordinary misuse.
+
+The `when isMainModule` block runs only when this file is executed directly. When another module
+imports it, the block is skipped. That is why the module can be tested on its own, without the CLI.
+This example uses `getTempDir()` so its test file does not land in the working directory, and it
+removes that file at the end.
+
+## Step 3: subcommands
+
+The last layer is the command line tool itself. Save it as `a03_main.nim`.
+
+```{.nim}
+import std/[parseopt, os, strutils]
+import a02_store
+
+const Usage = """usage: notes <command> [options]
+
+commands:
+  add <text>       append a note
+  list             print every note
+  remove <index>   delete the note at <index>
+
+options:
+  -f, --file:path  where the notes are stored
+"""
+
+var storePath = getEnv("NOTES_FILE", getTempDir() / "nim_id_notes.json")
+
+proc handle(command: string, operands: seq[string]): int =
+  case command
+  of "":
+    echo Usage
+    0
+  of "add":
+    if operands.len != 1:
+      echo "add needs exactly one text argument"
+      return 1
+    addNote(storePath, operands[0])
+    0
+  of "list":
+    let notes = loadNotes(storePath)
+    if notes.len == 0:
+      echo "no notes"
+      return 0
+    for index, note in notes:
+      echo index + 1, ": ", note.text
+    0
+  of "remove":
+    if operands.len != 1:
+      echo "remove needs exactly one index"
+      return 1
+    let index = parseInt(operands[0]) - 1
+    if not removeNote(storePath, index):
+      echo "no note at index ", operands[0]
+      return 1
+    0
+  else:
+    echo "unknown command: ", command
+    echo Usage
+    1
+
+proc main(): int =
+  var command = ""
+  var operands: seq[string]
+
+  var parser = initOptParser()
+  for kind, key, val in parser.getopt():
+    case kind
+    of cmdArgument:
+      if command.len == 0:
+        command = key
+      else:
+        operands.add key
+    of cmdLongOption, cmdShortOption:
+      if key == "file" or key == "f":
+        storePath = val
+      else:
+        echo "unknown option: ", key
+        return 1
+    of cmdEnd:
+      discard
+
+  handle(command, operands)
+
+when isMainModule:
+  quit main()
+```
+
+```{.txt}
+usage: notes <command> [options]
+
+commands:
+  add <text>       append a note
+  list             print every note
+  remove <index>   delete the note at <index>
+
+options:
+  -f, --file:path  where the notes are stored
+```
+
+Run without arguments, the program prints the help text. The first argument becomes the subcommand
+name and the rest become operands; options are recognized by their leading dash, and `std/parseopt`
+already tells the two apart. The exit code is returned as an `int` and passed to `quit`, so other
+scripts can check whether the run succeeded.
+
+A real session looks like this:
+
+```bash
+nim c -d:release -o:notes a03_main.nim
+./notes --file:/tmp/notes-demo.json add "buy milk"
+./notes --file:/tmp/notes-demo.json add "write the chapter"
+./notes --file:/tmp/notes-demo.json list
+./notes --file:/tmp/notes-demo.json remove 1
+./notes --file:/tmp/notes-demo.json list
+rm -f /tmp/notes-demo.json
+```
+
+```{.txt}
+1: buy milk
+2: write the chapter
+1: write the chapter
+```
+
+Note the form `--file:/tmp/notes-demo.json`, not `--file /tmp/notes-demo.json`. `parseopt` takes an
+option's value from the same token as the option name, separated by a colon or an equals sign. If the
+value is separated by a space, that path is treated as a plain argument.
+
+## Step 4: tests
+
+The storage module has clear rules, and those are exactly the raw material for `std/unittest`. Save it
+as `a04_tests.nim`.
+
+```{.nim}
+import std/[unittest, os]
+import a02_store
+
+proc testPath(): string =
+  getTempDir() / "nim_id_notes_test.json"
+
+suite "store":
+  setup:
+    removeFile(testPath())
+
+  teardown:
+    removeFile(testPath())
+
+  test "starts empty":
+    check loadNotes(testPath()).len == 0
+
+  test "adds notes in order":
+    addNote(testPath(), "first")
+    addNote(testPath(), "second")
+    let notes = loadNotes(testPath())
+    check notes.len == 2
+    check notes[0].text == "first"
+    check notes[1].text == "second"
+
+  test "removes a note by index":
+    addNote(testPath(), "keep")
+    addNote(testPath(), "drop")
+    check removeNote(testPath(), 1)
+    check loadNotes(testPath()).len == 1
+
+  test "rejects an index that is out of range":
+    check not removeNote(testPath(), 0)
+```
+
+```{.txt}
+
+[Suite] store
+  [OK] starts empty
+  [OK] adds notes in order
+  [OK] removes a note by index
+  [OK] rejects an index that is out of range
+```
+
+Each case is named after a behaviour, not after a procedure. `setup` and `teardown` delete the file
+before and after every case, so the execution order no longer matters and one test does not inherit
+leftovers from the previous one. Tests like these are what keep a small program editable months
+later.
+
+## Deliberate error: `JsonNode` is not an ordinary object
+
+Objects you define yourself have named fields. `JsonNode` does not.
+
+```{.nim}
+import std/json
+
+let note = %*{"text": "buy milk"}
+
+# A JsonNode is not an object with named fields.
+echo note.text
+```
+
+```{.txt}
+main.nim(6, 10) Error: undeclared field: 'text' for type json.JsonNode [type declared in json.nim(194, 3)]
+```
+
+The message points at line 6, column 10, right at `.text`, then names the cause: there is no field
+called `text` on `json.JsonNode`. In the brackets the compiler also names the file where the type is
+declared, so it is clear which type is meant. The fix is to index it like the JSON object it really
+is, `note["text"]`, and convert the result to a `string` with `getStr`.
+
+## Exercises
+
+1. Add a `done <index>` subcommand that marks a note as done, then print `[x]` or `[ ]` in the `list`
+   subcommand.
+2. Without running it, predict the output: `./notes list` on a file that does not exist yet, then
+   `./notes add "one"` and `./notes list` again.
+3. Write a test for `saveNotes` that checks the written content can be read back and keeps its length.
+4. The code below fails to compile. Fix it, then explain the message: `let notes = parseJson("[]")`
+   followed by `notes.add("buy milk")`.
+5. Name one advantage of keeping the storage functions in a separate module, and one piece of work
+   that must be added before this tool is used from two computers at once.
+
+Answers are in [Appendix A](../appendix/answers.qmd).
+
+## Summary
+
+- A small tool deserves to be split: types and conversions, a storage module, a CLI layer, then tests.
+- `%*` builds JSON, `parseJson` reads it back, and the pair `toJson` plus `fromJson` keeps the
+  conversion from being written twice.
+- `when isMainModule` lets a module run on its own without disturbing the modules that import it.
+- `parseopt` takes an option's value with `:` or `=`, not with a space; the exit code is passed on
+  through `quit`.
+- `getTempDir()` is used for test files so the examples leave nothing behind in the working directory.
+
+## Next
+
+Part C ends here. What remains in this book are the reference pieces: the glossary, a summary sheet,
+and notes for readers arriving from other languages. Start with the glossary, because that is where
+every term used in this book is explained exactly once. Go to
+[Glossary](../appendix/glossary.qmd).

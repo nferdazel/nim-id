@@ -1,0 +1,6 @@
+
+[Suite] store
+  [OK] starts empty
+  [OK] adds notes in order
+  [OK] removes a note by index
+  [OK] rejects an index that is out of range

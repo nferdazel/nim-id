@@ -1,0 +1,10 @@
+usage: notes <command> [options]
+
+commands:
+  add <text>       append a note
+  list             print every note
+  remove <index>   delete the note at <index>
+
+options:
+  -f, --file:path  where the notes are stored
+

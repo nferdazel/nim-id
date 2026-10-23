@@ -1,0 +1,362 @@
+# Proyek akhir: catatan dari terminal
+
+Alat kecil yang berguna hampir selalu punya bentuk yang sama: beberapa modul, satu berkas data,
+beberapa subperintah, dan beberapa tes. Bagian C sudah menutup setiap potongannya satu per satu.
+Sekarang potongan itu disatukan menjadi satu program yang benar-benar bisa dipakai: `notes`, alat
+baris perintah untuk mencatat hal-hal pendek.
+
+::: {.callout-note}
+## Tujuan bab
+
+Setelah bab ini, pembaca bisa memecah satu alat kecil menjadi modul terpisah, menyimpan data ke
+berkas JSON, membaca subperintah dengan `std/parseopt`, menulis tesnya dengan `std/unittest`, dan
+membaca pesan error ketika JSON diperlakukan seperti object biasa.
+:::
+
+## Langkah 1: satu catatan menjadi JSON
+
+Mulai dari bagian terkecil: satu catatan dan bentuk JSON-nya. Simpan sebagai `a01_note_json.nim`.
+
+```{.nim}
+import std/json
+
+type Note* = object
+  text*: string
+  done*: bool
+
+proc toJson*(note: Note): JsonNode =
+  ## Turns one note into a JSON object.
+  %*{"text": note.text, "done": note.done}
+
+proc fromJson*(node: JsonNode): Note =
+  ## Rebuilds one note from a JSON object.
+  Note(text: node["text"].getStr, done: node["done"].getBool)
+
+when isMainModule:
+  let note = Note(text: "buy milk", done: false)
+  echo $note.toJson
+  echo note.toJson.fromJson.text
+```
+
+```{.txt}
+{"text":"buy milk","done":false}
+buy milk
+```
+
+Tiga hal sudah terlihat di sini. `%*` membangun objek JSON dari pasangan nama dan nilai. `$` pada
+`JsonNode` menghasilkan teks JSON, bukan penjelasan tipe. Dan pasangan `toJson` serta `fromJson`
+membuat konversi hanya ditulis sekali, lalu dipakai di mana saja.
+
+Tanda bintang pada `Note` dan kedua prosedurnya adalah ekspor. Tanpa tanda itu, modul lain tidak
+bisa memakainya, dan itulah yang kita butuhkan di langkah berikut.
+
+## Langkah 2: modul penyimpanan
+
+Sekarang pindahkan bagian yang menyentuh berkas ke modulnya sendiri. Simpan sebagai
+`a02_store.nim`.
+
+```{.nim}
+import std/[json, os]
+
+type Note* = object
+  text*: string
+  done*: bool
+
+proc toJson*(note: Note): JsonNode =
+  ## Turns one note into a JSON object.
+  %*{"text": note.text, "done": note.done}
+
+proc fromJson*(node: JsonNode): Note =
+  ## Rebuilds one note from a JSON object.
+  Note(text: node["text"].getStr, done: node["done"].getBool)
+
+proc loadNotes*(path: string): seq[Note] =
+  ## Returns an empty sequence when the file does not exist yet.
+  if not fileExists(path):
+    return @[]
+  let root = parseJson(readFile(path))
+  for item in root:
+    result.add fromJson(item)
+
+proc saveNotes*(path: string, notes: seq[Note]) =
+  var items = newJArray()
+  for note in notes:
+    items.add note.toJson
+  writeFile(path, $items)
+
+proc addNote*(path, text: string) =
+  var notes = loadNotes(path)
+  notes.add Note(text: text, done: false)
+  saveNotes(path, notes)
+
+proc removeNote*(path: string, index: int): bool =
+  ## Removes the note at `index`; returns false when the index is out of range.
+  var notes = loadNotes(path)
+  if index < 0 or index >= notes.len:
+    return false
+  notes.delete index
+  saveNotes(path, notes)
+  true
+
+when isMainModule:
+  let path = getTempDir() / "nim_id_notes_demo.json"
+  removeFile(path)
+
+  addNote(path, "buy milk")
+  addNote(path, "write the chapter")
+
+  let notes = loadNotes(path)
+  echo "notes: ", notes.len
+  echo "first: ", notes[0].text
+
+  echo "removed: ", removeNote(path, 0)
+  echo "left: ", loadNotes(path).len
+
+  removeFile(path)
+```
+
+```{.txt}
+notes: 2
+first: buy milk
+removed: true
+left: 1
+```
+
+Modul ini adalah seluruh aturan penyimpanan dalam satu tempat. `loadNotes` mengembalikan barisan
+kosong kalau berkasnya belum ada, sehingga pemanggil pertama tidak perlu menanganinya sendiri.
+`removeNote` mengembalikan `bool` sebagai laporan, bukan menghentikan program dengan pengecualian,
+karena indeks di luar rentang adalah kesalahan pemakaian yang wajar.
+
+Blok `when isMainModule` adalah bagian yang hanya berjalan saat berkas ini dijalankan langsung.
+Ketika modul lain mengimpornya, blok itu dilewati. Karena itu modul bisa diuji sendiri, tanpa CLI.
+Contoh ini memakai `getTempDir()` supaya berkas percobaannya tidak tertinggal di direktori kerja,
+lalu menghapusnya sendiri di akhir.
+
+## Langkah 3: subperintah
+
+Lapisan terakhir adalah alat baris perintahnya. Simpan sebagai `a03_main.nim`.
+
+```{.nim}
+import std/[parseopt, os, strutils]
+import a02_store
+
+const Usage = """usage: notes <command> [options]
+
+commands:
+  add <text>       append a note
+  list             print every note
+  remove <index>   delete the note at <index>
+
+options:
+  -f, --file:path  where the notes are stored
+"""
+
+var storePath = getEnv("NOTES_FILE", getTempDir() / "nim_id_notes.json")
+
+proc handle(command: string, operands: seq[string]): int =
+  case command
+  of "":
+    echo Usage
+    0
+  of "add":
+    if operands.len != 1:
+      echo "add needs exactly one text argument"
+      return 1
+    addNote(storePath, operands[0])
+    0
+  of "list":
+    let notes = loadNotes(storePath)
+    if notes.len == 0:
+      echo "no notes"
+      return 0
+    for index, note in notes:
+      echo index + 1, ": ", note.text
+    0
+  of "remove":
+    if operands.len != 1:
+      echo "remove needs exactly one index"
+      return 1
+    let index = parseInt(operands[0]) - 1
+    if not removeNote(storePath, index):
+      echo "no note at index ", operands[0]
+      return 1
+    0
+  else:
+    echo "unknown command: ", command
+    echo Usage
+    1
+
+proc main(): int =
+  var command = ""
+  var operands: seq[string]
+
+  var parser = initOptParser()
+  for kind, key, val in parser.getopt():
+    case kind
+    of cmdArgument:
+      if command.len == 0:
+        command = key
+      else:
+        operands.add key
+    of cmdLongOption, cmdShortOption:
+      if key == "file" or key == "f":
+        storePath = val
+      else:
+        echo "unknown option: ", key
+        return 1
+    of cmdEnd:
+      discard
+
+  handle(command, operands)
+
+when isMainModule:
+  quit main()
+```
+
+```{.txt}
+usage: notes <command> [options]
+
+commands:
+  add <text>       append a note
+  list             print every note
+  remove <index>   delete the note at <index>
+
+options:
+  -f, --file:path  where the notes are stored
+```
+
+Dijalankan tanpa argumen, program mencetak teks bantuan. Argumen pertama menjadi nama subperintah,
+sisanya menjadi operand; opsi dikenali dari tanda hubung, dan `std/parseopt` sudah membedakan
+keduanya. Kode keluar dikembalikan sebagai `int`, lalu diteruskan ke `quit`, sehingga skrip lain
+bisa memeriksa keberhasilannya.
+
+Pemakaian sesungguhnya seperti ini:
+
+```bash
+nim c -d:release -o:notes a03_main.nim
+./notes --file:/tmp/notes-demo.json add "buy milk"
+./notes --file:/tmp/notes-demo.json add "write the chapter"
+./notes --file:/tmp/notes-demo.json list
+./notes --file:/tmp/notes-demo.json remove 1
+./notes --file:/tmp/notes-demo.json list
+rm -f /tmp/notes-demo.json
+```
+
+```{.txt}
+1: buy milk
+2: write the chapter
+1: write the chapter
+```
+
+Perhatikan bentuk `--file:/tmp/notes-demo.json`, bukan `--file /tmp/notes-demo.json`. `parseopt`
+mengambil nilai opsi dari bagian yang sama dengan nama opsinya, dipisah titik dua atau tanda sama
+dengan. Kalau nilainya dipisah spasi, jalur itu dianggap argumen biasa.
+
+## Langkah 4: tes
+
+Modul penyimpanan punya aturan yang jelas, dan itu bahan yang tepat untuk `std/unittest`. Simpan
+sebagai `a04_tests.nim`.
+
+```{.nim}
+import std/[unittest, os]
+import a02_store
+
+proc testPath(): string =
+  getTempDir() / "nim_id_notes_test.json"
+
+suite "store":
+  setup:
+    removeFile(testPath())
+
+  teardown:
+    removeFile(testPath())
+
+  test "starts empty":
+    check loadNotes(testPath()).len == 0
+
+  test "adds notes in order":
+    addNote(testPath(), "first")
+    addNote(testPath(), "second")
+    let notes = loadNotes(testPath())
+    check notes.len == 2
+    check notes[0].text == "first"
+    check notes[1].text == "second"
+
+  test "removes a note by index":
+    addNote(testPath(), "keep")
+    addNote(testPath(), "drop")
+    check removeNote(testPath(), 1)
+    check loadNotes(testPath()).len == 1
+
+  test "rejects an index that is out of range":
+    check not removeNote(testPath(), 0)
+```
+
+```{.txt}
+
+[Suite] store
+  [OK] starts empty
+  [OK] adds notes in order
+  [OK] removes a note by index
+  [OK] rejects an index that is out of range
+```
+
+Nama setiap kasus adalah perilaku, bukan nama prosedur. `setup` dan `teardown` menghapus berkas
+sebelum dan sesudah tiap kasus, sehingga urutan pelaksanaan tidak lagi penting dan satu tes tidak
+mewarisi sisa tes sebelumnya. Tes jenis ini yang membuat program kecil tetap bisa diubah setelah
+berbulan-bulan.
+
+## Error sengaja: `JsonNode` bukan object biasa
+
+Object yang didefinisikan sendiri punya field bernama. `JsonNode` tidak.
+
+```{.nim}
+import std/json
+
+let note = %*{"text": "buy milk"}
+
+# A JsonNode is not an object with named fields.
+echo note.text
+```
+
+```{.txt}
+main.nim(6, 10) Error: undeclared field: 'text' for type json.JsonNode [type declared in json.nim(194, 3)]
+```
+
+Pesan ini menunjuk baris 6 kolom 10, tepat di `.text`, lalu menyebut sebabnya: field bernama `text`
+tidak ada pada `json.JsonNode`. Di dalam tanda kurung, compiler juga menyebut berkas tempat tipe itu
+dideklarasikan, supaya jelas tipe mana yang dimaksud. Perbaikannya memakai indeks seperti objek JSON
+sesungguhnya: `note["text"]`, lalu diterjemahkan dengan `getStr` menjadi `string`.
+
+## Latihan
+
+1. Tambahkan subperintah `done <index>` yang menandai catatan sebagai selesai, lalu cetak `[x]` atau
+   `[ ]` di subperintah `list`.
+2. Tanpa menjalankan, prediksi keluarannya: `./notes list` pada berkas yang belum ada, lalu
+   `./notes add "one"` dan `./notes list` lagi.
+3. Tulis tes untuk `saveNotes` yang memastikan hasil tulisannya bisa dibaca kembali dan panjangnya
+   tetap.
+4. Kode berikut gagal dikompilasi. Perbaiki, lalu jelaskan pesannya: `let notes = parseJson("[]")`
+   diikuti `notes.add("buy milk")`.
+5. Sebutkan satu keuntungan menyimpan fungsi penyimpanan di modul terpisah, dan satu pekerjaan yang
+   harus ditambahkan sebelum alat ini dipakai di dua komputer sekaligus.
+
+Jawaban ada di [Lampiran A](../appendix/answers.qmd).
+
+## Ringkasan
+
+- Satu alat kecil layak dipecah: tipe dan konversi, modul penyimpanan, lapisan CLI, lalu tes.
+- `%*` membangun JSON, `parseJson` membacanya, dan pasangan `toJson` serta `fromJson` mencegah
+  konversi ditulis dua kali.
+- `when isMainModule` membuat modul bisa dijalankan sendiri tanpa mengganggu pemakainya.
+- `parseopt` mengambil nilai opsi dengan `:` atau `=`, bukan spasi; kode keluar diteruskan lewat
+  `quit`.
+- `getTempDir()` dipakai untuk berkas uji supaya contoh tidak meninggalkan apa pun di direktori
+  kerja.
+
+## Selanjutnya
+
+Bagian C selesai. Yang tersisa dari buku ini adalah alat bantu: daftar istilah, lembar rangkuman,
+dan catatan untuk pembaca yang datang dari bahasa lain. Mulai dari daftar istilah, karena di
+sanalah setiap kata yang dipakai buku ini dijelaskan satu kali saja. Lanjut ke
+[Glosarium](../appendix/glossary.qmd).
