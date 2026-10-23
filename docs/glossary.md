@@ -15,7 +15,7 @@ diterjemahkan ke bahasa Indonesia secara paksa; kolom **Jangan** mencatat varian
 | variabel | variable | nama untuk sebuah nilai | variable, peubah | variables |
 | konstanta | constant | nilai yang tidak berubah | constant | variables |
 | tipe data | data type | jenis nilai; menentukan operasi yang sah dan ukuran di memori | type data | variables |
-| deklarasi | declaration | pernyataan yang memperkenalkan nama baru | pendeklarasian (kata benda) | variables |
+| deklarasi | declaration | statement yang memperkenalkan nama baru | pendeklarasian (kata benda) | variables |
 | inisialisasi | initialization | pengisian nilai pertama | penginitialisasian | variables |
 | interpolasi string | string interpolation | menyisipkan nilai ke dalam teks | — | variables |
 | identifier | identifier | nama untuk variabel, tipe, prosedur, atau modul | pengenal | variables |
@@ -34,14 +34,14 @@ diterjemahkan ke bahasa Indonesia secara paksa; kolom **Jangan** mencatat varian
 | indeks | index | posisi elemen di dalam koleksi, mulai dari 0 | index | collections |
 | elemen | element | satu nilai di dalam koleksi | element | collections |
 | literal | literal | nilai yang ditulis langsung di kode (`42`, `"teks"`, `@[1, 2]`) | — | primitive-types |
-| ekspresi | expression | rangkaian kode yang menghasilkan nilai | expression | conditionals |
-| pernyataan | statement | satuan kode yang melakukan sesuatu, tidak selalu menghasilkan nilai | statement | conditionals |
+| expression | expression | rangkaian kode yang menghasilkan nilai | ekspresi | conditionals |
+| statement | statement | satuan kode yang melakukan sesuatu, tidak selalu menghasilkan nilai | pernyataan | conditionals |
 | parameter | parameter | nama nilai yang diterima prosedur | argument (untuk isi pemanggilan) | procedures |
 | nilai default | default value | nilai yang dipakai kalau argumen tidak diberikan | — | procedures |
 | inklusif | inclusive | batas akhir ikut dihitung (`0..5` berisi 5) | — | loops |
 | eksklusif | exclusive | batas akhir tidak ikut dihitung (`0..<5` berhenti di 4) | — | loops |
 | tipe ordinal | ordinal type | tipe yang nilainya bisa diurutkan dan dihitung (`int`, `char`, `enum`) | — | enums-and-sets |
-| jejak tumpukan | stack trace | daftar pemanggilan yang ditampilkan saat program berhenti karena defect | — | collections |
+| stack trace | stack trace | daftar pemanggilan yang ditampilkan saat program berhenti karena defect | jejak tumpukan | collections |
 
 | biner | binary | berkas hasil kompilasi yang bisa dijalankan mesin | binary | what-is-nim |
 | mesin virtual | virtual machine | lapisan perangkat lunak yang menjalankan kode di atas CPU | VM | what-is-nim |
@@ -50,20 +50,20 @@ diterjemahkan ke bahasa Indonesia secara paksa; kolom **Jangan** mencatat varian
 | release build | release build | build teroptimasi, dipakai saat mengirim program | build rilis | workflow |
 | garbage collector | garbage collector | pengelola memori otomatis pada mode GC klasik | pemungut sampah | what-is-nim |
 | destruktor | destructor | prosedur `=destroy` yang dipanggil saat nilai dibuang | destructor (kecuali penjelasan) | what-is-nim |
-| ruang lingkup | scope | wilayah kode tempat sebuah nama bisa dipakai | scope (kecuali penjelasan) | comments |
+| scope | scope | wilayah kode tempat sebuah nama bisa dipakai | scope (kecuali penjelasan) | comments |
 | komentar baris | line comment | komentar `#` sampai akhir baris | komentar satu baris | comments |
 | komentar blok | block comment | komentar `#[ ... ]#` yang bisa bersarang | komentar multi-baris | comments |
 | doc comment | doc comment | komentar `##` yang terbaca oleh `nim doc` | dokumentasi komentar | comments |
-| pengelola paket | package manager | alat yang memasang dan mengelola dependensi (`nimble`) | manajer paket | installation |
+| package manager | package manager | alat yang memasang dan mengelola dependensi (`nimble`) | pengelola paket | installation |
 | pustaka standar | standard library | kumpulan modul bawaan compiler | library standar | installation |
-| perancah proyek | project scaffold | kerangka berkas yang dibuat `nimble init` | scaffolding | installation |
+| scaffold | project scaffold | kerangka berkas yang dibuat `nimble init` | scaffolding | installation |
 
 | escape sequence | escape sequence | pasangan `\` + huruf yang mewakili karakter khusus (`\n`, `\t`) | escape sequence | strings |
 | raw string | raw string | string `r"..."` yang tidak memproses escape | string mentah | strings |
 | string multi-baris | multiline string | string `"""..."""` yang mempertahankan baris baru | string multiline | strings |
 | slicing | slicing | mengambil potongan string/koleksi dengan rentang indeks | — | strings |
 | overflow | overflow | nilai yang melewati batas tipe dan berakhir `OverflowDefect` | luapan | primitive-types |
-| evaluasi singkat | short-circuit evaluation | `and`/`or` berhenti begitu hasilnya pasti | short-circuit | operators |
+| short-circuit | short-circuit evaluation | `and`/`or` berhenti begitu hasilnya pasti | evaluasi singkat | operators |
 | bitwise | bitwise | operasi per bit (`and`, `or`, `xor`, `shl`, `shr`) | bitwise | operators |
 | keanggotaan | membership | uji `in`/`notin` pada koleksi atau rentang | — | operators |
 | presisi | precision | jumlah digit signifikan yang dijamin tipe float | — | primitive-types |
@@ -75,8 +75,8 @@ diterjemahkan ke bahasa Indonesia secara paksa; kolom **Jangan** mencatat varian
 | enum | enum | tipe dengan daftar nilai bernama yang sudah pasti | enumerasi | enums-and-sets |
 | himpunan | set | kumpulan nilai berbeda dari tipe ordinal (`set[Color]`) | set (kecuali di kode) | enums-and-sets |
 | nilai ordinal | ordinal value | posisi angka sebuah nilai enum (`ord(green)`) | — | enums-and-sets |
-| himpunan bit | bitset | himpunan yang disimpan sebagai bit, dipakai untuk flag | — | enums-and-sets |
-| konstruktor | constructor | ekspresi yang membentuk nilai object (`Person(name: ...)`) | constructor (kecuali di kode) | objects |
+| bitset | bitset | himpunan yang disimpan sebagai bit, dipakai untuk flag | himpunan bit | enums-and-sets |
+| konstruktor | constructor | expression yang membentuk nilai object (`Person(name: ...)`) | constructor (kecuali di kode) | objects |
 | overloading | overloading | beberapa prosedur bernama sama dengan daftar parameter berbeda | overload | procedures |
 | nilai balik | return value | nilai yang dikembalikan prosedur | nilai kembalian, return value | procedures |
 | efek samping | side effect | perubahan di luar nilai balik (`echo`, menulis berkas, mengubah `var`) | — | procedures |
@@ -86,19 +86,19 @@ diterjemahkan ke bahasa Indonesia secara paksa; kolom **Jangan** mencatat varian
 
 | closure | closure | prosedur yang membawa variabel di sekitarnya | — | closures |
 | prosedur anonim | anonymous procedure | prosedur tanpa nama yang dipakai sebagai nilai | — | closures |
-| menangkap | capture | closure memakai variabel dari ruang lingkup luar | — | closures |
+| menangkap | capture | closure memakai variabel dari scope luar | — | closures |
 | konvensi pemanggilan | calling convention | aturan cara prosedur dipanggil (`nimcall`, `closure`) | — | closures |
 | higienis | hygienic | makro atau template yang tidak membocorkan nama ke pemanggil | higienis (kecuali sebagai sifat) | templates |
 | ekspansi template | template expansion | kode template yang disalin compiler ke tempat pemanggilan | — | templates |
 | instansiasi generic | generic instantiation | pembentukan tipe konkret dari generic pada pemakaian | — | generics |
 | typedesc | typedesc | tipe sebagai nilai, dipakai untuk overloading berbasis tipe | — | generics |
 
-| penunjuk | pointer | nilai yang menyimpan alamat memori (`ptr`) | pointer (kecuali di kode) | refs-and-pointers |
+| pointer | pointer | nilai yang menyimpan alamat memori (`ptr`) | penunjuk | refs-and-pointers |
 | alamat | address | lokasi nilai di memori, diperoleh lewat `addr` | — | refs-and-pointers |
-| dereferensi | dereference | mengambil nilai yang ditunjuk sebuah penunjuk | — | refs-and-pointers |
+| dereferensi | dereference | mengambil nilai yang ditunjuk sebuah pointer | — | refs-and-pointers |
 | penghitungan referensi | reference counting | menghitung pemakai sebuah nilai untuk tahu kapan dibebaskan | ref counting | memory-management |
 | mode memori | memory management mode | pilihan pengelola memori compiler (`--mm:arc`, `--mm:orc`) | — | memory-management |
-| sumber daya | resource | hal yang harus dibebaskan setelah dipakai (berkas, soket) | resource | files-and-os |
+| sumber daya | resource | hal yang harus dibebaskan setelah dipakai (berkas, socket) | resource | files-and-os |
 
 | modul | module | berkas atau folder yang berisi kode dan bisa diimpor | module | modules |
 | ruang nama | namespace | wilayah nama yang dipisahkan modul | namespace | modules |
@@ -120,9 +120,9 @@ diterjemahkan ke bahasa Indonesia secara paksa; kolom **Jangan** mencatat varian
 | direktori | directory | wadah berkas dan direktori lain | folder (kecuali sehari-hari) | files-and-os |
 | jalur | path | lokasi berkas dalam sistem berkas | path | files-and-os |
 | variabel lingkungan | environment variable | nilai konfigurasi dari proses induk | env var | files-and-os |
-| utas | thread | jalur eksekusi di dalam satu proses | thread | async |
-| putaran peristiwa | event loop | pengatur tugas async dalam satu utas | event loop | async |
-| suite | suite | kumpulan tes dalam `unittest` | — | unit-testing |
+| thread | thread | jalur eksekusi di dalam satu proses | utas | async |
+| event loop | event loop | pengatur tugas async dalam satu thread | putaran peristiwa | async |
+| suite | suite | kumpulan test dalam `unittest` | — | unit-testing |
 | kasus uji | test case | satu pemeriksaan di dalam suite | test case | unit-testing |
 | FFI | foreign function interface | cara memanggil kode bahasa lain, di sini C | — | ffi-c |
 | ABI | application binary interface | aturan tata letak dan pemanggilan di tingkat biner | — | ffi-c |
@@ -132,14 +132,18 @@ diterjemahkan ke bahasa Indonesia secara paksa; kolom **Jangan** mencatat varian
 | opsi | option | argumen bernama yang mengubah perilaku perintah (`--count=4`) | — | cli-tools |
 | kode keluar | exit code | angka yang dikembalikan proses ke pemanggilnya | exit status | cli-tools |
 | pintu masuk | entry point | berkas atau prosedur pertama yang dijalankan | entry point | cli-tools |
-| rute | route | pemetaan jalur dan metode HTTP ke pengendali | — | http-api |
-| pengendali | handler | fungsi yang menangani satu permintaan atau peristiwa | — | http-api |
-| soket | socket | ujung koneksi jaringan yang dipakai server dan klien | — | http-api |
-| baris | row | satu catatan di dalam tabel atau hasil kueri | — | database |
-| kueri | query | permintaan data ke basis data | query (kecuali di kode) | database |
+| rute | route | pemetaan jalur dan metode HTTP ke handler | — | http-api |
+| handler | handler | fungsi yang menangani satu permintaan atau peristiwa | pengendali | http-api |
+| socket | socket | ujung koneksi jaringan yang dipakai server dan klien | soket | http-api |
+| baris | row | satu catatan di dalam tabel atau hasil query | — | database |
+| query | query | permintaan data ke basis data | kueri | database |
 | transaksi | transaction | rangkaian perubahan yang harus berhasil semua atau tidak sama sekali | — | database |
-| paket | package | satuan distribusi kode yang bisa dipasang | package | nimble-packages |
-| pemelihara | maintainer | orang yang bertanggung jawab merawat sebuah paket | — | nimble-packages |
+| package | package | satuan distribusi kode yang bisa dipasang | paket | nimble-packages |
+| pemelihara | maintainer | orang yang bertanggung jawab merawat sebuah package | — | nimble-packages |
+| warning | warning | pesan compiler tentang kode yang patut diperiksa | peringatan | workflow |
+| test | test | pemeriksaan otomatis terhadap perilaku kode | tes | unit-testing |
+| release | release | versi yang diterbitkan dan diberi tag | rilis | workflow |
+| endpoint | endpoint | alamat dan metode yang dilayani sebuah API | titik akhir | http-api |
 Aturan singkat:
 
 - Istilah di kolom pertama dipakai di teks Indonesia; kolom English di teks Inggris.

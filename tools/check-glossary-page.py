@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 """Pastikan tabel glosarium di buku sama dengan `docs/glossary.md`.
 
-`docs/glossary.md` adalah sumber istilah; lampiran glosarium disalin dari sana saat bab
-bertambah. Tanpa pemeriksaan ini, keduanya pelan-pelan berbeda.
+`docs/glossary.md` adalah sumber istilah: kolom 1 istilah kanonis, kolom 2 padanan
+Inggris. Halaman glosarium Indonesia memakai kolom 1, halaman English memakai kolom 2.
+Tanpa pemeriksaan ini, ketiganya pelan-pelan berbeda.
 
 Dipakai di `./task check` dan CI.
 """
@@ -12,7 +13,6 @@ import sys
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 SUMBER = ROOT / "docs/glossary.md"
-# (berkas, kolom judul, indeks kolom istilah Indonesia)
 HALAMAN = [
     (ROOT / "books/id/appendix/glossary.qmd", "Istilah", 0),
     (ROOT / "books/en/appendix/glossary.qmd", "Term", 1),
@@ -21,7 +21,7 @@ HALAMAN = [
 PEMISAH = re.compile(r"^\|[\s:|-]+\|$")
 
 
-def istilah(berkas, kolom=0):
+def baris_tabel(berkas):
     hasil = []
     for baris in berkas.read_text().splitlines():
         baris = baris.strip()
@@ -30,9 +30,7 @@ def istilah(berkas, kolom=0):
         sel = [s.strip() for s in baris.strip("|").split("|")]
         if not sel or sel[0] in ("Istilah", "Term"):
             continue
-        if len(sel) <= kolom:
-            continue
-        hasil.append(sel[kolom].strip("`"))
+        hasil.append([s.strip("`") for s in sel])
     return hasil
 
 
@@ -41,21 +39,25 @@ def main():
         print(f"GAGAL  {SUMBER.relative_to(ROOT)}: tidak ada")
         return 1
 
-    acuan = istilah(SUMBER)
-    masalah = 0
+    sumber = baris_tabel(SUMBER)
+    if not sumber:
+        print("GAGAL  docs/glossary.md: tabel kosong")
+        return 1
 
+    masalah = 0
     for berkas, kolom, indeks in HALAMAN:
         rel = berkas.relative_to(ROOT)
         if not berkas.exists():
             print(f"GAGAL  {rel}: tidak ada")
             masalah += 1
             continue
-        kepala = berkas.read_text().splitlines()
-        if not any(kolom in b for b in kepala[:20]):
+        if not any(kolom in b for b in berkas.read_text().splitlines()[:10]):
             print(f"GAGAL  {rel}: kolom '{kolom}' tidak ditemukan")
             masalah += 1
+            continue
 
-        hal = istilah(berkas, indeks)
+        acuan = [sel[indeks] for sel in sumber]
+        hal = [sel[0] for sel in baris_tabel(berkas)]
         hilang = [t for t in acuan if t not in hal]
         lebih = [t for t in hal if t not in acuan]
         if hilang:
@@ -69,7 +71,7 @@ def main():
         print(f"\n{masalah} masalah glosarium")
         return 1
 
-    print(f"glosarium: oke ({len(acuan)} istilah)")
+    print(f"glosarium: oke ({len(sumber)} istilah)")
     return 0
 
 

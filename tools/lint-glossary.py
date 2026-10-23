@@ -12,12 +12,9 @@ import re
 import sys
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
-# glossary.md dan plan.md sengaja dikecualikan: keduanya membahas varian terlarang.
-BERKAS = sorted(
-    list((ROOT / "books/id").rglob("*.qmd"))
-    + [ROOT / "README.md", ROOT / "CONTRIBUTING.md"]
-    + [ROOT / "docs/writing-guide.md", ROOT / "docs/release.md"]
-)
+# Hanya naskah buku Indonesia. Dokumen internal boleh memakai istilah operasional
+# (mis. "rilis" untuk nama perintah), dan glossary.md sengaja membahas varian terlarang.
+BERKAS = sorted((ROOT / "books/id").rglob("*.qmd"))
 
 TERLARANG = {
     "variable": "variabel",
@@ -40,6 +37,25 @@ TERLARANG = {
     "concept": "konsep",
     "overload": "overloading",
     "object variant": "object varian",
+    "penunjuk": "pointer",
+    "utas": "thread",
+    "putaran peristiwa": "event loop",
+    "pengendali": "handler",
+    "soket": "socket",
+    "kueri": "query",
+    "jejak tumpukan": "stack trace",
+    "himpunan bit": "bitset",
+    "evaluasi singkat": "short-circuit",
+    "perancah proyek": "scaffold",
+    "ruang lingkup": "scope",
+    "pernyataan": "statement",
+    "ekspresi": "expression",
+    "peringatan": "warning",
+    "pengelola paket": "package manager",
+    "paket": "package",
+    "tes": "test",
+    "rilis": "release",
+    "titik akhir": "endpoint",
 }
 
 FENCE = re.compile(r"```.*?```", re.S)
