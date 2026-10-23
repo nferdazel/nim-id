@@ -84,6 +84,15 @@ diterjemahkan ke bahasa Indonesia secara paksa; kolom **Jangan** mencatat varian
 | referensi | reference | nilai yang menunjuk object di heap (`ref object`) | reference | objects |
 | salinan nilai | value copy | penyalinan isi nilai, bukan alamatnya | — | objects |
 
+| closure | closure | prosedur yang membawa variabel di sekitarnya | — | closures |
+| prosedur anonim | anonymous procedure | prosedur tanpa nama yang dipakai sebagai nilai | — | closures |
+| menangkap | capture | closure memakai variabel dari ruang lingkup luar | — | closures |
+| konvensi pemanggilan | calling convention | aturan cara prosedur dipanggil (`nimcall`, `closure`) | — | closures |
+| higienis | hygienic | makro atau template yang tidak membocorkan nama ke pemanggil | higienis (kecuali sebagai sifat) | templates |
+| ekspansi template | template expansion | kode template yang disalin compiler ke tempat pemanggilan | — | templates |
+| instansiasi generic | generic instantiation | pembentukan tipe konkret dari generic pada pemakaian | — | generics |
+| typedesc | typedesc | tipe sebagai nilai, dipakai untuk overloading berbasis tipe | — | generics |
+
 Aturan singkat:
 
 - Istilah di kolom pertama dipakai di teks Indonesia; kolom English di teks Inggris.
