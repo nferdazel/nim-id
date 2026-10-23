@@ -1,5 +1,11 @@
 # Dasar Pemrograman Nim {.unnumbered}
 
+::: {.book-lead}
+Fredianto · v{{< var version >}} · 23 Oktober 2026 · PDF 2,4 MB
+
+[Unduh PDF](https://nim.qouver.com/Dasar-Pemrograman-Nim.pdf){.book-lead-pdf}
+:::
+
 Buku ini mengajarkan bahasa [Nim](https://nim-lang.org) dalam bahasa Indonesia, untuk pembaca
 yang sudah pernah menulis program di bahasa lain (Python, JavaScript, PHP, Go) tapi belum pernah
 menyentuh bahasa yang dikompilasi ke native.
@@ -8,8 +14,6 @@ Buku ini **bukan** terjemahan dokumentasi resmi. Dokumentasi resmi Nim sudah len
 berbahasa Inggris; buku ini pelengkap, bukan pengganti. Kalau pembaca sudah nyaman dengan bahasa
 Inggris dan istilah sistem, langsung ke [dokumentasi resmi](https://nim-lang.org/documentation.html)
 lebih cepat.
-
-Ada juga [versi PDF](/Dasar-Pemrograman-Nim.pdf) (178 × 233 mm, sekitar 2,4 MB).
 
 ## Yang membuat buku ini berbeda
 

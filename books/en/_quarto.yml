@@ -10,33 +10,40 @@ book:
   date: "2026-10-23"
   language: en
   chapters:
-    - index.qmd
-    - copyright.qmd
-    - chapters/what-is-nim.qmd
-    - chapters/installation.qmd
-    - chapters/workflow.qmd
-    - chapters/comments.qmd
-    - chapters/variables.qmd
-    - chapters/primitive-types.qmd
-    - chapters/strings.qmd
-    - chapters/printing.qmd
-    - chapters/operators.qmd
-    - chapters/conditionals.qmd
-    - chapters/loops.qmd
-    - chapters/collections.qmd
-    - chapters/procedures.qmd
-    - chapters/tuples.qmd
-    - chapters/objects.qmd
-    - chapters/enums-and-sets.qmd
+    - part: "Part 0: Getting started"
+      chapters:
+        - index.qmd
+        - copyright.qmd
+    - part: "Part A: Fundamentals"
+      chapters:
+        - chapters/what-is-nim.qmd
+        - chapters/installation.qmd
+        - chapters/workflow.qmd
+        - chapters/comments.qmd
+        - chapters/variables.qmd
+        - chapters/primitive-types.qmd
+        - chapters/strings.qmd
+        - chapters/printing.qmd
+        - chapters/operators.qmd
+        - chapters/conditionals.qmd
+        - chapters/loops.qmd
+        - chapters/collections.qmd
+        - chapters/procedures.qmd
+        - chapters/tuples.qmd
+        - chapters/objects.qmd
+        - chapters/enums-and-sets.qmd
   appendices:
     - appendix/answers.qmd
   search: true
   sidebar:
     style: docked
     collapse-level: 1
+    tools:
+      - text: "Bahasa Indonesia"
+        href: "https://nim.qouver.com/"
   page-footer:
     left: "CC BY-SA 4.0 · code samples MIT"
-    right: "[PDF](/en/Learning-Nim.pdf) · [Bahasa Indonesia](/)"
+    right: "[PDF](https://nim.qouver.com/en/Learning-Nim.pdf) · [Bahasa Indonesia](https://nim.qouver.com/)"
 
 format:
   html:

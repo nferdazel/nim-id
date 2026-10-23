@@ -1,5 +1,11 @@
 # Learning Nim {.unnumbered}
 
+::: {.book-lead}
+Fredianto · v{{< var version >}} · 23 October 2026 · PDF 2.4 MB
+
+[Download PDF](https://nim.qouver.com/en/Learning-Nim.pdf){.book-lead-pdf}
+:::
+
 This book teaches the [Nim](https://nim-lang.org) programming language in English, for readers who
 have written code in another language (Python, JavaScript, PHP, Go) but have never used a language
 that compiles to native code.
@@ -8,8 +14,6 @@ It is **not** a translation of the official documentation. The official docs are
 actively maintained; this book is a companion, not a replacement. If you are comfortable with
 systems programming jargon, start with the
 [official documentation](https://nim-lang.org/documentation.html) instead.
-
-There is also a [PDF version](/en/Learning-Nim.pdf) (178 × 233 mm, about 2.4 MB).
 
 ## What makes this book different
 
