@@ -24,6 +24,9 @@ SIMPAN=3
 QUARTO="${QUARTO:-$APP_DIR/.tools/quarto/bin/quarto}"
 LOG="$APP_DIR/logs/deploy.log"
 HEALTH_URL="${NIMID_HEALTH_URL:-https://nim.qouver.com/}"
+# Uji origin langsung, bukan lewat Cloudflare: request dari VPS ke edge sendiri rawan
+# hairpin/timeout dan bukan yang sedang kita jamin. CF diuji terpisah dari luar.
+HEALTH_RESOLVE="${NIMID_HEALTH_RESOLVE:-127.0.0.1}"
 
 mkdir -p "$APP_DIR/logs" "$RILIS_DIR"
 log() { printf '[%s] %s\n' "$(date '+%Y-%m-%d %H:%M:%S')" "$*" | tee -a "$LOG"; }
@@ -69,9 +72,21 @@ fi
 ln -sfn "$BARU" "$WEB_LINK"
 log "==> symlink web -> $BARU"
 
-# 6. Health check. Gagal berarti kembalikan symlink lama.
-if ! curl -fsS --max-time 20 "$HEALTH_URL" | grep -q "Dasar Pemrograman Nim"; then
-  log "Health check GAGAL di $HEALTH_URL"
+# 6. Health check ke origin, dengan retry. Gagal berarti kembalikan symlink lama.
+sehat=0
+for i in 1 2 3 4 5; do
+  if curl -fsS --max-time 10 --resolve "nim.qouver.com:443:$HEALTH_RESOLVE" "$HEALTH_URL" \
+      | grep -q "Dasar Pemrograman Nim"; then
+    sehat=1
+    break
+  fi
+  log "health check percobaan $i gagal, ulangi 2 detik"
+  sleep 2
+done
+
+if [ "$sehat" -ne 1 ]; then
+  kode=$(curl -sS -o /dev/null -w '%{http_code}' --max-time 10 --resolve "nim.qouver.com:443:$HEALTH_RESOLVE" "$HEALTH_URL" || echo "000")
+  log "Health check GAGAL di $HEALTH_URL (origin $HEALTH_RESOLVE, kode $kode)"
   if [ -e "$APP_DIR/.previous" ]; then
     ln -sfn "$(readlink -f "$APP_DIR/.previous")" "$WEB_LINK"
     log "Rollback: symlink web dipulihkan"
