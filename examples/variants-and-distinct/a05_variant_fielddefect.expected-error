@@ -1,0 +1,1 @@
+field 'width' is not accessible for type 'Shape' using 'kind = circle' [FieldDefect]

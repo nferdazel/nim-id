@@ -1,0 +1,294 @@
+# Variant objects and `distinct`
+
+Two needs keep coming back. First, a type whose contents depend on its state: a shape has a `radius`,
+or a `width` and a `height`, but never both at once. Second, two values that hold the same data yet
+must not be mixed up, such as a user id and an order id.
+
+Nim answers these two differently. A variant object folds several shapes into one type with a tag.
+`distinct` creates a genuinely new type, so the compiler refuses to mix them. This chapter uses both.
+Every example is tested on Nim 2.2.12.
+
+::: {.callout-note}
+## What you will be able to do
+
+After this chapter you can define a variant object with a `case` field, read the error for a
+conflicting construction, recognize a `FieldDefect`, create a `distinct` type, convert explicitly,
+and know when `distinct` beats a type alias.
+:::
+
+## A variant object: fields that depend on a tag
+
+Start with an enum as the tag, then write a `case` block inside the object.
+
+```{.nim}
+type
+  ShapeKind = enum
+    circle, rect
+  Shape = object
+    case kind: ShapeKind
+      of circle:
+        radius: float
+      of rect:
+        width, height: float
+
+let c = Shape(kind: circle, radius: 2.0)
+echo c.kind, " ", c.radius
+```
+
+```{.txt}
+circle 2.0
+```
+
+The `kind` field is the **discriminator**, or tag. It decides which `case` branch is active. For
+`kind = circle` only `radius` exists; for `kind = rect` the fields are `width` and `height`. Nim
+stores the tag alongside the fields the active branch uses.
+
+## Using `case` to reach the right field
+
+The safe way to read a variant object is to check the tag first.
+
+```{.nim}
+type
+  ShapeKind = enum
+    circle, rect
+  Shape = object
+    case kind: ShapeKind
+      of circle:
+        radius: float
+      of rect:
+        width, height: float
+
+proc area(s: Shape): float =
+  case s.kind
+  of circle:
+    3.14159 * s.radius * s.radius
+  of rect:
+    s.width * s.height
+
+echo area(Shape(kind: circle, radius: 2.0))
+echo area(Shape(kind: rect, width: 3.0, height: 4.0))
+```
+
+```{.txt}
+12.56636
+12.0
+```
+
+Each `of` branch touches only the fields that belong to it, so no access is wrong. Since `ShapeKind`
+has just two members, this `case` is complete and needs no `else`.
+
+## Shared fields before `case`
+
+Fields written before `case` belong to every branch.
+
+```{.nim}
+type
+  Event = object
+    id: int
+    case kind: bool
+      of true:
+        message: string
+      of false:
+        code: int
+
+let ok = Event(id: 1, kind: true, message: "ok")
+let fail = Event(id: 2, kind: false, code: 500)
+echo ok.id, " ", ok.message
+echo fail.id, " ", fail.code
+```
+
+```{.txt}
+1 ok
+2 500
+```
+
+`id` is available in both shapes. Putting shared fields outside the `case` cuts repetition and keeps
+the type tidy. Field names must be unique across every branch, so `height` cannot appear in both the
+`rect` branch and another one at once.
+
+## Error: filling a field outside the branch
+
+When the tag is fixed in the constructor, the compiler checks the fields being filled.
+
+```{.nim}
+type
+  ShapeKind = enum
+    circle, rect
+  Shape = object
+    case kind: ShapeKind
+      of circle:
+        radius: float
+      of rect:
+        width, height: float
+
+let c = Shape(kind: circle, width: 3.0)
+echo c.radius
+```
+
+```{.txt}
+main.nim(11, 14) Error: a case selecting discriminator 'kind' with value 'circle' appears in the object construction, but the field(s) 'width' are in conflict with this value.
+```
+
+The message is long, but it makes one point: `kind` is `circle` while `width` exists only in the
+`rect` branch. The fix follows from it, drop `width` and set `radius`, or change `kind` to `rect`.
+
+## Runtime error: `FieldDefect`
+
+When the tag is only known while the program runs, the check moves to runtime.
+
+```{.nim}
+type
+  ShapeKind = enum
+    circle, rect
+  Shape = object
+    case kind: ShapeKind
+      of circle:
+        radius: float
+      of rect:
+        width, height: float
+
+let c = Shape(kind: circle, radius: 2.0)
+echo c.width
+```
+
+```{.txt}
+Error: unhandled exception: field 'width' is not accessible for type 'Shape' using 'kind = circle' [FieldDefect]
+```
+
+Here `c.width` is asked for while `c` is a circle. The compiler cannot always prove that at compile
+time, so Nim inserts a check that runs at the moment of access. Since the tag never changes after
+construction, this bug usually means some branch of the code forgot to check. The rule: reach a
+variant field only through a `case` on its tag.
+
+## `distinct`: a new type that cannot be mixed up
+
+`distinct` derives a type with its own identity. Its base value must be converted out explicitly.
+
+```{.nim}
+type Dollars = distinct float
+
+let price = Dollars(10.0)
+echo float(price), " USD"
+```
+
+```{.txt}
+10.0 USD
+```
+
+`Dollars(10.0)` builds a value of type `Dollars`. To get a `float` back, write `float(price)`. There
+is no automatic conversion in either direction. That is what stops values from being mixed up:
+`UserId` and `OrderId`, both built on `int`, stay two different types.
+
+## Explicit conversion in both directions
+
+The other direction needs a conversion too. A literal does not slip in by itself.
+
+```{.nim}
+type Dollars = distinct float
+
+let price: Dollars = 10.0
+echo float(price)
+```
+
+```{.txt}
+main.nim(3, 22) Error: type mismatch: got 'float64' for '10.0' but expected 'Dollars = distinct float'
+```
+
+The compiler rejects `10.0` because its type is `float64`, not `Dollars`. Write `Dollars(10.0)`. The
+error names both types, so the direction of the fix is immediate.
+
+## `distinct` vs a type alias
+
+An alias is only another name for the same type; it separates nothing.
+
+```{.nim}
+type
+  Alias = int
+  UserId = distinct int
+
+proc findUser(id: int): string = "found " & $id
+
+echo findUser(Alias(3))
+echo findUser(4)
+echo findUser(int(UserId(5)))
+```
+
+```{.txt}
+found 3
+found 4
+found 5
+```
+
+`Alias(3)` and `4` are both `int`, so both are accepted without conversion. `UserId` is different:
+its value must be written `int(UserId(5))` before it goes in. Use an alias when you only want a short
+name for the same type. Use `distinct` when values must not be mixed up, such as ids, units, or
+amounts of money.
+
+## Adding back the operations you need
+
+A `distinct` type loses its base type's operations. Add them back as needed, including `$` so `echo`
+reads well.
+
+```{.nim}
+type Dollars = distinct float
+
+proc `$`(d: Dollars): string =
+  $float(d) & " USD"
+
+proc `+`(a, b: Dollars): Dollars {.borrow.}
+
+let total = Dollars(10.0) + Dollars(5.5)
+echo total
+```
+
+```{.txt}
+15.5 USD
+```
+
+`{.borrow.}` borrows the body of `+` from `float` so it need not be written out. Since operations are
+picked one by one, `distinct` forces you to think about units before combining values.
+
+## Error: using a `distinct` as its base type
+
+What makes `distinct` useful is its refusal.
+
+```{.nim}
+type UserId = distinct int
+
+let u = UserId(7)
+let n: int = u
+echo n
+```
+
+```{.txt}
+main.nim(4, 14) Error: type mismatch: got 'UserId' for 'u' but expected 'int'
+```
+
+`u` cannot be used as an `int` without `int(u)`. The compiler names both types, and that is the hint
+for the fix. This is the guard a type alias does not have.
+
+## Exercises
+
+1. Add a third variant `triangle` with `base` and `altitude` to `Shape`, then extend `area`.
+2. Without running it, predict the output when `Shape(kind: circle, width: 3.0)` becomes
+   `Shape(kind: circle, radius: 3.0)`. Explain.
+3. Write a type `Meters = distinct int` with its `$` procedure, then print one value.
+4. Change `type UserId = distinct int` into the alias `int`. What does the program lose, and why does
+   it matter?
+5. Explain why `echo Shape(kind: rect, width: 3.0, height: 4.0).radius` fails while the program runs
+   instead of at compile time.
+
+Answers are in [Appendix A](../appendix/answers.qmd).
+
+## Summary
+
+- A variant object uses a `case` field and one discriminator; only the active branch's fields exist.
+- A constructor that fills a field outside the branch is rejected as a compile error.
+- Reading a variant field without checking the tag ends in a `FieldDefect` while the program runs.
+- `distinct` creates a new type; converting to and from the base type must be explicit.
+- A type alias separates nothing; `distinct` fits ids, units, and values that are easy to mix up.
+
+## Next
+
+The next chapter covers [references and pointers](refs-and-pointers.qmd): values that point at other
+values, when to copy and when to share, and the difference between `ref`, `ptr`, and `nil`.

@@ -1,0 +1,298 @@
+# Object variant dan `distinct`
+
+Dua kebutuhan muncul berulang. Pertama, satu tipe yang isinya bergantung pada keadaan: bentuk punya
+`radius`, atau `width` dan `height`, tapi tidak keduanya sekaligus. Kedua, dua nilai yang secara
+data sama tetapi tidak boleh tertukar, misalnya id pengguna dan id pesanan.
+
+Nim menjawab keduanya dengan cara berbeda. Object variant menyatukan beberapa bentuk ke dalam satu
+tipe dengan sebuah penanda. `distinct` membuat tipe benar benar baru, sehingga compiler menolak
+pencampuran. Bab ini memakai keduanya. Semua contoh diuji di Nim 2.2.12.
+
+::: {.callout-note}
+## Tujuan bab
+
+Setelah bab ini, pembaca bisa mendefinisikan object variant dengan field `case`, membaca error
+konstruksi yang bertentangan, mengenali `FieldDefect`, membuat tipe `distinct`, melakukan konversi
+eksplisit, dan tahu kapan `distinct` lebih baik daripada alias tipe.
+:::
+
+## Object variant: field yang bergantung pada penanda
+
+Awali dengan sebuah enum sebagai penanda, lalu tulis blok `case` di dalam objek.
+
+```{.nim}
+type
+  ShapeKind = enum
+    circle, rect
+  Shape = object
+    case kind: ShapeKind
+      of circle:
+        radius: float
+      of rect:
+        width, height: float
+
+let c = Shape(kind: circle, radius: 2.0)
+echo c.kind, " ", c.radius
+```
+
+```{.txt}
+circle 2.0
+```
+
+Field `kind` adalah **discriminator** (penanda). Ia menentukan cabang `case` mana yang aktif. Untuk
+`kind = circle`, yang ada hanyalah field `radius`; untuk `kind = rect`, yang ada adalah `width` dan
+`height`. Nim menyimpan penanda bersama field yang dipakai cabang itu.
+
+## Memakai `case` untuk mengakses field yang benar
+
+Cara aman membaca object variant adalah memeriksa penandanya lebih dulu.
+
+```{.nim}
+type
+  ShapeKind = enum
+    circle, rect
+  Shape = object
+    case kind: ShapeKind
+      of circle:
+        radius: float
+      of rect:
+        width, height: float
+
+proc area(s: Shape): float =
+  case s.kind
+  of circle:
+    3.14159 * s.radius * s.radius
+  of rect:
+    s.width * s.height
+
+echo area(Shape(kind: circle, radius: 2.0))
+echo area(Shape(kind: rect, width: 3.0, height: 4.0))
+```
+
+```{.txt}
+12.56636
+12.0
+```
+
+Setiap cabang `of` hanya menyentuh field milik cabang itu, jadi tidak ada akses yang salah. Karena
+`ShapeKind` hanya punya dua anggota, `case` ini sudah lengkap dan tidak perlu `else`.
+
+## Field umum sebelum `case`
+
+Field yang ditulis sebelum `case` dimiliki semua cabang.
+
+```{.nim}
+type
+  Event = object
+    id: int
+    case kind: bool
+      of true:
+        message: string
+      of false:
+        code: int
+
+let ok = Event(id: 1, kind: true, message: "ok")
+let fail = Event(id: 2, kind: false, code: 500)
+echo ok.id, " ", ok.message
+echo fail.id, " ", fail.code
+```
+
+```{.txt}
+1 ok
+2 500
+```
+
+`id` tersedia untuk kedua bentuk. Menaruh field bersama di luar `case` mengurangi pengulangan dan
+membuat tipe lebih rapi. Nama field harus unik di seluruh cabang, jadi `height` tidak bisa dipakai di
+cabang `rect` dan cabang lain sekaligus.
+
+## Error: mengisi field di luar cabang
+
+Kalau penandanya sudah ditentukan di konstruktor, compiler memeriksa field yang diisi.
+
+```{.nim}
+type
+  ShapeKind = enum
+    circle, rect
+  Shape = object
+    case kind: ShapeKind
+      of circle:
+        radius: float
+      of rect:
+        width, height: float
+
+let c = Shape(kind: circle, width: 3.0)
+echo c.radius
+```
+
+```{.txt}
+main.nim(11, 14) Error: a case selecting discriminator 'kind' with value 'circle' appears in the object construction, but the field(s) 'width' are in conflict with this value.
+```
+
+Pesan itu panjang, tapi pesannya tunggal: `kind` bernilai `circle`, sementara `width` hanya ada di
+cabang `rect`. Perbaikannya jelas dari isi pesan, yaitu hapus `width` dan isi `radius`, atau ubah
+`kind` menjadi `rect`.
+
+## Error saat runtime: `FieldDefect`
+
+Kalau penandanya baru diketahui saat program berjalan, pemeriksaan pindah ke runtime.
+
+```{.nim}
+type
+  ShapeKind = enum
+    circle, rect
+  Shape = object
+    case kind: ShapeKind
+      of circle:
+        radius: float
+      of rect:
+        width, height: float
+
+let c = Shape(kind: circle, radius: 2.0)
+echo c.width
+```
+
+```{.txt}
+Error: unhandled exception: field 'width' is not accessible for type 'Shape' using 'kind = circle' [FieldDefect]
+```
+
+Di sini `c.width` diminta padahal `c` adalah lingkaran. Compiler tidak selalu bisa membuktikan itu
+saat kompilasi, jadi Nim menyisipkan pemeriksaan yang berjalan saat akses terjadi. Karena penandanya
+tidak pernah berubah setelah konstruksi, bug ini biasanya berarti ada cabang di kode yang lupa
+diperiksa. Aturannya: akses field variant hanya lewat `case` pada penandanya.
+
+## `distinct`: tipe baru yang tidak tertukar
+
+`distinct` membuat tipe turunan dengan identitas sendiri. Nilai dasarnya harus dikonversi secara
+eksplisit ke luar.
+
+```{.nim}
+type Dollars = distinct float
+
+let price = Dollars(10.0)
+echo float(price), " USD"
+```
+
+```{.txt}
+10.0 USD
+```
+
+`Dollars(10.0)` membentuk nilai bertipe `Dollars`. Untuk kembali ke `float`, tulis `float(price)`.
+Tidak ada konversi otomatis ke arah mana pun. Inilah yang mencegah nilai tertukar: `UserId` dan
+`OrderId` yang keduanya di atas `int` tetap dua tipe berbeda.
+
+## Konversi eksplisit di kedua arah
+
+Arah sebaliknya juga butuh konversi. Literal tidak masuk dengan sendirinya.
+
+```{.nim}
+type Dollars = distinct float
+
+let price: Dollars = 10.0
+echo float(price)
+```
+
+```{.txt}
+main.nim(3, 22) Error: type mismatch: got 'float64' for '10.0' but expected 'Dollars = distinct float'
+```
+
+Compiler menolak `10.0` karena tipenya `float64`, bukan `Dollars`. Tulis `Dollars(10.0)`. Pesan
+errornya menyebut kedua tipe, jadi arah perbaikannya langsung terbaca.
+
+## `distinct` vs alias tipe
+
+Alias hanya nama lain untuk tipe yang sama; ia tidak memisahkan apa pun.
+
+```{.nim}
+type
+  Alias = int
+  UserId = distinct int
+
+proc findUser(id: int): string = "found " & $id
+
+echo findUser(Alias(3))
+echo findUser(4)
+echo findUser(int(UserId(5)))
+```
+
+```{.txt}
+found 3
+found 4
+found 5
+```
+
+`Alias(3)` dan `4` sama sama `int`, jadi keduanya diterima tanpa konversi. `UserId` berbeda: nilainya
+harus ditulis `int(UserId(5))` sebelum masuk. Pakai alias kalau hanya butuh nama pendek untuk tipe
+yang sama. Pakai `distinct` kalau nilainya tidak boleh tertukar, seperti id, satuan, atau nominal
+uang.
+
+## Menambah kembali operasi yang dibutuhkan
+
+Tipe `distinct` kehilangan operasi tipe dasarnya. Tambahkan lagi secukupnya, termasuk `$` supaya
+`echo` enak dibaca.
+
+```{.nim}
+type Dollars = distinct float
+
+proc `$`(d: Dollars): string =
+  $float(d) & " USD"
+
+proc `+`(a, b: Dollars): Dollars {.borrow.}
+
+let total = Dollars(10.0) + Dollars(5.5)
+echo total
+```
+
+```{.txt}
+15.5 USD
+```
+
+`{.borrow.}` meminjam badan `+` dari `float` supaya tidak ditulis ulang. Karena operasinya dipilih
+satu per satu, `distinct` memaksa kita berpikir soal satuan sebelum mencampur nilai.
+
+## Error: memakai `distinct` sebagai tipe dasarnya
+
+Yang membuat `distinct` berguna adalah penolakannya.
+
+```{.nim}
+type UserId = distinct int
+
+let u = UserId(7)
+let n: int = u
+echo n
+```
+
+```{.txt}
+main.nim(4, 14) Error: type mismatch: got 'UserId' for 'u' but expected 'int'
+```
+
+`u` tidak bisa dipakai sebagai `int` tanpa `int(u)`. Compiler menyebut kedua tipe, dan itu petunjuk
+perbaikannya. Inilah pengaman yang tidak dimiliki alias tipe.
+
+## Latihan
+
+1. Tambahkan varian ketiga `triangle` dengan field `base` dan `altitude` pada `Shape`, lalu perluas
+   `area`.
+2. Tanpa menjalankan, prediksi keluaran bila `Shape(kind: circle, width: 3.0)` diganti menjadi
+   `Shape(kind: circle, radius: 3.0)`. Jelaskan.
+3. Tulis tipe `Meters = distinct int` beserta prosedur `$`-nya, lalu cetak satu nilainya.
+4. Ubah `type UserId = distinct int` menjadi alias `int`. Apa yang hilang dari program, dan kenapa
+   itu penting?
+5. Jelaskan kenapa `echo Shape(kind: rect, width: 3.0, height: 4.0).radius` gagal saat berjalan,
+   bukan saat kompilasi.
+
+Jawaban ada di [Lampiran A](../appendix/answers.qmd).
+
+## Ringkasan
+
+- Object variant memakai field `case` dengan satu discriminator; hanya field cabang aktif yang ada.
+- Konstruktor yang mengisi field di luar cabang ditolak sebagai error kompilasi.
+- Akses field variant tanpa memeriksa penanda berakhir `FieldDefect` saat program berjalan.
+- `distinct` membuat tipe baru; konversi ke dan dari tipe dasar harus eksplisit.
+- Alias tipe tidak memisahkan apa pun; `distinct` cocok untuk id, satuan, dan nilai yang mudah
+  tertukar.
+
+## Selanjutnya
+
+Bab berikutnya membahas [referensi dan pointer](refs-and-pointers.qmd): nilai yang menunjuk nilai
+lain, kapan menyalin dan kapan berbagi, serta bedanya `ref`, `ptr`, dan `nil`.
