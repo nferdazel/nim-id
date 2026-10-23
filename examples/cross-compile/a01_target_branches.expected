@@ -1,0 +1,4 @@
+isWindows: false
+isUnixLike: true
+hostOS agrees with defined(linux): true
+hostCPU is set: true

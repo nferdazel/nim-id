@@ -1,0 +1,261 @@
+# Cross-compile dan deploy biner
+
+Biner yang dihasilkan di laptop tidak otomatis berjalan di mesin lain. Format berkas yang bisa
+dijalankan berbeda antara sistem operasi, dan instruksi prosesornya pun berbeda. Nim bisa
+mengarahkan hasilnya ke sistem lain, tetapi tidak dengan satu saklar ajaib: hasilnya hanya sebaik
+toolchain C yang tersedia di mesin pengembang.
+
+::: {.callout-note}
+## Tujuan bab
+
+Setelah bab ini, pembaca bisa memilih target dengan `--os` dan `--cpu`, menyalakan fitur dari baris
+perintah lewat `-d:` dan `{.strdefine.}`, membedakan `-d:release`, `--opt:speed`, dan `-d:danger`,
+membuat biner statis, serta tahu kapan cross-compile akan gagal karena toolchain-nya tidak ada.
+:::
+
+## Memilih target: `--os` dan `--cpu`
+
+Dua saklar menentukan mesin tujuan. `--os` memilih sistem operasi, `--cpu` memilih keluarga
+prosesor. Nilai yang umum: `linux`, `windows`, `macosx` untuk sistem, dan `amd64`, `arm64`, `i386`,
+`arm` untuk prosesor.
+
+Cara paling aman memeriksa target adalah bertanya kepada compiler. `defined` dan `when` dijawab
+sebelum program berjalan, sementara `hostOS` dan `hostCPU` menyimpan nama yang sama untuk dibaca
+program. Keduanya berasal dari `system`, jadi tidak perlu diimpor.
+
+```{.nim}
+# The compiler resolves this `when` before the program runs.
+const isWindows =
+  when defined(windows): true
+  else: false
+
+const isUnixLike =
+  when defined(linux) or defined(macosx) or defined(freebsd) or defined(openbsd): true
+  else: false
+
+const isLinux =
+  when defined(linux): true
+  else: false
+
+echo "isWindows: ", isWindows
+echo "isUnixLike: ", isUnixLike
+echo "hostOS agrees with defined(linux): ", (hostOS == "linux") == isLinux
+echo "hostCPU is set: ", hostCPU.len > 0
+```
+
+```{.txt}
+isWindows: false
+isUnixLike: true
+hostOS agrees with defined(linux): true
+hostCPU is set: true
+```
+
+Contoh ini sengaja tidak mencetak nilai `hostOS` dan `hostCPU` mentah. Nilai itu berbeda antara
+mesin pengembang dan mesin pemeriksa, sehingga blok keluarannya tidak akan pernah cocok. Yang
+dicetak adalah perbandingan yang sama di semua mesin unix-like: apakah cabang `when` sesuai dengan
+`hostOS`, dan apakah `hostCPU` terisi.
+
+## Menyalakan fitur dari baris perintah
+
+Selain `--os` dan `--cpu`, ada `-d:nama` untuk mendefinisikan simbol. Simbol itu dibaca `when`, jadi
+pilihan build tidak perlu mengubah kode.
+
+```{.nim}
+# `-d:symbol` sets a compile-time flag that `when` can see.
+when defined(release):
+  const buildKind = "release"
+else:
+  const buildKind = "debug"
+
+# `{.strdefine.}` and `{.intdefine.}` read their value from `-d:name=value`.
+const targetName {.strdefine.} = "host"
+const workers {.intdefine.} = 1
+
+echo "build kind: ", buildKind
+echo "target name: ", targetName
+echo "workers: ", workers
+```
+
+```{.txt}
+build kind: debug
+target name: host
+workers: 1
+```
+
+Tanpa saklar tambahan, keluarannya seperti di atas: build default, nama default, dan satu pekerja.
+Dijalankan dengan `nim c -r -d:release -d:targetName=server -d:workers=4`, baris pertama berubah
+menjadi `release` dan dua baris berikutnya mengikuti nilai yang diberikan.
+
+`{.strdefine.}` dan `{.intdefine.}` memberi nilai default yang tetap bisa diganti dari luar. Ini
+pola yang dipakai banyak program: satu biner, beberapa konfigurasi, tanpa menyentuh kodenya.
+
+## `-d:release`, `--opt:speed`, dan `-d:danger`
+
+Kode yang sama, hasil yang berbeda. Berkas contoh di repositori buku ini menyimpan saklar
+kompilasinya di berkas `.mode`, sehingga pemeriksaan otomatis memakai cara yang sama dengan yang
+ditulis di sini.
+
+```{.nim}
+when defined(release):
+  echo "build kind: release"
+else:
+  echo "build kind: debug"
+
+when defined(danger):
+  echo "danger define is set"
+else:
+  echo "danger define is not set"
+```
+
+```{.txt}
+build kind: release
+danger define is not set
+```
+
+Contoh di atas dijalankan dengan `nim c -r -d:release`. `-d:release` menyalakan optimasi dan
+mematikan jejak tumpukan; pemeriksaan runtime tetap aktif. `--opt:speed` mengurus optimasinya saja,
+tanpa mengubah yang lain. `-d:danger` melangkah lebih jauh: ia mematikan semua pemeriksaan runtime.
+
+```{.nim}
+when defined(danger):
+  echo "danger define is set"
+else:
+  echo "danger define is not set"
+
+when defined(release):
+  echo "release is implied by danger"
+else:
+  echo "release is not set"
+```
+
+```{.txt}
+danger define is set
+release is implied by danger
+```
+
+Hasil itu dijalankan dengan `nim c -r -d:danger`, dan dua hal terbaca sekaligus. `danger` memang
+menyala, dan ia membawa serta `release`. Konsekuensinya nyata: rentang larik yang lewat batas tidak
+lagi dilaporkan sebagai defect, melainkan membaca memori di luar datanya. `-d:danger` hanya untuk
+biner yang sudah terbukti benar, bukan untuk tahap menulis kode.
+
+## Biner statis
+
+Biner yang dikompilasi di satu distribusi kadang menolak berjalan di distribusi lain karena versi
+pustaka C-nya berbeda. Penaut bisa diminta memasukkan seluruh pustaka ke dalam biner:
+
+```bash
+nim c -d:release --passL:-static --out:app app.nim
+```
+
+Hasilnya biner statis: tidak mencari pustaka C saat dijalankan, jadi lebih aman dipindahkan.
+Saklar ini untuk target Linux. Penaut macOS tidak mengenalnya, dan percobaan di Nim 2.2.12 berhenti
+dengan `ld: library 'crt0.o' not found`.
+
+`--passL` meneruskan opsi ke penaut, `--passC` meneruskan opsi ke compiler C. Keduanya jembatan
+ketika Nim belum punya saklarnya sendiri:
+
+```bash
+nim c --passC:-DLOG_LEVEL=2 --passL:-lm --out:app app.nim
+```
+
+Pakai keduanya seperlunya. Opsi yang tidak dipahami compiler C akan menggagalkan build, dan
+pesannya datang dari compiler C, bukan dari Nim.
+
+## Error sengaja: `when` butuh nilai compile-time
+
+`when` berbeda dari `if`. Cabangnya dipilih saat kompilasi, jadi syaratnya harus bisa dihitung saat
+itu juga.
+
+```{.nim}
+import std/os
+
+let requested = paramStr(0)
+
+# `when` needs a value that is known before the program runs.
+when requested.len > 0:
+  echo "the program has a name"
+```
+
+```{.txt}
+main.nim(6, 6) Error: cannot evaluate at compile time: requested
+```
+
+Pesannya menunjuk baris 6 kolom 6, tepat di awal nama `requested`, lalu menjelaskan sebabnya:
+nilainya baru diketahui saat program berjalan. `paramStr(0)` membaca argumen dari sistem operasi,
+dan itu terjadi setelah biner berjalan. Perbaikannya mengganti `when` dengan `if`, atau memindahkan
+syaratnya ke `const` yang bisa dihitung saat kompilasi.
+
+## Keterbatasan: toolchain C untuk target
+
+`--os` dan `--cpu` hanya memberi tahu Nim mau ke mana. Yang benar-benar membentuk biner adalah
+compiler C, dan ia harus tersedia untuk target itu.
+
+```bash
+# Needs a MinGW toolchain; without one the C compiler stops at windows.h.
+nim c -d:mingw --os:windows --cpu:amd64 --out:app.exe app.nim
+```
+
+Tanpa toolchain tersebut, build berhenti di compiler C dengan `fatal error: 'windows.h' file not
+found`. Di Linux, paket MinGW menyediakan `x86_64-w64-mingw32-gcc`, dan Nim sudah menyiapkan
+pemetaannya di `config/nim.cfg` pada bagian `@if unix and mingw`.
+
+Perilaku yang lebih halus: mengubah `--os` saja tidak selalu gagal. Di macOS, `--os:linux --
+cpu:amd64` berjalan sampai selesai dan meninggalkan berkas Mach-O, bukan ELF. Nim percaya dirinya
+membuat biner Linux, sementara compiler C tetap menghasilkan biner host. Biner seperti itu tidak
+berguna; kesalahan barunya muncul jauh kemudian, saat dijalankan di mesin tujuan.
+
+## Perintah per target
+
+Beberapa perintah yang sering dipakai, lengkap dengan catatannya:
+
+```bash
+# Native release build for the machine doing the compiling.
+nim c -d:release --out:app app.nim
+```
+
+```bash
+# Linux target with a static C runtime, then copy the binary to the server.
+nim c -d:release --passL:-static --out:app app.nim
+scp ./app server:/srv/app/app
+ssh server 'chmod +x /srv/app/app && /srv/app/app --version'
+```
+
+Proyek yang memakai nimble bisa menitipkan saklar yang sama lewat `nimble build`, karena argumen
+tambahan diteruskan ke compiler Nim:
+
+```bash
+nimble build --os:windows --cpu:amd64 -d:release
+```
+
+## Latihan
+
+1. Sebutkan nilai `--os` dan `--cpu` untuk mesin tempat pembaca menulis kode, lalu bandingkan dengan
+   keluaran contoh pertama.
+2. Tanpa menjalankan, prediksi keluarannya kalau contoh kedua dikompilasi dengan
+   `-d:release -d:workers=8`.
+3. Tulis program yang mencetak `"windows target"` atau `"unix target"` memakai `when defined`, lalu
+   sebutkan apa yang terjadi pada cabang yang tidak dipilih.
+4. Kode berikut gagal dikompilasi. Perbaiki, lalu jelaskan pesannya:
+   `let mode = paramStr(1)` diikuti `when mode == "--debug": echo "debug"`.
+5. Sebutkan dua hal yang harus tersedia sebelum cross-compile ke Windows benar-benar menghasilkan
+   biner, dan apa yang terjadi kalau salah satunya tidak ada.
+
+Jawaban ada di [Lampiran A](../appendix/answers.qmd).
+
+## Ringkasan
+
+- `--os` dan `--cpu` memilih target; `when defined(...)`, `hostOS`, dan `hostCPU` membacanya dari
+  dalam kode.
+- `-d:nama` menyalakan simbol compile-time; `{.strdefine.}` dan `{.intdefine.}` menerima nilainya.
+- `-d:release` menyalakan optimasi, `--opt:speed` mengurus optimasi sendiri, dan `-d:danger`
+  mematikan semua pemeriksaan.
+- `--passC` dan `--passL` meneruskan opsi ke compiler C dan penaut; `--passL:-static` menghasilkan
+  biner statis di Linux.
+- Cross-compile butuh toolchain C untuk target. Tanpa itu, build berhenti atau menghasilkan biner
+  host yang tidak berguna.
+
+## Selanjutnya
+
+Perkakas sudah lengkap: mengukur, mengoptimasi, dan mengirim biner. Bab terakhir Bagian C menyatukan
+semuanya menjadi satu program kecil yang utuh. Lanjut ke
+[Proyek akhir: catatan dari terminal](final-project.qmd).

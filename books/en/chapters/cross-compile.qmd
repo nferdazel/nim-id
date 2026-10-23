@@ -1,0 +1,260 @@
+# Cross-compiling and deploying binaries
+
+A binary built on your laptop does not automatically run on another machine. The executable file
+format differs between operating systems, and so do the processor instructions. Nim can aim its
+output at another system, but not with a single magic switch: the result is only as good as the C
+toolchain available on the machine doing the build.
+
+::: {.callout-note}
+## What you will be able to do
+
+After this chapter you can pick a target with `--os` and `--cpu`, set features from the command line
+with `-d:` and `{.strdefine.}`, tell `-d:release`, `--opt:speed`, and `-d:danger` apart, build a
+static binary, and recognize when cross-compiling must fail because the toolchain is missing.
+:::
+
+## Choosing a target: `--os` and `--cpu`
+
+Two switches decide the destination. `--os` picks the operating system and `--cpu` picks the
+processor family. Common values: `linux`, `windows`, `macosx` for systems, and `amd64`, `arm64`,
+`i386`, `arm` for processors.
+
+The safest way to inspect the target is to ask the compiler. `defined` and `when` are answered before
+the program runs, while `hostOS` and `hostCPU` hold the same names for the running program to read.
+Both come from `system`, so no import is needed.
+
+```{.nim}
+# The compiler resolves this `when` before the program runs.
+const isWindows =
+  when defined(windows): true
+  else: false
+
+const isUnixLike =
+  when defined(linux) or defined(macosx) or defined(freebsd) or defined(openbsd): true
+  else: false
+
+const isLinux =
+  when defined(linux): true
+  else: false
+
+echo "isWindows: ", isWindows
+echo "isUnixLike: ", isUnixLike
+echo "hostOS agrees with defined(linux): ", (hostOS == "linux") == isLinux
+echo "hostCPU is set: ", hostCPU.len > 0
+```
+
+```{.txt}
+isWindows: false
+isUnixLike: true
+hostOS agrees with defined(linux): true
+hostCPU is set: true
+```
+
+This example deliberately does not print the raw `hostOS` and `hostCPU` values. Those differ between
+the development machine and the checking machine, so the output block would never match. What is
+printed are comparisons that are identical on every unix-like machine: whether the `when` branch
+agrees with `hostOS`, and whether `hostCPU` is set.
+
+## Turning features on from the command line
+
+Besides `--os` and `--cpu` there is `-d:name` for defining a symbol. The symbol is read by `when`, so
+a build choice never requires a code change.
+
+```{.nim}
+# `-d:symbol` sets a compile-time flag that `when` can see.
+when defined(release):
+  const buildKind = "release"
+else:
+  const buildKind = "debug"
+
+# `{.strdefine.}` and `{.intdefine.}` read their value from `-d:name=value`.
+const targetName {.strdefine.} = "host"
+const workers {.intdefine.} = 1
+
+echo "build kind: ", buildKind
+echo "target name: ", targetName
+echo "workers: ", workers
+```
+
+```{.txt}
+build kind: debug
+target name: host
+workers: 1
+```
+
+Without extra switches the output is as above: default build, default name, one worker. Run with
+`nim c -r -d:release -d:targetName=server -d:workers=4`, and the first line becomes `release` while
+the next two follow the values you gave.
+
+`{.strdefine.}` and `{.intdefine.}` give a default value that can still be overridden from outside.
+This is the pattern many programs use: one binary, several configurations, without touching the code.
+
+## `-d:release`, `--opt:speed`, and `-d:danger`
+
+The same code, different results. The example files in this book's repository keep their compile
+switches in a `.mode` file, so the automated check compiles them the same way as written here.
+
+```{.nim}
+when defined(release):
+  echo "build kind: release"
+else:
+  echo "build kind: debug"
+
+when defined(danger):
+  echo "danger define is set"
+else:
+  echo "danger define is not set"
+```
+
+```{.txt}
+build kind: release
+danger define is not set
+```
+
+The example above is run with `nim c -r -d:release`. `-d:release` turns optimization on and disables
+stack traces; runtime checks stay in place. `--opt:speed` only turns optimization on, leaving
+everything else alone. `-d:danger` goes further: it turns off all runtime checks.
+
+```{.nim}
+when defined(danger):
+  echo "danger define is set"
+else:
+  echo "danger define is not set"
+
+when defined(release):
+  echo "release is implied by danger"
+else:
+  echo "release is not set"
+```
+
+```{.txt}
+danger define is set
+release is implied by danger
+```
+
+That output comes from `nim c -r -d:danger`, and two things are visible at once. `danger` is indeed
+set, and it brings `release` along. The consequence is real: an array index past its bounds is no
+longer reported as a defect, it silently reads memory outside its data. Keep `-d:danger` for binaries
+already proven correct, not for the stage where you are still writing code.
+
+## Static binaries
+
+A binary compiled on one distribution sometimes refuses to run on another because the C library
+version differs. The linker can be asked to fold every library into the binary:
+
+```bash
+nim c -d:release --passL:-static --out:app app.nim
+```
+
+The result is a static binary: it does not look for C libraries at run time, so it is safer to move
+around. This switch is for Linux targets. The macOS linker does not know it, and on Nim 2.2.12 the
+attempt stops with `ld: library 'crt0.o' not found`.
+
+`--passL` forwards options to the linker and `--passC` forwards options to the C compiler. Both are
+the bridge for cases Nim has no switch of its own for:
+
+```bash
+nim c --passC:-DLOG_LEVEL=2 --passL:-lm --out:app app.nim
+```
+
+Use both sparingly. An option the C compiler does not understand breaks the build, and that message
+comes from the C compiler, not from Nim.
+
+## Deliberate error: `when` needs a compile-time value
+
+`when` is not `if`. Its branch is chosen during compilation, so the condition has to be computable
+right then.
+
+```{.nim}
+import std/os
+
+let requested = paramStr(0)
+
+# `when` needs a value that is known before the program runs.
+when requested.len > 0:
+  echo "the program has a name"
+```
+
+```{.txt}
+main.nim(6, 6) Error: cannot evaluate at compile time: requested
+```
+
+The message points at line 6, column 6, right at the start of the name `requested`, then explains
+why: the value is only known while the program runs. `paramStr(0)` reads an argument from the
+operating system, and that happens after the binary starts. The fix is to replace `when` with `if`,
+or to move the condition into a `const` that can be computed during compilation.
+
+## The limit: a C toolchain for the target
+
+`--os` and `--cpu` only tell Nim where you want to go. What actually shapes the binary is the C
+compiler, and it has to be available for that target.
+
+```bash
+# Needs a MinGW toolchain; without one the C compiler stops at windows.h.
+nim c -d:mingw --os:windows --cpu:amd64 --out:app.exe app.nim
+```
+
+Without that toolchain the build stops in the C compiler with `fatal error: 'windows.h' file not
+found`. On Linux, the MinGW packages provide `x86_64-w64-mingw32-gcc`, and Nim already ships the
+mapping for it in `config/nim.cfg` under `@if unix and mingw`.
+
+A subtler behaviour: changing `--os` alone does not always fail. On macOS, `--os:linux --cpu:amd64`
+runs to completion and leaves a Mach-O file behind, not an ELF one. Nim believes it built a Linux
+binary, while the C compiler kept producing a host binary. Such a file is useless; the mistake only
+shows up much later, when it is started on the destination machine.
+
+## Commands per target
+
+A few commands that come up often, with their notes:
+
+```bash
+# Native release build for the machine doing the compiling.
+nim c -d:release --out:app app.nim
+```
+
+```bash
+# Linux target with a static C runtime, then copy the binary to the server.
+nim c -d:release --passL:-static --out:app app.nim
+scp ./app server:/srv/app/app
+ssh server 'chmod +x /srv/app/app && /srv/app/app --version'
+```
+
+A project that uses nimble can pass the same switches through `nimble build`, because extra arguments
+are forwarded to the Nim compiler:
+
+```bash
+nimble build --os:windows --cpu:amd64 -d:release
+```
+
+## Exercises
+
+1. Name the `--os` and `--cpu` values for the machine you write code on, then compare them with the
+   output of the first example.
+2. Without running it, predict the output if the second example is compiled with
+   `-d:release -d:workers=8`.
+3. Write a program that prints `"windows target"` or `"unix target"` using `when defined`, then say
+   what happens to the branch that is not chosen.
+4. The code below fails to compile. Fix it, then explain the message: `let mode = paramStr(1)`
+   followed by `when mode == "--debug": echo "debug"`.
+5. Name two things that must be present before cross-compiling to Windows really produces a binary,
+   and say what happens when one of them is missing.
+
+Answers are in [Appendix A](../appendix/answers.qmd).
+
+## Summary
+
+- `--os` and `--cpu` pick the target; `when defined(...)`, `hostOS`, and `hostCPU` read it from
+  inside the code.
+- `-d:name` sets a compile-time symbol; `{.strdefine.}` and `{.intdefine.}` take its value.
+- `-d:release` turns optimization on, `--opt:speed` handles optimization alone, and `-d:danger` turns
+  off every check.
+- `--passC` and `--passL` forward options to the C compiler and the linker; `--passL:-static` builds a
+  static binary on Linux.
+- Cross-compiling needs a C toolchain for the target. Without one, the build stops or produces a host
+  binary that is useless.
+
+## Next
+
+The tools are complete: measure, optimize, and ship a binary. The last chapter of Part C puts it all
+together into one small program that works. Go to
+[Final project: notes from the terminal](final-project.qmd).
