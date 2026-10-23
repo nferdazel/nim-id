@@ -58,16 +58,19 @@ case "${1:-help}" in
   id)
     perlu "$QUARTO"
     sh tools/gen-version.sh
+    sh tools/sync-assets.sh
     "$QUARTO" render books/id
     ;;
   en)
     perlu "$QUARTO"
     sh tools/gen-version.sh
+    sh tools/sync-assets.sh
     "$QUARTO" render books/en
     ;;
   pdf)
     perlu "$QUARTO"
     sh tools/gen-version.sh
+    sh tools/sync-assets.sh
     "$QUARTO" render books/id --to typst
     "$QUARTO" render books/en --to typst
     ;;

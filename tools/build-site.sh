@@ -14,13 +14,7 @@ sh tools/gen-version.sh
 
 rm -rf public
 
-# CSS bersama satu sumber (assets/ku.css). Quarto hanya menyalin berkas yang benar-benar ada
-# di dalam direktori project, jadi salinannya dibuat saat build dan tidak di-commit.
-for b in id en; do
-  mkdir -p "books/$b/assets/typst"
-  cp assets/ku.css "books/$b/assets/ku.css"
-  cp assets/typst/typst-show.typ "books/$b/assets/typst/typst-show.typ"
-done
+sh tools/sync-assets.sh
 
 "$quarto" render books/id
 "$quarto" render books/en
