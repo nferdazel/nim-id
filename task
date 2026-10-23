@@ -1,0 +1,86 @@
+#!/usr/bin/env sh
+#
+# nim-id — satu pintu perintah.
+#
+#   ./task contoh   kompilasi + verifikasi semua contoh (butuh Nim 2.2.12)
+#   ./task site     render Indonesia + English, susun public/
+#   ./task id       render hanya versi Indonesia
+#   ./task en       render hanya English (profil Quarto `en`)
+#   ./task pdf      render PDF kedua bahasa
+#   ./task dev      preview lokal (auto-reload)
+#   ./task check    contoh + site (gate sebelum commit)
+#   ./task help
+#
+# Skrip POSIX, bukan Taskfile/just: tanpa dependensi tooling baru, perintah yang sama dipakai
+# laptop dan CI — pola yang sama dengan repo cbs (D-001 di sana).
+set -eu
+
+ROOT=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
+cd "$ROOT"
+
+QUARTO=${QUARTO:-quarto}
+
+usage() {
+  cat <<'TXT'
+pemakaian: ./task <perintah>
+
+  contoh   kompilasi + verifikasi semua contoh (butuh Nim 2.2.12)
+  site     render Indonesia + English, susun public/
+  id       render hanya versi Indonesia
+  en       render hanya English
+  pdf      render PDF kedua bahasa
+  dev      preview lokal (auto-reload)
+  check    contoh + site (gate sebelum commit)
+
+variabel lingkungan:
+  QUARTO   path ke biner quarto (bawaan: quarto dari PATH)
+  NIM      path ke biner nim (bawaan: nim dari PATH)
+TXT
+}
+
+perlu() {
+  command -v "$1" >/dev/null 2>&1 || { echo "butuh '$1' di PATH" >&2; exit 1; }
+}
+
+case "${1:-help}" in
+  contoh)
+    perlu nim
+    bash tools/verify-examples.sh
+    ;;
+  site)
+    perlu "$QUARTO"
+    QUARTO="$QUARTO" bash tools/build-site.sh
+    ;;
+  id)
+    perlu "$QUARTO"
+    "$QUARTO" render books/id
+    ;;
+  en)
+    perlu "$QUARTO"
+    "$QUARTO" render books/en
+    ;;
+  pdf)
+    perlu "$QUARTO"
+    "$QUARTO" render books/id --to typst
+    "$QUARTO" render books/en --to typst
+    ;;
+  dev)
+    perlu "$QUARTO"
+    "$QUARTO" preview
+    ;;
+  check)
+    perlu nim
+    perlu "$QUARTO"
+    bash tools/verify-examples.sh
+    QUARTO="$QUARTO" bash tools/build-site.sh
+    ;;
+  help|-h|--help)
+    usage
+    ;;
+  *)
+    echo "perintah tidak dikenal: $1" >&2
+    echo >&2
+    usage >&2
+    exit 2
+    ;;
+esac

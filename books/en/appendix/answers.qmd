@@ -1,0 +1,42 @@
+# Exercise Answers {.unnumbered}
+
+These are the most direct answers, not the only correct ones. What matters: the code runs, and you
+can explain why.
+
+## Chapter: Variables
+
+**1.** `const` for a fixed value, `var` for one filled in later.
+
+```{.nim}
+import std/strformat
+
+const Year = 2026
+var message = ""
+
+message = &"released in {Year}"
+echo message
+```
+
+```{.txt}
+released in 2026
+```
+
+**2.** The output is `2-1`. The line `let b = a` copies the **value** of `a` at that moment, which
+is `1`. Changing `a` afterwards does not touch `b`.
+
+**3.** `let` allows exactly one assignment, and that assignment must happen on the declaration
+line. Without an initial value there will never be an assignment, so the compiler rejects it up
+front. A valid version:
+
+```{.nim}
+let x: int = 0
+```
+
+**4.** `Name` and `name` differ because the first letter is significant. The compiler treats `Name`
+as an identifier that was never declared. The fix is to spell it exactly as declared.
+
+```{.nim}
+var name = "Nim"
+name = "Nim 2"
+echo name
+```

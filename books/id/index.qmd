@@ -1,0 +1,37 @@
+# Dasar Pemrograman Nim {.unnumbered}
+
+Buku ini mengajarkan bahasa [Nim](https://nim-lang.org) dalam Bahasa Indonesia, untuk pembaca
+yang sudah pernah menulis program di bahasa lain (Python, JavaScript, PHP, Go) tapi belum pernah
+menyentuh bahasa yang dikompilasi ke native.
+
+Buku ini **bukan** terjemahan dokumentasi resmi. Dokumentasi resmi Nim sudah lengkap dan
+berbahasa Inggris; buku ini pelengkap, bukan pengganti. Kalau pembaca sudah nyaman dengan bahasa
+Inggris dan istilah sistem, langsung ke [dokumentasi resmi](https://nim-lang.org/documentation.html)
+lebih cepat.
+
+## Yang membuat buku ini berbeda
+
+- **Setiap contoh dijalankan.** Semua berkas di `examples/` dikompilasi dan keluarannya
+  dibandingkan otomatis di CI. Kalau snippet di buku tidak jalan, build-nya gagal.
+- **Kode yang sengaja salah.** Beberapa contoh memang gagal dikompilasi, dan itu disengaja:
+  pembaca dilatih membaca pesan compiler, bukan menghindarinya.
+- **Output ditulis, bukan difoto.** Semua keluaran program berupa teks yang bisa dicari dan
+  dicopy, dan tetap terbaca oleh pembaca layar.
+
+## Versi
+
+| Perangkat | Versi |
+|---|---|
+| Nim | 2.2.12 |
+| Buku | 0.1.0 (draf, bab pertama) |
+
+## Cara membaca
+
+Kalau baru pertama kali memakai Nim, baca berurutan. Kalau sudah pernah, lompat ke
+[Variabel](chapters/variables.qmd) dan lanjut dari situ. Setiap bab berakhir dengan latihan;
+jawabannya ada di [Lampiran A](appendix/answers.qmd).
+
+## Lisensi
+
+Teks buku: [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/deed.id).
+Kode contoh di `examples/`: MIT.

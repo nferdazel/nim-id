@@ -1,0 +1,26 @@
+/* Styling kecil di atas tema Quarto. Jangan menambah framework. */
+
+/* Blok output dibedakan dari blok kode: kode = putih, output = abu muda.
+   Warna sengaja tipis supaya tetap terbaca saat dicetak hitam-putih. */
+pre.txt,
+pre.output {
+  background-color: rgba(0, 0, 0, 0.04);
+  border-left: 3px solid rgba(0, 0, 0, 0.18);
+  border-radius: 0 4px 4px 0;
+  color: inherit;
+}
+
+pre.txt::before {
+  content: "output";
+  display: block;
+  margin-bottom: 0.35rem;
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  opacity: 0.55;
+}
+
+/* Blok kode sedikit lebih lega dari default. */
+div.sourceCode {
+  margin: 1rem 0;
+}

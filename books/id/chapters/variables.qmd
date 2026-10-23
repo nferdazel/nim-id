@@ -1,0 +1,253 @@
+# Variabel: `var`, `let`, `const`
+
+Nim punya tiga kata kunci untuk menyimpan nilai: `var`, `let`, dan `const`. Di layar ketiganya
+kelihatan sama saja. Yang berbeda adalah janji yang ditepati compiler: mana yang boleh berubah,
+kapan nilainya ditentukan, dan siapa yang boleh mengubahnya.
+
+Salah memilih tidak langsung membuat program error. Yang terjadi biasanya lebih mahal: nilai
+berubah di tempat yang tidak diduga, dan bug-nya baru muncul dua ratus baris kemudian. Bab ini
+memisahkan ketiganya dengan contoh yang bisa dijalankan.
+
+::: {.callout-note}
+## Tujuan bab
+
+Setelah bab ini, pembaca bisa memilih `var`, `let`, atau `const` dengan alasan yang jelas,
+membaca pesan error `cannot be assigned to`, dan tahu kenapa `user_name` dan `userName` dianggap
+identifier yang sama oleh Nim.
+:::
+
+## `var`: nilai yang boleh berubah
+
+Simpan kode berikut sebagai `main.nim`, lalu jalankan dengan `nim r main.nim`.
+
+```{.nim}
+import std/strformat
+
+var name = "Nim"
+var year = 2008
+
+echo "Hello, ", name
+echo &"{name} was released in {year}"
+```
+
+```{.txt}
+Hello, Nim
+Nim was released in 2008
+```
+
+Dua hal yang perlu diperhatikan:
+
+- `echo` menerima beberapa argumen sekaligus, tapi **tidak menambahkan pemisah apa pun** di
+  antaranya. Spasi di output di atas datang dari string `"Hello, "`, bukan dari `echo`. Kalau butuh
+  spasi, tulis sendiri.
+- `&"..."` adalah *string interpolation* dari `std/strformat`: teks di dalam `{...}` diganti
+  dengan nilai variabelnya. Tanpa `import std/strformat`, bentuk ini tidak dikenal compiler.
+
+`var` berarti nilai boleh diganti kapan saja setelah deklarasi:
+
+```{.nim}
+var score = 0
+score = 10
+score = score + 5
+
+echo "score: ", score
+```
+
+```{.txt}
+score: 15
+```
+
+## Tipe: ditulis eksplisit atau disimpulkan compiler
+
+Pada contoh sebelumnya, tipe variabel tidak ditulis. Compiler menyimpulkannya dari nilai awal:
+`"Nim"` adalah `string`, `2008` adalah `int`. Ini disebut *type inference*.
+
+Kalau tipe perlu ditegaskan (misalnya untuk menghemat memori, atau karena nilainya akan diisi
+belakangan), tulis setelah nama variabel dengan tanda titik dua:
+
+```{.nim}
+var age: int8 = 24
+var temperature: float = 36.5
+var active: bool = true
+var initial: char = 'S'
+
+echo age, " ", temperature, " ", active, " ", initial
+```
+
+```{.txt}
+24 36.5 true S
+```
+
+`int8` adalah bilangan bulat 8-bit, rentangnya −128 sampai 127. Nim menyediakan `int8`, `int16`,
+`int32`, `int64`, dan `int` (ukuran mengikuti arsitektur mesin). `float` adalah nama lain dari
+`float64`.
+
+## `let`: diisi sekali, tidak boleh diganti
+
+Ganti `var` menjadi `let` pada contoh `score` di atas, lalu coba jalankan lagi.
+
+```{.nim}
+let pi = 3.14159
+
+pi = 3.14
+echo pi
+```
+
+Program tidak sampai berjalan. Compiler menolaknya:
+
+```{.txt}
+main.nim(3, 1) Error: 'pi' cannot be assigned to
+```
+
+Pesan itu pendek, dan isinya lengkap kalau tahu cara membacanya:
+
+| Bagian | Arti |
+|---|---|
+| `main.nim` | berkas tempat masalahnya |
+| `(3, 1)` | baris 3, kolom 1 |
+| `Error` | tingkat keparahan; `Warning` dan `Hint` tidak menghentikan build |
+| `'pi' cannot be assigned to` | yang salah: `pi` dideklarasikan `let`, jadi hanya boleh diisi sekali |
+
+Inilah bedanya dengan `var`. `let` adalah variabel yang nilainya ditetapkan saat deklarasi dan
+tidak boleh diubah setelahnya. Kalau nilainya harus dihitung lebih dulu, hitung di baris
+deklarasinya:
+
+```{.nim}
+let circumference = 2 * 3.14159 * 7.0
+echo "circumference: ", circumference
+```
+
+```{.txt}
+circumference: 43.98226
+```
+
+Karena `let` hanya boleh diisi sekali, mendeklarasikannya tanpa nilai juga ditolak:
+
+```{.txt}
+main.nim(1, 5) Error: 'let' symbol requires an initialization
+```
+
+## `const`: nilainya diketahui saat kompilasi
+
+`const` lebih ketat lagi. Nilainya harus sudah bisa dihitung **saat kompilasi**, bukan saat
+program berjalan.
+
+```{.nim}
+import std/strformat
+
+const AppName = "notes"
+const MaxItems = 128
+
+var label = &"{AppName} (max {MaxItems})"
+
+echo label
+```
+
+```{.txt}
+notes (max 128)
+```
+
+Bedanya dengan `let` bukan sekadar "lebih tidak boleh diubah". `const` disubstitusi langsung oleh
+compiler, jadi nilainya bisa dipakai untuk hal yang harus diketahui sebelum program jalan:
+ukuran array tetap, parameter generic, atau cabang `when`. Konsekuensinya, `const` tidak bisa
+diisi hasil yang baru diketahui saat runtime, misalnya isi berkas atau waktu sistem.
+
+Aturan praktisnya:
+
+| Kata kunci | Bisa diubah? | Kapan nilainya ditentukan | Pakai untuk |
+|---|---|---|---|
+| `var` | ya, berkali-kali | runtime | state yang memang berubah |
+| `let` | tidak, sekali | runtime, saat deklarasi | nilai yang dihitung lalu dibekukan |
+| `const` | tidak | compile-time | konstanta, ukuran tetap, nilai konfigurasi |
+
+## Jebakan pertama: nama variabel tidak sesensitif yang dikira
+
+Nim membandingkan identifier dengan mengabaikan huruf besar-kecil dan garis bawah, **kecuali
+huruf pertama**. Artinya dua penulisan berikut menunjuk variabel yang sama:
+
+```{.nim}
+var user_name = "hello"
+
+# Ejaan berbeda, tapi ini identifier yang sama.
+echo userName
+```
+
+```{.txt}
+hello
+```
+
+Karena dianggap sama, keduanya tidak bisa dideklarasikan bersamaan:
+
+```{.txt}
+main.nim(2, 5) Error: redefinition of 'userName'; previous declaration here: main.nim(1, 5)
+```
+
+Tapi huruf pertama tetap dibedakan. `UserName` bukan variabel yang sama:
+
+```{.txt}
+main.nim(2, 6) Error: undeclared identifier: 'UserName'
+candidates (edit distance, scope distance); see '--spellSuggest':
+ (1, 2): 'user_name'
+```
+
+Perhatikan baris `candidates`: compiler tidak hanya bilang "tidak ada", tapi menawarkan kandidat
+terdekat. Ini salah satu alasan pesan error Nim terasa membantu begitu dibiasakan.
+
+Saran praktis: pilih satu gaya penulisan dan pakai konsisten. Gaya resmi Nim untuk variabel
+adalah `camelCase`, untuk tipe `PascalCase`.
+
+## Jebakan kedua: `var` tanpa nilai tidak kosong
+
+`var` boleh dideklarasikan tanpa nilai awal, dan Nim mengisinya dengan nilai default tipe
+tersebut:
+
+```{.nim}
+var count: int
+var active: bool
+var text: string
+
+echo count, "|", active, "|", repr(text)
+```
+
+```{.txt}
+0|false|""
+```
+
+`repr` menampilkan bentuk yang bisa dibaca mesin; karena itu string kosong tercetak sebagai `""`,
+bukan kosong sama sekali. Nilai default ini aman (tidak ada sampah memori seperti di C), tapi
+kode lebih mudah dibaca kalau nilainya diisi eksplisit saat deklarasi.
+
+## Latihan
+
+1. Deklarasikan `const Tahun = 2026` dan `var pesan = ""`. Isi `pesan` dengan interpolasi
+   `&"terbit {Tahun}"`, lalu cetak.
+2. Tanpa menjalankan, prediksi outputnya:
+   ```{.nim}
+   var a = 1
+   let b = a
+   a = 2
+   echo a, "-", b
+   ```
+3. Kenapa `let x: int` gagal dikompilasi? Tulis ulang supaya valid tanpa mengubah maksudnya.
+4. Kode berikut error. Perbaiki, lalu jelaskan kenapa error-nya begitu:
+   ```{.nim}
+   var name = "Nim"
+   Name = "Nim 2"
+   echo name
+   ```
+
+Jawaban ada di [Lampiran A](../appendix/answers.qmd).
+
+## Ringkasan
+
+- `var` boleh diubah, `let` diisi sekali, `const` ditentukan saat kompilasi.
+- `let` dan `const` tidak boleh dideklarasikan tanpa nilai.
+- `echo` tidak menambahkan pemisah antar argumen; `&"..."` butuh `import std/strformat`.
+- Identifier Nim mengabaikan besar-kecil dan `_`, kecuali huruf pertama, sehingga
+  `user_name` = `userName` ≠ `UserName`.
+- `var` tanpa nilai berisi default tipe (`0`, `false`, `""`), bukan nilai acak.
+
+## Selanjutnya
+
+Bab berikutnya membahas tipe data dasar secara lebih rinci: rentang setiap tipe integer, kapan
+memakai `float32` dan kapan `float64`, serta cara konversi antar tipe tanpa kehilangan data.

@@ -1,0 +1,37 @@
+project:
+  type: book
+  resources:
+    - assets/ku.css
+
+book:
+  title: "Dasar Pemrograman Nim"
+  subtitle: "Belajar bahasa Nim dari nol, dalam Bahasa Indonesia"
+  author: "Sachiel"
+  date: "2026-10-23"
+  language: id
+  chapters:
+    - index.qmd
+    - chapters/variables.qmd
+  appendices:
+    - appendix/answers.qmd
+  search: true
+  sidebar:
+    style: docked
+    collapse-level: 1
+  page-footer:
+    left: "CC BY-SA 4.0 · kode contoh MIT"
+    right: "[English](/en/) · Quarto"
+
+format:
+  html:
+    lang: id
+    css: assets/ku.css
+    toc: true
+    toc-depth: 2
+    toc-title: "Di halaman ini"
+    code-copy: true
+    code-overflow: wrap
+    fig-cap-location: bottom
+  typst:
+    papersize: a5
+    number-sections: true

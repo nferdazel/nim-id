@@ -1,0 +1,39 @@
+# Learning Nim {.unnumbered}
+
+This book teaches the [Nim](https://nim-lang.org) programming language in English, for readers who
+have written code in another language (Python, JavaScript, PHP, Go) but have never used a language
+that compiles to native code.
+
+It is **not** a translation of the official documentation. The official docs are complete and
+actively maintained; this book is a companion, not a replacement. If you are comfortable with
+systems programming jargon, start with the
+[official documentation](https://nim-lang.org/documentation.html) instead.
+
+## What makes this book different
+
+- **Every example runs.** Files under `examples/` are compiled and their output is compared
+  automatically in CI. If a snippet in the book stops working, the build fails.
+- **Code that fails on purpose.** Some examples do not compile, and that is deliberate: you learn
+  to read compiler messages instead of avoiding them.
+- **Output is written, not photographed.** All program output is text you can search, copy, and
+  have read aloud by a screen reader.
+
+## Versions
+
+| Tool | Version |
+|---|---|
+| Nim | 2.2.12 |
+| Book | 0.1.0 (draft, first chapter) |
+
+## How to read
+
+If this is your first time with Nim, read in order. If you have used Nim before, jump to
+[Variables](chapters/variables.qmd) and continue from there. Every chapter ends with exercises;
+answers are in [Appendix A](appendix/answers.qmd).
+
+Versi Bahasa Indonesia: [Dasar Pemrograman Nim](/).
+
+## License
+
+Book text: [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/).
+Code samples in `examples/`: MIT.

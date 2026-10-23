@@ -1,0 +1,42 @@
+# Jawaban Latihan {.unnumbered}
+
+Jawaban di bawah ini yang paling langsung, bukan satu-satunya yang benar. Yang penting: kodenya
+jalan, dan alasannya bisa dijelaskan.
+
+## Bab: Variabel
+
+**1.** `const` untuk nilai yang tetap, `var` untuk yang diisi belakangan.
+
+```{.nim}
+import std/strformat
+
+const Tahun = 2026
+var pesan = ""
+
+pesan = &"terbit {Tahun}"
+echo pesan
+```
+
+```{.txt}
+terbit 2026
+```
+
+**2.** Outputnya `2-1`. Baris `let b = a` menyalin **nilai** `a` saat itu juga, yaitu `1`.
+Mengubah `a` sesudahnya tidak menyentuh `b`.
+
+**3.** `let` hanya boleh diisi sekali, dan pengisian itu harus terjadi pada baris deklarasinya.
+Tanpa nilai awal, tidak akan pernah ada pengisian, jadi compiler menolaknya di depan. Yang valid:
+
+```{.nim}
+let x: int = 0
+```
+
+**4.** `Name` dan `name` berbeda karena huruf pertama ikut dibedakan. Compiler menganggap `Name`
+sebagai identifier yang belum pernah dideklarasikan. Perbaikannya: tulis persis seperti
+deklarasinya.
+
+```{.nim}
+var name = "Nim"
+name = "Nim 2"
+echo name
+```

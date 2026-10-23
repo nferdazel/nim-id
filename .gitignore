@@ -1,0 +1,11 @@
+build/
+public/
+books/*/_book/
+_site/
+_build/
+_pdf/
+.quarto/
+.DS_Store
+*.pdf
+!assets/**/*.pdf
+books/*/assets/

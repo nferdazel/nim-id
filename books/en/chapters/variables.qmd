@@ -1,0 +1,249 @@
+# Variables: `var`, `let`, `const`
+
+Nim has three keywords for storing a value: `var`, `let`, and `const`. On screen they look
+interchangeable. What differs is the promise the compiler enforces: whether the value may change,
+when it is decided, and who is allowed to change it.
+
+Picking the wrong one rarely breaks the program immediately. What usually happens is more
+expensive: a value changes somewhere you did not expect, and the bug shows up two hundred lines
+later. This chapter separates the three with examples you can run.
+
+::: {.callout-note}
+## What you will be able to do
+
+After this chapter you can choose between `var`, `let`, and `const` with a reason, read the error
+`cannot be assigned to`, and explain why Nim treats `user_name` and `userName` as the same
+variable.
+:::
+
+## `var`: a value that may change
+
+Save the following as `main.nim`, then run `nim r main.nim`.
+
+```{.nim}
+import std/strformat
+
+var name = "Nim"
+var year = 2008
+
+echo "Hello, ", name
+echo &"{name} was released in {year}"
+```
+
+```{.txt}
+Hello, Nim
+Nim was released in 2008
+```
+
+Two things are worth noticing:
+
+- `echo` accepts several arguments, but **adds no separator** between them. The space in the output
+  above comes from the `"Hello, "` string literal, not from `echo`. Write the spacing yourself.
+- `&"..."` is string interpolation from `std/strformat`: whatever sits inside `{...}` is replaced by
+  the variable's value. Without `import std/strformat`, the compiler does not recognize the syntax.
+
+`var` means the value may be reassigned at any point after the declaration:
+
+```{.nim}
+var score = 0
+score = 10
+score = score + 5
+
+echo "score: ", score
+```
+
+```{.txt}
+score: 15
+```
+
+## Types: written out, or inferred
+
+In the previous example the types were never written. The compiler inferred them from the initial
+value: `"Nim"` is a `string`, `2008` is an `int`. This is called *type inference*.
+
+When the type needs to be explicit — to save memory, or because the value is assigned later — write
+it after the name, separated by a colon:
+
+```{.nim}
+var age: int8 = 24
+var temperature: float = 36.5
+var active: bool = true
+var initial: char = 'S'
+
+echo age, " ", temperature, " ", active, " ", initial
+```
+
+```{.txt}
+24 36.5 true S
+```
+
+`int8` is an 8-bit integer with the range −128 to 127. Nim provides `int8`, `int16`, `int32`,
+`int64`, and `int` (machine word size). `float` is an alias for `float64`.
+
+## `let`: assigned once, never replaced
+
+Change `var` to `let` in the `score` example above and run it again.
+
+```{.nim}
+let pi = 3.14159
+
+pi = 3.14
+echo pi
+```
+
+The program never runs. The compiler rejects it:
+
+```{.txt}
+main.nim(3, 1) Error: 'pi' cannot be assigned to
+```
+
+That message is short, but it says everything once you know how to read it:
+
+| Part | Meaning |
+|---|---|
+| `main.nim` | the file containing the problem |
+| `(3, 1)` | line 3, column 1 |
+| `Error` | severity; `Warning` and `Hint` do not stop the build |
+| `'pi' cannot be assigned to` | what is wrong: `pi` was declared with `let`, so it may be assigned only once |
+
+That is the difference from `var`. `let` binds a value at declaration and refuses to change after
+that. If the value must be computed first, compute it on the declaration line:
+
+```{.nim}
+let circumference = 2 * 3.14159 * 7.0
+echo "circumference: ", circumference
+```
+
+```{.txt}
+circumference: 43.98226
+```
+
+Since `let` allows exactly one assignment, declaring it without a value is also rejected:
+
+```{.txt}
+main.nim(1, 5) Error: 'let' symbol requires an initialization
+```
+
+## `const`: known at compile time
+
+`const` is stricter still. Its value must be computable **at compile time**, not while the program
+runs.
+
+```{.nim}
+import std/strformat
+
+const AppName = "notes"
+const MaxItems = 128
+
+var label = &"{AppName} (max {MaxItems})"
+
+echo label
+```
+
+```{.txt}
+notes (max 128)
+```
+
+The difference from `let` is not just "even less changeable". `const` is substituted by the
+compiler, so its value can be used where a value must be known before the program starts: fixed
+array sizes, generic parameters, `when` branches. The consequence is that `const` cannot hold
+anything only known at runtime, such as the contents of a file or the current time.
+
+Rule of thumb:
+
+| Keyword | Reassignable? | Value decided | Use for |
+|---|---|---|---|
+| `var` | yes, repeatedly | at runtime | state that genuinely changes |
+| `let` | no, once | at runtime, at declaration | a computed value that is then frozen |
+| `const` | no | at compile time | constants, fixed sizes, configuration |
+
+## First trap: names are less case-sensitive than they look
+
+Nim compares identifiers while ignoring case and underscores, **except for the first letter**. So
+the two spellings below name the same variable:
+
+```{.nim}
+var user_name = "hello"
+
+# Different spelling style, same identifier.
+echo userName
+```
+
+```{.txt}
+hello
+```
+
+Because they are the same, declaring both is an error:
+
+```{.txt}
+main.nim(2, 5) Error: redefinition of 'userName'; previous declaration here: main.nim(1, 5)
+```
+
+The first letter, however, is still significant. `UserName` is a different name:
+
+```{.txt}
+main.nim(2, 6) Error: undeclared identifier: 'UserName'
+candidates (edit distance, scope distance); see '--spellSuggest':
+ (1, 2): 'user_name'
+```
+
+Note the `candidates` line: the compiler does not just say "not found", it offers the closest
+match. This is one reason Nim errors feel helpful once you are used to them.
+
+Practical advice: pick one spelling style and stay consistent. Nim's official style is `camelCase`
+for variables and `PascalCase` for types.
+
+## Second trap: `var` without a value is not empty
+
+`var` may be declared without an initial value, and Nim fills it with the type's default:
+
+```{.nim}
+var count: int
+var active: bool
+var text: string
+
+echo count, "|", active, "|", repr(text)
+```
+
+```{.txt}
+0|false|""
+```
+
+`repr` prints the machine-readable form, which is why the empty string appears as `""` rather than
+nothing. These defaults are safe (no garbage memory as in C), but code reads better when values are
+given explicitly at declaration.
+
+## Exercises
+
+1. Declare `const Year = 2026` and `var message = ""`. Fill `message` with the interpolation
+   `&"released in {Year}"`, then print it.
+2. Without running it, predict the output:
+   ```{.nim}
+   var a = 1
+   let b = a
+   a = 2
+   echo a, "-", b
+   ```
+3. Why does `let x: int` fail to compile? Rewrite it so it is valid without changing the intent.
+4. The code below fails. Fix it, then explain why the error looks the way it does:
+   ```{.nim}
+   var name = "Nim"
+   Name = "Nim 2"
+   echo name
+   ```
+
+Answers are in [Appendix A](../appendix/answers.qmd).
+
+## Summary
+
+- `var` may change, `let` is assigned once, `const` is decided at compile time.
+- `let` and `const` cannot be declared without a value.
+- `echo` adds no separators between arguments; `&"..."` requires `import std/strformat`.
+- Nim identifiers ignore case and `_` except in the first letter, so `user_name` = `userName` ≠
+  `UserName`.
+- A `var` without a value holds the type's default (`0`, `false`, `""`), not random data.
+
+## Next
+
+The next chapter covers primitive types in detail: the range of each integer type, when `float32`
+matters, and how to convert between types without losing data.
