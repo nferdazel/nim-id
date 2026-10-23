@@ -1,0 +1,220 @@
+# Generics: types and procedures
+
+Writing one procedure for `int`, then copying it for `string`, then again for `float`, gets old
+fast. Nim solves this with *generics*: one declaration written once, after which the compiler makes
+a version for every type that is used.
+
+The part that goes wrong is not the syntax but the constraints. Without a constraint, the compiler
+accepts any type and complains deep inside. With a constraint, the wrong type is rejected at the
+call site, with a reason attached.
+
+::: {.callout-note}
+## What you will be able to do
+
+After this chapter you can write generic procedures and types, put constraints on a type parameter,
+read the error when a constraint is not met, and tell automatic inference apart from explicit type
+arguments.
+:::
+
+## One procedure for many types
+
+Type parameters are written in square brackets after the procedure name.
+
+```{.nim}
+proc identity[T](value: T): T =
+  value
+
+echo identity(42)
+echo identity("nim")
+```
+
+```{.txt}
+42
+nim
+```
+
+`T` is a name for a type that is not fixed yet. When `identity(42)` is called, the compiler fills
+`T` with `int`; when `identity("nim")` is called, `T` becomes `string`. Filling in `T` is called
+instantiation, and the result is two different procedures both named `identity`.
+
+The name `T` lives only inside that declaration, and the two instantiated procedures share no code:
+one works with `int`, the other with `string`. As a result, a mistake inside a generic body only
+shows up once one of its versions is created. The compiler checks each version separately, and its
+error messages often name the type being resolved.
+
+## Type constraints: `T: SomeInteger`
+
+Without a constraint, `T` may be any type inside the procedure body. When the body only makes sense
+for some types, constrain `T` after a colon.
+
+```{.nim}
+proc double[T: SomeInteger](value: T): T =
+  value * 2
+
+echo double(21)
+echo double(5'i8)
+```
+
+```{.txt}
+42
+10
+```
+
+`SomeInteger` is the set of integer types: signed (`int`, `int8` up to `int64`) and unsigned (`uint`
+and friends). As long as `T` is in it, `value * 2` is valid. A type outside the set is rejected, and
+the message explains why.
+
+```{.nim}
+proc double[T: SomeInteger](value: T): T =
+  value * 2
+
+echo double(2.5)
+```
+
+```{.txt}
+main.nim(4, 12) Error: type mismatch
+Expression: double(2.5)
+  [1] 2.5: float64
+
+Expected one of (first mismatch at [position]):
+[1] proc double[T: SomeInteger](value: T): T
+```
+
+The last line shows the only candidate, `double` with the requirement `T: SomeInteger`. `float64` is
+not part of `SomeInteger`, so no version of `double` matches. Without the constraint, a message like
+this would only appear inside the body, after `T` was already used.
+
+## Generics on types
+
+The `[T]` brackets apply to types too, not just procedures. An `object` can take a type parameter,
+so its contents adapt.
+
+```{.nim}
+type Box[T] = object
+  value: T
+
+proc boxed[T](value: T): Box[T] =
+  Box[T](value: value)
+
+echo boxed(7).value
+echo boxed("text").value
+```
+
+```{.txt}
+7
+text
+```
+
+`Box[int]` and `Box[string]` are two different types made from one declaration. The constructor is
+written `Box[T](value: value)`, and `T` there is adjusted from the value passed in.
+
+A procedure that works on `Box[T]` must also carry the same type parameter. That is why `boxed` is
+written `boxed[T]`, not just `boxed`. Without `[T]`, the compiler does not know which type is meant
+inside `Box[T]`.
+
+## Inference and explicit type arguments
+
+The compiler infers `T` from an argument that has type `T`. When there is no such argument, `T` must
+be named directly.
+
+```{.nim}
+proc makeSeq[T](count: int): seq[T] =
+  for _ in 1..count:
+    result.add default(T)
+
+echo makeSeq[int](3)
+echo makeSeq[string](2)
+```
+
+```{.txt}
+@[0, 0, 0]
+@["", ""]
+```
+
+Here `T` does not appear in the parameter list, so `makeSeq(3)` is not enough: the compiler has no
+way to guess the element type. The type argument goes in square brackets after the name:
+`makeSeq[int](3)`. `default(T)` produces the empty value of type `T`, which is `0` for `int` and
+`""` for `string`.
+
+## `typedesc`: taking a type as an argument
+
+Sometimes what is passed is not a value but the type itself. A parameter of type `typedesc` accepts
+that type.
+
+```{.nim}
+proc nameOf(T: typedesc): string =
+  $T
+
+echo nameOf(int)
+echo nameOf(string)
+```
+
+```{.txt}
+int
+string
+```
+
+`nameOf(int)` does not pass a value `int`, but the type `int` itself. Calls like this are common in
+the standard library, for example to create an empty collection of a given type.
+
+## `static[T]`: a value known at compile time
+
+A type parameter can be marked `static`. This means its value must be known at compile time, not
+while the program runs.
+
+```{.nim}
+proc fill[T; N: static int](value: T): array[N, T] =
+  for i in 0..<N:
+    result[i] = value
+
+echo fill[char, 3]('z')
+echo fill[int, 2](9)
+```
+
+```{.txt}
+['z', 'z', 'z']
+[9, 9]
+```
+
+`N` is used as the size of `array[N, T]`, and an array size must be fixed, so `N` has to be known to
+the compiler. Since `N` does not appear in the value parameter list, both are written explicitly:
+`fill[char, 3]`. The result of `fill[char, 3]('z')` is an array of three characters. The size `N` is
+part of the result type, so `fill[int, 2](9)` produces `array[2, int]`, a different type from
+`fill[int, 3](9)`.
+
+## Exercises
+
+1. Write `proc largest[T](items: openArray[T]): T` that returns the largest value, then call it with
+   an `int` array and with a `string` sequence.
+2. Without running it, predict the output:
+   ```{.nim}
+   proc pair[T](value: T): (T, T) =
+     (value, value)
+
+   echo pair(3)
+   echo pair("a")
+   ```
+3. Why can `makeSeq(3)` not be compiled without `[int]`? Explain by pointing to where `T` appears.
+4. The code below fails to compile. Fix the constraint, then explain the message:
+   ```{.nim}
+   proc double[T: SomeInteger](value: T): T =
+     value * 2
+
+   echo double(2.5)
+   ```
+
+Answers are in [Appendix A](../appendix/answers.qmd).
+
+## Summary
+
+- Type parameters are written `[T]` after the name; the compiler makes one version per type used.
+- A constraint such as `T: SomeInteger` rejects mismatched types at the call site.
+- `[T]` is also used on `type`, not only on procedures.
+- `T` is inferred from arguments of type `T`; when there are none, write the type argument
+  explicitly.
+- `typedesc` takes a type as an argument, and `static` demands a value known at compile time.
+
+## Next
+
+The next chapter covers *templates*: code that the compiler copies into the call site, unlike a
+generic, which creates a new version of a procedure.
