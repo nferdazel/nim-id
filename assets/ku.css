@@ -1,26 +1,428 @@
-/* Styling kecil di atas tema Quarto. Jangan menambah framework. */
+/* Arah desain: DESIGN.md (editorial tenang, ENERGY 1 / RHYTHM 2 / MOTION 1).
+   Satu berkas CSS, tanpa framework, tanpa webfont. Disalin ke tiap buku saat build. */
 
-/* Blok output dibedakan dari blok kode: kode = putih, output = abu muda.
-   Warna sengaja tipis supaya tetap terbaca saat dicetak hitam-putih. */
+:root {
+  --kertas: #fcfbf7;
+  --tinta: #1a1c1f;
+  --tinta-lembut: #4a4e55;
+  --aksen: #1f3a5f;
+  --aksen-gelap: #16293f;
+  --garis: #ddd8cc;
+  --kode-bg: #f4f1ea;
+  --serif: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+  --sans: system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+
+  /* Variabel Bootstrap yang dipakai Quarto. */
+  --bs-body-bg: var(--kertas);
+  --bs-body-color: var(--tinta);
+  --bs-body-font-family: var(--serif);
+  --bs-body-font-size: 18px;
+  --bs-body-line-height: 1.65;
+  --bs-link-color: var(--aksen);
+  --bs-link-hover-color: var(--aksen-gelap);
+  --bs-border-color: var(--garis);
+  --bs-emphasis-color: var(--tinta);
+  --bs-secondary-color: var(--tinta-lembut);
+}
+
+body {
+  background-color: var(--kertas);
+  color: var(--tinta);
+  font-family: var(--serif);
+  font-size: 18px;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Lebar baca: 68 karakter. Tidak ada paragraf selebar layar. */
+#quarto-document-content,
+main.content {
+  max-width: 34rem;
+  margin-left: auto;
+  margin-right: auto;
+  padding-bottom: 4rem;
+}
+
+p,
+li {
+  max-width: 34rem;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.title {
+  font-family: var(--serif);
+  font-weight: 600;
+  letter-spacing: 0;
+  color: var(--tinta);
+}
+
+h1,
+.title {
+  font-size: 2rem;
+  line-height: 1.25;
+  padding-bottom: 0.6rem;
+  border-bottom: 1px solid var(--garis);
+}
+
+h2 {
+  font-size: 1.35rem;
+  margin-top: 2.4rem;
+  margin-bottom: 0.6rem;
+}
+
+h3 {
+  font-size: 1.1rem;
+  margin-top: 1.8rem;
+}
+
+/* Halaman depan: judul sudah tampil di title block, jadi heading isi tidak diulang.
+   Heading tetap ada di dokumen supaya bab ini tidak bernomor. */
+#title-block-header + section > h1 {
+  display: none;
+}
+
+/* Nomor bab di kepala bab: aksen tipis, bukan blok warna. Nomor yang sama di sidebar jangan
+   ikut jadi blok (itu sebabnya selektor dibatasi). */
+.quarto-title .chapter-number,
+#quarto-document-content > .quarto-title .chapter-number {
+  display: block;
+  font-family: var(--sans);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--aksen);
+  margin-bottom: 0.4rem;
+}
+
+a {
+  color: var(--aksen);
+  text-decoration-line: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 2px;
+  text-decoration-color: var(--garis);
+}
+
+a:hover {
+  text-decoration-color: var(--aksen);
+}
+
+a:focus-visible,
+button:focus-visible,
+summary:focus-visible,
+input:focus-visible {
+  outline: 2px solid var(--aksen);
+  outline-offset: 2px;
+}
+
+/* Sidebar: kertas, garis tipis, tanpa bayangan. */
+#quarto-sidebar,
+.sidebar.sidebar-navigation {
+  background-color: var(--kertas);
+  border-right: 1px solid var(--garis);
+  box-shadow: none;
+  font-family: var(--sans);
+  font-size: 0.9rem;
+}
+
+.sidebar-title,
+.sidebar-item-text,
+.sidebar-link {
+  font-family: var(--sans);
+}
+
+.sidebar-link {
+  color: var(--tinta-lembut);
+  text-decoration: none;
+  padding-top: 0.3rem;
+  padding-bottom: 0.3rem;
+}
+
+.sidebar-link:hover,
+.sidebar-link.active,
+.sidebar-item-text.sidebar-link.active {
+  color: var(--tinta);
+  background-color: transparent;
+  font-weight: 600;
+}
+
+.sidebar-item-text.sidebar-link.active {
+  border-left: 2px solid var(--aksen);
+  padding-left: 0.6rem;
+}
+
+#quarto-margin-sidebar {
+  border-left: 1px solid var(--garis);
+  padding-left: 1rem;
+}
+
+#TOC,
+nav[role="doc-toc"] {
+  font-family: var(--sans);
+  font-size: 0.85rem;
+}
+
+#TOC .toc-title,
+nav[role="doc-toc"] .toc-title {
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--tinta-lembut);
+}
+
+#TOC a,
+nav[role="doc-toc"] a {
+  color: var(--tinta-lembut);
+  text-decoration: none;
+}
+
+#TOC a:hover,
+nav[role="doc-toc"] a:hover {
+  color: var(--tinta);
+}
+
+/* Kode: latar kertas lebih gelap satu tingkat, sudut kecil, tanpa bayangan. */
+code {
+  font-family: var(--mono);
+  font-size: 0.86em;
+  color: var(--tinta);
+  background-color: var(--kode-bg);
+  padding: 0.1em 0.3em;
+  border-radius: 2px;
+}
+
+div.sourceCode {
+  margin: 1.1rem 0;
+  background-color: var(--kode-bg);
+  border-radius: 2px;
+}
+
+div.sourceCode pre {
+  background-color: transparent;
+  border: 0;
+  border-radius: 2px;
+  padding: 0.9rem 1rem;
+  font-size: 0.86rem;
+  line-height: 1.55;
+  overflow-x: auto;
+  margin: 0;
+}
+
+div.sourceCode pre code {
+  background: transparent;
+  padding: 0;
+  font-size: inherit;
+}
+
+/* Blok keluaran: bisa dibedakan tanpa warna mencolok, tetap terbaca saat dicetak. */
 pre.txt,
 pre.output {
-  background-color: rgba(0, 0, 0, 0.04);
-  border-left: 3px solid rgba(0, 0, 0, 0.18);
-  border-radius: 0 4px 4px 0;
-  color: inherit;
+  background-color: var(--kode-bg);
+  border-left: 2px solid var(--aksen);
+  border-radius: 0 2px 2px 0;
+  color: var(--tinta);
+  padding: 0.75rem 1rem;
+  font-size: 0.86rem;
+  line-height: 1.55;
+  overflow-x: auto;
 }
 
 pre.txt::before {
   content: "output";
   display: block;
   margin-bottom: 0.35rem;
-  font-size: 0.7rem;
+  font-family: var(--sans);
+  font-size: 0.68rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  opacity: 0.55;
+  color: var(--tinta-lembut);
 }
 
-/* Blok kode sedikit lebih lega dari default. */
-div.sourceCode {
-  margin: 1rem 0;
+/* Callout: garis kiri, latar transparan, tanpa ikon dekoratif. */
+/* Bootstrap memberi border 5px dan latar pada header; di sini keduanya diganti. */
+div.callout,
+div.callout.callout-style-default,
+div.callout.callout-style-simple {
+  border: 0;
+  border-left: 2px solid var(--aksen);
+  border-radius: 0;
+  background-color: transparent;
+  padding: 0.25rem 0 0.25rem 1rem;
+  margin: 1.5rem 0;
+}
+
+.callout .callout-icon-container {
+  display: none;
+}
+
+/* Bootstrap/Quarto memberi latar pada badan callout; di arah ini latar harus kertas. */
+.callout.callout-style-default > .callout-body,
+.callout.callout-style-default .callout-body,
+.callout .callout-body-container {
+  background-color: transparent !important;
+  border: 0 !important;
+}
+
+div.callout > .callout-header,
+div.callout.callout-style-default > .callout-header,
+div.callout-note.callout-style-default > .callout-header,
+div.callout-tip.callout-style-default > .callout-header,
+div.callout-warning.callout-style-default > .callout-header,
+div.callout-caution.callout-style-default > .callout-header {
+  background-color: transparent;
+}
+
+.callout-header {
+  border-bottom: 0;
+  padding: 0 0 0.35rem;
+  font-family: var(--sans);
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--aksen);
+}
+
+.callout-body,
+.callout-body-container {
+  padding: 0;
+  background-color: transparent;
+}
+
+.callout.callout-style-default > .callout-body,
+.callout.callout-style-default .callout-body-container {
+  background-color: transparent;
+}
+
+.callout-body p:last-child {
+  margin-bottom: 0;
+}
+
+/* Tabel: garis horizontal tipis, tanpa zebra. */
+table,
+.table {
+  border-top: 1px solid var(--tinta);
+  border-bottom: 1px solid var(--tinta);
+  font-size: 0.95rem;
+}
+
+table thead th,
+.table thead th {
+  border-bottom: 1px solid var(--tinta);
+  font-family: var(--sans);
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  text-align: left;
+}
+
+table td,
+table th,
+.table td,
+.table th {
+  border-top: 1px solid var(--garis);
+  padding: 0.5rem 0.75rem;
+}
+
+/* Navigasi halaman bawah: tenang, tanpa tombol berwarna. */
+.nav-page {
+  font-family: var(--sans);
+  font-size: 0.85rem;
+}
+
+.nav-page a {
+  color: var(--aksen);
+  text-decoration: none;
+}
+
+.page-footer,
+.nav-footer {
+  font-family: var(--sans);
+  font-size: 0.8rem;
+  color: var(--tinta-lembut);
+  border-top: 1px solid var(--garis);
+  background-color: var(--kertas);
+}
+
+blockquote {
+  border-left: 2px solid var(--garis);
+  padding-left: 1rem;
+  color: var(--tinta-lembut);
+  font-style: italic;
+}
+
+hr {
+  border-color: var(--garis);
+}
+
+/* Tidak ada dark mode: buku ini print-first, tema gelap memutus hubungan dengan PDF.
+   Alasan tertulis di DESIGN.md. */
+
+@media (max-width: 767.98px) {
+  body {
+    font-size: 17px;
+  }
+
+  html,
+  body {
+    overflow-x: hidden;
+  }
+
+  .quarto-container.page-columns,
+  #quarto-content,
+  #quarto-document-content,
+  main.content {
+    max-width: 100%;
+    width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+    margin-left: 0;
+    margin-right: 0;
+  }
+
+  #quarto-document-content,
+  main.content {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  p,
+  li,
+  pre,
+  table,
+  div.sourceCode,
+  .callout {
+    max-width: 100%;
+    min-width: 0;
+  }
+
+  p,
+  li {
+    max-width: 100%;
+  }
+
+  h1,
+  .title {
+    font-size: 1.65rem;
+  }
+
+  div.sourceCode pre,
+  pre.txt {
+    font-size: 0.82rem;
+  }
+
+  .sidebar-link,
+  .nav-link {
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+  }
 }
