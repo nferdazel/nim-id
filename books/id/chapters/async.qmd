@@ -1,0 +1,193 @@
+# `async`/`await` dan IO
+
+Program yang menunggu berkas atau jaringan menghabiskan sebagian besar waktunya untuk diam. Model
+`async`/`await` membuat program bisa mengerjakan hal lain selama menunggu, tanpa membuat utas baru.
+Nim menyediakan `std/asyncdispatch`. Bab ini memakai `Future`, `await`, dan `waitFor` untuk urutan
+yang keluarannya selalu sama.
+
+::: {.callout-note}
+## Tujuan bab
+
+Setelah bab ini, pembaca bisa menandai prosedur dengan `{.async.}`, memanggilnya dengan `await`,
+menjalankan beberapa tugas sekaligus dengan `all`, dan membaca error "Can only 'await' inside a proc
+marked as 'async'" saat salah menempatkan `await`.
+:::
+
+## Prosedur async dan `Future`
+
+Prosedur async tidak mengembalikan nilai secara langsung. Ia mengembalikan `Future`, wadah yang
+nanti berisi hasilnya. Simpan kode berikut sebagai `main.nim`, lalu jalankan `nim c -r main.nim`.
+
+```{.nim}
+import std/asyncdispatch
+
+proc greeting(name: string): Future[string] {.async.} =
+  return "hello, " & name
+
+proc main() {.async.} =
+  let message = await greeting("Nim")
+  echo message
+
+waitFor main()
+```
+
+```{.txt}
+hello, Nim
+```
+
+Perhatikan tiga hal. Pragma `{.async.}` mengubah prosedur sehingga `return` di dalamnya mengisi
+`Future`. Di dalam `main`, `await greeting("Nim")` menunggu sampai hasilnya siap lalu membuka
+nilainya. Di luar prosedur async, `waitFor` yang menjalankan mesin async sampai tugasnya selesai.
+
+`waitFor` memulai putaran peristiwa, yaitu mekanisme yang menggilir tugas-tugas yang sedang
+menunggu. Karena itu ia dipanggil sekali saja, di tingkat teratas program.
+
+`Future` adalah tipe generik. `Future[string]` berisi string, `Future[int]` berisi bilangan bulat.
+`waitFor` mengembalikan nilai yang sama dengan isi `Future` itu, jadi `let total = waitFor sum()`
+memberi `int` biasa, bukan wadah lagi.
+
+Kenapa tidak memakai utas saja? Utas mahal dan berbagi memori, sehingga butuh penguncian dan
+rawan balapan. Model async memakai satu utas dan menggilir tugas yang sedang menunggu. Seribu
+koneksi yang menunggu balasan tidak berarti seribu utas; yang ada hanya seribu `Future` kecil.
+
+## Menunggu berurutan
+
+Setiap `await` menunggu tugas itu selesai sebelum baris berikutnya berjalan.
+
+```{.nim}
+import std/asyncdispatch
+
+proc fetch(name: string, delayMs: int): Future[string] {.async.} =
+  await sleepAsync(delayMs)
+  return name & " ready"
+
+proc main() {.async.} =
+  let first = await fetch("alpha", 30)
+  echo first
+  let second = await fetch("beta", 10)
+  echo second
+
+waitFor main()
+```
+
+```{.txt}
+alpha ready
+beta ready
+```
+
+Kedua tugas selesai berurutan: `alpha` lebih dulu, baru `beta`, meskipun jeda `beta` lebih pendek.
+Ini yang perlu diperhatikan kalau program terasa lambat. Dua `await` berturut-turut menjumlahkan
+jedanya, tidak menumpuknya.
+
+Kalau urutannya memang harus seperti itu, tidak ada yang salah dengan pola ini. Yang salah adalah
+memakainya ketika dua tugas sebenarnya tidak saling bergantung.
+
+## Menumpuk tugas dengan `all`
+
+Untuk menjalankan beberapa tugas bersamaan, mulai semuanya lebih dulu, baru tunggu bersama.
+
+```{.nim}
+import std/asyncdispatch
+
+proc fetch(name: string, delayMs: int): Future[string] {.async.} =
+  await sleepAsync(delayMs)
+  return name & " ready"
+
+proc main() {.async.} =
+  let results = await all(fetch("alpha", 30), fetch("beta", 10))
+  for result in results:
+    echo result
+
+waitFor main()
+```
+
+```{.txt}
+alpha ready
+beta ready
+```
+
+`all` menerima beberapa `Future` dan mengembalikan satu `Future` berisi barisan hasil. Urutan
+hasilnya mengikuti urutan argumen, bukan urutan selesainya. Karena itu keluarannya tetap `alpha`
+lalu `beta`, meskipun `beta` selesai lebih dulu.
+
+Bedanya ada di waktu. Dua tugas berjeda 30 dan 10 milidetik selesai dalam sekitar 30 milidetik,
+bukan 40. Untuk dua tugas, bedanya kecil; untuk dua ratus permintaan jaringan, bedanya besar.
+
+Selama tugas-tugas itu tidak saling bergantung, menggabungkannya hampir selalu lebih cepat daripada
+menunggu satu per satu.
+
+Satu hal yang mudah salah: `sleep` biasa memblokir seluruh putaran peristiwa, sedangkan `sleepAsync`
+mengembalikan kendali ke mesin async. Di dalam prosedur `{.async.}`, pakai versi async dari setiap
+operasi yang menunggu. Kalau tidak, tugas-tugas itu berjalan berurutan lagi tanpa disadari.
+
+Kesalahan di dalam prosedur async muncul saat `Future`-nya di-`await`. Artinya `try` dan `except`
+dipasang di sekitar `await`, bukan di dalam prosedur yang melempar. Kalau beberapa tugas digabung
+dengan `all`, satu tugas yang gagal menggagalkan seluruh gabungan.
+
+## Error sengaja: `await` di luar prosedur async
+
+`await` hanya sah di dalam prosedur yang ditandai `{.async.}`.
+
+```{.nim}
+import std/asyncdispatch
+
+proc work(): Future[int] {.async.} =
+  return 42
+
+proc main(): int =
+  let value = await work()
+  value
+
+echo main()
+```
+
+```{.txt}
+main.nim(7, 25) Error: Can only 'await' inside a proc marked as 'async'. Use 'waitFor' when calling an 'async' proc in a non-async scope instead
+```
+
+Pesan itu punya dua bagian. Bagian pertama menyebut aturannya. Bagian kedua langsung memberi jalan
+keluar: pakai `waitFor` kalau pemanggilnya bukan prosedur async. `(7, 25)` menunjuk baris dan kolom
+tempat `await` berada.
+
+Ada dua perbaikan yang wajar. Ubah `main` menjadi prosedur async lalu panggil dengan `waitFor`,
+atau biarkan `main` sinkron dan panggil `waitFor work()` di dalamnya.
+
+Ada juga `asyncCheck` untuk memulai tugas tanpa menunggunya. Hati-hati memakainya: kalau tugas itu
+gagal dan tidak ada yang menunggu hasilnya, kesalahannya tidak dilihat siapa pun. Pakai `await`
+selama hasil atau kesalahannya memang penting.
+
+## Latihan
+
+1. Ubah contoh berurutan supaya dua tugas berjalan bersamaan. Jelaskan perbedaan waktunya.
+2. Tanpa menjalankan, prediksi keluarannya:
+   ```{.nim}
+   import std/asyncdispatch
+
+   proc tag(name: string): Future[string] {.async.} =
+     return "tag:" & name
+
+   proc main() {.async.} =
+     echo await tag("a")
+     echo await tag("b")
+
+   waitFor main()
+   ```
+3. Tulis prosedur async yang menerima dua `Future[int]`, menjumlahkan hasilnya, lalu panggil dengan
+   `waitFor`.
+4. Perbaiki kode yang memakai `await` di dalam prosedur biasa, tanpa mengubah maksudnya.
+
+Jawaban ada di [Lampiran A](../appendix/answers.qmd).
+
+## Ringkasan
+
+- Prosedur `{.async.}` mengembalikan `Future`; `await` membuka hasilnya.
+- `waitFor` menjalankan mesin async dari kode sinkron dan dipanggil sekali di tingkat teratas.
+- `await` berurutan menjumlahkan jeda; `all` menumpuknya sambil menjaga urutan argumen.
+- Keluaran contoh dijaga pasti dengan mengandalkan urutan `await`, bukan waktu.
+- `await` di luar prosedur async ditolak saat kompilasi.
+
+## Selanjutnya
+
+Bab berikutnya menghubungkan Nim dengan kode C yang sudah ada: mengompilasi berkas C bersama
+program, mendeklarasikan fungsi dengan `{.importc.}`, dan memakai tipe C dengan benar. Lanjut ke
+[FFI ke C](ffi-c.qmd).

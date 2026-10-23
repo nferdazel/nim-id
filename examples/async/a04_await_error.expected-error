@@ -1,0 +1,1 @@
+Can only 'await' inside a proc marked as 'async'

@@ -1,0 +1,194 @@
+# `async`/`await` and IO
+
+A program waiting on a file or the network spends most of its time doing nothing. The
+`async`/`await` model lets it work on something else while it waits, without spawning threads. Nim
+provides `std/asyncdispatch`. This chapter uses `Future`, `await`, and `waitFor` for sequences whose
+output is always the same.
+
+::: {.callout-note}
+## What you will be able to do
+
+After this chapter you can mark a procedure with `{.async.}`, call it with `await`, run several
+tasks at once with `all`, and read the error "Can only 'await' inside a proc marked as 'async'" when
+`await` lands in the wrong place.
+:::
+
+## Async procedures and `Future`
+
+An async procedure does not return a value directly. It returns a `Future`, a container that will
+hold the result later. Save the following as `main.nim`, then run `nim c -r main.nim`.
+
+```{.nim}
+import std/asyncdispatch
+
+proc greeting(name: string): Future[string] {.async.} =
+  return "hello, " & name
+
+proc main() {.async.} =
+  let message = await greeting("Nim")
+  echo message
+
+waitFor main()
+```
+
+```{.txt}
+hello, Nim
+```
+
+Notice three things. The `{.async.}` pragma rewrites the procedure so that `return` inside it fills a
+`Future`. Inside `main`, `await greeting("Nim")` waits until the result is ready, then unwraps it.
+Outside an async procedure, `waitFor` drives the async machinery until the task finishes.
+
+`waitFor` starts the event loop, the mechanism that cycles through tasks that are waiting. That is
+why it is called once, at the top level of the program.
+
+`Future` is a generic type. `Future[string]` holds a string, `Future[int]` holds an integer.
+`waitFor` returns the same value as the contents of that `Future`, so `let total = waitFor sum()`
+gives you a plain `int`, not another container.
+
+Why not just use threads? Threads are expensive and share memory, so they need locking and invite
+races. The async model uses one thread and cycles through tasks that are waiting. A thousand
+connections waiting for a reply do not mean a thousand threads; there are just a thousand small
+`Future` values.
+
+## Waiting in sequence
+
+Each `await` waits for that task to finish before the next line runs.
+
+```{.nim}
+import std/asyncdispatch
+
+proc fetch(name: string, delayMs: int): Future[string] {.async.} =
+  await sleepAsync(delayMs)
+  return name & " ready"
+
+proc main() {.async.} =
+  let first = await fetch("alpha", 30)
+  echo first
+  let second = await fetch("beta", 10)
+  echo second
+
+waitFor main()
+```
+
+```{.txt}
+alpha ready
+beta ready
+```
+
+Both tasks finish in order: `alpha` first, then `beta`, even though `beta` has the shorter delay.
+This is what to watch when the program feels slow. Two `await` calls in a row add their delays, they
+do not overlap them.
+
+When the order really must be sequential, there is nothing wrong with this pattern. What is wrong is
+reaching for it when the two tasks do not actually depend on each other.
+
+## Stacking tasks with `all`
+
+To run several tasks together, start them all first, then wait for them together.
+
+```{.nim}
+import std/asyncdispatch
+
+proc fetch(name: string, delayMs: int): Future[string] {.async.} =
+  await sleepAsync(delayMs)
+  return name & " ready"
+
+proc main() {.async.} =
+  let results = await all(fetch("alpha", 30), fetch("beta", 10))
+  for result in results:
+    echo result
+
+waitFor main()
+```
+
+```{.txt}
+alpha ready
+beta ready
+```
+
+`all` takes several `Future` values and returns one `Future` holding a sequence of results. The
+order of the results follows the order of the arguments, not the order in which they finished. So
+the output is still `alpha` then `beta`, even though `beta` finished first.
+
+The difference shows up in time. Two tasks with 30 and 10 millisecond delays finish in about 30
+milliseconds, not 40. For two tasks the gap is small; for two hundred network requests it is large.
+
+As long as the tasks do not depend on each other, grouping them is almost always faster than waiting
+for them one at a time.
+
+One easy mistake: plain `sleep` blocks the entire event loop, whereas `sleepAsync` hands control back
+to the async machinery. Inside an `{.async.}` procedure, use the async version of every waiting
+operation. Otherwise the tasks run in sequence again without you noticing.
+
+An error inside an async procedure surfaces when its `Future` is awaited. That means `try` and
+`except` go around the `await`, not inside the procedure that raises. When several tasks are combined
+with `all`, one failing task fails the whole combination.
+
+## Deliberate error: `await` outside an async procedure
+
+`await` is legal only inside a procedure marked `{.async.}`.
+
+```{.nim}
+import std/asyncdispatch
+
+proc work(): Future[int] {.async.} =
+  return 42
+
+proc main(): int =
+  let value = await work()
+  value
+
+echo main()
+```
+
+```{.txt}
+main.nim(7, 25) Error: Can only 'await' inside a proc marked as 'async'. Use 'waitFor' when calling an 'async' proc in a non-async scope instead
+```
+
+The message has two parts. The first states the rule. The second hands you the way out: use
+`waitFor` when the caller is not an async procedure. `(7, 25)` points at the line and column where
+`await` sits.
+
+There are two reasonable fixes. Turn `main` into an async procedure and call it with `waitFor`, or
+leave `main` synchronous and call `waitFor work()` inside it.
+
+There is also `asyncCheck` for starting a task without waiting for it. Be careful with it: if that
+task fails and nothing waits for the result, the error is seen by nobody. Use `await` while the
+result or the error actually matters.
+
+## Exercises
+
+1. Change the sequential example so the two tasks run together. Explain the difference in time.
+2. Without running it, predict the output:
+   ```{.nim}
+   import std/asyncdispatch
+
+   proc tag(name: string): Future[string] {.async.} =
+     return "tag:" & name
+
+   proc main() {.async.} =
+     echo await tag("a")
+     echo await tag("b")
+
+   waitFor main()
+   ```
+3. Write an async procedure that takes two `Future[int]` values, adds their results, then call it
+   with `waitFor`.
+4. Fix code that uses `await` inside an ordinary procedure, without changing what it is meant to do.
+
+Answers are in [Appendix A](../appendix/answers.qmd).
+
+## Summary
+
+- An `{.async.}` procedure returns a `Future`; `await` unwraps its result.
+- `waitFor` drives the async machinery from synchronous code and is called once at the top level.
+- Sequential `await` adds delays; `all` overlaps them and keeps argument order.
+- The examples keep their output fixed by relying on `await` order, not on time.
+- `await` outside an async procedure is rejected at compile time.
+
+## Next
+
+The next chapter connects Nim to existing C code: compiling a C file together with the program,
+declaring functions with `{.importc.}`, and using C types correctly. Continue to
+[FFI to C](ffi-c.qmd).
