@@ -70,10 +70,10 @@ green
 ```
 
 Dua baris terakhir mencetak hal yang sama, karena `echo` memakai `$` yang sama. Kalau nilainya
-literal, rentangnya diperiksa saat kompilasi: `Color(9)` ditolak dengan
+literal, rentangnya diperiksa saat *compile*: `Color(9)` ditolak dengan
 `9 can't be converted to Color`.
 
-## Set: himpunan nilai
+## Set: *set* nilai
 
 `set[Color]` menyimpan sekumpulan anggota. Literalnya memakai `{}`.
 
@@ -89,7 +89,7 @@ echo palette
 {red, blue}
 ```
 
-Himpunan kosong ditulis `{}`, dan tipe dasarnya harus ditulis di anotasi. Tanpa itu compiler
+*Set* kosong ditulis `{}`, dan tipe dasarnya harus ditulis di anotasi. Tanpa itu compiler
 menolak dengan `cannot infer the type of the set`, karena `{}` bisa berarti set tipe apa pun.
 
 ## `incl` dan `excl`: menambah dan membuang
@@ -154,7 +154,7 @@ blue
 Perhatikan bahwa `blue` muncul setelah `red`, walaupun urutan penulisan literalnya bisa berbeda.
 Urutannya ditentukan enum, bukan oleh set.
 
-## Operasi himpunan
+## Operasi *set*
 
 Set mendukung gabungan, irisan, dan selisih dengan operator biasa.
 
@@ -173,7 +173,7 @@ echo warm * cool
 {}
 ```
 
-`warm + cool` adalah gabungan. Karena kedua himpunan tidak beririsan, `warm * cool` kosong. `card`
+`warm + cool` adalah gabungan. Karena kedua *set* tidak beririsan, `warm * cool` kosong. `card`
 memberi jumlah anggota, misalnya `card({red, green})` bernilai `2`.
 
 ## *Bitset* untuk tipe dasar
@@ -199,8 +199,9 @@ Kita membaca teks karakter demi karakter, dan set menyimpan mana yang sudah munc
 4 karena `hello` hanya memuat empat huruf berbeda.
 
 Dasar set harus ordinal dengan paling banyak 2^16 nilai. `set[int]` melewati batas itu, dan
-compiler menolaknya: `set is too large; use std/sets for ordinal types with more than 2^16
-elements`. Untuk himpunan besar, pakai `std/sets`.
+compiler menolaknya:
+`set is too large; use std/sets for ordinal types with more than 2^16 elements`. Untuk *set*
+besar, pakai `std/sets`.
 
 ## Membaca error: integer bukan enum
 
@@ -249,12 +250,12 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
 - `enum` memberi nama pada nilai berurutan; `ord` mengambil posisinya, dimulai dari 0.
 - `Color(...)` mengubah integer menjadi enum secara eksplisit; literal di luar rentang ditolak.
-- `set[Color]` menyimpan himpunan anggota, ditulis `{red, blue}`; himpunan kosong `{}` butuh
+- `set[Color]` menyimpan *set* anggota, ditulis `{red, blue}`; *set* kosong `{}` butuh
   anotasi tipe.
 - `incl`, `excl`, `in`, `+`, `*`, `-`, dan `card` mengolah set; iterasi mengikuti urutan ordinal.
 - Set juga bekerja untuk tipe ordinal lain seperti `char`, sampai 2^16 nilai.
 
 ## Selanjutnya
 
-Bab berikutnya membuka bagian menengah: modul dan `import`, cara memecah kode ke beberapa berkas
+Bab berikutnya membuka bagian menengah: modul dan `import`, cara memecah kode ke beberapa *file*
 yang bisa dipakai ulang.

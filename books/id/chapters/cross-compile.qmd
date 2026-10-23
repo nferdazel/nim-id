@@ -1,6 +1,6 @@
 # Cross-compile dan deploy biner
 
-Biner yang dihasilkan di laptop tidak otomatis berjalan di mesin lain. Format berkas yang bisa
+Biner yang dihasilkan di laptop tidak otomatis berjalan di mesin lain. Format *file* yang bisa
 dijalankan berbeda antara sistem operasi, dan instruksi prosesornya pun berbeda. Nim bisa
 mengarahkan hasilnya ke sistem lain, tetapi tidak dengan satu saklar ajaib: hasilnya hanya sebaik
 toolchain C yang tersedia di mesin pengembang.
@@ -91,8 +91,8 @@ pola yang dipakai banyak program: satu biner, beberapa konfigurasi, tanpa menyen
 
 ## `-d:release`, `--opt:speed`, dan `-d:danger`
 
-Kode yang sama, hasil yang berbeda. Berkas contoh di repositori buku ini menyimpan saklar
-kompilasinya di berkas `.mode`, sehingga pemeriksaan otomatis memakai cara yang sama dengan yang
+Kode yang sama, hasil yang berbeda. *File* contoh di repositori buku ini menyimpan saklar
+*hasil compile-nya* di *file* `.mode`, sehingga pemeriksaan otomatis memakai cara yang sama dengan yang
 ditulis di sini.
 
 ```{.nim}
@@ -134,20 +134,20 @@ release is implied by danger
 ```
 
 Hasil itu dijalankan dengan `nim c -r -d:danger`, dan dua hal terbaca sekaligus. `danger` memang
-menyala, dan ia membawa serta `release`. Konsekuensinya nyata: rentang larik yang lewat batas tidak
+menyala, dan ia membawa serta `release`. Konsekuensinya nyata: rentang *array* yang lewat batas tidak
 lagi dilaporkan sebagai defect, melainkan membaca memori di luar datanya. `-d:danger` hanya untuk
 biner yang sudah terbukti benar, bukan untuk tahap menulis kode.
 
 ## Biner statis
 
-Biner yang dikompilasi di satu distribusi kadang menolak berjalan di distribusi lain karena versi
-pustaka C-nya berbeda. Penaut bisa diminta memasukkan seluruh pustaka ke dalam biner:
+Biner yang *di-compile* di satu distribusi kadang menolak berjalan di distribusi lain karena versi
+*library* C-nya berbeda. Penaut bisa diminta memasukkan seluruh *library* ke dalam biner:
 
 ```bash
 nim c -d:release --passL:-static --out:app app.nim
 ```
 
-Hasilnya biner statis: tidak mencari pustaka C saat dijalankan, jadi lebih aman dipindahkan.
+Hasilnya biner statis: tidak mencari *library* C saat dijalankan, jadi lebih aman dipindahkan.
 Saklar ini untuk target Linux. Penaut macOS tidak mengenalnya, dan percobaan di Nim 2.2.12 berhenti
 dengan `ld: library 'crt0.o' not found`.
 
@@ -163,7 +163,7 @@ pesannya datang dari compiler C, bukan dari Nim.
 
 ## Error sengaja: `when` butuh nilai compile-time
 
-`when` berbeda dari `if`. Cabangnya dipilih saat kompilasi, jadi syaratnya harus bisa dihitung saat
+`when` berbeda dari `if`. Cabangnya dipilih saat *compile*, jadi syaratnya harus bisa dihitung saat
 itu juga.
 
 ```{.nim}
@@ -183,7 +183,7 @@ main.nim(6, 6) Error: cannot evaluate at compile time: requested
 Pesannya menunjuk baris 6 kolom 6, tepat di awal nama `requested`, lalu menjelaskan sebabnya:
 nilainya baru diketahui saat program berjalan. `paramStr(0)` membaca argumen dari sistem operasi,
 dan itu terjadi setelah biner berjalan. Perbaikannya mengganti `when` dengan `if`, atau memindahkan
-syaratnya ke `const` yang bisa dihitung saat kompilasi.
+syaratnya ke `const` yang bisa dihitung saat *compile*.
 
 ## Keterbatasan: toolchain C untuk target
 
@@ -195,14 +195,15 @@ compiler C, dan ia harus tersedia untuk target itu.
 nim c -d:mingw --os:windows --cpu:amd64 --out:app.exe app.nim
 ```
 
-Tanpa toolchain tersebut, build berhenti di compiler C dengan `fatal error: 'windows.h' file not
-found`. Di Linux, *package* MinGW menyediakan `x86_64-w64-mingw32-gcc`, dan Nim sudah menyiapkan
-pemetaannya di `config/nim.cfg` pada bagian `@if unix and mingw`.
+Tanpa toolchain tersebut, build berhenti di compiler C dengan
+`fatal error: 'windows.h' file not found`. Di Linux, *package* MinGW menyediakan
+`x86_64-w64-mingw32-gcc`, dan Nim sudah menyiapkan pemetaannya di `config/nim.cfg` pada bagian
+`@if unix and mingw`.
 
-Perilaku yang lebih halus: mengubah `--os` saja tidak selalu gagal. Di macOS, `--os:linux --
-cpu:amd64` berjalan sampai selesai dan meninggalkan berkas Mach-O, bukan ELF. Nim percaya dirinya
+Perilaku yang lebih halus: mengubah `--os` saja tidak selalu gagal. Di macOS,
+`--os:linux --cpu:amd64` berjalan sampai selesai dan meninggalkan *file* Mach-O, bukan ELF. Nim percaya dirinya
 membuat biner Linux, sementara compiler C tetap menghasilkan biner host. Biner seperti itu tidak
-berguna; kesalahan barunya muncul jauh kemudian, saat dijalankan di mesin tujuan.
+berguna; *error* barunya muncul jauh kemudian, saat dijalankan di mesin tujuan.
 
 ## Perintah per target
 
@@ -231,11 +232,11 @@ nimble build --os:windows --cpu:amd64 -d:release
 
 1. Sebutkan nilai `--os` dan `--cpu` untuk mesin tempat pembaca menulis kode, lalu bandingkan dengan
    keluaran contoh pertama.
-2. Tanpa menjalankan, prediksi keluarannya kalau contoh kedua dikompilasi dengan
+2. Tanpa menjalankan, prediksi keluarannya kalau contoh kedua *di-compile* dengan
    `-d:release -d:workers=8`.
 3. Tulis program yang mencetak `"windows target"` atau `"unix target"` memakai `when defined`, lalu
    sebutkan apa yang terjadi pada cabang yang tidak dipilih.
-4. Kode berikut gagal dikompilasi. Perbaiki, lalu jelaskan pesannya:
+4. Kode berikut gagal *di-compile*. Perbaiki, lalu jelaskan pesannya:
    `let mode = paramStr(1)` diikuti `when mode == "--debug": echo "debug"`.
 5. Sebutkan dua hal yang harus tersedia sebelum cross-compile ke Windows benar-benar menghasilkan
    biner, dan apa yang terjadi kalau salah satunya tidak ada.

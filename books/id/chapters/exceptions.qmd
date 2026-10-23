@@ -1,20 +1,20 @@
-# Pengecualian dan efek `raises`
+# *Exception* dan efek `raises`
 
-Operasi bisa gagal di tengah jalan: berkas tidak ada, isi berkas bukan angka, jaringan putus.
-Membiarkan program berhenti mendadak bukan pilihan. Nim memakai pengecualian, dan menambahkan satu hal
-yang jarang dimiliki bahasa lain: compiler melacak pengecualian apa saja yang mungkin dilempar sebuah
-prosedur.
+Operasi bisa gagal di tengah jalan: *file* tidak ada, isi *file* bukan angka, jaringan putus.
+Membiarkan program berhenti mendadak bukan pilihan. Nim memakai *exception*, dan menambahkan satu hal
+yang jarang dimiliki bahasa lain: compiler melacak *exception* apa saja yang mungkin dilempar sebuah
+*procedure*.
 
 ::: {.callout-note}
 ## Tujuan bab
 
-Setelah bab ini, pembaca bisa menangkap dan melempar pengecualian, membuat tipe pengecualian sendiri,
-menandai prosedur dengan `raises`, serta membaca pesan error `can raise an unlisted exception`.
+Setelah bab ini, pembaca bisa menangkap dan melempar *exception*, membuat tipe *exception* sendiri,
+menandai *procedure* dengan `raises`, serta membaca pesan error `can raise an unlisted exception`.
 :::
 
 ## `try`, `except`, dan `raise`
 
-`raise` melempar pengecualian. `try` menangkapnya, sehingga program bisa melanjutkan dengan jalur lain.
+`raise` melempar *exception*. `try` menangkapnya, sehingga program bisa melanjutkan dengan jalur lain.
 
 ```{.nim}
 try:
@@ -27,8 +27,8 @@ except ValueError as e:
 caught: bad input
 ```
 
-`newException` membuat nilai pengecualian dari sebuah tipe dan sebuah pesan. Kata kunci `as e` mengikat
-pengecualian yang tertangkap ke nama `e`, dan `e.msg` adalah pesannya. Tanpa `try`, pengecualian yang
+`newException` membuat nilai *exception* dari sebuah tipe dan sebuah pesan. Kata kunci `as e` mengikat
+*exception* yang tertangkap ke nama `e`, dan `e.msg` adalah pesannya. Tanpa `try`, *exception* yang
 naik sampai puncak akan menghentikan program dengan *stack trace*.
 
 ## Beberapa `except` dan `finally`
@@ -66,12 +66,12 @@ none: done
 
 Dua hal penting di sini. Urutan `except` menentukan hasil: `ValueError` ditangkap lebih dulu, sisanya
 jatuh ke `CatchableError`, tipe induk yang lebih longgar. `finally` selalu jalan, baik blok `try`
-sukses, gagal, maupun dilewati pengecualian yang tidak tertangkap. Di situ tempat yang tepat untuk
+sukses, gagal, maupun dilewati *exception* yang tidak tertangkap. Di situ tempat yang tepat untuk
 membersihkan sumber daya.
 
-## Tipe pengecualian sendiri
+## Tipe *exception* sendiri
 
-Pengecualian adalah objek yang saling mewarisi. Semua bertumpu pada `Exception`. Dua cabang besarnya
+*Exception* adalah *object* yang saling mewarisi. Semua bertumpu pada `Exception`. Dua cabang besarnya
 `CatchableError` dan `Defect`. Tipe buatan sendiri diturunkan dari `CatchableError`.
 
 ```{.nim}
@@ -91,13 +91,13 @@ except NegativeAge as e:
 caught: age cannot be negative
 ```
 
-`Defect` dipakai untuk kesalahan program seperti indeks di luar batas, dan sengaja tidak ikut
-ditangkap oleh `except CatchableError`. Jadi `except CatchableError` menangkap semua kesalahan yang
-wajar dipulihkan, bukan kesalahan yang menandakan logika program keliru.
+`Defect` dipakai untuk *error* program seperti indeks di luar batas, dan sengaja tidak ikut
+ditangkap oleh `except CatchableError`. Jadi `except CatchableError` menangkap semua *error* yang
+wajar dipulihkan, bukan *error* yang menandakan logika program keliru.
 
 ## `raise` dengan konteks yang lebih berguna
 
-Pengecualian sering naik dari lapisan bawah, lalu perlu diberi keterangan sebelum diteruskan.
+*Exception* sering naik dari lapisan bawah, lalu perlu diberi keterangan sebelum diteruskan.
 
 ```{.nim}
 import std/strutils
@@ -123,12 +123,12 @@ error: not a number: abc
 `parseAge` menangkap `ValueError` dari `parseInt`, lalu melempar yang baru dengan pesan yang lebih
 jelas. Perhatikan bahwa `parseInt("abc")` sendiri sudah melempar, jadi hasilnya `42` dicetak lebih
 dulu, baru baris kedua berhenti dan tertangkap. `raise` tanpa nilai di dalam `except` melempar ulang
-pengecualian yang sedang ditangani.
+*exception* yang sedang ditangani.
 
 ## Efek `raises`: siapa boleh melempar
 
-Nim melacak pengecualian yang mungkin keluar dari sebuah prosedur. Ini disebut efek `raises`, dan
-compiler memeriksanya seperti tipe biasa. Prosedur dengan `raises: []` berjanji tidak melempar
+Nim melacak *exception* yang mungkin keluar dari sebuah *procedure*. Ini disebut efek `raises`, dan
+compiler memeriksanya seperti tipe biasa. *Procedure* dengan `raises: []` berjanji tidak melempar
 `CatchableError`. `Defect` tidak dilacak efek ini, jadi `raises: []` bukan jaminan program tidak
 akan berhenti karena indeks di luar batas atau pembagian dengan nol.
 
@@ -175,7 +175,7 @@ except ValueError as e:
 error: failed
 ```
 
-Pemeriksaan ini berjalan saat kompilasi. Saklar lama `--effect:off` yang mematikannya sudah tidak
+Pemeriksaan ini berjalan saat *compile*. Saklar lama `--effect:off` yang mematikannya sudah tidak
 ada di Nim 2.2.12.
 
 ```{.txt}
@@ -223,7 +223,7 @@ blok `finally`. Untuk satu atau dua baris pembersihan, bentuk ini lebih mudah di
      echo "done"
    ```
 3. Buat `type TooLarge = object of CatchableError` dan lempar saat sebuah `int` melebihi 100.
-4. Kode berikut gagal dikompilasi. Jelaskan pesannya, lalu perbaiki:
+4. Kode berikut gagal *di-compile*. Jelaskan pesannya, lalu perbaiki:
    ```{.nim}
    proc readValue(): int =
      raise newException(ValueError, "missing")
@@ -240,11 +240,11 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
 - `raise` melempar, `try` menangkap, `as e` memberi akses pesan lewat `e.msg`.
 - Beberapa `except` dicek berurutan; `finally` selalu jalan.
-- Pengecualian saling mewarisi; buat tipe sendiri dari `CatchableError`, bukan `Defect`.
-- Efek `raises` memeriksa saat kompilasi; `raises: []` berarti tidak ada `CatchableError`.
+- *Exception* saling mewarisi; buat tipe sendiri dari `CatchableError`, bukan `Defect`.
+- Efek `raises` memeriksa saat *compile*; `raises: []` berarti tidak ada `CatchableError`.
 - `defer` menjalankan pembersihan di akhir blok, apa pun yang terjadi.
 
 ## Selanjutnya
 
 Bab berikutnya membahas [iterator](iterators.qmd): cara menghasilkan nilai satu per satu, dan kapan
-iterator lebih hemat daripada barisan.
+iterator lebih hemat daripada *seq*.

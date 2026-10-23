@@ -1,24 +1,24 @@
 # Closure dan variabel yang ditangkap
 
-Prosedur di Nim adalah nilai. Ia bisa disimpan dalam variabel, dioper sebagai argumen, dan
-dikembalikan dari prosedur lain. Saat sebuah prosedur mengingat variabel dari tempat ia dibuat, ia
+*Procedure* di Nim adalah nilai. Ia bisa disimpan dalam variabel, dioper sebagai argumen, dan
+dikembalikan dari *procedure* lain. Saat sebuah *procedure* mengingat variabel dari tempat ia dibuat, ia
 menjadi *closure*.
 
 Yang mudah disalahpahami bukan sintaksnya, tapi isi ingatan itu. Perubahan pada variabel yang
 ditangkap kadang terlihat, kadang tidak, tergantung apakah variabelnya `var` atau `let`. Di dalam
-perulangan, satu pilihan kecil membuat semua closure menunjuk variabel yang sama.
+*loop*, satu pilihan kecil membuat semua closure menunjuk variabel yang sama.
 
 ::: {.callout-note}
 ## Tujuan bab
 
-Setelah bab ini, pembaca bisa menyimpan prosedur dalam variabel bertipe `proc`, menulis closure
+Setelah bab ini, pembaca bisa menyimpan *procedure* dalam variabel bertipe `proc`, menulis closure
 yang menangkap variabel, menjelaskan kapan capture menunjuk dan kapan menyalin, dan mengenali
-jebakan closure di dalam perulangan.
+jebakan closure di dalam *loop*.
 :::
 
-## Prosedur sebagai nilai
+## *Procedure* sebagai nilai
 
-Prosedur bernama bisa disimpan dalam variabel. Tipe variabelnya ditulis dengan kata kunci `proc`.
+*Procedure* bernama bisa disimpan dalam variabel. Tipe variabelnya ditulis dengan kata kunci `proc`.
 
 ```{.nim}
 proc add(a, b: int): int =
@@ -37,11 +37,11 @@ echo op(10, 20)
 ```
 
 `op` bertipe `proc(a, b: int): int`. Isi tanda kurung adalah daftar parameter, dan setelah titik dua
-adalah tipe nilai balik. Memanggil `op(2, 3)` sama saja dengan memanggil `add(2, 3)`.
+adalah tipe **return value**. Memanggil `op(2, 3)` sama saja dengan memanggil `add(2, 3)`.
 
-## Meneruskan prosedur sebagai argumen
+## Meneruskan *procedure* sebagai argumen
 
-Tipe `proc` juga boleh menjadi tipe parameter, sehingga prosedur bisa dioper ke prosedur lain.
+Tipe `proc` juga boleh menjadi tipe parameter, sehingga *procedure* bisa dioper ke *procedure* lain.
 
 ```{.nim}
 proc apply(f: proc(x: int): int, value: int): int =
@@ -59,14 +59,14 @@ echo apply(proc(x: int): int = x + 1, 10)
 11
 ```
 
-Pemanggilan pertama mengoper prosedur bernama `twice`. Pemanggilan kedua menulis prosedurnya
-langsung di posisi argumen, `proc(x: int): int = x + 1`. Bentuk ini disebut prosedur anonim
+Pemanggilan pertama mengoper *procedure* bernama `twice`. Pemanggilan kedua menulis *procedure itu*
+langsung di posisi argumen, `proc(x: int): int = x + 1`. Bentuk ini disebut *procedure* anonim
 (*anonymous proc*), dan hasilnya bertipe sama dengan `twice`.
 
-## Closure: prosedur yang mengingat
+## Closure: *procedure* yang mengingat
 
-Prosedur anonim boleh memakai variabel dari prosedur induknya. Nim menyimpan variabel itu bersama
-prosedurnya, dan pasangan inilah yang disebut *closure*.
+*Procedure* anonim boleh memakai variabel dari *procedure* induknya. Nim menyimpan variabel itu bersama
+*procedure itu*, dan pasangan inilah yang disebut *closure*.
 
 ```{.nim}
 proc makeCounter(): proc(): int =
@@ -87,7 +87,7 @@ echo c()
 3
 ```
 
-`makeCounter` mengembalikan sebuah prosedur, dan `count` ikut di dalamnya. Setiap panggilan `c()`
+`makeCounter` mengembalikan sebuah *procedure*, dan `count` ikut di dalamnya. Setiap panggilan `c()`
 menambah `count` yang sama. Kalau `makeCounter` dipanggil dua kali, kita mendapat dua `count`
 terpisah, masing-masing mulai dari nol.
 
@@ -165,12 +165,12 @@ demo()
 `99` sebelum kedua closure dipanggil, sedangkan `frozen` tidak pernah diisi ulang, jadi `readLet`
 tetap melihat `1`.
 
-Ini penting untuk `let` yang berisi `ref`: variabelnya tetap, tetapi objek yang ditunjuk masih bisa
+Ini penting untuk `let` yang berisi `ref`: variabelnya tetap, tetapi *object* yang ditunjuk masih bisa
 berubah, dan closure melihat perubahan itu.
 
-## Closure di dalam perulangan
+## Closure di dalam *loop*
 
-Jebakan yang paling sering muncul ada di perulangan.
+Jebakan yang paling sering muncul ada di *loop*.
 
 ```{.nim}
 var fns: seq[proc(): int]
@@ -189,10 +189,10 @@ for f in fns:
 
 Yang mungkin diharapkan adalah `0`, `1`, `2`. Yang tercetak tiga kali `2`. Sebabnya, `i` adalah
 satu variabel yang dipakai ulang tiap putaran, dan ketiga closure menunjuk variabel yang sama. Saat
-perulangan selesai, `i` bernilai `2`.
+*loop* selesai, `i` bernilai `2`.
 
-Membuat salinan di dalam badan perulangan tidak menolong, karena Nim tetap memakai satu slot untuk
-variabel putaran. Perbaikannya: buat closure lewat prosedur terpisah, sehingga tiap pemanggilan
+Membuat salinan di dalam badan *loop* tidak menolong, karena Nim tetap memakai satu slot untuk
+variabel putaran. Perbaikannya: buat closure lewat *procedure* terpisah, sehingga tiap pemanggilan
 punya parameter sendiri.
 
 ```{.nim}
@@ -218,7 +218,7 @@ milik pemanggilan itu, bukan satu variabel bersama.
 
 ## Membaca pesan error: calling convention
 
-Nim membedakan prosedur biasa dan closure. Prosedur biasa memakai konvensi *nimcall*, sedangkan
+Nim membedakan *procedure* biasa dan closure. *Procedure* biasa memakai konvensi *nimcall*, sedangkan
 closure memakai *closure* karena ia membawa lingkungannya. Menyamakan keduanya ditolak compiler.
 
 ```{.nim}
@@ -248,11 +248,11 @@ Expected one of (first mismatch at [position]):
 Baca dari bawah. Baris terakhir menyebut masalahnya: `g` bertipe closure, sedangkan `IntFn`
 menuntut `{.nimcall.}`. `g` menjadi closure karena menangkap `base`. Ada dua perbaikan: hapus
 `{.nimcall.}` dari `IntFn`, atau jangan menangkap apa pun di `g`. Tanpa `base`, `g` menjadi
-prosedur biasa dan muat di `IntFn`.
+*procedure* biasa dan muat di `IntFn`.
 
 ## Latihan
 
-1. Tulis `proc compose(f, g: proc(x: int): int): proc(x: int): int` yang mengembalikan prosedur
+1. Tulis `proc compose(f, g: proc(x: int): int): proc(x: int): int` yang mengembalikan *procedure*
    `g(f(x))`, lalu panggil hasilnya dengan satu nilai.
 2. Tanpa menjalankan, prediksi keluarannya:
    ```{.nim}
@@ -263,9 +263,9 @@ prosedur biasa dan muat di `IntFn`.
    add(4)
    echo total
    ```
-3. Kenapa tiga closure pada contoh perulangan di atas mencetak `2` semuanya? Sebutkan satu cara
+3. Kenapa tiga closure pada contoh *loop* di atas mencetak `2` semuanya? Sebutkan satu cara
    memperbaikinya.
-4. Kode berikut gagal dikompilasi. Perbaiki, lalu jelaskan kenapa pesannya menyebut *calling
+4. Kode berikut gagal *di-compile*. Perbaiki, lalu jelaskan kenapa pesannya menyebut *calling
    convention*:
    ```{.nim}
    proc makeAdder(base: int): proc(x: int): int =
@@ -279,15 +279,15 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
 ## Ringkasan
 
-- Prosedur adalah nilai bertipe `proc(...)`; ia bisa disimpan, dioper, dan dikembalikan.
-- Closure adalah prosedur bersama variabel yang ditangkapnya.
+- *Procedure* adalah nilai bertipe `proc(...)`; ia bisa disimpan, dioper, dan dikembalikan.
+- Closure adalah *procedure* bersama variabel yang ditangkapnya.
 - `var` ditangkap dengan menunjuk, `let` dengan menyalin; closure dari pemanggilan yang sama berbagi
   satu variabel.
-- Closure di dalam perulangan menunjuk variabel putaran yang sama; buat lewat prosedur terpisah
+- Closure di dalam *loop* menunjuk variabel putaran yang sama; buat lewat *procedure* terpisah
   agar tiap closure punya salinannya sendiri.
 - Closure memakai konvensi `{.closure.}`; mencampurnya dengan tipe `{.nimcall.}` ditolak compiler.
 
 ## Selanjutnya
 
-Bab berikutnya membahas *generic*: menulis satu prosedur atau tipe yang bekerja untuk banyak tipe,
+Bab berikutnya membahas *generic*: menulis satu *procedure* atau tipe yang bekerja untuk banyak tipe,
 dengan batasan yang diperiksa compiler sebelum program berjalan.

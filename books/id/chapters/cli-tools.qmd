@@ -2,7 +2,7 @@
 
 Alat baris perintah hampir selalu dimulai dari masalah yang sama: membongkar `seq[string]` dari
 `commandLineParams()` menjadi opsi dan argumen. Tanpa bantuan, kode itu penuh `if` dan pemeriksaan
-indeks yang mudah salah. Nim mengirim pemecahnya di pustaka standar: `std/parseopt`.
+indeks yang mudah salah. Nim mengirim pemecahnya di **standard library**: `std/parseopt`.
 
 ::: {.callout-note}
 ## Tujuan bab
@@ -15,7 +15,7 @@ mengimpor.
 
 ## Satu putaran, satu token
 
-`initOptParser` menerima barisan argumen dan mengembalikan parser. Tiap panggilan `next` memajukan
+`initOptParser` menerima *seq* argumen dan mengembalikan parser. Tiap panggilan `next` memajukan
 parser ke satu token. Supaya keluarannya tetap sama setiap kali, contoh memberi argumen tetap,
 bukan mengambil dari `commandLineParams()`. Simpan sebagai `main.nim`, lalu jalankan
 `nim c -r main.nim`.
@@ -50,7 +50,7 @@ Parser memberi tahu jenis tiap token lewat `kind`. Empat nilainya:
 | `cmdLongOption` | opsi panjang | `--verbose` |
 | `cmdShortOption` | opsi pendek | `-n` |
 | `cmdArgument` | argumen biasa | `input.txt` |
-| `cmdEnd` | argumen habis | akhir barisan |
+| `cmdEnd` | argumen habis | akhir *seq* |
 
 Untuk opsi, `key` berisi nama tanpa tanda hubung, dan `val` berisi nilainya. Untuk `cmdArgument`,
 `key` berisi argumen itu sendiri. `repr` dipakai pada `val` supaya string kosong terlihat sebagai
@@ -59,7 +59,7 @@ Untuk opsi, `key` berisi nama tanpa tanda hubung, dan `val` berisi nilainya. Unt
 ## Opsi bernilai dan iterator `getopt`
 
 Berputar manual dengan `next` cepat menjadi panjang. Untuk kasus biasa, ada iterator `getopt` yang
-mengurus putarannya. Iterator ini berhenti sendiri sebelum `cmdEnd`, jadi perulangannya lebih
+mengurus putarannya. Iterator ini berhenti sendiri sebelum `cmdEnd`, jadi *loop itu* lebih
 ringkas.
 
 ```{.nim}
@@ -146,7 +146,7 @@ files: @["notes.txt"]
 
 Argumen pertama menjadi `command`; sisanya dikumpulkan ke `files`. `--force` ditandai lewat
 `longNoVal` supaya `notes.txt` tidak dianggap nilainya. Pola ini cukup sampai sekitar lima
-subperintah; di atas itu, pisahkan tiap subperintah ke prosedur sendiri.
+subperintah; di atas itu, pisahkan tiap subperintah ke *procedure* sendiri.
 
 ## `usage`, `--help`, dan kode keluar
 
@@ -201,7 +201,7 @@ usage: notes [--help] <command> [<file>...]
 
 ## Argumen tambahan setelah `--`
 
-Terkadang sebuah nama berkas dimulai dengan tanda hubung, misalnya `-draft.txt`. Parser akan
+Terkadang sebuah nama *file* dimulai dengan tanda hubung, misalnya `-draft.txt`. Parser akan
 mengira itu sebuah opsi. Tanda `--` menandai akhir bagian opsi. Parser melaporkannya sebagai opsi
 panjang dengan nama kosong: hentikan putaran di situ, lalu ambil sisa token dengan `remainingArgs`.
 Parser tidak mengubah token berikutnya menjadi argumen dengan sendirinya.
@@ -232,8 +232,8 @@ files: @["file one.txt", "file two.txt"]
 ```
 
 Tanda `--` muncul sebagai `cmdLongOption` dengan `key` kosong. Begitu ditemukan, putaran berhenti,
-dan `remainingArgs` mengembalikan sisa barisan. Varian `cmdLineRest` mengembalikan sisa itu sebagai
-satu string, bukan barisan.
+dan `remainingArgs` mengembalikan sisa *seq*. Varian `cmdLineRest` mengembalikan sisa itu sebagai
+satu string, bukan *seq*.
 
 ## Error sengaja: lupa mengimpor `std/parseopt`
 
@@ -249,7 +249,7 @@ echo parser.kind
 main.nim(1, 14) Error: undeclared identifier: 'initOptParser'
 ```
 
-Baca dari kiri: berkas, posisi `(baris, kolom)`, tingkat, lalu pesannya. Posisi `(1, 14)` adalah
+Baca dari kiri: *file*, posisi `(baris, kolom)`, tingkat, lalu pesannya. Posisi `(1, 14)` adalah
 awal nama yang tidak dikenal, tepat setelah `let parser = `. `undeclared identifier` berarti nama
 itu dipakai tanpa pernah dideklarasikan atau diimpor. Baris `candidates` di bawahnya mencetak nama
 yang jarak editnya dekat; pada contoh ini tidak ada yang relevan. Perbaikan terpendek: tambahkan `import std/parseopt` di baris
@@ -259,16 +259,16 @@ pertama.
 
 `parseopt` sengaja kecil. Ia tidak memeriksa tipe secara otomatis, tidak membuat halaman bantuan,
 dan tidak mendukung subperintah bawaan. Untuk alat yang menerima sepuluh opsi atau kurang, itu justru
-kelebihannya: tidak ada konfigurasi, tidak ada berkas tambahan, dan perilakunya jelas. Kalau
+kelebihannya: tidak ada konfigurasi, tidak ada *file* tambahan, dan perilakunya jelas. Kalau
 kebutuhan tumbuh menjadi banyak subperintah dengan bantuan otomatis, ada *package* `cligen` di luar
-pustaka standar. Bab ini tidak memakainya karena kumpulan contoh dipakai kedua buku, dan pustaka
+**standard library**. Bab ini tidak memakainya karena kumpulan contoh dipakai kedua buku, dan *library*
 standar selalu tersedia bersama compiler.
 
 ## Latihan
 
-1. Tambahkan opsi `--quiet` pada contoh pertama supaya perulangannya berhenti mencetak token dan
+1. Tambahkan opsi `--quiet` pada contoh pertama supaya *loop itu* berhenti mencetak token dan
    hanya mencetak `quiet mode` di akhir.
-2. Tanpa menjalankan, prediksi keluarannya: token apa saja yang muncul dari barisan ini, dan apa
+2. Tanpa menjalankan, prediksi keluarannya: token apa saja yang muncul dari *seq* ini, dan apa
    isi `key` serta `val` masing-masing?
    ```{.nim}
    import std/parseopt
@@ -278,7 +278,7 @@ standar selalu tersedia bersama compiler.
    ```
 3. Tulis dari nol: alat yang menerima `--count N` lalu mencetak `count` sebanyak N kali, dengan
    nilai bawaan N sama dengan 3.
-4. Kode berikut gagal dikompilasi. Perbaiki, lalu jelaskan isi pesannya:
+4. Kode berikut gagal *di-compile*. Perbaiki, lalu jelaskan isi pesannya:
    ```{.nim}
    import std/parseopt
 
@@ -287,7 +287,7 @@ standar selalu tersedia bersama compiler.
      of cmdLongOption:
        echo key
    ```
-5. Kapan `--` perlu dipakai? Sebutkan satu nama berkas yang membuatnya wajib.
+5. Kapan `--` perlu dipakai? Sebutkan satu nama *file* yang membuatnya wajib.
 
 Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 

@@ -1,7 +1,7 @@
 # Tuple dan destructuring
 
-Prosedur `minMax` perlu mengembalikan dua angka: nilai terkecil dan terbesar. Di banyak bahasa,
-jalan pintasnya adalah mengembalikan larik atau objek kecil. Nim punya cara yang lebih langsung:
+*Procedure* `minMax` perlu mengembalikan dua angka: nilai terkecil dan terbesar. Di banyak bahasa,
+jalan pintasnya adalah mengembalikan *array* atau *object* kecil. Nim punya cara yang lebih langsung:
 tuple, nilai gabungan berukuran tetap yang elemennya boleh berbeda tipe.
 
 Tuple itu kecil dan murah. Ia dipakai untuk mengembalikan beberapa nilai sekaligus, menamai
@@ -11,7 +11,7 @@ pasangan, atau menampung data sementara yang belum perlu menjadi tipe penuh.
 ## Tujuan bab
 
 Setelah bab ini, pembaca bisa membuat tuple anonim dan bernama, mengakses fieldnya, membongkar
-nilainya ke beberapa variabel, dan memakai tuple sebagai nilai balik prosedur.
+nilainya ke beberapa variabel, dan memakai tuple sebagai **return value** *procedure*.
 :::
 
 ## Tuple anonim: nilai yang menempel
@@ -46,7 +46,7 @@ echo corner.x, ",", corner.y
 ```
 
 Perhatikan `(x: 3, y: 4)`, bukan `Point(x: 3, y: 4)`. Tuple tidak punya konstruktor seperti
-objek. Cara membuatnya selalu literal dengan nama field di dalam tanda kurung, dan tipenya
+*object*. Cara membuatnya selalu literal dengan nama field di dalam tanda kurung, dan tipenya
 ditulis lewat anotasi variabel.
 
 Bentuk pendek `x, y: int` menamai dua field sekaligus. Nama dan urutannya adalah bagian dari tipe,
@@ -90,9 +90,9 @@ echo x, " ", y
 Bentuk `let (a, b) = ...` membuat dua variabel sekaligus. Dengan `var`, keduanya bisa diubah, tapi
 mengubah `y` tidak menyentuh `x`. Tanpa destructuring, kode yang sama butuh tiga baris.
 
-## Tuple sebagai nilai balik
+## Tuple sebagai **return value**
 
-Nilai balik prosedur boleh bertipe tuple bernama.
+**Return value** *procedure* boleh bertipe tuple bernama.
 
 ```{.nim}
 proc minMax(values: openArray[int]): tuple[min, max: int] =
@@ -112,13 +112,13 @@ echo low, "..", high
 1..5
 ```
 
-Di dalam prosedur, field `result` diisi satu per satu. Di sisi pemanggil, hasilnya langsung
-dibongkar dengan `let (low, high) = ...`. Tidak ada tipe bantu, tidak ada larik sementara.
+Di dalam *procedure*, field `result` diisi satu per satu. Di sisi pemanggil, hasilnya langsung
+dibongkar dengan `let (low, high) = ...`. Tidak ada tipe bantu, tidak ada *array* sementara.
 
 Batas praktisnya: tuple nyaman untuk dua sampai tiga nilai. Begitu field bertambah banyak, atau
-nilainya perlu aturan dan operasi sendiri, objek lebih tepat, dan itu bab berikutnya.
+nilainya perlu aturan dan operasi sendiri, *object* lebih tepat, dan itu bab berikutnya.
 
-## Membongkar di dalam perulangan
+## Membongkar di dalam *loop*
 
 Destructuring juga bekerja di kepala `for`.
 
@@ -134,7 +134,7 @@ for (number, word) in words:
 2 = two
 ```
 
-Setiap elemen barisan adalah tuple, dan `(number, word)` membongkarnya pada tiap putaran. Tanpa
+Setiap elemen *seq* adalah tuple, dan `(number, word)` membongkarnya pada tiap putaran. Tanpa
 itu, pembaca harus menulis `item[0]` dan `item[1]`, yang tidak menjelaskan apa pun.
 
 ## Melihat semua field sekaligus
@@ -174,7 +174,7 @@ main.nim(1, 5) Error: tuple with 2 elements expected, but got '(int, int, int)' 
 Pesan itu menyebut kedua belah pihak: pola menunggu 2 elemen, nilainya punya 3. Solusinya menambah
 variabel atau memakai elemen lain. Posisi `(1, 5)` menunjuk ke awal pola `(a, b)`.
 
-## Membaca error: tuple bukan objek
+## Membaca error: tuple bukan *object*
 
 Tuple tidak punya konstruktor, dan compiler menolaknya dengan jelas.
 
@@ -216,11 +216,11 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
 - Tuple adalah nilai gabungan berukuran tetap; elemennya boleh berbeda tipe.
 - Tuple anonim diakses lewat indeks, tuple bernama lewat field.
-- Tuple dibuat dengan literal, bukan dengan konstruktor bergaya objek.
+- Tuple dibuat dengan literal, bukan dengan konstruktor bergaya *object*.
 - `let (a, b) = ...` membongkar tuple dalam satu baris, dan juga bekerja di kepala `for`.
-- Prosedur bisa mengembalikan tuple, lalu pemanggil membongkarnya.
+- *Procedure* bisa mengembalikan tuple, lalu pemanggil membongkarnya.
 
 ## Selanjutnya
 
-Bab berikutnya membahas [objek](objects.qmd): tipe gabungan dengan field bernama, konstruktor, nilai
+Bab berikutnya membahas [*object*](objects.qmd): tipe gabungan dengan field bernama, konstruktor, nilai
 default, dan dua bentuk penyimpanan: nilai dan referensi.

@@ -1,6 +1,6 @@
-# Generic: tipe dan prosedur
+# Generic: tipe dan *procedure*
 
-Menulis satu prosedur untuk `int`, lalu menyalinnya untuk `string`, lalu lagi untuk `float`, cepat
+Menulis satu *procedure* untuk `int`, lalu menyalinnya untuk `string`, lalu lagi untuk `float`, cepat
 melelahkan. Nim menyelesaikan ini dengan *generic*: satu deklarasi yang ditulis sekali, lalu
 compiler membuat versinya untuk setiap tipe yang dipakai.
 
@@ -11,14 +11,14 @@ pemanggilan, lengkap dengan alasan.
 ::: {.callout-note}
 ## Tujuan bab
 
-Setelah bab ini, pembaca bisa menulis prosedur dan tipe generic, memasang batasan pada parameter
+Setelah bab ini, pembaca bisa menulis *procedure* dan tipe generic, memasang batasan pada parameter
 tipe, membaca pesan error saat batasannya tidak dipenuhi, serta membedakan inferensi otomatis dan
 argumen tipe eksplisit.
 :::
 
-## Satu prosedur untuk banyak tipe
+## Satu *procedure* untuk banyak tipe
 
-Parameter tipe ditulis dalam tanda kurung siku setelah nama prosedur.
+Parameter tipe ditulis dalam tanda kurung siku setelah nama *procedure*.
 
 ```{.nim}
 proc identity[T](value: T): T =
@@ -35,16 +35,16 @@ nim
 
 `T` adalah nama untuk tipe yang belum ditentukan. Saat `identity(42)` dipanggil, compiler mengisi
 `T` dengan `int`; saat `identity("nim")` dipanggil, `T` menjadi `string`. Proses mengisi `T` ini
-disebut instansiasi, dan hasilnya dua prosedur berbeda yang sama-sama bernama `identity`.
+disebut instansiasi, dan hasilnya dua *procedure* berbeda yang sama-sama bernama `identity`.
 
-Nama `T` hanya berlaku di dalam deklarasi itu, dan dua prosedur hasil instansiasi tidak berbagi
-kode: yang satu bekerja dengan `int`, yang lain dengan `string`. Karena itu, kesalahan di dalam
+Nama `T` hanya berlaku di dalam deklarasi itu, dan dua *procedure* hasil instansiasi tidak berbagi
+kode: yang satu bekerja dengan `int`, yang lain dengan `string`. Karena itu, *error* di dalam
 badan generic baru terlihat saat salah satu versinya dibuat. Compiler memeriksa tiap versi secara
 terpisah, dan pesan errornya sering menyebut tipe yang sedang disimpulkan.
 
 ## Batasan tipe: `T: SomeInteger`
 
-Tanpa batasan, `T` boleh tipe apa saja di dalam badan prosedur. Kalau badan prosedur hanya masuk
+Tanpa batasan, `T` boleh tipe apa saja di dalam badan *procedure*. Kalau badan *procedure* hanya masuk
 akal untuk sebagian tipe, batasi `T` setelah titik dua.
 
 ```{.nim}
@@ -60,9 +60,9 @@ echo double(5'i8)
 10
 ```
 
-`SomeInteger` adalah himpunan tipe bilangan bulat: yang bertanda (`int`, `int8` sampai `int64`)
+`SomeInteger` adalah *set* tipe bilangan bulat: yang bertanda (`int`, `int8` sampai `int64`)
 maupun yang tak bertanda (`uint` dan kawan-kawan). Selama `T` ada di dalamnya, `value * 2` sah.
-Tipe di luar himpunan itu ditolak, dan pesannya menjelaskan kenapa.
+Tipe di luar *set* itu ditolak, dan pesannya menjelaskan kenapa.
 
 ```{.nim}
 proc double[T: SomeInteger](value: T): T =
@@ -86,7 +86,7 @@ pesan seperti ini baru muncul di dalam badan, saat `T` sudah dipakai.
 
 ## Generic pada tipe
 
-Batasan `[T]` juga berlaku untuk tipe, bukan hanya prosedur. Sebuah `object` bisa diberi parameter
+Batasan `[T]` juga berlaku untuk tipe, bukan hanya *procedure*. Sebuah `object` bisa diberi parameter
 tipe, sehingga isinya menyesuaikan.
 
 ```{.nim}
@@ -108,7 +108,7 @@ text
 `Box[int]` dan `Box[string]` adalah dua tipe berbeda yang dibuat dari satu deklarasi. Konstruktornya
 ditulis `Box[T](value: value)`, dan `T` di situ disesuaikan dari nilai yang dioper.
 
-Prosedur yang bekerja pada `Box[T]` juga harus membawa parameter tipe yang sama. Itulah sebabnya
+*Procedure* yang bekerja pada `Box[T]` juga harus membawa parameter tipe yang sama. Itulah sebabnya
 `boxed` ditulis `boxed[T]`, bukan sekadar `boxed`. Tanpa `[T]`, compiler tidak tahu tipe mana yang
 dimaksud di dalam `Box[T]`.
 
@@ -153,11 +153,11 @@ string
 ```
 
 `nameOf(int)` tidak mengoper nilai `int`, melainkan tipe `int` itu sendiri. Panggilan seperti ini
-umum di pustaka standar, misalnya untuk membuat koleksi kosong bertipe tertentu.
+umum di **standard library**, misalnya untuk membuat koleksi kosong bertipe tertentu.
 
-## `static[T]`: nilai yang diketahui saat kompilasi
+## `static[T]`: nilai yang diketahui saat *compile*
 
-Parameter tipe bisa diberi batas `static`. Artinya nilainya harus diketahui saat kompilasi, bukan
+Parameter tipe bisa diberi batas `static`. Artinya nilainya harus diketahui saat *compile*, bukan
 saat program berjalan.
 
 ```{.nim}
@@ -174,16 +174,16 @@ echo fill[int, 2](9)
 [9, 9]
 ```
 
-`N` dipakai sebagai ukuran `array[N, T]`, dan ukuran larik harus tetap, jadi `N` wajib diketahui
+`N` dipakai sebagai ukuran `array[N, T]`, dan ukuran *array* harus tetap, jadi `N` wajib diketahui
 compiler. Karena `N` tidak muncul di daftar parameter nilai, keduanya ditulis eksplisit:
-`fill[char, 3]`. Hasil `fill[char, 3]('z')` adalah larik tiga karakter. Ukuran `N` menjadi bagian
+`fill[char, 3]`. Hasil `fill[char, 3]('z')` adalah *array* tiga karakter. Ukuran `N` menjadi bagian
 dari tipe hasil, jadi `fill[int, 2](9)` menghasilkan `array[2, int]`, tipe yang berbeda dari
 `fill[int, 3](9)`.
 
 ## Latihan
 
 1. Tulis `proc largest[T](items: openArray[T]): T` yang mengembalikan nilai terbesar, lalu panggil
-   dengan larik `int` dan dengan barisan `string`.
+   dengan *array* `int` dan dengan *seq* `string`.
 2. Tanpa menjalankan, prediksi keluarannya:
    ```{.nim}
    proc pair[T](value: T): (T, T) =
@@ -192,9 +192,9 @@ dari tipe hasil, jadi `fill[int, 2](9)` menghasilkan `array[2, int]`, tipe yang 
    echo pair(3)
    echo pair("a")
    ```
-3. Kenapa `makeSeq(3)` tidak bisa dikompilasi tanpa `[int]`? Jelaskan dengan menyebut di mana `T`
+3. Kenapa `makeSeq(3)` tidak bisa *di-compile* tanpa `[int]`? Jelaskan dengan menyebut di mana `T`
    muncul.
-4. Kode berikut gagal dikompilasi. Perbaiki batasannya, lalu jelaskan isi pesannya:
+4. Kode berikut gagal *di-compile*. Perbaiki batasannya, lalu jelaskan isi pesannya:
    ```{.nim}
    proc double[T: SomeInteger](value: T): T =
      value * 2
@@ -208,12 +208,12 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
 - Parameter tipe ditulis `[T]` setelah nama; compiler membuat satu versi per tipe yang dipakai.
 - Batasan seperti `T: SomeInteger` menolak tipe yang tidak sesuai di tempat pemanggilan.
-- `[T]` juga dipakai pada `type`, bukan hanya prosedur.
+- `[T]` juga dipakai pada `type`, bukan hanya *procedure*.
 - `T` disimpulkan dari argumen yang bertipe `T`; kalau tidak ada, tulis argumen tipe eksplisit.
 - `typedesc` menerima tipe sebagai argumen, dan `static` menuntut nilai yang diketahui saat
-  kompilasi.
+  *compile*.
 
 ## Selanjutnya
 
 Bab berikutnya membahas *template*: potongan kode yang disalin compiler ke tempat pemanggilan,
-berbeda dari generic yang membuat versi baru dari sebuah prosedur.
+berbeda dari generic yang membuat versi baru dari sebuah *procedure*.

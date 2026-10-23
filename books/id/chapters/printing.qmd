@@ -42,7 +42,7 @@ terakhir: `"a", "b", "c"` tercetak `abc` tanpa spasi. Semua spasi pada output di
 string yang kita tulis sendiri. Setelah semua argumen, `echo` menambahkan tepat satu baris baru.
 
 Karena setiap nilai diubah lewat `$`, `echo` bisa menampilkan hampir semua tipe: bilangan, `char`,
-`bool`, sampai barisan. Barisan ditandai `@` di depannya, misalnya `@[1, 2, 3]`, dan bentuk itu
+`bool`, sampai *seq*. *Seq* ditandai `@` di depannya, misalnya `@[1, 2, 3]`, dan bentuk itu
 memudahkan pemeriksaan isi saat memburu bug.
 
 ## `repr` dan `$`
@@ -168,10 +168,10 @@ missing_import.nim(1, 6) Error: undeclared identifier: 'fmt'
 ```
 
 Pesan menunjukkan kolom 6, tepat di huruf pertama `fmt`. Compiler tidak menemukan simbol bernama
-`fmt` di *scope* mana pun. Solusinya satu baris di atas kode: `import std/strformat`. Kesalahan yang
+`fmt` di *scope* mana pun. Solusinya satu baris di atas kode: `import std/strformat`. *Error* yang
 sama bisa muncul untuk `&"..."`, hanya saja pesannya berbentuk `type mismatch` karena compiler
 mengira `&` adalah operator penggabung string biasa. Pesan `undeclared identifier` selalu berarti
-hal yang sama: nama itu belum diperkenalkan ke berkas, biasanya lewat `import` yang terlupa.
+hal yang sama: nama itu belum diperkenalkan ke *file*, biasanya lewat `import` yang terlupa.
 
 ## Latihan
 

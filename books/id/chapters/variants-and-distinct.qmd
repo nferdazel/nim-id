@@ -18,7 +18,7 @@ eksplisit, dan tahu kapan `distinct` lebih baik daripada alias tipe.
 
 ## Object varian: field yang bergantung pada penanda
 
-Awali dengan sebuah enum sebagai penanda, lalu tulis blok `case` di dalam objek.
+Awali dengan sebuah enum sebagai penanda, lalu tulis blok `case` di dalam *object*.
 
 ```{.nim}
 type
@@ -135,9 +135,9 @@ cabang `rect`. Perbaikannya jelas dari isi pesan, yaitu hapus `width` dan isi `r
 
 ## Error saat runtime: `FieldDefect`
 
-Nim tidak memeriksa akses field varian saat kompilasi. Pemeriksaan penanda disisipkan pada setiap
+Nim tidak memeriksa akses field varian saat *compile*. Pemeriksaan penanda disisipkan pada setiap
 akses dan berjalan saat program berjalan, bahkan ketika penandanya literal di konstruktor. Yang
-tetap ditolak saat kompilasi adalah konstruktor yang mengisi field di cabang yang salah.
+tetap ditolak saat *compile* adalah konstruktor yang mengisi field di cabang yang salah.
 
 ```{.nim}
 type
@@ -159,7 +159,7 @@ Error: unhandled exception: field 'width' is not accessible for type 'Shape' usi
 ```
 
 Di sini `c.width` diminta padahal `c` adalah lingkaran. Compiler tidak selalu bisa membuktikan itu
-saat kompilasi, jadi Nim menyisipkan pemeriksaan yang berjalan saat akses terjadi. Karena penandanya
+saat *compile*, jadi Nim menyisipkan pemeriksaan yang berjalan saat akses terjadi. Karena penandanya
 tidak pernah berubah setelah konstruksi, bug ini biasanya berarti ada cabang di kode yang lupa
 diperiksa. Aturannya: akses field variant hanya lewat `case` pada penandanya.
 
@@ -278,18 +278,18 @@ perbaikannya. Inilah pengaman yang tidak dimiliki alias tipe.
    `area`.
 2. Tanpa menjalankan, prediksi keluaran bila `Shape(kind: circle, width: 3.0)` diganti menjadi
    `Shape(kind: circle, radius: 3.0)`. Jelaskan.
-3. Tulis tipe `Meters = distinct int` beserta prosedur `$`-nya, lalu cetak satu nilainya.
+3. Tulis tipe `Meters = distinct int` beserta *procedure* `$`-nya, lalu cetak satu nilainya.
 4. Ubah `type UserId = distinct int` menjadi alias `int`. Apa yang hilang dari program, dan kenapa
    itu penting?
 5. Jelaskan kenapa `echo Shape(kind: rect, width: 3.0, height: 4.0).radius` gagal saat berjalan,
-   bukan saat kompilasi.
+   bukan saat *compile*.
 
 Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
 ## Ringkasan
 
 - Object varian memakai field `case` dengan satu discriminator; hanya field cabang aktif yang ada.
-- Konstruktor yang mengisi field di luar cabang ditolak sebagai error kompilasi.
+- Konstruktor yang mengisi field di luar cabang ditolak sebagai error *compile*.
 - Akses field variant tanpa memeriksa penanda berakhir `FieldDefect` saat program berjalan.
 - `distinct` membuat tipe baru; konversi ke dan dari tipe dasar harus eksplisit.
 - Alias tipe tidak memisahkan apa pun; `distinct` cocok untuk id, satuan, dan nilai yang mudah

@@ -1,7 +1,7 @@
 # HTTP API dengan `asynchttpserver`
 
 Membuat server HTTP terdengar seperti proyek besar. Padahal dengan `std/asynchttpserver`, satu
-server sederhana cukup belasan baris, dan semua bagiannya ada di pustaka standar. Yang membuat kode
+server sederhana cukup belasan baris, dan semua bagiannya ada di **standard library**. Yang membuat kode
 server sulit diuji bukan *socket*-nya, melainkan *handler* yang bercampur dengan *socket* itu.
 
 ::: {.callout-note}
@@ -153,7 +153,7 @@ GET /items/7
 
 `reqMethod` adalah `HttpMethod`, dan `url` adalah `Uri` yang sama seperti hasil `parseUri`. Karena
 `Request` adalah object biasa, ia bisa dibentuk di dalam *test*: cukup isi field yang dibutuhkan.
-Inilah alasan *handler* murni mudah diuji, sementara *socket*-nya tidak perlu ikut berjalan.
+Inilah alasan *handler* murni mudah diuji, sementara *socket* itu tidak perlu ikut berjalan.
 
 ## Menyalakan server
 
@@ -193,7 +193,7 @@ for (httpMethod, path) in [(HttpGet, "/health"), (HttpGet, "/nope")]:
 ```
 
 `handle` bertanda `{.async.}` karena `respond` mengembalikan `Future[void]`, dan hasilnya harus
-ditulis dengan `await`. Prosedur `main` membangun server, lalu memanggil `serve`. Server asli tidak
+ditulis dengan `await`. *Procedure* `main` membangun server, lalu memanggil `serve`. Server asli tidak
 dinyalakan di sini: contoh hanya memanggil `dispatch` langsung supaya keluarannya tetap. Di program
 sungguhan, baris terakhir adalah `waitFor main()`, yang menjalankan *event loop*.
 
@@ -208,7 +208,7 @@ $ curl -s http://localhost:8080/nope
 
 ## Error sengaja: lupa `await` pada `respond`
 
-Kesalahan pertama yang hampir selalu terjadi: memanggil `respond` tanpa `await`.
+*Error* pertama yang hampir selalu terjadi: memanggil `respond` tanpa `await`.
 
 ```{.nim}
 import std/[asynchttpserver, asyncdispatch, httpcore]
@@ -226,7 +226,7 @@ Pesannya dua bagian. Bagian pertama menyebut tipe hasil panggilan: `Future[syste
 `void`. Bagian kedua menawarkan dua pilihan, memakai nilainya atau membuangnya dengan sadar. Karena
 kita memang menunggu balasan terkirim, jawabannya `await`. Penulisan yang benar:
 `await req.respond(Http200, "ok")`. Compiler juga menandai baris tempat `{.async.}` dipakai, tanda
-bahwa masalahnya ada di dalam prosedur async.
+bahwa masalahnya ada di dalam *procedure* async.
 
 ## Kenapa *handler* dipisah dari *socket*
 
@@ -253,7 +253,7 @@ Menjaga lapisan itu setipis mungkin adalah kebiasaan yang dibawa terus saat API 
    ```
 3. Tulis dari nol: *handler* yang membaca `page` dari *query string* dan mengembalikannya sebagai
    JSON, misalnya `{"page":"2"}`.
-4. Kode berikut gagal dikompilasi. Perbaiki, lalu jelaskan isi pesannya:
+4. Kode berikut gagal *di-compile*. Perbaiki, lalu jelaskan isi pesannya:
    ```{.nim}
    import std/[asynchttpserver, asyncdispatch, httpcore]
 

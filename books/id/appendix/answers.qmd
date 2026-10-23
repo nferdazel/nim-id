@@ -90,21 +90,21 @@ stabil terbaru.
 
 ## Bab: Alur kerja: `nim r`, `nimble`, editor
 
-**1.** Dengan `nim r hello.nim`, tidak ada biner baru di samping berkas sumber; hasil antara masuk ke
+**1.** Dengan `nim r hello.nim`, tidak ada biner baru di samping *file* sumber; hasil antara masuk ke
 direktori cache. Dengan `nim c hello.nim`, muncul biner bernama `hello` di direktori kerja, lalu
 dijalankan dengan `./hello`.
 
-**2.** Biner muncul di direktori kerja, di samping berkas sumber, dan namanya mengikuti nama berkas:
+**2.** Biner muncul di direktori kerja, di samping *file* sumber, dan namanya mengikuti nama *file*:
 `join` di Linux dan macOS, `join.exe` di Windows. Nama itu bisa diganti dengan `-o:program`.
 
-**3.** Meski berekstensi `.txt`, Nim tetap mengompilasi isinya: `nim c data.txt` berhasil dan
-menghasilkan biner bernama `data`. Nim tidak mewajibkan ekstensi `.nim` pada berkas utama. Namun
-konvensinya tetap `.nim`, dan saat mengimpor sebuah modul, Nim mencari berkas bernama `<modul>.nim`.
-Jadi berkas `.txt` tidak bisa dipakai sebagai modul yang diimpor. Simpan kode Nim di `.nim`.
+**3.** Meski berekstensi `.txt`, Nim tetap *meng-compile* isinya: `nim c data.txt` berhasil dan
+menghasilkan biner bernama `data`. Nim tidak mewajibkan ekstensi `.nim` pada *file* utama. Namun
+konvensinya tetap `.nim`, dan saat mengimpor sebuah modul, Nim mencari *file* bernama `<modul>.nim`.
+Jadi *file* `.txt` tidak bisa dipakai sebagai modul yang diimpor. Simpan kode Nim di `.nim`.
 
 **4.** Keduanya melaporkan error yang sama. `nim check` berhenti setelah pemeriksaan tipe dan
 semantik, tidak melanjutkan ke pembuatan biner, dan keluar dengan kode bukan nol. `nim c` juga
-berhenti dengan kode bukan nol, tetapi hanya setelah mencoba seluruh tahap kompilasi. Untuk umpan
+berhenti dengan kode bukan nol, tetapi hanya setelah mencoba seluruh tahap *compile*. Untuk umpan
 balik cepat, `nim check` lebih ringan.
 
 **5.** Membuat lalu menjalankan:
@@ -115,7 +115,7 @@ nimble build
 nimble run
 ```
 
-`nimble init notes` membuat direktori proyek lengkap dengan berkas `.nimble`, `nimble build`
+`nimble init notes` membuat direktori proyek lengkap dengan *file* `.nimble`, `nimble build`
 membangunnya, dan `nimble run` membangun sekaligus menjalankannya.
 
 ## Bab: Komentar dan doc comment
@@ -144,8 +144,8 @@ Keluarannya tidak berubah. Komentar dibuang seluruhnya sebelum program dijalanka
 atau menambah isinya tidak pernah mengubah keluaran.
 
 **3.** Error dilaporkan di baris 3, satu baris setelah baris terakhir kode. Compiler menandai `#[`
-dibuka, tetapi baru tahu komentarnya tidak pernah ditutup waktu mencapai akhir berkas. Karena itu
-posisi yang dilaporkan sering bukan posisi kesalahannya. Kebiasaan yang berguna: periksa beberapa
+dibuka, tetapi baru tahu komentarnya tidak pernah ditutup waktu mencapai akhir *file*. Karena itu
+posisi yang dilaporkan sering bukan posisi *error itu*. Kebiasaan yang berguna: periksa beberapa
 baris sebelum titik yang ditunjuk.
 
 **4.** Tidak muncul. Hanya `##` yang dikenali sebagai doc comment dan masuk ke keluaran `nim doc`.
@@ -378,7 +378,7 @@ if name.len > 0:
 Nim
 ```
 
-## Bab: Perulangan: `for`, `while`, `break`, `continue`
+## Bab: *Loop*: `for`, `while`, `break`, `continue`
 
 **1.** `countup(2, 10, 2)` mulai dari `2` dan melangkah dua, jadi hanya bilangan genap yang dicetak.
 
@@ -419,7 +419,7 @@ total: 22
 max index: 1
 ```
 
-**4.** Badan perulangan tidak pernah mengubah `n`, jadi `n > 0` selalu benar. Tambahkan pengurangan
+**4.** Badan *loop* tidak pernah mengubah `n`, jadi `n > 0` selalu benar. Tambahkan pengurangan
 di dalam badan.
 
 ```{.nim}
@@ -492,7 +492,7 @@ echo values
 @[10, 20, 30, 40]
 ```
 
-## Bab: Prosedur, parameter, dan nilai balik
+## Bab: *Procedure*, parameter, dan **return value**
 
 **1.** Tambahkan parameter dengan nilai default, lalu panggil dengan dan tanpa mengisinya.
 
@@ -533,7 +533,7 @@ echo average(@[10.0, 20.0])
 
 **4.** Compiler menolak baris `value * 2` dengan
 `Error: undeclared identifier: 'value'` pada baris 2 kolom 3. Nama parameter di deklarasi adalah
-`x`, sedangkan badan prosedur memakai `value` yang tidak pernah dideklarasikan. Perbaikannya adalah
+`x`, sedangkan badan *procedure* memakai `value` yang tidak pernah dideklarasikan. Perbaikannya adalah
 menyamakan nama.
 
 ```{.nim}
@@ -594,7 +594,7 @@ echo pair[0]
 1
 ```
 
-## Bab: Objek dan konstruktor
+## Bab: *Object* dan konstruktor
 
 **1.** Field baru cukup ditambahkan di deklarasi `object`, lalu diisi lewat konstruktor.
 
@@ -614,7 +614,7 @@ ada@example.com
 **2.** Outputnya `false write`. Field `done` tidak disebut di konstruktor, jadi isinya default tipe
 `bool`, yaitu `false`. Field `title` diisi `"write"`.
 
-**3.** `Book` mewarisi dari `RootObj`, dan prosedur menerima `Book` secara langsung.
+**3.** `Book` mewarisi dari `RootObj`, dan *procedure* menerima `Book` secara langsung.
 
 ```{.nim}
 type Book = ref object of RootObj
@@ -663,7 +663,7 @@ echo ord(yellow)
 3
 ```
 
-**2.** Outputnya `{red}`. Operator `-` adalah selisih himpunan: anggota `second` yang juga ada di
+**2.** Outputnya `{red}`. Operator `-` adalah selisih *set*: anggota `second` yang juga ada di
 `first` dibuang. `green` dibuang, `red` tetap, dan `blue` memang tidak pernah ada di `first`.
 
 **3.** `excl` membuang anggota, `incl` menambah, dan `in` menguji keanggotaan.
@@ -758,7 +758,7 @@ echo config_module.appName
 ```
 
 Keuntungannya: nama `appName` berada di ruang nama modulnya, jadi tidak bertabrakan dengan nama di
-berkas induk, dan modulnya bisa dipakai berkas lain tanpa menyalin isinya.
+*file* induk, dan modulnya bisa dipakai *file* lain tanpa menyalin isinya.
 
 ## Bab: Exception dan efek `raises`
 
@@ -880,12 +880,12 @@ dalam `for`.
 
 **4.** Pilih iterator kalau elemennya hanya dilewati sekali, jumlahnya besar atau belum diketahui,
 dan pencarian sering berhenti di tengah. Iterator tidak menyimpan elemen, jadi hemat memori. Pilih
-barisan kalau elemennya perlu diindeks, diurutkan, atau dipakai berkali-kali, karena barisan
+*seq* kalau elemennya perlu diindeks, diurutkan, atau dipakai berkali-kali, karena *seq*
 menyimpan semuanya sekaligus.
 
 ## Bab: Closure dan variabel yang ditangkap
 
-**1.** Prosedur yang dikembalikan memakai `f` dan `g` dari parameter, jadi keduanya ikut ditangkap:
+**1.** *Procedure* yang dikembalikan memakai `f` dan `g` dari parameter, jadi keduanya ikut ditangkap:
 
 ```{.nim}
 proc compose(f, g: proc(x: int): int): proc(x: int): int =
@@ -905,9 +905,9 @@ echo compose(inc, dbl)(5)
 **2.** Outputnya `7`. `add` menangkap `total` yang bertipe `var`, jadi kedua panggilan menambah
 variabel yang sama: `3 + 4 = 7`.
 
-**3.** `i` adalah satu variabel yang dipakai ulang tiap putaran perulangan. Ketiga closure menunjuk
-variabel itu, bukan salinannya. Setelah perulangan selesai, `i` bernilai `2`, jadi ketiganya
-mencetak `2`. Salah satu perbaikan: buat closure lewat prosedur terpisah yang parameternya baru
+**3.** `i` adalah satu variabel yang dipakai ulang tiap putaran *loop*. Ketiga closure menunjuk
+variabel itu, bukan salinannya. Setelah *loop* selesai, `i` bernilai `2`, jadi ketiganya
+mencetak `2`. Salah satu perbaikan: buat closure lewat *procedure* terpisah yang parameternya baru
 setiap pemanggilan.
 
 **4.** Yang salah adalah tipe `{.nimcall.}` pada `addBase`. `makeAdder` mengembalikan closure karena
@@ -930,9 +930,9 @@ Pesan compiler menyebut *calling convention* karena masalahnya bukan nilai yang 
 konvensi pemanggilan tipe: closure memakai `{.closure.}`, sedangkan tipe yang diminta memakai
 `{.nimcall.}`.
 
-## Bab: Generic: tipe dan prosedur
+## Bab: Generic: tipe dan *procedure*
 
-**1.** Parameter `openArray[T]` menerima larik maupun barisan, dan `T` disimpulkan dari isinya:
+**1.** Parameter `openArray[T]` menerima *array* maupun *seq*, dan `T` disimpulkan dari isinya:
 
 ```{.nim}
 proc largest[T](items: openArray[T]): T =
@@ -1094,7 +1094,7 @@ operand.
 
 ## Bab: Konsep dan pencocokan tipe
 
-**1.** Konsep `Sized` beserta prosedur yang memakainya.
+**1.** Konsep `Sized` beserta *procedure* yang memakainya.
 
 ```{.nim}
 type
@@ -1220,11 +1220,11 @@ echo d
 **4.** Alias `int` membuat `UserId` sama persis dengan `int`, sehingga tidak ada lagi yang memisahkan
 id pengguna dari angka lain. Program kehilangan pengamannya: nilai id bisa tertukar dengan id pesanan
 atau angka biasa tanpa satu pun error, dan bug seperti ini sering baru terlihat di produksi. `distinct`
-membuat kekeliruan itu ditolak saat kompilasi, dan itulah alasan utama memakainya.
+membuat kekeliruan itu ditolak saat *compile*, dan itulah alasan utama memakainya.
 
-**5.** Nim tidak memeriksa akses field varian saat kompilasi. Setiap akses disertai pemeriksaan
+**5.** Nim tidak memeriksa akses field varian saat *compile*. Setiap akses disertai pemeriksaan
 yang membaca `kind` lalu memastikan fieldnya sesuai, dan pemeriksaan itu berjalan saat program
-berjalan, baik objeknya nilai sementara maupun disimpan di `let` atau `var`. Cara menghindarinya
+berjalan, baik *object itu* nilai sementara maupun disimpan di `let` atau `var`. Cara menghindarinya
 adalah membaca lewat `case` pada penanda, sehingga cabang yang salah tidak pernah dieksekusi.
 
 ## Bab: `ref`, `ptr`, dan `nil`
@@ -1254,7 +1254,7 @@ Nim in Action
 Programming Nim
 ```
 
-**2.** `q` menunjuk objek yang sama dengan `p`, jadi mengubah `q.x` ikut mengubah `p.x`:
+**2.** `q` menunjuk *object* yang sama dengan `p`, jadi mengubah `q.x` ikut mengubah `p.x`:
 
 ```txt
 10 10
@@ -1273,8 +1273,8 @@ echo x
 
 Keluarannya `2`. `p[]` membaca dan menulis nilai di alamat yang ditunjuk `p`.
 
-**4.** `var p: Person` berisi `nil`; belum ada objek di heap untuk ditunjuk. `new(p)`
-mengalokasikan objek dengan default setiap field lalu menyimpan alamatnya di `p`. Tanpa itu,
+**4.** `var p: Person` berisi `nil`; belum ada *object* di heap untuk ditunjuk. `new(p)`
+mengalokasikan *object* dengan default setiap field lalu menyimpan alamatnya di `p`. Tanpa itu,
 `p.name` mendereferensi `nil` dan program berhenti saat berjalan.
 
 **5.** Pesan error-nya:
@@ -1330,7 +1330,7 @@ end
 pada sumbernya. Jalur `=sink` hanya dipakai saat compiler memindahkan nilai sementara lewat
 penugasan biasa. Karena `move` sudah menyatakan pemindahan secara eksplisit, hooknya dilewati.
 
-**4.** Penghitungan referensi ARC hanya menambah dan mengurangi angka. Dua objek yang saling
+**4.** Penghitungan referensi ARC hanya menambah dan mengurangi angka. Dua *object* yang saling
 menunjuk sama-sama menyimpan satu referensi ke pasangannya, jadi angkanya tidak pernah nol. ORC
 menambahkan pendeteksi siklus yang menemukan pasangan seperti itu dan membebaskannya.
 
@@ -1342,10 +1342,10 @@ main.nim(4, 1) Error: signature for '=destroy' must be proc[T: object](x: var T)
 
 `=destroy` hanya berlaku untuk tipe `object` nilai. `ref object` sudah dibebaskan otomatis oleh
 ARC/ORC, jadi hooknya justru tidak diterima. `Person` di sini adalah `ref object`. Perbaikannya,
-hapus prosedur itu dan serahkan pembebasan ke ARC/ORC, atau pindahkan sumber dayanya ke tipe
+hapus *procedure* itu dan serahkan pembebasan ke ARC/ORC, atau pindahkan sumber dayanya ke tipe
 `object` nilai yang dipegang oleh referensi tersebut.
 
-## Bab: Tur pustaka standar
+## Bab: Tur **standard library**
 
 **1.** Pisahkan, ubah setiap kata, lalu gabungkan kembali:
 
@@ -1414,7 +1414,7 @@ let t = {"a": 1}.toTable
 echo t.getOrDefault("b", -1)
 ```
 
-## Bab: Berkas, direktori, dan OS
+## Bab: *File*, direktori, dan OS
 
 **1.** `splitFile` sudah memisahkan nama dan ekstensi; tidak perlu memotong string manual.
 
@@ -1500,7 +1500,7 @@ Keluaran (baris pertama kosong, bawaan `unittest`):
   [OK] five is 120
 ```
 
-Rentang `2 .. n` kosong saat `n` bernilai 0 atau 1, jadi perulangan tidak berjalan dan `result`
+Rentang `2 .. n` kosong saat `n` bernilai 0 atau 1, jadi *loop* tidak berjalan dan `result`
 tetap 1.
 
 **2.** Keluarannya:
@@ -1530,7 +1530,7 @@ suite "math":
     check 1 + 1 == 2
 ```
 
-**4.** `expect` menuntut pengecualian itu benar-benar dilempar. Kalau bloknya selesai tanpa error,
+**4.** `expect` menuntut *exception* itu benar-benar dilempar. Kalau bloknya selesai tanpa error,
 tesnya gagal dengan pesan `Expect Failed, no exception was thrown.`, lalu ditandai `[FAILED]`.
 Prosesnya keluar dengan kode bukan nol. Ini memang tujuannya: menguji jalur error hanya bermakna
 kalau error-nya benar-benar terjadi.
@@ -1559,7 +1559,7 @@ tag:b
 
 Kedua `await` berurutan, jadi `tag("a")` selesai dan dicetak lebih dulu, baru `tag("b")`.
 
-**3.** `all` menerima beberapa `Future` bertipe sama dan mengembalikan barisan hasil.
+**3.** `all` menerima beberapa `Future` bertipe sama dan mengembalikan *seq* hasil.
 
 ```{.nim}
 import std/asyncdispatch
@@ -1578,14 +1578,14 @@ echo waitFor total(value(2), value(3))
 5
 ```
 
-**4.** Ganti `await` di prosedur sinkron dengan `waitFor`.
+**4.** Ganti `await` di *procedure* sinkron dengan `waitFor`.
 
 ```{.nim}
 proc main(): int =
   waitFor work()
 ```
 
-Alternatifnya, ubah `main` menjadi prosedur async dan panggil dengan `waitFor main()` di tingkat
+Alternatifnya, ubah `main` menjadi *procedure* async dan panggil dengan `waitFor main()` di tingkat
 teratas.
 
 ## Bab: FFI ke C
@@ -1618,7 +1618,7 @@ Pembagian bilangan bulat di C memotong ke arah nol, jadi `9 / 2` bernilai 4.
 supaya fungsi C tahu di mana string berakhir. `strlen` menghitung byte sebelum penanda itu, yaitu
 lima karakter `h`, `e`, `l`, `l`, `o`. Penanda nol tidak ikut dihitung.
 
-**4.** `{.compile.}` tidak bisa menempel pada deklarasi prosedur, apalagi digabung dengan pragma
+**4.** `{.compile.}` tidak bisa menempel pada deklarasi *procedure*, apalagi digabung dengan pragma
 lain.
 
 ```{.txt}
@@ -1626,7 +1626,7 @@ main.nim(1, 37) Error: invalid pragma: compile: "helper.c"
 ```
 
 Pindahkan ke tempatnya sendiri: `{.compile.}` berdiri di barisnya, dan `{.importc.}` dipasang pada
-deklarasi prosedur.
+deklarasi *procedure*.
 
 ```{.nim}
 {.compile: "helper.c".}
@@ -1640,7 +1640,7 @@ echo triple(2)
 6
 ```
 
-## Bab: Kompilasi ke JavaScript
+## Bab: *Compile* ke JavaScript
 
 **1.** Keluarannya sama persis. Backend JavaScript memetakan aturan tipe dan pembagian Nim ke
 operator JavaScript yang setara.
@@ -1657,7 +1657,7 @@ area: 21
 total: 27
 ```
 
-`4 + 8 + 15` bernilai 27, dan perulangan `for n in numbers` menjumlahkannya satu per satu.
+`4 + 8 + 15` bernilai 27, dan *loop* `for n in numbers` menjumlahkannya satu per satu.
 
 **3.** Contoh yang mengubah isi `<div>`, dijalankan dari halaman HTML yang punya elemen itu:
 
@@ -1667,8 +1667,8 @@ import std/dom
 document.getElementById("out").textContent = "from Nim"
 ```
 
-`node` tidak menyediakan `document`; objek itu hanya ada di peramban. Karena itu program ini
-dikompilasi dengan `nim js` lalu berkas `.js`-nya disisipkan ke halaman HTML, bukan dijalankan
+`node` tidak menyediakan `document`; *object* itu hanya ada di peramban. Karena itu program ini
+*di-compile* dengan `nim js` lalu *file* `.js`-nya disisipkan ke halaman HTML, bukan dijalankan
 langsung dari terminal.
 
 **4.** Modul `marshal` tidak punya padanan di target JavaScript.
@@ -1770,7 +1770,7 @@ one
 ```
 
 **5.** `--` perlu saat argumen bisa dimulai dengan tanda hubung, sehingga parser akan mengiranya
-opsi. Contohnya nama berkas `-draft.txt`: tulis `tool -- -draft.txt` supaya `-draft.txt` sampai
+opsi. Contohnya nama *file* `-draft.txt`: tulis `tool -- -draft.txt` supaya `-draft.txt` sampai
 sebagai argumen biasa.
 
 ## Bab: HTTP API dengan `asynchttpserver`
@@ -1912,7 +1912,7 @@ else:
 no year
 ```
 
-**5.** Dua di antaranya: (a) datanya sudah besar sehingga membaca dan menulis seluruh berkas setiap
+**5.** Dua di antaranya: (a) datanya sudah besar sehingga membaca dan menulis seluruh *file* setiap
 kali terlalu mahal, dan (b) *query* perlu menyaring atau mengurutkan tanpa memuat semuanya ke memori.
 Yang pindah ke SQLite: penyaringan dan pengurutan (`WHERE`, `ORDER BY`), indeks, transaksi, serta
 penulisan bersamaan dari beberapa proses. Kode di bab ini tidak salah; ia hanya berhenti memadai
@@ -1955,22 +1955,22 @@ srcDir        = "src"
 requires "nim >= 2.0.0"
 ```
 
-Nama berkas *test* boleh apa saja selama diawali huruf `t`, karena `nimble test` menjalankan setiap
-berkas di `tests/` yang dimulai dengan `t`.
+Nama *file* *test* boleh apa saja selama diawali huruf `t`, karena `nimble test` menjalankan setiap
+*file* di `tests/` yang dimulai dengan `t`.
 
-**4.** Tidak ada berkas bernama `notes_helpers.nim` di jalur pencarian:
+**4.** Tidak ada *file* bernama `notes_helpers.nim` di jalur pencarian:
 
 ```{.txt}
 main.nim(1, 8) Error: cannot open file: notes_helpers
 ```
 
 `(1, 8)` adalah kolom 8, tepat di awal nama modul setelah `import `. Perbaikannya menyesuaikan impor
-dengan nama berkas yang benar, misalnya `import notes`, atau memberi berkas modulnya nama
+dengan nama *file* yang benar, misalnya `import notes`, atau memberi *file* modulnya nama
 `notes_helpers.nim`.
 
 **5.** (a) `0.2.0`, karena ada tambahan dan belum ada yang rusak; (b) `0.1.1`, karena hanya memperbaiki
 pesan tanpa mengubah cara pakai; (c) `2.0.0` kalau *package* sudah mencapai `1.0.0`, karena mengganti
-nama prosedur memutus kode pemakai dan perubahan yang memutus wajib menaikkan angka major. Selama
+nama *procedure* memutus kode pemakai dan perubahan yang memutus wajib menaikkan angka major. Selama
 *package* masih di bawah `1.0.0`, perubahan ketiga itu cukup ditandai `0.2.0` dengan catatan di
 riwayat perubahan.
 
@@ -2023,8 +2023,8 @@ same length: true
 fast <= slow: true
 ```
 
-**4.** Tanpa `import std/times`, prosedur `inMilliseconds` untuk `Duration` tidak ikut masuk. Pesannya
-menyebut nama field yang tidak ada, bukan nama prosedur, karena pemanggilannya berbentuk
+**4.** Tanpa `import std/times`, *procedure* `inMilliseconds` untuk `Duration` tidak ikut masuk. Pesannya
+menyebut nama field yang tidak ada, bukan nama *procedure*, karena pemanggilannya berbentuk
 `elapsed.inMilliseconds`:
 
 ```{.txt}
@@ -2032,7 +2032,7 @@ main.nim(5, 13) Error: undeclared field: 'inMilliseconds' for type times.Duratio
 ```
 
 Tipe `Duration` sendiri tetap dikenali, karena `std/monotimes` mengimpornya. Yang hilang adalah
-prosedur pembacanya, dan itu ada di `std/times`. Perbaikannya menambahkan `import std/times`.
+*procedure* pembacanya, dan itu ada di `std/times`. Perbaikannya menambahkan `import std/times`.
 
 **5.** Dua keadaan yang masuk akal untuk berhenti mengoptimasi:
 
@@ -2057,7 +2057,7 @@ target name: host
 workers: 8
 ```
 
-**3.** `when` memilih cabang saat kompilasi, jadi tidak ada pemeriksaan runtime:
+**3.** `when` memilih cabang saat *compile*, jadi tidak ada pemeriksaan runtime:
 
 ```{.nim}
 when defined(windows):
@@ -2067,7 +2067,7 @@ else:
 ```
 
 Cabang yang tidak dipilih dibuang seluruhnya. Ia bahkan tidak diperiksa tipenya, sehingga boleh
-menyebut nama yang hanya ada di sistem itu, misalnya prosedur dari `std/posix` pada cabang unix.
+menyebut nama yang hanya ada di sistem itu, misalnya *procedure* dari `std/posix` pada cabang unix.
 Itu yang membuat `when` dipakai untuk kode per platform, bukan sekadar untuk memilih teks.
 
 **4.** `mode` diisi `let`, jadi nilainya baru diketahui saat program berjalan, sementara `when`
@@ -2089,7 +2089,7 @@ if mode == "--debug":
 ```
 
 Kalau pilihannya memang harus compile-time, nilainya tidak boleh datang dari argumen. Ganti dengan
-simbol yang diberikan saat kompilasi, misalnya `when defined(debug)`.
+simbol yang diberikan saat *compile*, misalnya `when defined(debug)`.
 
 **5.** Dua hal yang harus ada sebelum cross-compile ke Windows menghasilkan biner:
 
@@ -2105,7 +2105,7 @@ tidak diberikan, yang dihasilkan adalah biner host yang tidak bisa dijalankan di
 
 ## Bab: Proyek akhir: catatan dari terminal
 
-**1.** Tambahkan satu prosedur di `a02_store.nim`, sejajar dengan `removeNote`:
+**1.** Tambahkan satu *procedure* di `a02_store.nim`, sejajar dengan `removeNote`:
 
 ```{.nim}
 proc setDone*(path: string, index: int, done: bool): bool =
@@ -2148,13 +2148,13 @@ Jangan lupa menambahkan baris `done <index>` pada teks `Usage`. Sesudah itu, `ad
 1: [x] buy milk
 ```
 
-**2.** Berkasnya belum ada, dan `loadNotes` mengembalikan barisan kosong untuk kasus itu:
+**2.** *File itu* belum ada, dan `loadNotes` mengembalikan *seq* kosong untuk kasus itu:
 
 ```{.txt}
 no notes
 ```
 
-Setelah `add "one"`, berkasnya berisi satu catatan, sehingga `list` mencetak:
+Setelah `add "one"`, *file itu* berisi satu catatan, sehingga `list` mencetak:
 
 ```{.txt}
 1: one
@@ -2173,7 +2173,7 @@ Setelah `add "one"`, berkasnya berisi satu catatan, sehingga `list` mencetak:
     check notes[1].done
 ```
 
-**4.** `parseJson("[]")` menghasilkan `JsonNode`, bukan barisan, dan prosedur `add` untuk `JsonNode`
+**4.** `parseJson("[]")` menghasilkan `JsonNode`, bukan *seq*, dan *procedure* `add` untuk `JsonNode`
 hanya menerima `JsonNode` lain sebagai anak:
 
 ```{.txt}
@@ -2183,7 +2183,7 @@ Expression: add(notes, "buy milk")
   [2] "buy milk": string
 ```
 
-Perbaikannya membungkus string menjadi `JsonNode` lebih dulu, atau membangun objeknya langsung:
+Perbaikannya membungkus string menjadi `JsonNode` lebih dulu, atau membangun *object itu* langsung:
 
 ```{.nim}
 import std/json
@@ -2197,12 +2197,12 @@ echo $notes
 ["buy milk"]
 ```
 
-**5.** Satu keuntungan memisahkan modul penyimpanan: aturan "berkas kosong berarti belum ada
+**5.** Satu keuntungan memisahkan modul penyimpanan: aturan "*file* kosong berarti belum ada
 catatan" ditulis sekali di `loadNotes`, dan baik CLI maupun *test* memakai aturan yang sama. Kalau
 aturan itu disalin ke dua tempat, keduanya bisa berbeda diam-diam.
 
 Satu pekerjaan yang harus ditambahkan sebelum dipakai dari dua komputer: aturan untuk penulisan
-bersamaan. Berkas JSON ditimpa seluruhnya setiap kali disimpan, jadi dua pengguna yang menambah
-catatan pada saat yang sama akan saling menghapus. Pilihannya mengunci berkas saat menulis,
-menyimpan ke berkas terpisah per pengguna, atau memindahkan datanya ke layanan seperti pada bab
+bersamaan. *File* JSON ditimpa seluruhnya setiap kali disimpan, jadi dua pengguna yang menambah
+catatan pada saat yang sama akan saling menghapus. Pilihannya mengunci *file* saat menulis,
+menyimpan ke *file* terpisah per pengguna, atau memindahkan datanya ke layanan seperti pada bab
 database.

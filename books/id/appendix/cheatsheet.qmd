@@ -9,7 +9,7 @@ Inggris, sama seperti seluruh buku, dan diuji di Nim 2.2.12.
 |---|---|
 | nilai yang boleh berubah | `var count = 0` |
 | diisi sekali | `let name = "Nim"` |
-| diketahui saat kompilasi | `const MaxItems = 128` |
+| diketahui saat *compile* | `const MaxItems = 128` |
 | tipe ditulis eksplisit | `var age: int8 = 24` |
 | tanpa nilai awal, berisi default tipe | `var flag: bool` |
 
@@ -82,7 +82,7 @@ else:
   echo "other"
 ```
 
-## Perulangan
+## *Loop*
 
 | Konsep | Kode |
 |---|---|
@@ -99,10 +99,10 @@ else:
 
 | Konsep | Kode |
 |---|---|
-| larik ukuran tetap | `var a: array[3, int] = [1, 2, 3]` |
-| larik tanpa tipe eksplisit | `let a = [1, 2, 3]` |
-| barisan | `let s = @[1, 2, 3]` |
-| barisan kosong bertipe | `var s: seq[int] = @[]` |
+| *array* ukuran tetap | `var a: array[3, int] = [1, 2, 3]` |
+| *array* tanpa tipe eksplisit | `let a = [1, 2, 3]` |
+| *seq* | `let s = @[1, 2, 3]` |
+| *seq* kosong bertipe | `var s: seq[int] = @[]` |
 | tambah, buang | `s.add 4`, `s.delete(0)` |
 | sisip | `s.insert(1, 0)` |
 | panjang | `s.len` |
@@ -156,11 +156,11 @@ flags.excl red
 echo green in flags
 ```
 
-## Prosedur dan parameter
+## *Procedure* dan parameter
 
 | Konsep | Kode |
 |---|---|
-| nilai balik | `proc add(a, b: int): int = a + b` |
+| **return value** | `proc add(a, b: int): int = a + b` |
 | tanpa efek samping | `func square(x: int): int = x * x` |
 | parameter default | `proc greet(name: string, punctuation = "!")` |
 | argumen bernama | `greet(punctuation = "?")` |
@@ -220,7 +220,7 @@ finally:
 
 | Konsep | Kode |
 |---|---|
-| pengecualian sendiri | `type TooLarge = object of CatchableError` |
+| *exception* sendiri | `type TooLarge = object of CatchableError` |
 | melempar | `raise newException(TooLarge, "too large")` |
 | efek `raises` | `proc risky(): int {.raises: [ValueError].}` |
 | bersihkan saat keluar | `defer: echo "cleanup"` |
@@ -278,7 +278,7 @@ echo doc["city"].getStr
 | variabel lingkungan | `getEnv("HOME", "/")`, `existsEnv("HOME")` |
 | argumen program | `paramCount()`, `paramStr(1)`, `commandLineParams()` |
 | direktori | `getCurrentDir()`, `setCurrentDir(dir)` |
-| uji berkas | `fileExists(p)`, `dirExists(p)` |
+| uji *file* | `fileExists(p)`, `dirExists(p)` |
 | gabung jalur | `"dir" / "file.txt"` |
 | baca, tulis | `readFile(p)`, `writeFile(p, s)` |
 | telusuri | `walkDir(dir)`, `walkFiles("*.txt")` |
@@ -334,13 +334,13 @@ int twice(int x) { return x * 2; }
 
 | Perintah | Arti |
 |---|---|
-| `nim c file.nim` | kompilasi |
-| `nim r file.nim` | kompilasi lalu jalankan |
+| `nim c file.nim` | *compile* |
+| `nim r file.nim` | *compile* lalu jalankan |
 | `nim check file.nim` | periksa tipe saja |
 | `nim c -d:release file.nim` | build teroptimasi |
 | `nim c -o:app file.nim` | tentukan nama biner |
 | `nim c --mm:orc file.nim` | pilih mode memori |
-| `nim js file.nim` | kompilasi ke JavaScript |
+| `nim js file.nim` | *compile* ke JavaScript |
 | `nim doc file.nim` | buat dokumentasi |
 | `nim c --hints:off file.nim` | senyapkan hint |
 | `nimble test` | jalankan *test* |

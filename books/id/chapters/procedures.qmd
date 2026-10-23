@@ -1,4 +1,4 @@
-# Prosedur, parameter, dan nilai balik
+# *Procedure*, parameter, dan **return value**
 
 Di banyak bahasa, semua rutin disebut "fungsi". Nim memisahkan dua hal: rutin yang boleh mengubah
 keadaan di luar dirinya (`proc`), dan rutin yang dijamin tidak (`func`). Compiler menegakkan
@@ -10,7 +10,7 @@ ubah?", karena jawabannya selalu "tidak ada".
 ::: {.callout-note}
 ## Tujuan bab
 
-Setelah bab ini, pembaca bisa menulis prosedur bertipe jelas, memilih antara `proc` dan `func`,
+Setelah bab ini, pembaca bisa menulis *procedure* bertipe jelas, memilih antara `proc` dan `func`,
 memakai parameter default, argumen bernama (*named argument*), `var` parameter, dan `openArray`,
 serta membaca pesan
 error `can have side effects`.
@@ -18,7 +18,7 @@ error `can have side effects`.
 
 ## `proc`: rutin yang boleh punya efek samping
 
-Tulis daftar parameter bertipe di dalam tanda kurung, lalu tipe nilai balik setelah titik dua.
+Tulis daftar parameter bertipe di dalam tanda kurung, lalu tipe **return value** setelah titik dua.
 
 ```{.nim}
 proc greet(name: string): string =
@@ -31,7 +31,7 @@ echo greet("Nim")
 Hello, Nim
 ```
 
-Badan `greet` hanya satu *expression*, dan *expression* terakhir sebuah prosedur otomatis menjadi nilai
+Badan `greet` hanya satu *expression*, dan *expression* terakhir sebuah *procedure* otomatis menjadi nilai
 baliknya. Jadi `return` tidak wajib.
 
 ## `func`: janji tanpa efek samping
@@ -63,17 +63,17 @@ shout("hello")
 main.nim(1, 6) Error: 'shout' can have side effects
 ```
 
-Baca dari depan: berkas, posisi `(baris, kolom)`, tingkat, lalu isi pesannya. `(1, 6)` menunjuk
+Baca dari depan: *file*, posisi `(baris, kolom)`, tingkat, lalu isi pesannya. `(1, 6)` menunjuk
 baris 1 kolom 6, tepat di nama `shout`. Compiler menambahkan `Hint` yang menyebut `echo` sebagai
 penyebabnya. Perbaikan langsungnya: ganti `func` menjadi `proc`, karena `echo` menulis ke layar,
 sebuah efek samping.
 
 Aturan praktisnya: `func` untuk perhitungan murni, `proc` saat rutin memang mencetak, menulis
-berkas, atau mengubah argumennya.
+*file*, atau mengubah argumennya.
 
-## `result` dan nilai balik yang dibangun bertahap
+## `result` dan **return value** yang dibangun bertahap
 
-Prosedur bertipe nilai balik punya variabel implisit bernama `result`. Nilai awalnya adalah
+*Procedure* bertipe **return value** punya variabel implisit bernama `result`. Nilai awalnya adalah
 default tipe (`0` untuk `int`, `""` untuk `string`), dan *expression* terakhir menimpanya.
 
 ```{.nim}
@@ -88,12 +88,12 @@ echo total(@[1, 2, 3, 4])
 10
 ```
 
-`result` berguna saat nilai balik dibangun bertahap. Di `total`, tiap putaran menambah `result`
+`result` berguna saat **return value** dibangun bertahap. Di `total`, tiap putaran menambah `result`
 tanpa variabel tambahan.
 
 ## `return` untuk keluar lebih awal
 
-`return` menghentikan prosedur saat itu juga.
+`return` menghentikan *procedure* saat itu juga.
 
 ```{.nim}
 proc classify(n: int): string =
@@ -115,7 +115,7 @@ positive
 ```
 
 Dua `if` pertama sudah menangani kasusnya, jadi baris terakhir hanya dieksekusi untuk bilangan
-positif, dan hasilnya menjadi nilai balik.
+positif, dan hasilnya menjadi **return value**.
 
 ## Parameter default dan argumen bernama
 
@@ -173,12 +173,12 @@ echo count
 ```
 
 Pemanggil harus mengoper variabel, bukan angka atau *expression*. Inilah *pass by reference* di Nim,
-dan karena tertulis di deklarasi prosedur, pembaca tidak perlu menebaknya.
+dan karena tertulis di deklarasi *procedure*, pembaca tidak perlu menebaknya.
 
-## `openArray`: satu prosedur untuk larik dan barisan
+## `openArray`: satu *procedure* untuk *array* dan *seq*
 
-Parameter bertipe `seq[int]` hanya menerima barisan. `openArray[int]` menerima larik maupun
-barisan, tanpa menyalin isinya.
+Parameter bertipe `seq[int]` hanya menerima *seq*. `openArray[int]` menerima *array* maupun
+*seq*, tanpa menyalin isinya.
 
 ```{.nim}
 proc total(values: openArray[int]): int =
@@ -194,12 +194,12 @@ echo total(@[10, 20])
 30
 ```
 
-Pemanggilan pertama mengirim larik, yang kedua mengirim barisan. Satu prosedur menangani
-keduanya. Batasnya: `openArray` tidak bisa diubah isinya dari dalam prosedur.
+Pemanggilan pertama mengirim *array*, yang kedua mengirim *seq*. Satu *procedure* menangani
+keduanya. Batasnya: `openArray` tidak bisa diubah isinya dari dalam *procedure*.
 
 ## Overloading: nama sama, tipe berbeda
 
-Beberapa prosedur boleh memakai nama yang sama asalkan daftar parameternya berbeda. Compiler
+Beberapa *procedure* boleh memakai nama yang sama asalkan daftar parameternya berbeda. Compiler
 memilih berdasarkan tipe argumen.
 
 ```{.nim}
@@ -220,7 +220,7 @@ string: answer
 
 ## `discard`: saat hasilnya memang dibuang
 
-Nim menolak nilai balik yang dibuang diam-diam. Kode berikut gagal dikompilasi:
+Nim menolak **return value** yang dibuang diam-diam. Kode berikut gagal *di-compile*:
 
 ```{.nim}
 proc bump(counter: var int): int =
@@ -267,8 +267,8 @@ echo hits
    echo scale(5, factor = 10)
    ```
 3. Tulis `proc average(values: openArray[float]): float` yang mengembalikan rata-rata, lalu
-   panggil sekali dengan larik dan sekali dengan barisan.
-4. Kode berikut gagal dikompilasi. Perbaiki, lalu jelaskan isi pesannya:
+   panggil sekali dengan *array* dan sekali dengan *seq*.
+4. Kode berikut gagal *di-compile*. Perbaiki, lalu jelaskan isi pesannya:
    ```{.nim}
    proc double(x: int): int =
      value * 2
@@ -282,12 +282,12 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 ## Ringkasan
 
 - `proc` boleh punya efek samping; `func` dijamin tidak, dan compiler menolak yang melanggar.
-- *Expression* terakhir menjadi nilai balik; `result` untuk nilai bertahap, `return` untuk keluar awal.
+- *Expression* terakhir menjadi **return value**; `result` untuk nilai bertahap, `return` untuk keluar awal.
 - Parameter default dan argumen bernama membuat pemanggilan panjang tetap terbaca.
-- `var` parameter menulis balik ke pemanggil; `openArray` menerima larik dan barisan.
-- Nilai balik yang tidak dipakai ditolak compiler; tulis `discard` kalau memang dibuang.
+- `var` parameter menulis balik ke pemanggil; `openArray` menerima *array* dan *seq*.
+- **Return value** yang tidak dipakai ditolak compiler; tulis `discard` kalau memang dibuang.
 
 ## Selanjutnya
 
 Bab berikutnya membahas [tuple](tuples.qmd): menggabungkan beberapa nilai menjadi satu,
-mengembalikannya dari prosedur, dan membongkarnya kembali dalam satu baris.
+mengembalikannya dari *procedure*, dan membongkarnya kembali dalam satu baris.

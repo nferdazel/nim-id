@@ -103,7 +103,7 @@ Pesan itu pendek, dan isinya lengkap kalau tahu cara membacanya:
 
 | Bagian | Arti |
 |---|---|
-| `main.nim` | berkas tempat masalahnya |
+| `main.nim` | *file* tempat masalahnya |
 | `(3, 1)` | baris 3, kolom 1 |
 | `Error` | tingkat keparahan; `Warning` dan `Hint` tidak menghentikan build |
 | `'pi' cannot be assigned to` | yang salah: `pi` dideklarasikan `let`, jadi hanya boleh diisi sekali |
@@ -127,9 +127,9 @@ Karena `let` hanya boleh diisi sekali, mendeklarasikannya tanpa nilai juga ditol
 main.nim(1, 5) Error: 'let' symbol requires an initialization
 ```
 
-## `const`: nilainya diketahui saat kompilasi
+## `const`: nilainya diketahui saat *compile*
 
-`const` lebih ketat lagi. Nilainya harus sudah bisa dihitung **saat kompilasi**, bukan saat
+`const` lebih ketat lagi. Nilainya harus sudah bisa dihitung **saat *compile***, bukan saat
 program berjalan.
 
 ```{.nim}
@@ -150,7 +150,7 @@ notes (max 128)
 Bedanya dengan `let` bukan sekadar "lebih tidak boleh diubah". `const` disubstitusi langsung oleh
 compiler, jadi nilainya bisa dipakai untuk hal yang harus diketahui sebelum program jalan:
 ukuran array tetap, parameter generic, atau cabang `when`. Konsekuensinya, `const` tidak bisa
-diisi hasil yang baru diketahui saat runtime, misalnya isi berkas atau waktu sistem.
+diisi hasil yang baru diketahui saat runtime, misalnya isi *file* atau waktu sistem.
 
 Aturan praktisnya:
 
@@ -228,7 +228,7 @@ kode lebih mudah dibaca kalau nilainya diisi eksplisit saat deklarasi.
    a = 2
    echo a, "-", b
    ```
-3. Kenapa `let x: int` gagal dikompilasi? Tulis ulang supaya valid tanpa mengubah maksudnya.
+3. Kenapa `let x: int` gagal *di-compile*? Tulis ulang supaya valid tanpa mengubah maksudnya.
 4. Kode berikut error. Perbaiki, lalu jelaskan kenapa error-nya begitu:
    ```{.nim}
    var name = "Nim"
@@ -240,7 +240,7 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
 ## Ringkasan
 
-- `var` boleh diubah, `let` diisi sekali, `const` ditentukan saat kompilasi.
+- `var` boleh diubah, `let` diisi sekali, `const` ditentukan saat *compile*.
 - `let` dan `const` tidak boleh dideklarasikan tanpa nilai.
 - `echo` tidak menambahkan pemisah antar argumen; `&"..."` butuh `import std/strformat`.
 - Identifier Nim mengabaikan besar-kecil dan `_`, kecuali huruf pertama, sehingga

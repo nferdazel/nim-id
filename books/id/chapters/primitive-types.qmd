@@ -94,7 +94,7 @@ overflow.nim(2) overflow
 Error: unhandled exception: over- or underflow [OverflowDefect]
 ```
 
-Pesan pertama menyebut berkas dan baris. Pesan kedua menyebut jenis masalahnya: `OverflowDefect`.
+Pesan pertama menyebut *file* dan baris. Pesan kedua menyebut jenis masalahnya: `OverflowDefect`.
 Secara bawaan Nim memeriksa overflow dan menghentikan program, bukan diam-diam membungkus nilainya
 menjadi −128. Pemeriksaan itu bisa dimatikan dengan `--overflowChecks:off` (atau `-d:danger`),
 dan saat itu baris di atas benar-benar menghasilkan −128. Jangan lakukan itu untuk menghilangkan
@@ -210,7 +210,7 @@ operator logika di bab operator.
 
 1. Tulis tiga literal, yaitu `0xFF`, `0b1010`, dan `1_000`. Prediksi output `echo` untuk masing-masing
    sebelum menjalankannya.
-2. Apa yang terjadi pada kode ini, dan mengapa pesannya muncul saat runtime, bukan saat kompilasi?
+2. Apa yang terjadi pada kode ini, dan mengapa pesannya muncul saat runtime, bukan saat *compile*?
    ```{.nim}
    var n: int8 = 127
    n = n + 1
@@ -218,7 +218,7 @@ operator logika di bab operator.
    ```
 3. Kenapa `float32(0.1) == 0.1` bernilai `false`, padahal `0.1` dan `float32(0.1)` tampak sama?
 4. Konversi `2.99` menjadi `int`. Hasilnya 2 atau 3? Jelaskan mengapa.
-5. Kode `const Big: int8 = 200` gagal dikompilasi. Perbaiki tanpa menambah nilai lain, lalu
+5. Kode `const Big: int8 = 200` gagal *di-compile*. Perbaiki tanpa menambah nilai lain, lalu
    jelaskan mengapa tipe sebelumnya salah.
 
 Jawaban ada di [Lampiran A](../appendix/answers.qmd).

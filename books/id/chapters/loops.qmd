@@ -1,12 +1,12 @@
-# Perulangan: `for`, `while`, `break`, `continue`
+# *Loop*: `for`, `while`, `break`, `continue`
 
-Mengulang pekerjaan yang sama seratus kali adalah alasan komputer ada. Tapi perulangan juga sumber
+Mengulang pekerjaan yang sama seratus kali adalah alasan komputer ada. Tapi *loop* juga sumber
 bug paling tua: batas yang salah satu, elemen terakhir tidak ikut, atau indeks yang melewati ujung
-larik.
+*array*.
 
-Nim tidak menyediakan `for (int i = 0; i < n; i++)` seperti C. Perulangan `for` di Nim selalu
-memakai *iterator*: rentang, larik, `seq`, atau iterator buatan sendiri. Bentuk itu menghapus banyak
-kesalahan penghitungan indeks.
+Nim tidak menyediakan `for (int i = 0; i < n; i++)` seperti C. *Loop* `for` di Nim selalu
+memakai *iterator*: rentang, *array*, `seq`, atau iterator buatan sendiri. Bentuk itu menghapus banyak
+*error* penghitungan indeks.
 
 ::: {.callout-note}
 ## Tujuan bab
@@ -46,7 +46,7 @@ ujung, jadi `3` ikut. Kesalahpahaman yang paling sering adalah memakai `..` untu
 padahal indeks terakhir selalu `len - 1`. Karena itu gaya yang aman untuk mengulang sebanyak `n`
 kali adalah `for i in 0 ..< n:`.
 
-Variabel `i` hanya berlaku di dalam badan perulangan dan tidak bisa diubah. Menulis `i = 5` di
+Variabel `i` hanya berlaku di dalam badan *loop* dan tidak bisa diubah. Menulis `i = 5` di
 dalamnya ditolak dengan pesan `'i' cannot be assigned to`. Ini disengaja, supaya nilai hitungan tidak
 dirusak dari dalam.
 
@@ -130,12 +130,12 @@ remaining: 2
 Kondisi diperiksa **sebelum** badan dijalankan, jadi `while` bisa berjalan nol kali. Bentuk ini
 satu-satunya `while` yang ada; Nim tidak menyediakan `do .. while`.
 
-Pastikan ada sesuatu di dalam badan yang akhirnya membuat kondisi salah; kalau tidak, perulangannya
+Pastikan ada sesuatu di dalam badan yang akhirnya membuat kondisi salah; kalau tidak, *loop itu*
 tidak pernah berhenti dan kita harus menghentikan prosesnya sendiri.
 
 ## `break` dan `continue`
 
-`break` keluar dari perulangan. `continue` melompat ke putaran berikutnya.
+`break` keluar dari *loop*. `continue` melompat ke putaran berikutnya.
 
 ```{.nim}
 for i in 1 .. 10:
@@ -154,13 +154,13 @@ for i in 1 .. 10:
 ```
 
 Bacanya berurutan tiap putaran: bilangan genap dilewati `continue`, dan begitu `i` melebihi `7`,
-`break` menghentikan perulangan. Hasilnya bilangan ganjil sampai `7`.
+`break` menghentikan *loop*. Hasilnya bilangan ganjil sampai `7`.
 
-Pada perulangan bersarang, keduanya hanya berlaku untuk perulangan terdalam. `break` di dalam
-`for j` tidak menghentikan `for i` di luarnya. Untuk keluar dari dua perulangan sekaligus, pindahkan
-bagian itu ke prosedur tersendiri, atau simpan penanda `bool` yang diperiksa di perulangan luar.
+Pada *loop* bersarang, keduanya hanya berlaku untuk *loop* terdalam. `break` di dalam
+`for j` tidak menghentikan `for i` di luarnya. Untuk keluar dari dua *loop* sekaligus, pindahkan
+bagian itu ke *procedure* tersendiri, atau simpan penanda `bool` yang diperiksa di *loop* luar.
 
-## Membaca pesan error: `break` di luar perulangan
+## Membaca pesan error: `break` di luar *loop*
 
 ```{.nim}
 echo "before"
@@ -189,7 +189,7 @@ yang sama di posisi serupa.
 
    echo total
    ```
-3. Tulis perulangan yang menjumlahkan elemen sebuah `seq[int]` memakai `pairs`, lalu cetak total dan
+3. Tulis *loop* yang menjumlahkan elemen sebuah `seq[int]` memakai `pairs`, lalu cetak total dan
    indeks elemen terbesar.
 4. Kode berikut tidak pernah berhenti. Perbaiki tanpa mengubah maksudnya:
    ```{.nim}
@@ -207,10 +207,10 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 - `countdown(a, b)` dan `countup(a, b, step)` mengatur arah dan langkah.
 - `items` memberi elemen, `pairs` memberi indeks dan elemen sekaligus.
 - Kondisi `while` diperiksa sebelum badan, jadi bisa berjalan nol kali.
-- `break` menghentikan perulangan, `continue` melewati satu putaran; keduanya hanya sah di dalam
-  perulangan.
+- `break` menghentikan *loop*, `continue` melewati satu putaran; keduanya hanya sah di dalam
+  *loop*.
 
 ## Selanjutnya
 
 Bab berikutnya membahas [kumpulan data](collections.qmd): `array` berukuran tetap, `seq` yang bisa
-tumbuh, dan `openArray` yang menerima keduanya sebagai parameter prosedur.
+tumbuh, dan `openArray` yang menerima keduanya sebagai parameter *procedure*.

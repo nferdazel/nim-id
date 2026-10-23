@@ -1,6 +1,6 @@
 # `ref`, `ptr`, dan `nil`
 
-Bab objek berhenti tepat sebelum pertanyaan yang paling sering muncul: di mana datanya sebenarnya
+Bab *object* berhenti tepat sebelum pertanyaan yang paling sering muncul: di mana datanya sebenarnya
 disimpan? `Person(name: "Ada")` pada `ref object` menaruh data di heap dan menyimpan *pointer* ke
 sana. Pada `object` biasa, data menempel langsung di variabelnya. Bab ini membuka kotak itu:
 `ref`, `ptr`, dan `nil`.
@@ -33,9 +33,9 @@ echo p.name, " is ", p.age
 Ada is 36
 ```
 
-`var p: Person` belum menunjuk ke objek apa pun; nilainya `nil`. `new(p)` meminta memori di heap,
-membentuk objek dengan default setiap field, lalu menyimpan alamatnya di `p`. Setelah itu field
-bisa diisi seperti objek biasa.
+`var p: Person` belum menunjuk ke *object* apa pun; nilainya `nil`. `new(p)` meminta memori di heap,
+membentuk *object* dengan default setiap field, lalu menyimpan alamatnya di `p`. Setelah itu field
+bisa diisi seperti *object* biasa.
 
 Konstruktor literal mempersingkat dua langkah itu. `Person(name: "Ada", age: 36)` mengalokasikan
 dan mengisi fieldnya sekaligus.
@@ -65,7 +65,7 @@ dan seterusnya, tanpa menulis `[]` setiap kali.
 
 ## `nil` dan `isNil`
 
-`nil` berarti "tidak menunjuk ke objek mana pun". `ref` yang dideklarasikan tanpa nilai awal
+`nil` berarti "tidak menunjuk ke *object* mana pun". `ref` yang dideklarasikan tanpa nilai awal
 berisi `nil`.
 
 ```{.nim}
@@ -88,7 +88,7 @@ false
 
 `isNil` mengembalikan `true` selama referensinya kosong. Setelah diisi, hasilnya `false`. Uji
 `isNil` sebelum memakai referensi yang mungkin belum diisi. Mendereferensi `nil` menghentikan
-program saat berjalan, bukan saat kompilasi: di macOS dan Linux prosesnya mati dengan `SIGSEGV`,
+program saat berjalan, bukan saat *compile*: di macOS dan Linux prosesnya mati dengan `SIGSEGV`,
 bukan exception Nim yang bisa ditangkap `try`.
 
 ## `ptr`: alamat, bukan pemilik
@@ -116,7 +116,7 @@ Keduanya berbagi lokasi yang sama, jadi perubahan lewat `p` langsung terlihat di
 `ptr` tidak memiliki memori. Ia hanya mencatat alamat. Nim tidak membebaskan memori yang ditunjuk
 sebuah `ptr`, karena kepemilikannya ada di tempat lain.
 
-`ptr` bekerja juga pada objek:
+`ptr` bekerja juga pada *object*:
 
 ```{.nim}
 type Counter = object
@@ -203,11 +203,11 @@ Perbedaannya paling terasa saat nilai disalin.
 
 `ref object` dipakai saat beberapa bagian kode harus berbagi satu nilai, atau saat datanya besar.
 `object` dipakai untuk nilai kecil yang memang ingin disalin. Rincian penyalinannya sudah dibahas
-di bab objek.
+di bab *object*.
 
 ## Kapan `ptr` perlu, dan risikonya
 
-`ptr` diperlukan untuk berbicara dengan C, menulis prosedur tingkat rendah, atau menunjuk ke dalam
+`ptr` diperlukan untuk berbicara dengan C, menulis *procedure* tingkat rendah, atau menunjuk ke dalam
 buffer. Di luar itu, `ref` hampir selalu lebih baik karena memorinya dikelola otomatis.
 
 Risikonya nyata:
@@ -235,9 +235,9 @@ Aturannya sederhana: pakai `ref` kalau bisa, pakai `ptr` hanya saat tidak ada pi
    q.x = 10
    echo p.x, " ", q.x
    ```
-3. Tulis prosedur `incr(p: ptr int)` yang menaikkan nilai yang ditunjuk `p` sebesar satu.
+3. Tulis *procedure* `incr(p: ptr int)` yang menaikkan nilai yang ditunjuk `p` sebesar satu.
 4. Kenapa `var p: Person` harus melewati `new(p)` dulu sebelum `p.name` diisi?
-5. Kode berikut gagal dikompilasi. Perbaiki, lalu jelaskan pesan error-nya:
+5. Kode berikut gagal *di-compile*. Perbaiki, lalu jelaskan pesan error-nya:
    ```{.nim}
    var x = 5
    var p: ptr int = x

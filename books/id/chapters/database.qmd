@@ -3,15 +3,15 @@
 Data yang disimpan di variabel hilang begitu program ditutup. Database ada untuk menutup celah itu:
 menyimpan baris sampai program berikutnya dijalankan. Kabar buruknya, sejak Nim 2.0 modul
 `std/db_sqlite` tidak lagi ikut compiler. Modul basis data dipindahkan ke *package* terpisah,
-`db_connector`. Karena buku ini hanya memakai pustaka standar, kita belajar polanya dengan yang
+`db_connector`. Karena buku ini hanya memakai **standard library**, kita belajar polanya dengan yang
 sudah tersedia, lalu memetakannya ke SQLite.
 
 ::: {.callout-note}
 ## Tujuan bab
 
-Setelah bab ini, pembaca bisa menyimpan baris ke berkas, menyaring dan mengurutkan hasilnya,
+Setelah bab ini, pembaca bisa menyimpan baris ke *file*, menyaring dan mengurutkan hasilnya,
 menulis pembaruan yang tidak berhenti setengah jalan, membaca error `IOError`, dan tahu kapan
-SQLite lebih tepat daripada berkas JSON.
+SQLite lebih tepat daripada *file* JSON.
 :::
 
 ## Baris di memori
@@ -59,7 +59,7 @@ menurut tahun. Di SQL, pekerjaan itu dilakukan `ORDER BY year`; di Nim, `sort`. 
 baris tetap mengikuti urutan penulisan, bukan urutan yang dicari. Untuk hasil SQL, urutannya bahkan
 tidak dijamin tanpa `ORDER BY`, dan keluaran yang berubah setiap kali dijalankan tidak bisa diuji.
 
-## Menyimpan ke berkas
+## Menyimpan ke *file*
 
 Agar data bertahan setelah program berhenti, baris itu harus meninggalkan memori.
 
@@ -94,14 +94,14 @@ rows on disk: 2
 first title: Neuromancer
 ```
 
-`%*{...}` mengubah objek menjadi `JsonNode`, dan `newJArray` menyusunnya menjadi larik. `pretty`
-mencetak JSON dengan indentasi; untuk berkas, `toUgly` lebih hemat karena tidak menyisipkan spasi.
+`%*{...}` mengubah *object* menjadi `JsonNode`, dan `newJArray` menyusunnya menjadi *array*. `pretty`
+mencetak JSON dengan indentasi; untuk *file*, `toUgly` lebih hemat karena tidak menyisipkan spasi.
 `writeFile` menulis semuanya sekaligus, `readFile` membacanya kembali, dan `parseJson` mengubah teks
 menjadi struktur yang bisa ditelusuri.
 
 Tiga langkah itu, buka, tulis, tutup, sama bentuknya dengan alur `db_sqlite`: `open` untuk
 membuka koneksi, `exec` untuk menjalankan perintah, `close` untuk menutupnya. Bedanya, di sini koneksi
-kita adalah berkas biasa.
+kita adalah *file* biasa.
 
 ## *Query*: saring lalu urutkan
 
@@ -135,16 +135,16 @@ for item in result:
 1984 Neuromancer
 ```
 
-`row["year"].getInt` mengambil satu field dan menuntut tipenya `int`. Perulangan itu berperan
+`row["year"].getInt` mengambil satu field dan menuntut tipenya `int`. *Loop* itu berperan
 seperti klausa `WHERE`: hanya baris yang lolos syarat ikut dikumpulkan. `sort` berperan seperti
 `ORDER BY`.
 
 Kebiasaan yang menyelamatkan: urutkan selalu di tempat yang memutuskan keluaran, bukan bergantung
-pada urutan berkas. Sama seperti di SQL, `ORDER BY` bukan hiasan, melainkan bagian dari jawaban.
+pada urutan *file*. Sama seperti di SQL, `ORDER BY` bukan hiasan, melainkan bagian dari jawaban.
 
 ## Transaksi: semua atau tidak sama sekali
 
-Pembaruan yang berhenti di tengah lebih berbahaya daripada pembaruan yang gagal sejak awal. Berkas
+Pembaruan yang berhenti di tengah lebih berbahaya daripada pembaruan yang gagal sejak awal. *File*
 bisa tertinggal separuh terisi.
 
 ```{.nim}
@@ -180,9 +180,9 @@ update rejected
 2 rows after rollback
 ```
 
-Triknya ada di `save`: seluruh data baru ditulis ke berkas sementara, baru dipindahkan menimpa
-berkas lama dengan `moveFile`. Pemindahan itu satu langkah, jadi pembaca tidak pernah melihat berkas
-setengah jadi. Kalau validasi gagal sebelum `writeFile`, berkas lama tidak tersentuh sama sekali.
+Triknya ada di `save`: seluruh data baru ditulis ke *file* sementara, baru dipindahkan menimpa
+*file* lama dengan `moveFile`. Pemindahan itu satu langkah, jadi pembaca tidak pernah melihat *file*
+setengah jadi. Kalau validasi gagal sebelum `writeFile`, *file* lama tidak tersentuh sama sekali.
 Itulah arti *commit* dan *rollback* di sini.
 
 SQLite menyediakan keduanya secara eksplisit. Bungkus beberapa perintah dengan
@@ -190,9 +190,9 @@ SQLite menyediakan keduanya secara eksplisit. Bungkus beberapa perintah dengan
 `db.exec(sql"ROLLBACK")` membatalkan semuanya. Tanpa `BEGIN`, setiap perintah langsung tersimpan,
 dan pembatalan tidak mungkin.
 
-## Bila berkasnya belum ada
+## Bila *file itu* belum ada
 
-Berbeda dengan C yang mengembalikan kode error, Nim melempar pengecualian. Program yang mengabaikannya
+Berbeda dengan C yang mengembalikan kode error, Nim melempar *exception*. Program yang mengabaikannya
 akan berhenti.
 
 ```{.nim}
@@ -211,14 +211,14 @@ except IOError:
 no database yet
 ```
 
-`readFile` melempar `IOError` kalau berkasnya tidak ada; `parseJson` melempar `JsonParsingError`
+`readFile` melempar `IOError` kalau *file itu* tidak ada; `parseJson` melempar `JsonParsingError`
 kalau isinya rusak. Keduanya harus ditangani di tempat yang tahu apa yang harus dilakukan, misalnya
-memulai berkas kosong. Pola ini persis pola `DbError` di `db_sqlite`: kesalahan yang tidak bisa
-diabaikan muncul sebagai pengecualian, bukan sebagai nilai balik.
+memulai *file* kosong. Pola ini persis pola `DbError` di `db_sqlite`: *error* yang tidak bisa
+diabaikan muncul sebagai *exception*, bukan sebagai **return value**.
 
 ## Error sengaja: modul yang sudah pindah
 
-Kode yang mengimpor modul basis data langsung dari pustaka standar kini gagal di baris pertama.
+Kode yang mengimpor modul basis data langsung dari **standard library** kini gagal di baris pertama.
 
 ```{.nim}
 import std/db_sqlite
@@ -228,16 +228,16 @@ import std/db_sqlite
 main.nim(1, 11) Error: cannot open file: std/db_sqlite
 ```
 
-Bacanya dari kiri: `main.nim` adalah berkasnya, `(1, 11)` berarti baris 1 kolom 11, dan `Error`
-berarti kompilasi berhenti. Kolom 11 menunjuk garis miring setelah `std`; nama modulnya sendiri
+Bacanya dari kiri: `main.nim` adalah *file itu*, `(1, 11)` berarti baris 1 kolom 11, dan `Error`
+berarti *compile* berhenti. Kolom 11 menunjuk garis miring setelah `std`; nama modulnya sendiri
 mulai di kolom 8. `cannot open file` bukan
-berarti berkasnya rusak, tetapi modulnya memang tidak ada di jalur pencarian.
+berarti *file itu* rusak, tetapi modulnya memang tidak ada di jalur pencarian.
 
 ## Kapan SQLite tepat
 
-Berkas JSON cukup untuk data kecil yang dibaca dan ditulis utuh. Ia mulai menyusahkan ketika tiga
+*File* JSON cukup untuk data kecil yang dibaca dan ditulis utuh. Ia mulai menyusahkan ketika tiga
 hal muncul bersamaan: datanya besar, *query* harus cepat pada sebagian kecil baris, dan beberapa
-program menulis ke berkas yang sama. Di titik itu pergantian ke SQLite masuk akal.
+program menulis ke *file* yang sama. Di titik itu pergantian ke SQLite masuk akal.
 
 Untuk memakainya, pasang `db_connector`, lalu impor `db_connector/db_sqlite`. Modul itu memerlukan
 `libsqlite3` pada sistem. Bentuk pemakaiannya sama, hanya lebih banyak:
@@ -245,13 +245,13 @@ Untuk memakainya, pasang `db_connector`, lalu impor `db_connector/db_sqlite`. Mo
 | Kebutuhan | Di bab ini | Di `db_sqlite` |
 |---|---|---|
 | membuka | `readFile(path)` | `open("data.db", "", "", "")` |
-| menutup | berkas ditutup otomatis | `db.close()` |
+| menutup | *file* ditutup otomatis | `db.close()` |
 | menjalankan perintah | `writeFile` | `db.exec(sql"CREATE TABLE ...")` |
 | jumlah baris terpengaruh | tidak ada | `db.execAffectedRows` |
 | semua hasil | `parseJson` lalu `for` | `db.getAllRows(sql"SELECT ...")` |
 | satu baris | `rows[0]` | `db.getRow(sql"SELECT ...")` |
 | menyisipkan nilai | `%*{...}` | `db.exec(sql"INSERT ... VALUES (?)", value)` |
-| transaksi | berkas sementara lalu `moveFile` | `BEGIN`, `COMMIT`, `ROLLBACK` |
+| transaksi | *file* sementara lalu `moveFile` | `BEGIN`, `COMMIT`, `ROLLBACK` |
 
 Perintahnya ditulis sebagai `sql"SELECT ..."`, yang menghasilkan nilai `SqlQuery`. Parameter `?` di
 dalamnya itu penting: jangan menyambung nilai ke dalam string SQL. Lewat `?`, `db_sqlite` meng-quote
@@ -259,7 +259,7 @@ dan meng-escape nilai sebelum menyisipkannya, sehingga tanda kutip di dalamnya t
 perintah. Ini bukan parameter binding terpisah seperti di driver SQL lain, jadi aturan menyambung
 string sendiri tetap berlaku. Untuk pengujian, SQLite
 menerima nama basis data `:memory:` sehingga seluruh data hidup di memori dan tidak meninggalkan
-berkas. Selalu tulis `ORDER BY` pada *query* yang hasilnya dicetak, dengan alasan yang sama seperti
+*file*. Selalu tulis `ORDER BY` pada *query* yang hasilnya dicetak, dengan alasan yang sama seperti
 `sort` di bab ini.
 
 ## Latihan
@@ -276,16 +276,16 @@ berkas. Selalu tulis `ORDER BY` pada *query* yang hasilnya dicetak, dengan alasa
        years.add row["year"].getInt
    echo years
    ```
-3. Simpan tiga baris ke sebuah berkas JSON di `getTempDir()`, baca kembali, cetak jumlah barisnya,
-   lalu hapus berkasnya.
-4. Kode berikut berhenti saat dijalankan. Perbaiki, lalu jelaskan pengecualian yang muncul:
+3. Simpan tiga baris ke sebuah *file* JSON di `getTempDir()`, baca kembali, cetak jumlah barisnya,
+   lalu hapus *file itu*.
+4. Kode berikut berhenti saat dijalankan. Perbaiki, lalu jelaskan *exception* yang muncul:
    ```{.nim}
    import std/json
 
    let row = parseJson("""{"title": "Dune"}""")
    echo row["year"].getInt
    ```
-5. Sebutkan dua alasan berkas JSON tidak lagi cukup, dan pekerjaan apa yang harus pindah ke SQLite.
+5. Sebutkan dua alasan *file* JSON tidak lagi cukup, dan pekerjaan apa yang harus pindah ke SQLite.
 
 Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
@@ -293,7 +293,7 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
 - `seq` dan `Table` menyimpan baris selama program berjalan; keduanya hilang saat proses ditutup.
 - `%*` dan `pretty` membangun JSON, `parseJson` membacanya kembali; urutkan sendiri sebelum mencetak.
-- Pembaruan yang aman menulis ke berkas sementara lalu memindahkannya, pola yang sama dengan
+- Pembaruan yang aman menulis ke *file* sementara lalu memindahkannya, pola yang sama dengan
   `COMMIT`.
 - `readFile` melempar `IOError` dan `parseJson` melempar `JsonParsingError`, seperti `DbError` di
   `db_sqlite`.

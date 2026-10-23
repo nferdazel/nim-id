@@ -6,7 +6,7 @@ baru terasa saat program sudah berjalan.
 
 Nim mendorong kita menentukan pilihan sejak awal. `array` berukuran tetap dan disimpan langsung di
 tempatnya; `seq` berukuran dinamis dan bisa tumbuh. Bab ini memakai keduanya, lalu menunjukkan
-`openArray`: satu parameter prosedur yang menerima keduanya tanpa menyalin.
+`openArray`: satu parameter *procedure* yang menerima keduanya tanpa menyalin.
 
 ::: {.callout-note}
 ## Tujuan bab
@@ -43,7 +43,7 @@ elemen terakhir ada di `len - 1`. Nim menyediakan cara membaca dari belakang: `[
 dari ujung, sama dengan `scores[2]` di sini.
 
 Elemen `array` boleh diubah satu per satu selama variabelnya `var`. Deklarasi `let scores` membuat
-seluruh larik tetap, termasuk elemennya.
+seluruh *array* tetap, termasuk elemennya.
 
 ## `array[N, T]` dan nilai default
 
@@ -134,7 +134,7 @@ len: 4
 ```
 
 `@[]` adalah `seq` kosong tanpa elemen. Karena kosong, tipenya tidak bisa disimpulkan dari isinya,
-jadi anotasinya wajib: `seq[int]`. Setelah itu `add` dipanggil berulang kali di dalam perulangan.
+jadi anotasinya wajib: `seq[int]`. Setelah itu `add` dipanggil berulang kali di dalam *loop*.
 
 ## `openArray`: parameter yang menerima keduanya
 
@@ -156,9 +156,9 @@ seq: 15
 ```
 
 `openArray[int]` menerima `array` maupun `seq` bertipe elemen `int`, tanpa menyalin isinya. Ini
-jenis parameter yang dipakai `add`, `insert`, dan banyak prosedur `std/` lainnya. Bedanya dengan
+jenis parameter yang dipakai `add`, `insert`, dan banyak *procedure* `std/` lainnya. Bedanya dengan
 `array` dan `seq`: `openArray` hanya berlaku sebagai parameter, bukan tipe yang bisa disimpan di
-variabel atau dikembalikan dari prosedur. Prosedur yang menerima `openArray` juga tidak bisa
+variabel atau dikembalikan dari *procedure*. *Procedure* yang menerima `openArray` juga tidak bisa
 mengubah panjangnya.
 
 Satu catatan tentang penyalinan: menugaskan `array` atau `seq` ke variabel baru menyalin isinya,
@@ -167,7 +167,7 @@ bukan berbagi. Mengubah salinannya tidak menyentuh yang asli, berbeda dari `list
 ## Batas indeks dan error out-of-bounds
 
 Indeks yang sah untuk `array` dan `seq` berukuran `len` adalah `0` sampai `len - 1`. Indeks konstanta
-yang melewati batas ditangkap saat kompilasi:
+yang melewati batas ditangkap saat *compile*:
 
 ```{.nim}
 let values = [10, 20, 30]
@@ -195,13 +195,13 @@ echo values[index]
 Error: unhandled exception: index 5 not in 0 .. 2 [IndexDefect]
 ```
 
-Program dikompilasi, lalu berhenti saat dijalankan. `IndexDefect` adalah pengecualian yang dilempar
+Program *di-compile*, lalu berhenti saat dijalankan. `IndexDefect` adalah *exception* yang dilempar
 saat indeks keluar batas, dan pesannya menyebut indeks yang salah beserta rentang yang sah. Perilaku
-ini lebih aman daripada C, yang pada kasus serupa membaca memori di luar larik tanpa *warning*.
+ini lebih aman daripada C, yang pada kasus serupa membaca memori di luar *array* tanpa *warning*.
 Output di atas dipotong; keluaran lengkapnya juga memuat *stack trace*.
 
-Pemeriksaan ini menyala sejak awal, termasuk saat program dikompilasi dengan `-d:release`. Hanya
-`-d:danger` yang mematikannya; setelah itu contoh di atas mencetak nilai acak dari luar larik.
+Pemeriksaan ini menyala sejak awal, termasuk saat program *di-compile* dengan `-d:release`. Hanya
+`-d:danger` yang mematikannya; setelah itu contoh di atas mencetak nilai acak dari luar *array*.
 
 ## Latihan
 
@@ -213,9 +213,9 @@ Pemeriksaan ini menyala sejak awal, termasuk saat program dikompilasi dengan `-d
    data.add(data[^1] + 1)
    echo data
    ```
-3. Tulis prosedur `smallest(values: openArray[int]): int` yang mengembalikan nilai terkecil, lalu
+3. Tulis *procedure* `smallest(values: openArray[int]): int` yang mengembalikan nilai terkecil, lalu
    panggil dengan sebuah `array` dan sebuah `seq`.
-4. `var x = @[]` gagal dikompilasi, sementara `var y: seq[int]` jalan dan panjangnya `0`. Jelaskan
+4. `var x = @[]` gagal *di-compile*, sementara `var y: seq[int]` jalan dan panjangnya `0`. Jelaskan
    kenapa keduanya berbeda.
 5. Kode berikut gagal. Perbaiki, lalu jelaskan kenapa compiler menolaknya:
    ```{.nim}
@@ -233,9 +233,9 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
   menghapus.
 - `openArray[T]` sebagai parameter menerima `array` dan `seq` tanpa menyalin, tapi tidak bisa disimpan
   atau dikembalikan.
-- Indeks konstan di luar batas ditolak saat kompilasi; indeks saat runtime melempar `IndexDefect`.
+- Indeks konstan di luar batas ditolak saat *compile*; indeks saat runtime melempar `IndexDefect`.
 
 ## Selanjutnya
 
-Bab berikutnya membahas cara membungkus logika ke dalam [prosedur dan fungsi](procedures.qmd):
-parameter, nilai balik, dan perbedaan `proc` dengan `func`.
+Bab berikutnya membahas cara membungkus logika ke dalam [*procedure* dan fungsi](procedures.qmd):
+parameter, **return value**, dan perbedaan `proc` dengan `func`.

@@ -1,6 +1,6 @@
 # FFI ke C
 
-Sebagian pekerjaan sudah selesai dikerjakan pustaka C: penguraian tanggal, kompresi, atau fungsi
+Sebagian pekerjaan sudah selesai dikerjakan *library* C: penguraian tanggal, kompresi, atau fungsi
 sistem yang tidak punya padanan di Nim. Menulis ulang semuanya mahal. FFI, *foreign function
 interface*, membiarkan Nim memanggil fungsi C secara langsung, tanpa lapisan perantara. Bab ini
 mulai dari satu fungsi sederhana, lalu membaca pesan error saat pragma-nya salah tempat.
@@ -8,14 +8,14 @@ mulai dari satu fungsi sederhana, lalu membaca pesan error saat pragma-nya salah
 ::: {.callout-note}
 ## Tujuan bab
 
-Setelah bab ini, pembaca bisa mengompilasi berkas C bersama program Nim, mendeklarasikan fungsi C
+Setelah bab ini, pembaca bisa *meng-compile* *file* C bersama program Nim, mendeklarasikan fungsi C
 dengan `{.importc.}`, memakai tipe `cint`, `csize_t`, dan `cstring`, serta membaca error
 `invalid pragma: compile`.
 :::
 
-## Memanggil fungsi dari berkas C
+## Memanggil fungsi dari *file* C
 
-Siapkan dua berkas di direktori yang sama. `helper.c` berisi fungsi C biasa:
+Siapkan dua *file* di direktori yang sama. `helper.c` berisi fungsi C biasa:
 
 ```{.c}
 int triple(int x) {
@@ -37,27 +37,27 @@ echo triple(14)
 42
 ```
 
-`{.compile: "helper.c".}` memberi tahu compiler C untuk ikut mengompilasi berkas itu. Jalurnya
-dihitung relatif terhadap berkas Nim yang memuat pragma, jadi `helper.c` dicari di direktori yang
+`{.compile: "helper.c".}` memberi tahu compiler C untuk ikut *meng-compile* *file* itu. Jalurnya
+dihitung relatif terhadap *file* Nim yang memuat pragma, jadi `helper.c` dicari di direktori yang
 sama.
 
-`{.importc.}` menyatakan bahwa `triple` bukan prosedur Nim, melainkan nama yang sudah ada di biner
+`{.importc.}` menyatakan bahwa `triple` bukan *procedure* Nim, melainkan nama yang sudah ada di biner
 C. Namanya harus sama persis; pragma ini tidak menerjemahkan apa pun.
 
 Tipe parameternya `cint`, bukan `int`. `cint` adalah padanan tipe `int` di C, dan keberadaannya
 membuat Nim berbicara dengan ABI C tanpa menebak ukuran tipe. Ukuran `int` di Nim mengikuti mesin,
 sedangkan fungsi C mengharapkan lebar yang tetap.
 
-Kalau fungsi C-nya ada di pustaka terpisah, bukan di berkas yang kita tulis, pustakanya dihubungkan
+Kalau fungsi C-nya ada di *library* terpisah, bukan di *file* yang kita tulis, pustakanya dihubungkan
 dengan `{.passL: "-lm".}`. Pragma itu meneruskan opsi ke linker, dan nama pustakanya mengikuti
-kebiasaan sistem, misalnya `-lm` untuk pustaka matematika.
+kebiasaan sistem, misalnya `-lm` untuk *library* matematika.
 
-Tidak ada skrip build yang perlu ditulis. `nim c main.nim` membaca `{.compile.}`, mengompilasi
+Tidak ada skrip build yang perlu ditulis. `nim c main.nim` membaca `{.compile.}`, *meng-compile*
 `helper.c`, lalu menyambungkan keduanya dalam satu perintah.
 
 ## Fungsi dari header sistem
 
-Kalau fungsinya sudah ada di header sistem, tidak perlu mengompilasi apa pun. Cukup sebut headernya.
+Kalau fungsinya sudah ada di header sistem, tidak perlu *meng-compile* apa pun. Cukup sebut headernya.
 
 ```{.nim}
 proc strlen(s: cstring): csize_t {.importc, header: "<string.h>".}
@@ -122,12 +122,12 @@ pi is about 3.14
 
 `printf` mengembalikan `cint` yang tidak dipakai, jadi hasilnya dibuang dengan `discard`. Format
 `%.2f` tetap aturan C, bukan aturan Nim; Nim hanya meneruskan argumennya. Sejak titik ini, keamanan
-tipe ada di tangan pemanggil, dan kesalahan format baru terlihat saat program berjalan.
+tipe ada di tangan pemanggil, dan *error* format baru terlihat saat program berjalan.
 
 ## Error sengaja: pragma salah tempat
 
-`{.compile.}` bukan pragma yang menempel pada prosedur. Ia pragma berdiri sendiri, dan menaruhnya di
-daftar pragma sebuah prosedur ditolak.
+`{.compile.}` bukan pragma yang menempel pada *procedure*. Ia pragma berdiri sendiri, dan menaruhnya di
+daftar pragma sebuah *procedure* ditolak.
 
 ```{.nim}
 proc triple(x: cint): cint {.compile: "helper.c", importc.}
@@ -142,11 +142,11 @@ main.nim(1, 37) Error: invalid pragma: compile: "helper.c"
 Compiler menunjuk kolom 37, yaitu titik dua setelah nama pragma (`compile` sendiri mulai kolom 30). Pesannya pendek:
 `invalid pragma: compile`. Artinya `{.compile.}` tidak sah di posisi itu. Menggabungkannya dengan
 `{.importc.}` tidak menolong; bahkan sendirian, pragma itu tetap ditolak selama menempel pada
-prosedur.
+*procedure*.
 
 Solusinya memindahkannya. `{.compile: "helper.c".}` berdiri sendiri di barisnya, lalu `{.importc.}`
-dipasang pada deklarasi prosedur. Aturan yang lebih umum: setiap pragma punya tempatnya, dan
-`compile` tempatnya bukan di samping nama prosedur.
+dipasang pada deklarasi *procedure*. Aturan yang lebih umum: setiap pragma punya tempatnya, dan
+`compile` tempatnya bukan di samping nama *procedure*.
 
 FFI memindahkan jaminan keamanan ke sisi kita. Nim tidak bisa memeriksa apakah panjang buffer cukup
 atau apakah penunjuknya masih sah. Karena itu pembungkus tipis di sekeliling fungsi C sering lebih
@@ -164,7 +164,7 @@ mengubah tipe C kembali menjadi tipe Nim, sehingga sisanya tetap kode Nim biasa.
    ```
 3. Jelaskan kenapa `strlen("hello")` mengembalikan 5, bukan 6, padahal `cstring` selalu diakhiri
    byte nol.
-4. Kode berikut gagal dikompilasi. Perbaiki dan jelaskan pesannya:
+4. Kode berikut gagal *di-compile*. Perbaiki dan jelaskan pesannya:
    ```{.nim}
    proc triple(x: cint): cint {.importc, compile: "helper.c".}
 
@@ -175,14 +175,14 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
 ## Ringkasan
 
-- `{.compile.}` ikut mengompilasi berkas C; jalurnya relatif terhadap berkas Nim.
+- `{.compile.}` ikut *meng-compile* *file* C; jalurnya relatif terhadap *file* Nim.
 - `{.importc.}` menyambungkan deklarasi Nim ke simbol C yang namanya sama.
-- `header: "<...>"` mengambil fungsi dari header sistem tanpa mengompilasi berkas tambahan.
+- `header: "<...>"` mengambil fungsi dari header sistem tanpa *meng-compile* *file* tambahan.
 - `cint`, `csize_t`, dan `cstring` menjaga kecocokan dengan tipe C.
-- `{.compile.}` berdiri sendiri; ia tidak bisa menempel pada deklarasi prosedur.
+- `{.compile.}` berdiri sendiri; ia tidak bisa menempel pada deklarasi *procedure*.
 
 ## Selanjutnya
 
-Bab berikutnya mengganti target keluaran dari biner menjadi JavaScript: mengompilasi program Nim
+Bab berikutnya mengganti target keluaran dari biner menjadi JavaScript: *meng-compile* program Nim
 yang sama dengan `nim js`, menjalankannya di Node.js atau peramban, dan mengenali modul yang tidak
-tersedia di sana. Lanjut ke [Kompilasi ke JavaScript](js-backend.qmd).
+tersedia di sana. Lanjut ke [*Compile* ke JavaScript](js-backend.qmd).

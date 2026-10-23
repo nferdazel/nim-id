@@ -1,23 +1,23 @@
-# Objek dan konstruktor
+# *Object* dan konstruktor
 
 Tuple bagus untuk data kecil yang cepat dibongkar. Tapi begitu ada sepuluh field bernama, penanda
-berulang, dan aturan sendiri, tuple mulai menyulitkan. Objek memberi nama pada sekumpulan field,
+berulang, dan aturan sendiri, tuple mulai menyulitkan. *Object* memberi nama pada sekumpulan field,
 dan Nim menambahkan konstruktor literal yang membuatnya nyaman dipakai.
 
-Bab ini juga membongkar satu perbedaan yang sering mengejutkan: objek nilai dan `ref object`
+Bab ini juga membongkar satu perbedaan yang sering mengejutkan: *object* nilai dan `ref object`
 berperilaku berbeda saat disalin. Mengabaikannya sering berujung bug.
 
 ::: {.callout-note}
 ## Tujuan bab
 
 Setelah bab ini, pembaca bisa mendefinisikan `object` dan mengisinya lewat konstruktor, memakai
-nilai default, membedakan objek nilai dari `ref object`, menimpa `$`, dan membaca pesan error
+nilai default, membedakan *object* nilai dari `ref object`, menimpa `$`, dan membaca pesan error
 `undeclared field`.
 :::
 
-## Mendefinisikan objek dan mengisinya
+## Mendefinisikan *object* dan mengisinya
 
-Deklarasikan objek dengan `type`, lalu tulis daftar field di bawahnya.
+Deklarasikan *object* dengan `type`, lalu tulis daftar field di bawahnya.
 
 ```{.nim}
 type Person = object
@@ -33,7 +33,7 @@ Ada is 36
 ```
 
 `Person(name: "Ada", age: 36)` adalah konstruktor literal. Nim membuatnya otomatis untuk setiap
-tipe objek, jadi tidak ada fungsi yang perlu ditulis sendiri. Field yang tidak disebut akan
+tipe *object*, jadi tidak ada fungsi yang perlu ditulis sendiri. Field yang tidak disebut akan
 memakai nilai default.
 
 ## Field yang bisa diubah
@@ -55,9 +55,9 @@ echo p.x, ",", p.y
 
 `x, y: int` adalah singkatan untuk dua field bertipe sama.
 
-## Nilai default objek
+## Nilai default *object*
 
-Objek yang dideklarasikan tanpa isi sudah aman dipakai; setiap field berisi default tipenya.
+*Object* yang dideklarasikan tanpa isi sudah aman dipakai; setiap field berisi default tipenya.
 
 ```{.nim}
 type Counter = object
@@ -75,9 +75,9 @@ echo c.hits, "|", repr(c.label)
 Sama seperti `var` tanpa nilai awal pada tipe dasar: tidak ada sampah memori yang perlu
 dikhawatirkan.
 
-## Objek sudah punya `$` bawaan
+## *Object* sudah punya `$` bawaan
 
-Pembaca sering menduga `echo` menolak objek. Untuk objek nilai, Nim menyediakan `$` bawaan.
+Pembaca sering menduga `echo` menolak *object*. Untuk *object* nilai, Nim menyediakan `$` bawaan.
 
 ```{.nim}
 type Person = object
@@ -95,7 +95,7 @@ cepat, tapi biasanya belum enak dibaca manusia.
 
 ## Menimpa `$` sendiri
 
-Untuk mengubah cara objek dicetak, definisikan `$` untuk tipe itu.
+Untuk mengubah cara *object* dicetak, definisikan `$` untuk tipe itu.
 
 ```{.nim}
 type Person = object
@@ -157,12 +157,12 @@ Ada
 Grace
 ```
 
-`new(q)` mengalokasikan objek lalu menyimpannya di `q`. Constructor literal seperti
+`new(q)` mengalokasikan *object* lalu menyimpannya di `q`. Constructor literal seperti
 `Person(name: "Ada")` melakukan hal yang sama, lalu mengisi fieldnya.
 
 ## `$` bawaan tidak berlaku untuk `ref`
 
-Objek nilai punya `$` bawaan, tapi referensinya tidak.
+*Object* nilai punya `$` bawaan, tapi referensinya tidak.
 
 ```{.nim}
 type Person = ref object
@@ -183,7 +183,7 @@ Expected one of (first mismatch at [position]):
 
 Pesannya tidak menyebut `$` secara gamblang, tapi baris terakhir memberi petunjuk: `echo` butuh
 tipe yang punya `$`. Ada dua perbaikan. Pertama, definisikan `$` untuk `Person`. Kedua, lepas
-referensinya dengan `echo p[]`, supaya `$` bawaan objek yang dipakai.
+referensinya dengan `echo p[]`, supaya `$` bawaan *object* yang dipakai.
 
 ## Nilai vs referensi: menyalin tidak selalu sama
 
@@ -212,8 +212,8 @@ value: 1 99
 ref:   99 99
 ```
 
-Pada objek nilai, `var b = a` menyalin seluruh isinya, jadi mengubah `b` tidak menyentuh `a`.
-Pada `ref object`, `var d = c` menyalin penunjuknya, bukan datanya. Keduanya menunjuk objek yang
+Pada *object* nilai, `var b = a` menyalin seluruh isinya, jadi mengubah `b` tidak menyentuh `a`.
+Pada `ref object`, `var d = c` menyalin penunjuknya, bukan datanya. Keduanya menunjuk *object* yang
 sama, sehingga mengubah `d` ikut mengubah `c`.
 
 Aturannya: pakai `object` untuk nilai kecil yang ingin disalin, dan `ref object` untuk data besar
@@ -241,7 +241,7 @@ jawabannya ada di definisi tipe, bukan di baris pemakaiannya.
 
 ## Warisan dasar
 
-Objek bisa mewarisi field dari objek lain lewat `object of`.
+*Object* bisa mewarisi field dari *object* lain lewat `object of`.
 
 ```{.nim}
 type
@@ -261,9 +261,9 @@ echo describe(rex), " knows ", rex.tricks, " tricks"
 Rex knows 3 tricks
 ```
 
-`Dog` mewarisi field `name` dari `Animal` dan menambah `tricks`. Prosedur yang menerima `Animal`
+`Dog` mewarisi field `name` dari `Animal` dan menambah `tricks`. *Procedure* yang menerima `Animal`
 juga menerima `Dog`, karena `Dog` adalah `Animal` yang lebih khusus. Warisan memakai `ref object`
-dengan `RootObj` sebagai akar hierarki. Bab ini berhenti di sini; pemilihan prosedur saat runtime
+dengan `RootObj` sebagai akar hierarki. Bab ini berhenti di sini; pemilihan *procedure* saat runtime
 dibahas di bagian menengah.
 
 ## Latihan
@@ -279,7 +279,7 @@ dibahas di bagian menengah.
    echo t.done, " ", t.title
    ```
 3. Tulis `type Book = ref object of RootObj` dengan field `title` dan `pages`, buat satu instance,
-   lalu cetak lewat prosedur yang menerima `Book`.
+   lalu cetak lewat *procedure* yang menerima `Book`.
 4. Kode berikut gagal. Perbaiki tanpa mengubah `let`:
    ```{.nim}
    type Point = object
@@ -295,12 +295,12 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 ## Ringkasan
 
 - `object` mengelompokkan field bernama; `Tipe(field: nilai)` adalah konstruktor literal.
-- Field yang tidak diisi memakai default tipenya, dan objek tanpa isi tetap aman dipakai.
-- Objek nilai punya `$` bawaan; `ref object` tidak, jadi definisikan `$` atau pakai `p[]`.
-- Menyalin objek nilai menggandakan datanya; menyalin `ref object` menggandakan penunjuknya.
+- Field yang tidak diisi memakai default tipenya, dan *object* tanpa isi tetap aman dipakai.
+- *Object* nilai punya `$` bawaan; `ref object` tidak, jadi definisikan `$` atau pakai `p[]`.
+- Menyalin *object* nilai menggandakan datanya; menyalin `ref object` menggandakan penunjuknya.
 - `object of RootObj` mewariskan field; `new` mengalokasikan `ref` yang masih `nil`.
 
 ## Selanjutnya
 
-Bab berikutnya membahas [enum dan set](enums-and-sets.qmd): himpunan nilai bernama dengan urutan
+Bab berikutnya membahas [enum dan set](enums-and-sets.qmd): *set* nilai bernama dengan urutan
 tetap, dan *bitset* untuk menguji keanggotaan dengan cepat.

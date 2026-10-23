@@ -8,7 +8,7 @@ Fredianto · v{{< var version >}} · 23 Oktober 2026 · PDF 2,4 MB
 
 Buku ini mengajarkan bahasa [Nim](https://nim-lang.org) dalam bahasa Indonesia, untuk pembaca
 yang sudah pernah menulis program di bahasa lain (Python, JavaScript, PHP, Go) tapi belum pernah
-menyentuh bahasa yang dikompilasi ke native.
+menyentuh bahasa yang *di-compile* ke native.
 
 Buku ini **bukan** terjemahan dokumentasi resmi. Dokumentasi resmi Nim sudah lengkap dan
 berbahasa Inggris; buku ini pelengkap, bukan pengganti. Kalau pembaca sudah nyaman dengan bahasa
@@ -17,9 +17,9 @@ lebih cepat.
 
 ## Yang membuat buku ini berbeda
 
-- **Setiap contoh dijalankan.** Semua berkas di `examples/` dikompilasi dan keluarannya
+- **Setiap contoh dijalankan.** Semua *file* di `examples/` *di-compile* dan keluarannya
   dibandingkan otomatis di CI. Kalau snippet di buku tidak jalan, build-nya gagal.
-- **Kode yang sengaja salah.** Beberapa contoh memang gagal dikompilasi, dan itu disengaja:
+- **Kode yang sengaja salah.** Beberapa contoh memang gagal *di-compile*, dan itu disengaja:
   pembaca dilatih membaca pesan compiler, bukan menghindarinya.
 - **Output ditulis, bukan difoto.** Semua keluaran program berupa teks yang bisa dicari dan
   disalin, dan tetap terbaca oleh pembaca layar.

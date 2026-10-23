@@ -1,8 +1,8 @@
 # Modul, `import`, dan `export`
 
-Program sepanjang seratus baris masih nyaman di satu berkas. Begitu melewati beberapa ratus baris,
-satu berkas menjadi sulit dibaca, dan setiap perubahan menyeret separuh program. Nim membagi program
-menjadi modul: satu berkas, satu ruang nama, satu unit yang bisa diimpor. Aturannya sebenarnya
+Program sepanjang seratus baris masih nyaman di satu *file*. Begitu melewati beberapa ratus baris,
+satu *file* menjadi sulit dibaca, dan setiap perubahan menyeret separuh program. Nim membagi program
+menjadi modul: satu *file*, satu ruang nama, satu unit yang bisa diimpor. Aturannya sebenarnya
 sederhana. Yang menyimpan kejutan adalah `import`: nama apa yang masuk, milik siapa, dan siapa yang
 boleh memakainya.
 
@@ -14,10 +14,10 @@ Setelah bab ini, pembaca bisa memecah kode menjadi beberapa modul, memakai `impo
 `cannot open file` dan `invalid module name`.
 :::
 
-## Satu berkas, satu modul
+## Satu *file*, satu modul
 
-Sebuah berkas Nim adalah sebuah modul. Nama berkas, tanpa akhiran `.nim`, menjadi nama modul. Simpan
-kode berikut sebagai `a01_greeting.nim`. Berkas contoh di buku ini diberi awalan `aNN`, dan awalan
+Sebuah *file* Nim adalah sebuah modul. Nama *file*, tanpa akhiran `.nim`, menjadi nama modul. Simpan
+kode berikut sebagai `a01_greeting.nim`. *File* contoh di buku ini diberi awalan `aNN`, dan awalan
 itu ikut menjadi bagian nama modul.
 
 ```{.nim}
@@ -38,13 +38,13 @@ Dua hal menentukan apakah `greet` dan `version` terlihat dari modul lain.
 
 - Tanda bintang setelah nama, `greet*`, menandai simbol sebagai ekspor. Tanpa bintang, simbol hanya
   hidup di dalam modulnya. Ini kebalikan dari bahasa yang mengekspor semua nama secara default.
-- `when isMainModule` menandai blok yang hanya berjalan saat berkas ini dijalankan langsung. Ketika
+- `when isMainModule` menandai blok yang hanya berjalan saat *file* ini dijalankan langsung. Ketika
   modul lain mengimpornya, blok itu dilewati. Modul bisa sekaligus menjadi program kecil yang bisa
   diuji sendiri.
 
 ## `import`: memasukkan nama dari modul lain
 
-Modul lain memakai `import` untuk masuk ke berkas.
+Modul lain memakai `import` untuk masuk ke *file*.
 
 ```{.nim}
 import a01_greeting
@@ -117,7 +117,7 @@ susunan internal sebuah *package* dan menyediakan satu pintu masuk.
 ## Nama modul harus identifier yang sah
 
 Nama modul harus identifier Nim yang sah. Nama tidak boleh diawali angka dan tidak boleh memuat
-tanda hubung. Compiler menolaknya sebelum sempat membaca isi berkas.
+tanda hubung. Compiler menolaknya sebelum sempat membaca isi *file*.
 
 ```{.nim}
 echo "this file is fine; its name is not"
@@ -127,7 +127,7 @@ echo "this file is fine; its name is not"
 Error: invalid module name: '3d_helpers'; a module name must be a valid Nim identifier.
 ```
 
-Pesan itu tidak menyebut baris, karena masalahnya ada di nama berkas, bukan di kode. Berkas di atas
+Pesan itu tidak menyebut baris, karena masalahnya ada di nama *file*, bukan di kode. *File* di atas
 dinamai `3d_helpers.nim`, dan itulah yang ditolak.
 
 ## Modul di dalam direktori
@@ -141,7 +141,7 @@ proc upper*(s: string): string =
   s.toUpperAscii()
 ```
 
-Pemanggil menulis garis miring untuk menunjuk letak berkas.
+Pemanggil menulis garis miring untuk menunjuk letak *file*.
 
 ```{.nim}
 import textutils/format
@@ -153,13 +153,13 @@ echo format.upper("hello")
 HELLO
 ```
 
-Garis miring menunjuk letak berkas, bukan nama modul. Modul di atas tetap bernama `format`, jadi
+Garis miring menunjuk letak *file*, bukan nama modul. Modul di atas tetap bernama `format`, jadi
 akses lengkapnya `format.upper`, bukan `textutils/format.upper`. Aturan yang sama berlaku untuk
-pustaka standar: `import std/strutils` mengambil modul bernama `strutils` dari direktori `std`.
+**standard library**: `import std/strutils` mengambil modul bernama `strutils` dari direktori `std`.
 
-## `include`: menyisipkan berkas, bukan mengimpor
+## `include`: menyisipkan *file*, bukan mengimpor
 
-`include` tidak membuat modul baru. Ia menyalin isi berkas ke posisi perintahnya, seakan ditulis di
+`include` tidak membuat modul baru. Ia menyalin isi *file* ke posisi perintahnya, seakan ditulis di
 sana. Karena itu `include` berguna untuk memecah satu modul yang sangat panjang, bukan untuk
 memisahkan tanggung jawab.
 
@@ -179,12 +179,12 @@ notes
 
 Perhatikan `appName` dipakai langsung, tanpa awalan modul. Tidak ada modul yang dibuat. Karena
 `include` bekerja dengan menyalin teks, satu nama di dalamnya bisa bertabrakan dengan nama di
-berkas induk tanpa *warning* dari compiler. Untuk memisahkan kode, `import` hampir selalu pilihan
+*file* induk tanpa *warning* dari compiler. Untuk memisahkan kode, `import` hampir selalu pilihan
 yang lebih aman.
 
 ## Membaca error: modul tidak ditemukan
 
-Kalau nama modul salah, compiler mencarinya di berkas dan berhenti.
+Kalau nama modul salah, compiler mencarinya di *file* dan berhenti.
 
 ```{.nim}
 import not_a_real_module
@@ -196,18 +196,18 @@ echo "never reached"
 main.nim(1, 8) Error: cannot open file: not_a_real_module
 ```
 
-Posisi `(1, 8)` menunjuk nama modul di baris `import`. Compiler tidak tahu berkas itu memang tidak
-ada atau hanya salah ketik, jadi pesannya literal: berkas tidak bisa dibuka. Periksa kembali nama
-berkas dan letaknya. Untuk pustaka standar, awalan `std/` adalah konvensi yang membuat asal modul
+Posisi `(1, 8)` menunjuk nama modul di baris `import`. Compiler tidak tahu *file* itu memang tidak
+ada atau hanya salah ketik, jadi pesannya literal: *file* tidak bisa dibuka. Periksa kembali nama
+*file* dan letaknya. Untuk **standard library**, awalan `std/` adalah konvensi yang membuat asal modul
 jelas: `import std/strutils`. Bentuk tanpa awalan masih dikenali compiler, tetapi tidak menunjukkan
-bahwa modul itu bagian dari pustaka standar.
+bahwa modul itu bagian dari **standard library**.
 
 ## Latihan
 
 1. Buat `shout.nim` berisi `proc shout*(text: string): string` bertanda bintang, lalu panggil dari
    `main.nim`.
-2. Berkas `mathx.nim` mengekspor `double*`. Berkas kedua menulis `from mathx import double` lalu
-   `echo double(21)`. Berapa outputnya, dan bolehkah berkas kedua memanggil `mathx.double(21)`?
+2. *File* `mathx.nim` mengekspor `double*`. *File* kedua menulis `from mathx import double` lalu
+   `echo double(21)`. Berapa outputnya, dan bolehkah *file* kedua memanggil `mathx.double(21)`?
 3. Kode berikut gagal. Jelaskan kenapa, lalu perbaiki:
    ```{.nim}
    import textutils/format
@@ -220,13 +220,13 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
 ## Ringkasan
 
-- Satu berkas Nim adalah satu modul; nama berkas menjadi nama modul, dan harus identifier yang sah.
+- Satu *file* Nim adalah satu modul; nama *file* menjadi nama modul, dan harus identifier yang sah.
 - Tanpa tanda `*`, simbol tidak keluar dari modulnya.
 - `import` membuka semua ekspor, `from ... import` membuka sebagian, `export` meneruskan.
-- Modul di direktori tetap bernama berkasnya, bukan jalurnya.
+- Modul di direktori tetap bernama *file itu*, bukan jalurnya.
 - `include` menyalin teks dan tidak membuat modul; pakai `import` untuk memisahkan kode.
 
 ## Selanjutnya
 
-Bab berikutnya membahas [pengecualian](exceptions.qmd): apa yang terjadi saat operasi gagal di tengah
-program, dan bagaimana Nim melacak pengecualian yang mungkin muncul.
+Bab berikutnya membahas [*exception*](exceptions.qmd): apa yang terjadi saat operasi gagal di tengah
+program, dan bagaimana Nim melacak *exception* yang mungkin muncul.

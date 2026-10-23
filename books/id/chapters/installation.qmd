@@ -63,7 +63,7 @@ Perhatikan satu hal: versi di repositori distro sering tertinggal. Setelah memas
 
 ## Windows
 
-Unduh berkas zip *release*, ekstrak ke direktori pilihan, lalu jalankan `finish.exe` di dalamnya.
+Unduh *file* zip *release*, ekstrak ke direktori pilihan, lalu jalankan `finish.exe` di dalamnya.
 Program kecil itu menambahkan direktori `bin` ke PATH dan menawarkan pemasangan MinGW. `choosenim`
 juga bekerja di Windows dan jauh lebih sering dipakai karena memudahkan ganti versi.
 
@@ -87,13 +87,13 @@ shell menelusuri setiap direktori di PATH, tidak menemukannya, lalu menyerah.
 
 Perbaikannya: tambahkan dua direktori ini ke PATH. Direktori `bin` tempat Nim dipasang, dan
 `~/.nimble/bin` tempat `choosenim` dan `nimble` menaruh biner. Untuk `choosenim`, tambahkan baris
-berikut ke berkas profil shell (`.zshrc` atau `.bashrc`):
+berikut ke *file* profil shell (`.zshrc` atau `.bashrc`):
 
 ```{.bash}
 export PATH="$HOME/.nimble/bin:$PATH"
 ```
 
-Muat ulang berkas itu dengan `source ~/.zshrc`, atau cukup buka terminal baru.
+Muat ulang *file* itu dengan `source ~/.zshrc`, atau cukup buka terminal baru.
 
 ## Memeriksa versi dan compiler C
 
@@ -136,7 +136,7 @@ memeriksa satu per satu.
 ## Kalau versi berbeda
 
 Kalau versi yang terpasang bukan 2.2.12, contoh di buku ini kemungkinan besar tetap jalan. Yang
-paling sering berubah antar versi adalah isi pesan error dan detail kecil di pustaka standar. Kalau
+paling sering berubah antar versi adalah isi pesan error dan detail kecil di **standard library**. Kalau
 output contoh di mesin pembaca berbeda dari buku, langkah pertama adalah mencocokkan versi:
 
 ```{.bash}

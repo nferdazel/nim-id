@@ -1,6 +1,6 @@
-# Tur pustaka standar
+# Tur **standard library**
 
-Bahasa yang bagus tanpa pustaka akan melelahkan. Nim mengirim pustaka standar bersama compiler,
+Bahasa yang bagus tanpa *library* akan melelahkan. Nim mengirim **standard library** bersama compiler,
 dan modulnya diimpor dengan awalan `std/`. Bab ini menelusuri empat modul yang paling sering
 dipakai hari-hari: `strutils`, `sequtils`, `tables`, dan `json`. Setiap modul dibahas secukupnya;
 sisanya punya bab sendiri.
@@ -8,15 +8,15 @@ sisanya punya bab sendiri.
 ::: {.callout-note}
 ## Tujuan bab
 
-Setelah bab ini, pembaca bisa mengolah teks dengan `std/strutils`, mengubah barisan dengan
+Setelah bab ini, pembaca bisa mengolah teks dengan `std/strutils`, mengubah *seq* dengan
 `std/sequtils`, menyimpan nilai berkunci di `Table`, membaca dan membangun JSON, serta memilih
 antara `Table` dan `seq` dengan alasan yang jelas.
 :::
 
-## Mengimpor modul pustaka standar
+## Mengimpor modul **standard library**
 
-Modul pustaka standar diimpor dengan awalan `std/`, misalnya `import std/strutils` atau
-`import std/sequtils`. Awalan itu memisahkan modul resmi dari berkas lokal. Tanpa impor, nama
+Modul **standard library** diimpor dengan awalan `std/`, misalnya `import std/strutils` atau
+`import std/sequtils`. Awalan itu memisahkan modul resmi dari *file* lokal. Tanpa impor, nama
 seperti `strip` atau `hasKey` tidak dikenal compiler.
 
 ## `std/strutils`: mengolah teks
@@ -46,7 +46,7 @@ a-b-c
 menggabungkan kembali `seq[string]` menjadi satu string dengan pemisah. Semua fungsi ini
 mengembalikan nilai baru; string asalnya tidak berubah.
 
-## `std/sequtils`: mengubah barisan
+## `std/sequtils`: mengubah *seq*
 
 ```{.nim}
 import std/sequtils
@@ -175,12 +175,12 @@ Ada is 36
 ```
 
 `%*{...}` membangun `JsonNode` langsung dari literal, tanpa menulis string JSON lalu menguraikannya.
-`to(Tipe)` mengubahnya menjadi objek biasa. Keduanya menghindari penggabungan string manual yang
+`to(Tipe)` mengubahnya menjadi *object* biasa. Keduanya menghindari penggabungan string manual yang
 mudah salah.
 
 ## Membaca error: kunci yang tidak ada
 
-Mengakses kunci yang tidak ada bukan error kompilasi; program baru berhenti saat berjalan.
+Mengakses kunci yang tidak ada bukan error *compile*; program baru berhenti saat berjalan.
 
 ```{.nim}
 import std/json
@@ -199,9 +199,9 @@ saat kuncinya hilang.
 
 ## Modul lain punya babnya sendiri
 
-Pustaka standar jauh lebih luas dari empat modul ini. `std/os` dibahas di bab berkas dan operasi
+**Standard library** jauh lebih luas dari empat modul ini. `std/os` dibahas di bab *file* dan operasi
 sistem, `std/strformat` di bab variabel, dan `std/math` serta `std/algorithm` muncul di bab operasi
-dan berkas. `std/random` dan `std/times` tidak punya bab khusus di buku ini; dokumentasi resmi jadi
+dan *file*. `std/random` dan `std/times` tidak punya bab khusus di buku ini; dokumentasi resmi jadi
 rujukan berikutnya. Pola impornya sama: `import std/nama`.
 
 ## Latihan
@@ -231,8 +231,8 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
 ## Ringkasan
 
-- Modul pustaka standar diimpor dengan awalan `std/`, misalnya `import std/strutils`.
-- `strutils` mengolah teks (`strip`, `split`, `join`), `sequtils` mengubah barisan (`filterIt`,
+- Modul **standard library** diimpor dengan awalan `std/`, misalnya `import std/strutils`.
+- `strutils` mengolah teks (`strip`, `split`, `join`), `sequtils` mengubah *seq* (`filterIt`,
   `mapIt`).
 - `Table[K, V]` memetakan kunci ke nilai untuk pencarian cepat; `seq` tetap dipakai saat urutan
   penting.
@@ -241,5 +241,5 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
 ## Selanjutnya
 
-Bab berikutnya membahas berkas dan sistem operasi: [berkas dan OS](files-and-os.qmd), membaca dan
-menulis berkas, menelusuri direktori, serta membaca argumen dan variabel lingkungan.
+Bab berikutnya membahas *file* dan sistem operasi: [*file* dan OS](files-and-os.qmd), membaca dan
+menulis *file*, menelusuri direktori, serta membaca argumen dan variabel lingkungan.

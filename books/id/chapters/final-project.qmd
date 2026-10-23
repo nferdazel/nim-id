@@ -1,6 +1,6 @@
 # Proyek akhir: catatan dari terminal
 
-Alat kecil yang berguna hampir selalu punya bentuk yang sama: beberapa modul, satu berkas data,
+Alat kecil yang berguna hampir selalu punya bentuk yang sama: beberapa modul, satu *file* data,
 beberapa subperintah, dan beberapa *test*. Bagian C sudah menutup setiap potongannya satu per satu.
 Sekarang potongan itu disatukan menjadi satu program yang benar-benar bisa dipakai: `notes`, alat
 baris perintah untuk mencatat hal-hal pendek.
@@ -9,7 +9,7 @@ baris perintah untuk mencatat hal-hal pendek.
 ## Tujuan bab
 
 Setelah bab ini, pembaca bisa memecah satu alat kecil menjadi modul terpisah, menyimpan data ke
-berkas JSON, membaca subperintah dengan `std/parseopt`, menulis tesnya dengan `std/unittest`, dan
+*file* JSON, membaca subperintah dengan `std/parseopt`, menulis tesnya dengan `std/unittest`, dan
 membaca pesan error ketika JSON diperlakukan seperti object biasa.
 :::
 
@@ -43,16 +43,16 @@ when isMainModule:
 buy milk
 ```
 
-Tiga hal sudah terlihat di sini. `%*` membangun objek JSON dari pasangan nama dan nilai. `$` pada
+Tiga hal sudah terlihat di sini. `%*` membangun *object* JSON dari pasangan nama dan nilai. `$` pada
 `JsonNode` menghasilkan teks JSON, bukan penjelasan tipe. Dan pasangan `toJson` serta `fromJson`
 membuat konversi hanya ditulis sekali, lalu dipakai di mana saja.
 
-Tanda bintang pada `Note` dan kedua prosedurnya adalah ekspor. Tanpa tanda itu, modul lain tidak
+Tanda bintang pada `Note` dan kedua *procedure itu* adalah ekspor. Tanpa tanda itu, modul lain tidak
 bisa memakainya, dan itulah yang kita butuhkan di langkah berikut.
 
 ## Langkah 2: modul penyimpanan
 
-Sekarang pindahkan bagian yang menyentuh berkas ke modulnya sendiri. Simpan sebagai
+Sekarang pindahkan bagian yang menyentuh *file* ke modulnya sendiri. Simpan sebagai
 `a02_store.nim`.
 
 ```{.nim}
@@ -122,14 +122,14 @@ removed: true
 left: 1
 ```
 
-Modul ini adalah seluruh aturan penyimpanan dalam satu tempat. `loadNotes` mengembalikan barisan
-kosong kalau berkasnya belum ada, sehingga pemanggil pertama tidak perlu menanganinya sendiri.
-`removeNote` mengembalikan `bool` sebagai laporan, bukan menghentikan program dengan pengecualian,
-karena indeks di luar rentang adalah kesalahan pemakaian yang wajar.
+Modul ini adalah seluruh aturan penyimpanan dalam satu tempat. `loadNotes` mengembalikan *seq*
+kosong kalau *file itu* belum ada, sehingga pemanggil pertama tidak perlu menanganinya sendiri.
+`removeNote` mengembalikan `bool` sebagai laporan, bukan menghentikan program dengan *exception*,
+karena indeks di luar rentang adalah *error* pemakaian yang wajar.
 
-Blok `when isMainModule` adalah bagian yang hanya berjalan saat berkas ini dijalankan langsung.
+Blok `when isMainModule` adalah bagian yang hanya berjalan saat *file* ini dijalankan langsung.
 Ketika modul lain mengimpornya, blok itu dilewati. Karena itu modul bisa diuji sendiri, tanpa CLI.
-Contoh ini memakai `getTempDir()` supaya berkas percobaannya tidak tertinggal di direktori kerja,
+Contoh ini memakai `getTempDir()` supaya *file* percobaannya tidak tertinggal di direktori kerja,
 lalu menghapusnya sendiri di akhir.
 
 ## Langkah 3: subperintah
@@ -301,7 +301,7 @@ suite "store":
   [OK] rejects an index that is out of range
 ```
 
-Nama setiap kasus adalah perilaku, bukan nama prosedur. `setup` dan `teardown` menghapus berkas
+Nama setiap kasus adalah perilaku, bukan nama *procedure*. `setup` dan `teardown` menghapus *file*
 sebelum dan sesudah tiap kasus, sehingga urutan pelaksanaan tidak lagi penting dan satu *test* tidak
 mewarisi sisa *test* sebelumnya. *Test* jenis ini yang membuat program kecil tetap bisa diubah setelah
 berbulan-bulan.
@@ -324,19 +324,19 @@ main.nim(6, 10) Error: undeclared field: 'text' for type json.JsonNode [type dec
 ```
 
 Pesan ini menunjuk baris 6 kolom 10, tepat di `.text`, lalu menyebut sebabnya: field bernama `text`
-tidak ada pada `json.JsonNode`. Di dalam tanda kurung, compiler juga menyebut berkas tempat tipe itu
-dideklarasikan, supaya jelas tipe mana yang dimaksud. Perbaikannya memakai indeks seperti objek JSON
+tidak ada pada `json.JsonNode`. Di dalam tanda kurung, compiler juga menyebut *file* tempat tipe itu
+dideklarasikan, supaya jelas tipe mana yang dimaksud. Perbaikannya memakai indeks seperti *object* JSON
 sesungguhnya: `note["text"]`, lalu diterjemahkan dengan `getStr` menjadi `string`.
 
 ## Latihan
 
 1. Tambahkan subperintah `done <index>` yang menandai catatan sebagai selesai, lalu cetak `[x]` atau
    `[ ]` di subperintah `list`.
-2. Tanpa menjalankan, prediksi keluarannya: `./notes list` pada berkas yang belum ada, lalu
+2. Tanpa menjalankan, prediksi keluarannya: `./notes list` pada *file* yang belum ada, lalu
    `./notes add "one"` dan `./notes list` lagi.
 3. Tulis *test* untuk `saveNotes` yang memastikan hasil tulisannya bisa dibaca kembali dan panjangnya
    tetap.
-4. Kode berikut gagal dikompilasi. Perbaiki, lalu jelaskan pesannya: `let notes = parseJson("[]")`
+4. Kode berikut gagal *di-compile*. Perbaiki, lalu jelaskan pesannya: `let notes = parseJson("[]")`
    diikuti `notes.add("buy milk")`.
 5. Sebutkan satu keuntungan menyimpan fungsi penyimpanan di modul terpisah, dan satu pekerjaan yang
    harus ditambahkan sebelum alat ini dipakai di dua komputer sekaligus.
@@ -351,7 +351,7 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 - `when isMainModule` membuat modul bisa dijalankan sendiri tanpa mengganggu pemakainya.
 - `parseopt` mengambil nilai opsi dengan `:` atau `=`, bukan spasi; kode keluar diteruskan lewat
   `quit`.
-- `getTempDir()` dipakai untuk berkas uji supaya contoh tidak meninggalkan apa pun di direktori
+- `getTempDir()` dipakai untuk *file* uji supaya contoh tidak meninggalkan apa pun di direktori
   kerja.
 
 ## Selanjutnya

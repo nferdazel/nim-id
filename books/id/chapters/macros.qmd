@@ -4,7 +4,7 @@ Template sudah menyelesaikan banyak pekerjaan: ia mengganti satu potongan kode d
 lain. Tapi template hanya menempel teks. Ia tidak menerima argumen sebagai data AST yang bisa
 dibongkar, dan tidak bisa mengulang atas isi data untuk membangun kode baru. Tipe masih bisa
 diperiksa lewat `when typeof(x) is ...`, tapi itu hanya memilih cabang, bukan membangun bentuk baru.
-Begitu kebutuhan sampai di situ, `macro` mengambil alih: prosedur yang berjalan saat kompilasi dan
+Begitu kebutuhan sampai di situ, `macro` mengambil alih: *procedure* yang berjalan saat *compile* dan
 menerima kode sebagai data.
 
 Bab ini mulai dari template, menunjukkan titik ketika ia mentok, lalu membangun macro selangkah
@@ -69,7 +69,7 @@ Kalau argumen itu mahal atau mengubah state, ini bug.
 
 ## Macro: menerima kode sebagai data
 
-`macro` adalah prosedur yang dijalankan compiler saat kompilasi. Ia menerima argumen dalam bentuk
+`macro` adalah *procedure* yang dijalankan compiler saat *compile*. Ia menerima argumen dalam bentuk
 *abstract syntax tree* (AST) dan mengembalikan AST baru. Bentuk `quote do` membangun AST itu dengan
 tulisan yang menyerupai kode biasa.
 
@@ -188,7 +188,7 @@ bisa membongkar node tipe untuk disisipkan ke kode yang dibangun.
 ## Membangun node sendiri: `newTree`
 
 `quote do` nyaman, tapi hanya bisa menulis bentuk yang sudah tetap. Untuk bentuk yang ditentukan
-saat kompilasi, susun node manual.
+saat *compile*, susun node manual.
 
 ```{.nim}
 import std/macros
@@ -214,7 +214,7 @@ bergantung pada data.
 
 ## Membangkitkan banyak kode dari satu daftar
 
-Kekuatan sebenarnya muncul saat kode yang dihasilkan bergantung pada data saat kompilasi.
+Kekuatan sebenarnya muncul saat kode yang dihasilkan bergantung pada data saat *compile*.
 
 ```{.nim}
 import std/macros
@@ -239,7 +239,7 @@ hello, alice
 hello, bob
 ```
 
-Macro ini tidak menerima argumen. Ia membaca `Names`, lalu membuat satu prosedur untuk setiap nama.
+Macro ini tidak menerima argumen. Ia membaca `Names`, lalu membuat satu *procedure* untuk setiap nama.
 `newStmtList` menyusun daftar *statement*; `&` menyatukan awalan dengan nama, lalu `ident` membuat
 node identifier dari string itu. Menulis ini
 dengan template tidak mungkin: template tidak bisa mengulang atas data dan membuat nama baru.
@@ -249,7 +249,7 @@ dengan template tidak mungkin: template tidak bisa mengulang atas data dan membu
 Sebelum menulis macro, tanyakan apakah template sudah cukup. Template lebih sederhana, tidak butuh
 `import std/macros`, dan pesan errornya lebih mudah dibaca.
 
-Kalau yang dibutuhkan hanya nilai yang dihitung saat kompilasi, `const` dengan `func` sudah
+Kalau yang dibutuhkan hanya nilai yang dihitung saat *compile*, `const` dengan `func` sudah
 menyelesaikannya.
 
 ```{.nim}
@@ -269,7 +269,7 @@ echo Area
 Aturan praktisnya:
 
 - Ganti kode dengan kode, tanpa membaca bentuk argumen: `template`.
-- Butuh nilai saat kompilasi: `const` atau blok `static:`.
+- Butuh nilai saat *compile*: `const` atau blok `static:`.
 - Butuh membaca AST, tipe, atau membangkitkan kode dari data: `macro`.
 
 ## Membaca error: `typed` menuntut argumen yang sah
@@ -315,7 +315,7 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 ## Ringkasan
 
 - `template` menyisipkan kode apa adanya; argumen yang dipakai dua kali dievaluasi dua kali.
-- `macro` adalah prosedur saat kompilasi yang menerima `NimNode` dan mengembalikan `NimNode`.
+- `macro` adalah *procedure* saat *compile* yang menerima `NimNode` dan mengembalikan `NimNode`.
 - `quote do` membangun AST; backtick menempelkan node atau nilai dari luar, dan nama lokalnya
   aman dari bentrok.
 - `treeRepr` menampilkan AST; `getType` hanya bekerja pada argumen `typed`.
@@ -324,5 +324,5 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
 ## Selanjutnya
 
-Bab berikutnya membahas [konsep dan pencocokan tipe](concepts.qmd): membatasi prosedur generic
+Bab berikutnya membahas [konsep dan pencocokan tipe](concepts.qmd): membatasi *procedure* generic
 berdasarkan bentuk tipe, bukan namanya.

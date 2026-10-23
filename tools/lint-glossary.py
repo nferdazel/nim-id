@@ -56,6 +56,21 @@ TERLARANG = {
     "tes": "test",
     "rilis": "release",
     "titik akhir": "endpoint",
+    "berkas": "file",
+    "larik": "array",
+    "barisan": "seq",
+    "himpunan": "set",
+    "objek": "object",
+    "pengecualian": "exception",
+    "perulangan": "loop",
+    "prosedur": "procedure",
+    "pustaka": "library",
+    "nilai balik": "return value",
+    "kesalahan": "error",
+    "kompilasi": "compile",
+    "mengompilasi": "meng-compile",
+    "dikompilasi": "di-compile",
+    "pengompilasi": "compiler",
 }
 
 FENCE = re.compile(r"```.*?```", re.S)

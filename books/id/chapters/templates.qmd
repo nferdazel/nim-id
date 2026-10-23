@@ -1,8 +1,8 @@
 # Template: kode yang diperluas compiler
 
-*Template* ditulis mirip prosedur, tapi cara kerjanya berbeda. Compiler tidak memanggilnya; ia
-menyalin badan template ke tempat pemanggilan, lalu mengompilasi hasil salinan itu. Karena itu
-template bisa menerima argumen yang belum punya tipe, sesuatu yang tidak bisa dilakukan prosedur.
+*Template* ditulis mirip *procedure*, tapi cara kerjanya berbeda. Compiler tidak memanggilnya; ia
+menyalin badan template ke tempat pemanggilan, lalu *meng-compile* hasil salinan itu. Karena itu
+template bisa menerima argumen yang belum punya tipe, sesuatu yang tidak bisa dilakukan *procedure*.
 
 Kebebasan ini ada harganya. Kode yang disalin bisa mengevaluasi *expression* lebih dari sekali, dan nama
 di dalam template bisa bertabrakan dengan nama pemanggil. Nim menutup masalah kedua dengan aturan
@@ -12,7 +12,7 @@ hygiene, dan menyediakan dua jalan keluar saat kita memang butuh menembusnya.
 ## Tujuan bab
 
 Setelah bab ini, pembaca bisa menulis template, menjelaskan hygiene dan kapan memakai `{.inject.}`
-dan `{.dirty.}`, serta memilih antara template, generic, dan prosedur biasa dengan alasan yang
+dan `{.dirty.}`, serta memilih antara template, generic, dan *procedure* biasa dengan alasan yang
 jelas.
 :::
 
@@ -69,7 +69,7 @@ keduanya hidup berdampingan tanpa saling mengganggu.
 
 ## Template untuk `min` tiga nilai
 
-Pustaka standar sudah menyediakan `min` untuk dua nilai, dan itu prosedur, bukan template. Untuk
+**Standard library** sudah menyediakan `min` untuk dua nilai, dan itu *procedure*, bukan template. Untuk
 melihat ekspansi template pada perhitungan, kita menulis `min` versi tiga nilai.
 
 ```{.nim}
@@ -93,7 +93,7 @@ menggantikan seluruh pemanggilan, jadi `echo min(9, 2, 5)` menjadi `echo` atas *
 
 ## Versi generic dari `min`
 
-Prosedur generic bisa menyelesaikan pekerjaan yang sama untuk satu tipe per versi.
+*Procedure* generic bisa menyelesaikan pekerjaan yang sama untuk satu tipe per versi.
 
 ```{.nim}
 proc minOf3[T](a, b, c: T): T =
@@ -116,7 +116,7 @@ punya efek samping.
 
 ## Ekspansi versus pemanggilan
 
-Template menyalin, prosedur memanggil. Kalau argumen template dipakai dua kali di dalam badan, ia
+Template menyalin, *procedure* memanggil. Kalau argumen template dipakai dua kali di dalam badan, ia
 juga dievaluasi dua kali.
 
 ```{.nim}
@@ -149,7 +149,7 @@ proc: 1 (calls: 1)
 ```
 
 `a` muncul tiga kali di dalam badan template, jadi `next()` dipanggil tiga kali, dan `calls` naik
-sampai 3. Prosedur `minOf3` menerima nilainya sebagai argumen, jadi `next()` dipanggil sekali.
+sampai 3. *Procedure* `minOf3` menerima nilainya sebagai argumen, jadi `next()` dipanggil sekali.
 Pelajaran praktisnya: jangan oper *expression* berharga mahal atau punya efek samping ke template.
 
 ## Membaca pesan error: simbol yang tidak terlihat
@@ -219,20 +219,20 @@ count: 5
 ```
 
 `count` disuntikkan ke lingkup pemanggil, sehingga blok di bawah `countTo:` bisa menambahnya.
-Blok itu adalah argumen `body`, yang ikut disalin ke tempatnya. Pustaka standar memakai cara ini:
+Blok itu adalah argumen `body`, yang ikut disalin ke tempatnya. **Standard library** memakai cara ini:
 `test` di `std/unittest` menerima blok sebagai badan *test*, lalu menjalankannya di dalam suite.
 
-## Template, generic, atau prosedur
+## Template, generic, atau *procedure*
 
 Pilih berdasarkan kebutuhan, bukan kebiasaan.
 
-| | Template | Generic | Prosedur |
+| | Template | Generic | *Procedure* |
 |---|---|---|---|
-| Kapan dikerjakan | disalin saat kompilasi | dibuat per tipe saat kompilasi | dipanggil saat runtime |
+| Kapan dikerjakan | disalin saat *compile* | dibuat per tipe saat *compile* | dipanggil saat runtime |
 | Tipe argumen | bebas, sering `untyped` | satu tipe per versi | sudah tetap |
 | Efek samping argumen | bisa berulang | sekali | sekali |
 
-Aturan singkatnya: pakai prosedur untuk pekerjaan biasa, generic kalau algoritmanya sama untuk
+Aturan singkatnya: pakai *procedure* untuk pekerjaan biasa, generic kalau algoritmanya sama untuk
 banyak tipe, dan template hanya saat kita butuh bekerja pada level teks kode, misalnya membuat
 konstruksi bahasa baru dari potongan yang ada.
 
@@ -269,12 +269,12 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
 ## Ringkasan
 
-- Template menyalin badannya ke tempat pemanggilan; hasilnya dikompilasi bersama kode pemanggil.
+- Template menyalin badannya ke tempat pemanggilan; hasilnya *di-compile* bersama kode pemanggil.
 - Hygiene memberi nama unik pada simbol template, sehingga tidak bocor maupun bentrok.
-- Argumen template bisa dievaluasi berkali-kali; ini berbeda dari prosedur yang mengevaluasinya
+- Argumen template bisa dievaluasi berkali-kali; ini berbeda dari *procedure* yang mengevaluasinya
   sekali.
 - `{.inject.}` membuka satu simbol, `{.dirty.}` mematikan hygiene untuk seluruh template.
-- Pakai prosedur untuk pekerjaan biasa, generic untuk algoritma lintas tipe, template untuk
+- Pakai *procedure* untuk pekerjaan biasa, generic untuk algoritma lintas tipe, template untuk
   menyusun potongan kode.
 
 ## Selanjutnya

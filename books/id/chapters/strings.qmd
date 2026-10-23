@@ -1,6 +1,6 @@
 # String, raw string, dan karakter
 
-Hampir setiap program menyentuh teks. Di Nim, `string` adalah barisan byte yang boleh diubah di
+Hampir setiap program menyentuh teks. Di Nim, `string` adalah *seq* byte yang boleh diubah di
 tempat, berbeda dari bahasa yang memperlakukan string sebagai nilai beku. Perbedaan itu muncul di
 indeks, penggabungan, dan pesan error yang kadang tidak terduga.
 
@@ -84,7 +84,7 @@ END
 ```
 
 Perhatikan `len` bernilai 18. Isi string adalah `line one\nline two\n`: 8 + 1 + 8 + 1 karakter.
-Baris baru setelah `"""` pembuka ikut terhitung, dan itu sering menjadi sumber kesalahan hitung
+Baris baru setelah `"""` pembuka ikut terhitung, dan itu sering menjadi sumber *error* hitung
 saat pembaca baru memakainya. Raw string tiga kutip juga tidak memproses escape.
 
 ## Panjang dan indeks

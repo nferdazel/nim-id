@@ -1,7 +1,7 @@
 # Benchmark dan profiling
 
-Program yang lambat jarang lambat di baris yang dituduh. Intuisi menunjuk perulangan panjang; hasil
-pengukuran sering menunjuk prosedur kecil yang dipanggil jauh lebih sering. Urutan yang masuk akal:
+Program yang lambat jarang lambat di baris yang dituduh. Intuisi menunjuk *loop* panjang; hasil
+pengukuran sering menunjuk *procedure* kecil yang dipanggil jauh lebih sering. Urutan yang masuk akal:
 ukur dulu, baru menebak. Masalahnya, mengukur juga punya jebakan yang tidak terlihat dari kodenya.
 
 ::: {.callout-note}
@@ -140,7 +140,7 @@ same result: true
 fast <= slow: true
 ```
 
-Kedua prosedur membentuk string dengan cara berbeda. `result = result & "x"` menyalin seluruh isi
+Kedua *procedure* membentuk string dengan cara berbeda. `result = result & "x"` menyalin seluruh isi
 string lama ke string baru setiap kali, sehingga total penyalinan tumbuh kuadratik. `result.add 'x'`
 menambah karakter ke penyangga yang sudah ada, sehingga biayanya rata-rata tetap. Pada 20.000
 putaran keduanya menghasilkan teks yang sama, tetapi yang kedua jauh lebih murah.
@@ -177,7 +177,7 @@ cpu time is not negative: true
 wall clock looks plausible: true
 ```
 
-Bedanya terasa saat program menunggu: mengunduh berkas menghabiskan sedikit waktu CPU dan banyak
+Bedanya terasa saat program menunggu: mengunduh *file* menghabiskan sedikit waktu CPU dan banyak
 waktu dinding. Untuk mengukur pekerjaan hitung, jam monotonik lebih tepat. `epochTime` jangan dipakai
 untuk selang, karena jam sistem bisa disesuaikan dan hasil pengurangannya bisa negatif.
 
@@ -214,21 +214,21 @@ berubah. Karena yang diinginkan selang, kurangi dua `MonoTime` lebih dulu, lalu 
 ## Profiler bawaan Nim
 
 Selain mengukur sendiri, compiler Nim menyertakan profiler sampling. Tambahkan `import std/nimprof`
-dan kompilasi dengan dua saklar:
+dan *compile* dengan dua saklar:
 
 ```bash
 nim c -r --profiler:on --stackTrace:on app.nim
 ```
 
-Saat selesai, program mencetak `writing profile_results.txt...`, dan berkas `profile_results.txt`
+Saat selesai, program mencetak `writing profile_results.txt...`, dan *file* `profile_results.txt`
 muncul di direktori kerja. Isinya daftar *stack trace* yang diurutkan dari yang paling banyak
 memakai waktu, lengkap dengan persentase per baris. Yang dibaca adalah entri teratas: di situlah
 waktu paling banyak habis.
 
 Profiler ini mengambil sampel, jadi kegunaannya sebanding dengan lamanya program berjalan. Program
-yang selesai dalam sekejap menghasilkan berkas hampir kosong; perbesar bebannya dulu. Dua saklar
+yang selesai dalam sekejap menghasilkan *file* hampir kosong; perbesar bebannya dulu. Dua saklar
 lain: `--stackTraceMsgs:on` menambahkan pesan tiap bingkai, dan `--profileVM:on` memprofilkan kode
-yang berjalan saat kompilasi.
+yang berjalan saat *compile*.
 
 ## Alat sistem: `perf` dan Instruments
 
@@ -251,7 +251,7 @@ Beberapa kebiasaan membuat angka tidak menyesatkan:
 - Bandingkan hanya dalam satu mesin dan satu proses. Selisih antar mesin mencampur kecepatan
   prosesor dengan pengaruh build.
 - Kalau selisihnya sebesar derau, ulangi; beda di bawah dua kali lipat belum layak dipercaya.
-- Angka dari blok kecil belum tentu berlaku di program nyata. Bagian yang menyentuh berkas atau
+- Angka dari blok kecil belum tentu berlaku di program nyata. Bagian yang menyentuh *file* atau
   jaringan jauh lebih mahal.
 
 Optimasi tidak selalu perlu. Kalau program sudah selesai dalam waktu yang bisa ditunggu, mengejar

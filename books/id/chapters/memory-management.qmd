@@ -2,7 +2,7 @@
 
 Program yang mengalokasikan tanpa pernah membersihkan akan tumbuh sampai kehabisan memori. Di
 bahasa dengan garbage collector, itu diurus otomatis; di Nim 2.x, keputusannya diambil saat
-kompilasi lewat mode memori. Bab ini menjelaskan ARC dan ORC, lalu hook yang dipanggil compiler
+*compile* lewat mode memori. Bab ini menjelaskan ARC dan ORC, lalu hook yang dipanggil compiler
 pada saat yang tepat: `=destroy`, `=copy`, dan `=sink`.
 
 ::: {.callout-note}
@@ -19,11 +19,11 @@ ARC dan ORC sama-sama menghitung referensi. Setiap kali sebuah `ref` disalin, ju
 bertambah; setiap kali satu hilang, jumlahnya berkurang. Ketika angka itu mencapai nol, memorinya
 dibebaskan saat itu juga. Tidak ada jeda seperti pada garbage collector klasik.
 
-Bedanya satu: ORC menambahkan pendeteksi siklus. Dua objek yang saling menunjuk tidak akan pernah
+Bedanya satu: ORC menambahkan pendeteksi siklus. Dua *object* yang saling menunjuk tidak akan pernah
 turun ke nol dengan penghitungan biasa; ORC menemukan pasangan seperti itu dan membebaskannya.
 ARC tidak, sehingga siklus menjadi kebocoran memori.
 
-Pendeteksian itu tidak berjalan setiap saat. ORC baru menyisir siklus setelah jumlah objek yang
+Pendeteksian itu tidak berjalan setiap saat. ORC baru menyisir siklus setelah jumlah *object* yang
 dialokasikan melewati ambang bawaan (128), atau saat `GC_fullCollect()` dipanggil. Pada program
 kecil, siklus bisa belum terkumpul waktu program selesai, jadi jangan menyimpulkan ORC gagal hanya
 dari satu percobaan singkat.
@@ -49,8 +49,8 @@ orc
 
 ## Mengubah mode dengan `--mm`
 
-Untuk memilih mode lain, berikan flag ke compiler. Berkas contoh `a06_mm_arc.nim` berisi kode yang
-sama dengan di atas, dengan berkas `a06_mm_arc.mode` berisi `--mm:arc`. Jalankan dengan
+Untuk memilih mode lain, berikan flag ke compiler. *File* contoh `a06_mm_arc.nim` berisi kode yang
+sama dengan di atas, dengan *file* `a06_mm_arc.mode` berisi `--mm:arc`. Jalankan dengan
 `nim c -r --mm:arc main.nim`, dan keluarannya menjadi `arc`, karena flag itu mendefinisikan
 `gcArc` dan bukan `gcOrc`. Ganti flag menjadi `--mm:orc` untuk kembali ke mode bawaan. Verifikasi
 seperti ini lebih meyakinkan daripada menghafal mana yang berlaku.
@@ -132,7 +132,7 @@ b = a
 ```
 
 `var b = a` menyalin dari sebuah variabel, jadi `=copy` yang dipanggil. Definisi di atas menyalin
-fieldnya secara dangkal. Untuk tipe yang memegang berkas atau *pointer*, `=copy` perlu membuat
+fieldnya secara dangkal. Untuk tipe yang memegang *file* atau *pointer*, `=copy` perlu membuat
 salinan yang benar-benar terpisah, bukan menyalin penunjuknya.
 
 Hook di atas juga belum membuang nilai lama di `dest`. Itu disengaja supaya contohnya pendek:
@@ -218,7 +218,7 @@ diharapkan lengkap: `proc[T: object](x: var T; y: T)`. Samakan tanda tangannya d
 
 Biarkan hook bawaan kalau tipe hanya berisi data biasa; compiler sudah menyediakan `=destroy`,
 `=copy`, dan `=sink` yang benar. Tulis hook sendiri hanya saat tipe memegang sumber daya di luar
-memori terkelola, misalnya berkas, *socket*, atau memori yang dialokasikan manual.
+memori terkelola, misalnya *file*, *socket*, atau memori yang dialokasikan manual.
 
 ## Latihan
 
@@ -238,8 +238,8 @@ memori terkelola, misalnya berkas, *socket*, atau memori yang dialokasikan manua
    echo "end"
    ```
 3. Kenapa `move(a)` mengosongkan `a` tetapi tidak memanggil `=sink`?
-4. Jelaskan kenapa ORC bisa membebaskan dua objek yang saling menunjuk, sedangkan ARC tidak.
-5. Kode berikut gagal dikompilasi. Perbaiki, lalu jelaskan pesan error-nya:
+4. Jelaskan kenapa ORC bisa membebaskan dua *object* yang saling menunjuk, sedangkan ARC tidak.
+5. Kode berikut gagal *di-compile*. Perbaiki, lalu jelaskan pesan error-nya:
    ```{.nim}
    type Person = ref object
      name: string
@@ -264,5 +264,5 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
 ## Selanjutnya
 
-Bab berikutnya menelusuri [pustaka standar](standard-library.qmd): `strutils`, `sequtils`, `tables`,
+Bab berikutnya menelusuri [**standard library**](standard-library.qmd): `strutils`, `sequtils`, `tables`,
 dan `json`, lalu kapan memilih masing-masing.

@@ -1,6 +1,6 @@
 # Iterator dan `yield`
 
-Barisan (`seq`) menyimpan semua elemennya di memori. Itu boros kalau elemennya banyak, atau baru
+*Seq* (`seq`) menyimpan semua elemennya di memori. Itu boros kalau elemennya banyak, atau baru
 bisa dihitung saat dibutuhkan. Nim punya iterator: rutin yang menghasilkan nilai satu per satu, saat
 diminta. Nilainya tidak disimpan; yang berpindah adalah posisi iteratornya. Karena itu iterator bisa
 melewati data yang sangat besar, atau bahkan data yang belum ada, tanpa menunggu semuanya siap.
@@ -39,11 +39,11 @@ berhenti sebentar dan dilanjutkan pada putaran berikutnya. Karena nilai keluar s
 pemanggil bisa berhenti kapan saja tanpa menghitung sisanya.
 
 Iterator tanpa penanda khusus default-nya inline: compiler menyalin badannya ke tempat pemakaian.
-Hasilnya sama cepat dengan perulangan yang ditulis tangan.
+Hasilnya sama cepat dengan *loop* yang ditulis tangan.
 
 ## Iterator menerima parameter
 
-Iterator menerima parameter seperti prosedur.
+Iterator menerima parameter seperti *procedure*.
 
 ```{.nim}
 iterator evens(numbers: openArray[int]): int =
@@ -61,8 +61,8 @@ for n in evens([1, 2, 3, 4, 5, 6]):
 6
 ```
 
-`evens` hanya mengeluarkan bilangan genap dari masukannya. Parameter `openArray[int]` menerima larik
-maupun barisan, jadi satu iterator menangani keduanya.
+`evens` hanya mengeluarkan bilangan genap dari masukannya. Parameter `openArray[int]` menerima *array*
+maupun *seq*, jadi satu iterator menangani keduanya.
 
 ## `items` dan `pairs`
 
@@ -91,7 +91,7 @@ kadang memperjelas mana yang sedang dipakai.
 
 ## Closure iterator dan `finished`
 
-Iterator inline menempel di dalam `for`, jadi ia tidak bisa dipisahkan dari perulangan. Iterator yang perlu
+Iterator inline menempel di dalam `for`, jadi ia tidak bisa dipisahkan dari *loop*. Iterator yang perlu
 disimpan atau dioper ditandai `{.closure.}`.
 
 ```{.nim}
@@ -121,9 +121,9 @@ selesai. Perhatikan urutannya: panggil dulu, periksa `finished`, baru pakai nila
 memperingatkan bahwa `finished` baru bernilai `true` satu putaran setelah nilai terakhir keluar, jadi
 nilai pada putaran itu harus dibuang.
 
-## Factory: prosedur yang mengembalikan iterator
+## Factory: *procedure* yang mengembalikan iterator
 
-Iterator closure adalah nilai, jadi sebuah prosedur bisa mengembalikannya.
+Iterator closure adalah nilai, jadi sebuah *procedure* bisa mengembalikannya.
 
 ```{.nim}
 proc countTo(n: int): iterator (): int =
@@ -169,22 +169,22 @@ Pesannya menuliskan tipe lengkapnya, termasuk penanda `{.inline.}`, dan menolak 
 pakai langsung di `for`, atau tandai iteratornya `{.closure.}` kalau memang perlu disimpan sebagai
 nilai.
 
-## Iterator atau barisan?
+## Iterator atau *seq*?
 
 Iterator tidak menyimpan elemen, jadi ia hemat memori dan bisa berhenti lebih awal. Harganya: satu
 elemen hanya bisa dilewati sekali. Tidak ada indeks acak, tidak ada `.len`, dan tidak bisa diurutkan.
 
-Barisan menampilkan semua elemen di memori. Ia cocok kalau elemennya perlu diindeks, diurutkan, atau
+*Seq* menampilkan semua elemen di memori. Ia cocok kalau elemennya perlu diindeks, diurutkan, atau
 dipakai berkali-kali.
 
 Aturan praktisnya: pilih iterator kalau alirannya besar atau tak terbatas, dan kalau pencarian sering
-berhenti di tengah. Pilih barisan kalau butuh koleksi utuh. Membaca baris log raksasa sambil mencari
+berhenti di tengah. Pilih *seq* kalau butuh koleksi utuh. Membaca baris log raksasa sambil mencari
 satu pola adalah contoh yang sering: iterator berhenti begitu pola ketemu, tanpa memuat seluruh
-berkas.
+*file*.
 
 Dari sisi kecepatan, iterator inline dilipat ke kode pemanggil tanpa biaya tambahan. Iterator closure
 melibatkan pemanggilan fungsi, jadi sedikit lebih mahal. Keduanya tetap lebih hemat memori daripada
-membangun barisan yang hanya dilewati sekali.
+membangun *seq* yang hanya dilewati sekali.
 
 ## Latihan
 
@@ -202,7 +202,7 @@ membangun barisan yang hanya dilewati sekali.
    echo sum
    ```
 3. Tulis `proc countdown(n: int): iterator (): int` yang mengeluarkan nilai dari `n` turun sampai 1.
-4. Jelaskan kapan memilih iterator dan kapan memilih barisan untuk data yang sama.
+4. Jelaskan kapan memilih iterator dan kapan memilih *seq* untuk data yang sama.
 
 Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
@@ -212,7 +212,7 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 - Iterator inline (default) tidak menyimpan nilai dan dipakai langsung di dalam `for`.
 - `items` mengeluarkan elemen, `pairs` mengeluarkan indeks dan elemen.
 - Iterator closure bisa disimpan dan dilanjutkan; `finished` menandai akhirnya.
-- Pilih iterator untuk aliran besar atau berhenti awal, barisan untuk koleksi utuh.
+- Pilih iterator untuk aliran besar atau berhenti awal, *seq* untuk koleksi utuh.
 
 ## Selanjutnya
 

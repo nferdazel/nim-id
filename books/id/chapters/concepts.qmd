@@ -1,6 +1,6 @@
 # Konsep dan pencocokan tipe
 
-Prosedur generic dengan `[T]` menerima tipe apa saja. Itu sering terlalu longgar: badan prosedur
+*Procedure* generic dengan `[T]` menerima tipe apa saja. Itu sering terlalu longgar: badan *procedure*
 memakai `x.name`, tapi tidak ada yang mencegah pemanggilan dengan `int`. Batasan seperti
 `[T: SomeInteger]` membantu, tapi daftarnya sudah ditentukan bahasa. Konsep menutup celah itu:
 batasan yang ditulis sendiri, berdasarkan bentuk tipe.
@@ -35,8 +35,8 @@ echo total(@[1.5, 2.5])
 4.0
 ```
 
-`SomeNumber` mencakup tipe bilangan. Satu prosedur, dua tipe berbeda, tanpa menulis ulang. Batasan
-seperti ini berguna selama bentuk yang diinginkan sudah ada di pustaka standar. Begitu yang
+`SomeNumber` mencakup tipe bilangan. Satu *procedure*, dua tipe berbeda, tanpa menulis ulang. Batasan
+seperti ini berguna selama bentuk yang diinginkan sudah ada di **standard library**. Begitu yang
 dibutuhkan adalah "punya field `name`", tidak ada nama bawaan yang menolong.
 
 ## Konsep: syarat yang ditulis sendiri
@@ -100,7 +100,7 @@ Ada is 36
 
 ## Konsep menentukan overloading mana yang dipakai
 
-Karena konsep menyaring tipe, beberapa prosedur bernama sama bisa hidup berdampingan dan masing
+Karena konsep menyaring tipe, beberapa *procedure* bernama sama bisa hidup berdampingan dan masing
 masing menangkap kelompok tipe yang berbeda.
 
 ```{.nim}
@@ -193,13 +193,13 @@ name: kit
 size: 3
 ```
 
-Karena satu tipe yang cocok mungkin hanya punya salah satu field, badan prosedur harus memeriksa
-cabang mana yang berlaku. `when x is HasName` memilih saat kompilasi, dan tiap cabang hanya mengakses
+Karena satu tipe yang cocok mungkin hanya punya salah satu field, badan *procedure* harus memeriksa
+cabang mana yang berlaku. `when x is HasName` memilih saat *compile*, dan tiap cabang hanya mengakses
 field yang dijamin ada. Ini pola yang sering muncul begitu `or` dipakai.
 
 ## Membaca error: predicate gagal
 
-Memanggil prosedur dengan tipe yang tidak memenuhi konsep ditolak compiler.
+Memanggil *procedure* dengan tipe yang tidak memenuhi konsep ditolak compiler.
 
 ```{.nim}
 type
@@ -227,7 +227,7 @@ main.nim(3, 5) Named: concept predicate failed
 ```
 
 Bacalah dari bawah. Baris terakhir, `concept predicate failed`, menyebut penyebab sebenarnya. Baris
-di atasnya menunjuk berkas dan baris konsep, yaitu `Named` di baris 3, lalu merinci *expression* mana
+di atasnya menunjuk *file* dan baris konsep, yaitu `Named` di baris 3, lalu merinci *expression* mana
 yang gagal. Compiler mencoba `x.name` pada `int`, menemukan tidak ada field `name`, dan melaporkannya
 berulang untuk tiap bagian *expression*. Pesannya panjang, tapi arahnya jelas: periksa konsep di baris
 yang ditunjuk.
@@ -256,10 +256,10 @@ Untuk tipe yang benar-benar harus terdaftar, warisan atau `distinct` lebih tepat
 
 ## Latihan
 
-1. Tulis konsep `Sized` yang menuntut `x.size is int`, lalu prosedur yang mencetak ukurannya untuk
+1. Tulis konsep `Sized` yang menuntut `x.size is int`, lalu *procedure* yang mencetak ukurannya untuk
    tipe `Box`.
 2. Apakah `type Num = object` dengan field `name: int` cocok dengan `Named`? Jalankan untuk membuktikan.
-3. Gabungkan dua konsep dengan `and`, lalu pakai sebagai batasan satu prosedur.
+3. Gabungkan dua konsep dengan `and`, lalu pakai sebagai batasan satu *procedure*.
 4. Jelaskan kenapa `var value: Named` ditolak compiler, lalu tulis deklarasi setara yang memakai
    tipe konkret dengan field `name`.
 
@@ -269,12 +269,12 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
 - `concept` menyaring tipe berdasarkan bentuk, misalnya `x.name is string`.
 - Beberapa baris di dalam satu konsep digabung dengan `and` secara implisit.
-- `and` dan `or` menyatukan konsep; `or` menuntut badan prosedur memeriksa cabang dengan `when`.
+- `and` dan `or` menyatukan konsep; `or` menuntut badan *procedure* memeriksa cabang dengan `when`.
 - Konsep bisa memilih overloading selama tiap tipe hanya cocok dengan satu kandidat.
 - Konsep bukan tipe: `var x: Named` ditolak, dan pesan gagalnya berbentuk
   `concept predicate failed`.
 
 ## Selanjutnya
 
-Bab berikutnya membahas [object varian dan `distinct`](variants-and-distinct.qmd): satu tipe objek
+Bab berikutnya membahas [object varian dan `distinct`](variants-and-distinct.qmd): satu tipe *object*
 yang bentuk fieldnya berubah sesuai penanda, dan tipe baru yang tidak bisa tertukar.

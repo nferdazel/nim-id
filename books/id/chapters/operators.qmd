@@ -69,8 +69,8 @@ echo pow(3.0, 3.0)
 27.0
 ```
 
-Untuk pangkat bilangan bulat, kalikan berulang di dalam perulangan atau konversi ke `float` lebih
-dulu. Menulis `2 ^ 10` dengan dua bilangan bulat tidak dikompilasi menjadi pangkat bulat, jadi
+Untuk pangkat bilangan bulat, kalikan berulang di dalam *loop* atau konversi ke `float` lebih
+dulu. Menulis `2 ^ 10` dengan dua bilangan bulat tidak *di-compile* menjadi pangkat bulat, jadi
 niatnya perlu dibuat eksplisit.
 
 ## Perbandingan
@@ -149,8 +149,8 @@ true
 false
 ```
 
-`in` bekerja pada rentang, himpunan (`{...}`), dan larik; lewat `strutils`, juga pada string. Baris
-terakhir bernilai `false` karena `4` memang tidak ada di dalam larik tersebut.
+`in` bekerja pada rentang, *set* (`{...}`), dan *array*; lewat `strutils`, juga pada string. Baris
+terakhir bernilai `false` karena `4` memang tidak ada di dalam *array* tersebut.
 
 ## Prioritas operator
 
@@ -227,7 +227,7 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 - `mod` mengikuti tanda bilangan yang dibagi; membagi dengan nol menghentikan program.
 - `^` berasal dari `std/math` dan bekerja pada `float`.
 - `and` dan `or` mengevaluasi singkat; pada `int` keduanya berarti operasi bitwise.
-- `in` dan `notin` memeriksa keanggotaan pada rentang, himpunan, larik, dan string.
+- `in` dan `notin` memeriksa keanggotaan pada rentang, *set*, *array*, dan string.
 
 ## Selanjutnya
 
