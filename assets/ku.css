@@ -1,5 +1,7 @@
-/* Arah desain: DESIGN.md (editorial tenang, ENERGY 1 / RHYTHM 2 / MOTION 1).
-   Satu berkas CSS, tanpa framework, tanpa webfont. Disalin ke tiap buku saat build. */
+/* Arah desain: DESIGN.md, "Sistem visual (revisi 2)": ENERGY 2 / RHYTHM 2 / MOTION 1.
+   Identitas dibawa tipografi dan aturan garis; tanpa warna baru, tanpa webfont, tanpa JS tambahan.
+   Satu berkas CSS, disalin ke tiap buku saat build (tools/sync-assets.sh).
+   Tiap keputusan beralasan satu baris, ditulis di komentar di atas aturannya. */
 
 :root {
   --kertas: #fcfbf7;
@@ -24,6 +26,9 @@
   --bs-border-color: var(--garis);
   --bs-emphasis-color: var(--tinta);
   --bs-secondary-color: var(--tinta-lembut);
+  /* Pemisah breadcrumb ikut palet, bukan abu bawaan Bootstrap. */
+  --bs-breadcrumb-divider-color: var(--garis);
+  --bs-breadcrumb-item-active-color: var(--tinta-lembut);
 }
 
 body {
@@ -62,6 +67,7 @@ h6,
   color: var(--tinta);
 }
 
+/* Judul bab 2rem dengan garis bawah 1px selebar kolom. */
 h1,
 .title {
   font-size: 2rem;
@@ -87,18 +93,103 @@ h3 {
   display: none;
 }
 
-/* Nomor bab di kepala bab: aksen tipis, bukan blok warna. Nomor yang sama di sidebar jangan
-   ikut jadi blok (itu sebabnya selektor dibatasi). */
+/* Halaman depan: judul 3rem serif, diikuti garis ganda tipis 6rem (2px navy + 1px garis). */
+#title-block-header:has(.subtitle) .title {
+  font-size: 3rem;
+  line-height: 1.1;
+  border-bottom: 0;
+  padding-bottom: 0;
+}
+
+#title-block-header:has(.subtitle) .title::after {
+  content: "";
+  display: block;
+  width: 6rem;
+  margin-top: 1rem;
+  padding-top: 3px;
+  border-top: 2px solid var(--aksen);
+  border-bottom: 1px solid var(--garis);
+}
+
+/* Subjudul miring, satu baris; tinta lembut supaya judul tetap yang pertama dibaca. */
+#title-block-header:has(.subtitle) .subtitle {
+  font-size: 1.1rem;
+  font-weight: 400;
+  font-style: italic;
+  line-height: 1.4;
+  color: var(--tinta-lembut);
+  margin-top: 1.1rem;
+}
+
+/* Metadata generated (Penulis/Diterbitkan) diganti satu baris metadata di index.qmd;
+   versi dan ukuran PDF tidak tersedia sebagai metadata title block. Hanya halaman depan
+   yang punya metadata; di halaman lain blok ini kosong, jadi ikut disembunyikan.
+   Dua id dipakai karena Bootstrap menulis display:grid pada (1,3,0). */
+#quarto-document-content > #title-block-header .quarto-title-meta {
+  display: none;
+}
+
+/* Breadcrumb di dalam pembuka menduplikasi bilah atas; dibuang supaya pembuka bersih.
+   !important karena kelas utilitas Bootstrap d-lg-block menulis display:block !important. */
+#title-block-header .quarto-title-breadcrumbs {
+  display: none !important;
+}
+
+/* Blok pembuka: baris metadata kecil + tautan PDF di kanan, ditutup garis tipis. */
+.book-lead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.4rem 1.5rem;
+  margin: 1.6rem 0 2rem;
+  padding-bottom: 0.7rem;
+  border-bottom: 1px solid var(--garis);
+}
+
+.book-lead p {
+  margin: 0;
+  max-width: none;
+  font-family: var(--sans);
+  font-size: 0.8rem;
+  line-height: 1.5;
+  color: var(--tinta-lembut);
+}
+
+/* "Unduh PDF" sebagai tautan bergaris bawah, bukan tombol. */
+.book-lead-pdf {
+  font-family: var(--sans);
+  font-size: 0.8rem;
+  font-weight: 600;
+  white-space: nowrap;
+  color: var(--aksen);
+  text-decoration-line: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+  text-decoration-color: var(--aksen);
+}
+
+.book-lead-pdf:hover {
+  text-decoration-thickness: 2px;
+}
+
+/* Nomor bab di kepala bab: besar, tabular, navy, di atas judul. */
 .quarto-title .chapter-number,
 #quarto-document-content > .quarto-title .chapter-number {
   display: block;
-  font-family: var(--sans);
-  font-size: 0.75rem;
-  font-weight: 600;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+  font-family: var(--serif);
+  font-size: 4rem;
+  font-weight: 400;
+  line-height: 0.95;
+  font-variant-numeric: tabular-nums;
   color: var(--aksen);
-  margin-bottom: 0.4rem;
+  margin-bottom: 0.15rem;
+}
+
+/* Paragraf pertama = lead sedikit lebih besar. Di halaman depan elemen setelah header
+   adalah <section>, jadi aturan ini hanya mengenai bab dan lampiran. */
+#quarto-document-content > header.quarto-title-block + p {
+  font-size: 1.05em;
 }
 
 a {
@@ -121,40 +212,153 @@ input:focus-visible {
   outline-offset: 2px;
 }
 
+/* Bilah atas: kertas, satu garis bawah tipis, tanpa bayangan (buku, bukan dashboard). */
+.quarto-secondary-nav {
+  background-color: var(--kertas);
+  color: var(--tinta-lembut);
+  border-bottom: 1px solid var(--garis);
+  border-top: 0;
+}
+
+.quarto-secondary-nav nav.quarto-page-breadcrumbs,
+.quarto-secondary-nav nav.quarto-page-breadcrumbs a,
+.quarto-secondary-nav .breadcrumb {
+  color: var(--tinta-lembut);
+  font-family: var(--sans);
+  font-size: 0.8rem;
+}
+
+.quarto-secondary-nav nav.quarto-page-breadcrumbs a {
+  text-decoration: none;
+}
+
+.quarto-secondary-nav nav.quarto-page-breadcrumbs a:hover {
+  color: var(--aksen);
+}
+
+.quarto-secondary-nav .quarto-btn-toggle,
+.quarto-secondary-nav .quarto-search-button {
+  color: var(--tinta-lembut);
+}
+
 /* Sidebar: kertas, garis tipis, tanpa bayangan. */
 #quarto-sidebar,
 .sidebar.sidebar-navigation {
   background-color: var(--kertas);
-  border-right: 1px solid var(--garis);
   box-shadow: none;
   font-family: var(--sans);
-  font-size: 0.9rem;
+  font-size: 0.875rem;
+  padding-left: 1.1rem;
+  padding-right: 1.1rem;
 }
 
-.sidebar-title,
-.sidebar-item-text,
-.sidebar-link {
+/* Garis kanan sidebar pakai palet, bukan abu Bootstrap. !important karena aturan
+   Bootstrap sendiri memakai !important di sini. */
+#quarto-sidebar.sidebar.sidebar-navigation {
+  border-right: 1px solid var(--garis) !important;
+}
+
+.sidebar-title a {
+  font-family: var(--serif);
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--tinta);
+  text-decoration: none;
+}
+
+/* Kotak pencarian: hanya garis bawah, bukan kotak berbingkai. */
+#quarto-search .aa-Form {
+  background-color: transparent;
+  border: 0;
+  border-bottom: 1px solid var(--garis);
+  border-radius: 0;
+  box-shadow: none;
+}
+
+#quarto-search .aa-Form:focus-within {
+  box-shadow: none;
+  border-bottom-color: var(--aksen);
+}
+
+#quarto-search .aa-Input {
+  color: var(--tinta);
   font-family: var(--sans);
+  font-size: 0.85rem;
 }
 
-.sidebar-link {
+#quarto-search .aa-Input::placeholder {
+  color: var(--tinta-lembut);
+  opacity: 1;
+}
+
+#quarto-search .aa-Label svg,
+#quarto-search .aa-SubmitIcon {
+  color: var(--tinta-lembut);
+  opacity: 1;
+}
+
+/* Label bagian buku (book: parts): kecil, uppercase, letter-spacing 0.08em, garis atas tipis.
+   Selektor > membatasi ke judul bagian, bukan bab di dalamnya. */
+.sidebar-item-section > .sidebar-item-container .sidebar-link {
+  font-family: var(--sans);
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--tinta-lembut);
+  border-top: 1px solid var(--garis);
+  padding-top: 0.8rem;
+  padding-bottom: 0.3rem;
+  text-decoration: none;
+}
+
+.sidebar-item-section {
+  margin-top: 0.4rem;
+}
+
+.sidebar-item-section > .sidebar-item-container .sidebar-link:hover {
+  color: var(--tinta);
+}
+
+.sidebar-item-section > .sidebar-item-container .sidebar-item-toggle {
+  color: var(--tinta-lembut);
+  align-self: center;
+}
+
+/* Satu garis kiri transparan untuk semua tautan supaya tidak ada pergeseran saat bab aktif. */
+.sidebar-item .sidebar-link {
   color: var(--tinta-lembut);
   text-decoration: none;
-  padding-top: 0.3rem;
-  padding-bottom: 0.3rem;
+  border-left: 2px solid transparent;
+  padding: 0.28rem 0 0.28rem 0.5rem;
+  line-height: 1.35;
 }
 
-.sidebar-link:hover,
-.sidebar-link.active,
-.sidebar-item-text.sidebar-link.active {
+.sidebar-item .sidebar-link:hover {
   color: var(--tinta);
   background-color: transparent;
-  font-weight: 600;
 }
 
+/* Bab aktif: garis navy 2px di kiri, teks tinta, tanpa latar. */
+.sidebar-item .sidebar-link.active,
 .sidebar-item-text.sidebar-link.active {
-  border-left: 2px solid var(--aksen);
-  padding-left: 0.6rem;
+  color: var(--tinta);
+  font-weight: 600;
+  background-color: transparent;
+  border-left-color: var(--aksen);
+}
+
+/* Nomor bab sidebar tabular, lebar tetap, rata kanan supaya judul sejajar. */
+.sidebar-item .chapter-number {
+  display: inline-block;
+  min-width: 1.4rem;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  color: var(--tinta-lembut);
+}
+
+.sidebar-item .sidebar-link.active .chapter-number {
+  color: var(--aksen);
 }
 
 #quarto-margin-sidebar {
@@ -188,7 +392,7 @@ nav[role="doc-toc"] a:hover {
   color: var(--tinta);
 }
 
-/* Kode: latar kertas lebih gelap satu tingkat, sudut kecil, tanpa bayangan. */
+/* Kode sebaris: latar kertas lebih gelap satu tingkat, sudut kecil. */
 code {
   font-family: var(--mono);
   font-size: 0.86em;
@@ -198,10 +402,60 @@ code {
   border-radius: 2px;
 }
 
+/* Blok kode: latar kertas lebih gelap satu tingkat, radius 2px, tanpa bayangan. */
 div.sourceCode {
   margin: 1.1rem 0;
   background-color: var(--kode-bg);
   border-radius: 2px;
+}
+
+/* Pita atas tipis: label bahasa di kiri, tombol salin di kanan. Baku "nim" karena
+   blok Nim paling banyak; bahasa lain dioverride di bawah. */
+.code-copy-outer-scaffold {
+  position: relative;
+  margin: 1.1rem 0;
+}
+
+.code-copy-outer-scaffold > div.sourceCode {
+  margin: 0;
+  border-radius: 0 0 2px 2px;
+  background-color: transparent;
+}
+
+.code-copy-outer-scaffold::before {
+  content: "nim";
+  display: block;
+  padding: 0.32rem 1rem;
+  border-bottom: 1px solid var(--garis);
+  border-radius: 2px 2px 0 0;
+  background-color: var(--kode-bg);
+  font-family: var(--sans);
+  font-size: 0.66rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--tinta-lembut);
+}
+
+/* Blok keluaran: pita sama dengan label "output", dibedakan lewat garis kiri 2px navy. */
+.code-copy-outer-scaffold:has(pre.txt)::before {
+  content: "output";
+  border-left: 2px solid var(--aksen);
+}
+
+.code-copy-outer-scaffold:has(pre.txt) > div.sourceCode {
+  border-left: 2px solid var(--aksen);
+}
+
+/* Perintah shell di bab instalasi dan alur kerja. */
+.code-copy-outer-scaffold:has(pre.bash)::before {
+  content: "bash";
+}
+
+/* Tombol salin duduk di dalam pita, bukan menumpuk isi kode. */
+.code-copy-outer-scaffold .code-copy-button {
+  margin-top: 0.2rem;
+  margin-right: 0.5rem;
 }
 
 div.sourceCode pre {
@@ -221,7 +475,7 @@ div.sourceCode pre code {
   font-size: inherit;
 }
 
-/* Blok keluaran: bisa dibedakan tanpa warna mencolok, tetap terbaca saat dicetak. */
+/* Blok keluaran tanpa pembungkus tombol salin: tetap dapat garis kiri dan label. */
 pre.txt,
 pre.output {
   background-color: var(--kode-bg);
@@ -234,16 +488,7 @@ pre.output {
   overflow-x: auto;
 }
 
-pre.txt::before {
-  content: "output";
-  display: block;
-  margin-bottom: 0.35rem;
-  font-family: var(--sans);
-  font-size: 0.68rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--tinta-lembut);
-}
+/* Label output sudah dipasang lewat pita blok, bukan pseudo-element di sini. */
 
 /* Callout: garis kiri, latar transparan, tanpa ikon dekoratif. */
 /* Bootstrap memberi border 5px dan latar pada header; di sini keduanya diganti. */
@@ -332,15 +577,79 @@ table th,
   padding: 0.5rem 0.75rem;
 }
 
-/* Navigasi halaman bawah: tenang, tanpa tombol berwarna. */
+/* Navigasi bawah: dua kolom, label kecil uppercase, judul serif, tanpa panah dekoratif.
+   Lebar disamakan dengan kolom baca supaya garis pemisahnya sejajar dengan teks. */
+.page-navigation {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem 2rem;
+  width: 100%;
+  max-width: 34rem;
+  justify-self: center;
+  margin: 3rem 0 2rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--garis);
+}
+
 .nav-page {
+  display: block;
+  padding-bottom: 0;
+  min-width: 0;
   font-family: var(--sans);
-  font-size: 0.85rem;
+}
+
+.nav-page-next {
+  text-align: right;
+}
+
+.nav-page .bi {
+  display: none;
+}
+
+/* Label hanya muncul kalau kolom itu benar-benar punya tautan; halaman pertama/terakhir
+   tetap punya div kosong dari Quarto. */
+.nav-page-previous:has(a)::before {
+  content: "Sebelumnya";
+}
+
+.nav-page-next:has(a)::before {
+  content: "Berikutnya";
+}
+
+html:lang(en) .nav-page-previous:has(a)::before {
+  content: "Previous";
+}
+
+html:lang(en) .nav-page-next:has(a)::before {
+  content: "Next";
+}
+
+.nav-page-previous::before,
+.nav-page-next::before {
+  display: block;
+  margin-bottom: 0.25rem;
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--tinta-lembut);
 }
 
 .nav-page a {
-  color: var(--aksen);
+  display: block;
+  color: var(--tinta);
   text-decoration: none;
+}
+
+.nav-page a:hover {
+  color: var(--aksen);
+}
+
+.nav-page .nav-page-text {
+  display: block;
+  font-family: var(--serif);
+  font-size: 1rem;
+  line-height: 1.35;
 }
 
 .page-footer,
@@ -350,6 +659,10 @@ table th,
   color: var(--tinta-lembut);
   border-top: 1px solid var(--garis);
   background-color: var(--kertas);
+}
+
+.nav-footer a {
+  color: var(--aksen);
 }
 
 blockquote {
@@ -414,6 +727,23 @@ hr {
     font-size: 1.65rem;
   }
 
+  /* Judul pembuka tetap lebih besar dari judul bab, tapi tidak sampai meluber. */
+  #title-block-header:has(.subtitle) .title {
+    font-size: 2.15rem;
+  }
+
+  /* Blok pembuka menumpuk supaya baris metadata tidak berdesakan di layar sempit. */
+  .book-lead {
+    align-items: flex-start;
+  }
+
+  /* Navigasi bawah sejajar dengan teks di layar sempit. */
+  .page-navigation {
+    gap: 1.25rem 1rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
   div.sourceCode pre,
   pre.txt {
     font-size: 0.82rem;
@@ -425,4 +755,43 @@ hr {
     display: flex;
     align-items: center;
   }
+}
+
+/* Penukar bahasa: Quarto merender tools sebagai tautan berikon kosong (teks hanya di
+   aria-label), jadi label terlihat dipasang lewat ::after. Bahasa aktif menentukan label. */
+.sidebar-tools-main {
+  display: inline-block;
+  margin-left: 0.4rem;
+}
+
+.sidebar-tools-main a {
+  font-family: var(--sans);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: var(--aksen);
+  text-decoration: none;
+  border-bottom: 1px solid var(--garis);
+}
+
+.sidebar-tools-main a:hover {
+  border-bottom-color: var(--aksen);
+}
+
+.sidebar-tools-main a::after {
+  content: "EN";
+}
+
+html[lang="en"] .sidebar-tools-main a::after {
+  content: "ID";
+}
+
+.sidebar-tools-main .bi {
+  display: none;
+}
+
+/* Daftar TOC memakai Bootstrap collapse; di halaman depan tidak ada pemicu buka,
+   jadi daftarnya tampak kosong. TOC ini hanya dua tingkat, jadi tampilkan apa adanya. */
+#TOC ul.collapse {
+  display: block !important;
 }
