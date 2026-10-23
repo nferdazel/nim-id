@@ -1,0 +1,1 @@
+type mismatch: got 'int literal(1)' for '1' but expected 'Color = enum'

@@ -1,0 +1,188 @@
+# Alur kerja: `nim r`, `nimble`, editor
+
+Nim terpasang. Pertanyaan berikutnya bukan lagi "bagaimana menulis program", tapi "perintah apa yang
+dipakai tiap hari". Empat kebiasaan sudah cukup untuk sebagian besar pekerjaan: `nim r` untuk
+mencoba cepat, `nim c` untuk menghasilkan biner, `nimble` untuk mengelola proyek, dan editor yang
+bicara dengan compiler.
+
+::: {.callout-note}
+## Tujuan bab
+
+Setelah bab ini, pembaca bisa memilih antara `nim r` dan `nim c`, membaca pesan error yang menunjuk
+berkas dan kolom, memakai `nimble` untuk proyek, dan menyiapkan editor dengan `nimsuggest`.
+:::
+
+## `nim r`: kompilasi lalu jalankan
+
+Simpan kode berikut sebagai `hello.nim`, lalu jalankan `nim r hello.nim`.
+
+```{.nim}
+let message = "hello from a compiled binary"
+echo message
+```
+
+```{.txt}
+hello from a compiled binary
+```
+
+`nim r` adalah singkatan dari *run*: compiler mengompilasi berkas, menyimpan hasil antara di cache,
+menjalankannya, lalu berhenti. Perhatikan bahwa tidak ada biner baru di samping `hello.nim`. Ini
+cara tercepat untuk menguji potongan kode.
+
+## `nim c`: hasilkan biner
+
+Kalau hasilnya perlu dijalankan berulang, kompilasi sekali lalu jalankan biner itu langsung. Simpan
+berkas berikut sebagai `join.nim`, lalu jalankan `nim c join.nim`:
+
+```{.nim}
+import std/strutils
+
+let words = ["nim", "is", "fast"]
+echo words.join(", ")
+```
+
+```{.txt}
+nim, is, fast
+```
+
+`nim c` meninggalkan berkas biner bernama `join` di direktori yang sama. Jalankan dengan `./join`.
+Di Windows namanya `join.exe`. Nama biner mengikuti nama berkas sumber; ubah dengan `-o:program`.
+Tambahkan `-r` pada `nim c` untuk sekaligus menjalankannya: `nim c -r join.nim`.
+
+## Build rilis
+
+Secara bawaan, `nim c` membuat *debug build*: cepat dikompilasi, tetapi lambat dijalankan dan masih
+penuh pemeriksaan. Untuk hasil akhir, pakai build rilis:
+
+```{.bash}
+nim c -d:release join.nim
+```
+
+Build rilis mengaktifkan optimasi dan mematikan sebagian pemeriksaan, seperti pemeriksaan rentang
+larik. Karena itu program berjalan lebih cepat, dengan catatan kesalahan yang seharusnya ditangkap
+pemeriksaan tadi bisa lolos. Jangan memakai `-d:release` sebelum logikanya benar.
+
+## Di mana hasil kompilasi disimpan
+
+Dua lokasi perlu dibedakan:
+
+- `nim c` menaruh biner di direktori kerja, di samping berkas sumber kecuali `-o` diberikan.
+- `nim r` menyimpan hasil antara di direktori cache, biasanya di bawah `~/.cache/nim/`.
+
+Direktori cache bisa dipindah dengan `--nimcache:path`. Isinya hasil antara yang bisa dibuat ulang:
+aman dihapus kapan saja, dan akan diisi lagi pada kompilasi berikutnya. Kalau proses build terasa
+aneh, menghapus cache adalah langkah pertama yang murah.
+
+## Membaca pesan error
+
+Bagian paling berguna dari alur kerja ini adalah kebiasaan membaca pesan compiler. Simpan kode
+berikut sebagai `square.nim`, lalu jalankan `nim r square.nim`.
+
+```{.nim}
+proc square(n: int): int =
+  n * n
+
+echo square("four")
+```
+
+Program tidak berjalan. Compiler mengeluarkan:
+
+```{.txt}
+main.nim(4, 12) Error: type mismatch
+Expression: square("four")
+  [1] "four": string
+
+Expected one of (first mismatch at [position]):
+[1] proc square(n: int): int
+```
+
+Bacalah dari baris pertama:
+
+| Bagian | Arti |
+|---|---|
+| `main.nim` | berkas yang bermasalah |
+| `(4, 12)` | baris 4, kolom 12 — posisi argumen yang salah |
+| `Error` | tingkat keparahan; build berhenti |
+| `type mismatch` | kategori masalahnya: tipe tidak cocok |
+
+Baris sisanya adalah bukti. `Expression: square("four")` menunjukkan ekspresi yang diperiksa. Baris
+`[1] "four": string` menyebut argumen pertama beserta tipenya. Bagian `Expected one of` mendaftar
+prosedur yang mungkin cocok, dan `[1] proc square(n: int): int` menjelaskan syaratnya: parameter
+`n` harus `int`. Jadi masalahnya sederhana: `"four"` adalah `string`, bukan `int`.
+
+Kebiasaan yang baik: baca baris pertama untuk tahu *di mana* dan *apa*, baru baca sisanya kalau
+butuh alasan. Untuk galat pemanggilan prosedur, daftar `Expected one of` sering kali sudah berisi
+jawabannya.
+
+## `nim check`: umpan balik cepat
+
+Kalau hanya ingin tahu apakah tipe sudah benar, tanpa menghasilkan biner, pakai `nim check`:
+
+```{.bash}
+nim check square.nim
+```
+
+`nim check` menjalankan pemeriksaan tipe dan semantik, lalu berhenti. Pada berkas di atas, keluaran
+pertamanya sama dengan sebelumnya, yaitu `type mismatch` di baris 4, dan kode keluarnya bukan nol.
+Ini perintah yang dipakai editor di latar belakang karena jauh lebih ringan dari `nim c`.
+
+## `nimble`: proyek dan paket
+
+Nimble ikut terpasang bersama Nim. Perannya dua: pengelola paket, dan perancah proyek. Untuk proyek
+baru:
+
+```{.bash}
+nimble init notes
+```
+
+Perintah itu membuat direktori `notes` berisi berkas `notes.nimble`, kode di `src/`, dan kerangka
+tes di `tests/`. Setelah ada, perintah yang sering dipakai:
+
+| Perintah | Kegunaan |
+|---|---|
+| `nimble build` | membangun proyek |
+| `nimble run` | membangun lalu menjalankannya |
+| `nimble test` | menjalankan tes |
+| `nimble tasks` | menampilkan tugas yang didefinisikan |
+| `nimble install <paket>` | memasang paket pihak ketiga |
+
+Berkas `.nimble` mendeklarasikan nama, versi, dan dependensi lewat `requires`. Buku ini sengaja
+hanya memakai pustaka standar, jadi belum ada dependensi yang perlu dipasang. Cukup tahu bahwa
+`nimble` ada, dan kembali ke sana waktu proyeknya tumbuh.
+
+## Editor dan `nimsuggest`
+
+Nim menyertakan `nimsuggest`, sebuah server yang menjawab pertanyaan editor: apa tipe simbol ini,
+di mana didefinisikan, apa nama yang cocok di posisi ini. Sebagian besar editor Nim memakainya di
+belakang layar untuk melengkapi kode otomatis dan menampilkan kesalahan saat menulis.
+
+Yang perlu disiapkan hanya dua: pastikan `nimsuggest` ada di PATH (biasanya sudah, karena dipasang
+bersama Nim), dan arahkan editor ke proyek yang benar. Tanpa server itu, editor tetap bisa dipakai,
+tetapi kita kehilangan umpan balik cepat. Selama editor belum siap, `nim check` dari terminal bisa
+menggantikannya.
+
+## Latihan
+
+1. Jalankan `hello.nim` dengan `nim r`, lalu dengan `nim c` dan `./hello`. Bandingkan: berkas apa
+   yang muncul di direktori kerja pada masing-masing cara?
+2. Pada `nim c join.nim`, di mana biner muncul, dan apa namanya di Linux, macOS, dan Windows?
+3. Aku sengaja memberi nama berkas `data.txt` tetapi menulis kode Nim di dalamnya. Apa yang terjadi
+   waktu `nim c data.txt` dijalankan? Jelaskan.
+4. Jalankan `nim check square.nim` dan `nim c square.nim`. Bandingkan keluaran dan kode keluarnya.
+5. Buat proyek baru dengan `nimble init`, lalu sebutkan perintah untuk membangun dan menjalankannya.
+
+## Ringkasan
+
+- `nim r` mengompilasi dan langsung menjalankan; tidak meninggalkan biner di samping sumber.
+- `nim c` menghasilkan biner bernama seperti berkas sumber; ubah dengan `-o`, jalankan otomatis
+  dengan `-r`.
+- `-d:release` mempercepat program tetapi mematikan sebagian pemeriksaan; pakai setelah logikanya
+  benar.
+- Pesan error menunjuk berkas, baris, dan kolom; baris pertama menyebut apa, sisanya menjelaskan
+  mengapa.
+- `nimble` mengelola proyek dan paket; `nimsuggest` menyuplai editor di belakang layar.
+
+## Selanjutnya
+
+[Komentar dan doc comment](comments.qmd) membahas tiga bentuk komentar. Salah satu di antaranya
+menjadi bahan dokumentasi dan ikut diuji compiler, jadi bukan sekadar catatan untuk diri sendiri.

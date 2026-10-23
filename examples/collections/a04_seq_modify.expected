@@ -1,0 +1,3 @@
+after insert: @[10, 15, 20, 30, 40]
+after delete: @[10, 15, 30, 40]
+first: 10 last: 40

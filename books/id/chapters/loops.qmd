@@ -1,0 +1,216 @@
+# Perulangan: `for`, `while`, `break`, `continue`
+
+Mengulang pekerjaan yang sama seratus kali adalah alasan komputer ada. Tapi perulangan juga sumber
+bug paling tua: batas yang salah satu, elemen terakhir tidak ikut, atau indeks yang melewati ujung
+larik.
+
+Nim tidak menyediakan `for (int i = 0; i < n; i++)` seperti C. Perulangan `for` di Nim selalu
+memakai *iterator*: rentang, larik, `seq`, atau iterator buatan sendiri. Bentuk itu menghapus banyak
+kesalahan penghitungan indeks.
+
+::: {.callout-note}
+## Tujuan bab
+
+Setelah bab ini, pembaca bisa membedakan rentang inkusif `..` dan eksklusif `..<`, memakai
+`countdown` dan `countup`, mengiterasi elemen dengan `items` dan pasangan indeks-elemen dengan
+`pairs`, menulis `while` yang berhenti, serta memakai `break` dan `continue`.
+:::
+
+## `for` dengan rentang: `..` dan `..<`
+
+Simpan sebagai `main.nim`, lalu jalankan.
+
+```{.nim}
+for i in 0 ..< 3:
+  echo "i = ", i
+
+echo "---"
+
+for i in 0 .. 3:
+  echo "i = ", i
+```
+
+```{.txt}
+i = 0
+i = 1
+i = 2
+---
+i = 0
+i = 1
+i = 2
+i = 3
+```
+
+`0 ..< 3` membaca "nol sampai kurang dari tiga": angkanya `0`, `1`, `2`. `0 .. 3` inkusif di kedua
+ujung, jadi `3` ikut. Kesalahpahaman yang paling sering adalah memakai `..` untuk indeks `array`,
+padahal indeks terakhir selalu `len - 1`. Karena itu gaya yang aman untuk mengulang sebanyak `n`
+kali adalah `for i in 0 ..< n:`.
+
+Variabel `i` hanya berlaku di dalam badan perulangan dan tidak bisa diubah. Menulis `i = 5` di
+dalamnya ditolak dengan pesan `'i' cannot be assigned to`—sengaja, supaya nilai hitungan tidak
+dirusak dari dalam.
+
+Rentang juga boleh kosong. `for i in 5 .. 3:` tidak menjalankan badannya sama sekali, dan itu bukan
+error. Kalau memang ingin mundur, pakai `countdown`, bukan rentang yang dibalik.
+
+## Mundur dan melompat: `countdown`, `countup`
+
+```{.nim}
+for i in countdown(3, 1):
+  echo i
+
+echo "---"
+
+for i in countup(1, 3, 2):
+  echo i
+```
+
+```{.txt}
+3
+2
+1
+---
+1
+3
+```
+
+`countdown(3, 1)` berjalan dari `3` turun ke `1`. `countup(1, 3, 2)` berjalan naik dengan langkah
+dua, jadi hanya `1` dan `3` yang tercetak. Keduanya adalah iterator, bukan keyword; tanpa argumen
+langkah, `countup(a, b)` sama dengan `a .. b`. Keduanya menghasilkan satu nilai tiap putaran,
+sehingga bisa dipakai langsung sebagai sumber `for`.
+
+## `items` dan `pairs`
+
+```{.nim}
+let names = ["ada", "bob", "cyd"]
+
+for name in names:
+  echo name
+
+echo "---"
+
+for index, name in names:
+  echo index, ": ", name
+```
+
+```{.txt}
+ada
+bob
+cyd
+---
+0: ada
+1: bob
+2: cyd
+```
+
+`for name in names` memanggil iterator `items` secara implisit: setiap putaran mengambil elemennya.
+Kalau indeksnya dibutuhkan, tulis dua nama variabel. Bentuk itu memakai `pairs`, yang menghasilkan
+indeks dan elemen sekaligus. Untuk `array` dan `seq`, indeks `pairs` bertipe `int` mulai dari nol.
+Untuk `Table` dan tipe lain, `pairs` menghasilkan pasangan yang sesuai tipe tersebut.
+
+## `while`: selama kondisinya benar
+
+`for` dipakai kalau jumlah putaran sudah diketahui. Kalau batasnya bergantung pada keadaan saat
+program jalan, pakai `while`.
+
+```{.nim}
+var remaining = 12
+
+while remaining > 0:
+  echo "remaining: ", remaining
+  remaining = remaining - 5
+```
+
+```{.txt}
+remaining: 12
+remaining: 7
+remaining: 2
+```
+
+Kondisi diperiksa **sebelum** badan dijalankan, jadi `while` bisa berjalan nol kali. Bentuk ini
+satu-satunya `while` yang ada; Nim tidak menyediakan `do .. while`.
+
+Pastikan ada sesuatu di dalam badan yang akhirnya membuat kondisi salah; kalau tidak, perulangannya
+tidak pernah berhenti dan kita harus menghentikan prosesnya sendiri.
+
+## `break` dan `continue`
+
+`break` keluar dari perulangan. `continue` melompat ke putaran berikutnya.
+
+```{.nim}
+for i in 1 .. 10:
+  if i mod 2 == 0:
+    continue
+  if i > 7:
+    break
+  echo i
+```
+
+```{.txt}
+1
+3
+5
+7
+```
+
+Bacanya berurutan tiap putaran: bilangan genap dilewati `continue`, dan begitu `i` melebihi `7`,
+`break` menghentikan perulangan. Hasilnya bilangan ganjil sampai `7`.
+
+Pada perulangan bersarang, keduanya hanya berlaku untuk perulangan terdalam. `break` di dalam
+`for j` tidak menghentikan `for i` di luarnya. Untuk keluar dari dua perulangan sekaligus, pindahkan
+bagian itu ke prosedur tersendiri, atau simpan penanda `bool` yang diperiksa di perulangan luar.
+
+## Membaca pesan error: `break` di luar perulangan
+
+```{.nim}
+echo "before"
+break
+echo "after"
+```
+
+```{.txt}
+main.nim(2, 1) Error: invalid control flow: break
+```
+
+Compiler menunjuk langsung baris dan kolom `break`. Pesannya menyebut alurnya tidak sah karena
+`break` hanya punya arti di dalam `for` atau `while`. Ini termasuk pemeriksaan yang dilakukan
+sebelum program jalan, jadi tidak perlu ada uji coba untuk menemukannya. `continue` memberi pesan
+yang sama di posisi serupa.
+
+## Latihan
+
+1. Cetak bilangan genap dari `2` sampai `10` dengan `for` dan rentang yang tepat.
+2. Tanpa menjalankan, prediksi outputnya:
+   ```{.nim}
+   var total = 0
+
+   for i in 1 .. 3:
+     total = total + i
+
+   echo total
+   ```
+3. Tulis perulangan yang menjumlahkan elemen sebuah `seq[int]` memakai `pairs`, lalu cetak total dan
+   indeks elemen terbesar.
+4. Kode berikut tidak pernah berhenti. Perbaiki tanpa mengubah maksudnya:
+   ```{.nim}
+   var n = 5
+
+   while n > 0:
+     echo n
+   ```
+
+Jawaban ada di [Lampiran A](../appendix/answers.qmd).
+
+## Ringkasan
+
+- `for` memakai iterator, bukan penghitung gaya C; `0 ..< n` eksklusif, `0 .. n` inkusif.
+- `countdown(a, b)` dan `countup(a, b, step)` mengatur arah dan langkah.
+- `items` memberi elemen, `pairs` memberi indeks dan elemen sekaligus.
+- Kondisi `while` diperiksa sebelum badan, jadi bisa berjalan nol kali.
+- `break` menghentikan perulangan, `continue` melewati satu putaran; keduanya hanya sah di dalam
+  perulangan.
+
+## Selanjutnya
+
+Bab berikutnya membahas [kumpulan data](collections.qmd): `array` berukuran tetap, `seq` yang bisa
+tumbuh, dan `openArray` yang menerima keduanya sebagai parameter prosedur.

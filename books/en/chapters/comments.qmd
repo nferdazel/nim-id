@@ -1,0 +1,169 @@
+# Comments and doc comments
+
+A comment is the part of the code the compiler does not run. That is why many people treat it as
+free and write far too much. Nim has three forms with different rules, and one of them becomes
+documentation. Placing it wrong makes the documentation disappear without a single error message.
+
+::: {.callout-note}
+## What you will be able to do
+
+After this chapter you can use the line comment `#`, the block comment `#[ ]#`, and the doc comment
+`##` correctly, generate documentation with `nim doc`, and write examples that the compiler tests
+through `runnableExamples`.
+:::
+
+## Line comments: `#`
+
+The simplest form starts with `#`. Everything after it up to the end of the line is ignored.
+
+```{.nim}
+# This line is ignored by the compiler.
+echo "comments do not run"  # this one too
+```
+
+```{.txt}
+comments do not run
+```
+
+A line comment may stand alone at the start of a line, or trail after code. The compiler discards
+both before it emits machine code, so there is no runtime cost. One thing to watch: a comment should
+explain *why*, not *what*. `# add one` above `total += 1` tells you nothing.
+
+## Block comments: `#[ ... ]#`
+
+To disable several lines at once, use a block comment. It opens with `#[` and closes with `]#`.
+
+```{.nim}
+#[ This is a block comment.
+   It can span several lines. #[ Nested blocks work too. ]#
+]#
+echo "after the block"
+```
+
+```{.txt}
+after the block
+```
+
+Notice the `#[ Nested blocks work too. ]#` inside it. Nim counts depth: every `#[` adds a level and
+every `]#` removes one. The inner block must close first, then the outer one. C does not work that
+way; there `/* */` cannot nest. In Nim, disabling a block of code that already contains a block
+comment still works.
+
+## When a block is not closed
+
+If `#[` is left open, the compiler never learns where the comment ends. Save the following as
+`broken.nim`, then run `nim r broken.nim`.
+
+```{.nim}
+#[ this block never ends
+echo "unreachable"
+```
+
+The compiler rejects it:
+
+```{.txt}
+main.nim(3, 1) Error: end of multiline comment expected
+```
+
+Read the message. `main.nim` is the file, `(3, 1)` is line 3, column 1, and `Error` means the build
+stops. The text, "end of multiline comment expected", says the compiler reached the end of the file
+before finding `]#`.
+
+There is an important lesson in the position. We wrote `#[` on line 1, but the compiler points at
+line 3 — the empty line after the last one. The compiler learns the comment was never closed only
+when it reaches the end of the file. So the position it reports is where the compiler *noticed* the
+problem, not always where the mistake was written. When you meet an error that points somewhere
+unexpected, look a few lines earlier.
+
+## Doc comments: `##`
+
+The third form starts with `##`. This is not an ordinary comment, but documentation for the
+declaration that follows. Save the following as `area.nim`.
+
+```{.nim}
+## Computes the area of a rectangle.
+##
+## The result is in the same unit as the arguments.
+proc area(width, height: float): float =
+  width * height
+
+echo area(3.0, 4.0)
+```
+
+```{.txt}
+12.0
+```
+
+As far as the program goes, `##` behaves like `#`: it changes nothing. What differs is that the
+command `nim doc area.nim` collects every doc comment and writes an HTML file under the `htmldocs/`
+directory, here `htmldocs/area.html`. Its contents are exactly the two lines of description above
+the procedure.
+
+The difference from `#` matters. A doc comment must use `##`; a `#` comment above a declaration does
+not enter the documentation. So if you write `# Computes ...` above `proc area`, that note never
+appears in the HTML even though it looks the same in the editor.
+
+## `runnableExamples`: documentation that is tested
+
+A doc comment is not only text. A `runnableExamples` block inside it holds code the `nim doc` command
+actually compiles and runs. Save this as `double.nim`.
+
+```{.nim}
+proc double*(n: int): int =
+  ## Doubles an integer.
+  runnableExamples:
+    doAssert double(2) == 4
+  n * 2
+
+echo double(21)
+```
+
+```{.txt}
+42
+```
+
+Run `nim doc double.nim`. That command compiles the example block and runs it; if the `doAssert`
+fails, `nim doc` stops with a non-zero exit code. This means documentation examples cannot go stale:
+they fail as soon as the procedure's behavior changes. It is why many Nim library authors prefer
+`runnableExamples` over static examples that are never tested.
+
+One note: `nim doc` only runs `runnableExamples` on exported declarations (the ones ending in an
+asterisk, like `double*`). A private procedure may still have a doc comment, but its examples are
+not executed.
+
+## Comments that are worth writing
+
+With the three forms in hand, the question is when to comment. Three guidelines help:
+
+- Explain the reason, not the mechanism. `# retry because the API returns 429 during deploys` is
+  useful; `# loop three times` is not.
+- Improve the names or structure if a comment starts papering over complicated code. Clear code needs
+  no explanatory paragraph.
+- Do not keep dead code in comments. Version history already keeps it; commented-out code only ages
+  without being used.
+
+## Exercises
+
+1. Add one line comment to the first `echo` example that explains a reason, not a repetition of the
+   code.
+2. In the block comment of the second example, remove the nested block `#[ Nested blocks work too. ]#`.
+   Does the program's output change? Why?
+3. In the unclosed-comment example, on which line does the compiler report the error? Why not on the
+   line where `#[` was written?
+4. A procedure is annotated with `#` instead of `##` right above it. Does that note appear under
+   `htmldocs/`? Explain.
+5. Write an exported procedure with a doc comment and one `runnableExamples` block, then prove that
+   `nim doc` fails when the block's contents are wrong.
+
+## Summary
+
+- `#` ignores the rest of the line; `#[ ... ]#` ignores a range and may nest.
+- An unclosed block comment is reported at the end of the file, not where `#[` was.
+- `##` is a doc comment; only this form reaches the `nim doc` output under `htmldocs/`.
+- `runnableExamples` inside a doc comment is compiled and run by `nim doc`.
+- A good comment explains a reason; dead code is not kept inside comments.
+
+## Next
+
+The next chapter returns to code: [variables and the three keywords](variables.qmd) `var`, `let`, and
+`const`, along with how to choose between them.

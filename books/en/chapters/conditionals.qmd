@@ -1,0 +1,199 @@
+# Branching: `if`, `case`, `when`
+
+A program that does the same thing for every input is rarely useful. Sooner or later we need to pick
+a path: balance sufficient or not, name empty or filled, system Unix or Windows.
+
+`if` is familiar to anyone who has written code before. Three things are specific to Nim: `if` can
+produce a value directly, `case` demands that every possibility be covered, and `when` picks a
+branch **at compile time**—the branch that loses is not compiled at all.
+
+::: {.callout-note}
+## What you will be able to do
+
+After this chapter you can write `if`/`elif`/`else`, take a value out of an `if`, use `case` with
+sets and ranges, split code by operating system with `when`, and read the messages `type mismatch`
+and `not all cases are covered`.
+:::
+
+## `if`, `elif`, `else`
+
+Save this as `main.nim`, then run `nim r main.nim`.
+
+```{.nim}
+var temperature = 18
+
+if temperature < 10:
+  echo "cold"
+elif temperature < 20:
+  echo "cool"
+else:
+  echo "warm"
+```
+
+```{.txt}
+cool
+```
+
+Three things differ from many other languages:
+
+- The condition needs no parentheses. A colon `:` closes it, and the block body is indented.
+- Indentation defines the block, so do not mix tabs and spaces in one file. Nim's official style uses
+  two spaces.
+- Nim spells the keyword `elif`. `else if` is not recognized by the compiler.
+
+## `if` as an expression
+
+In Nim, `if` is an expression: its result can be stored straight into a variable.
+
+```{.nim}
+let score = 72
+
+let grade = if score >= 75: 'A' else: 'B'
+echo "grade: ", grade
+
+let label =
+  if score >= 90: "excellent"
+  elif score >= 75: "good"
+  else: "keep going"
+echo "label: ", label
+```
+
+```{.txt}
+grade: B
+label: keep going
+```
+
+Note the one-line form `if score >= 75: 'A' else: 'B'`. It is valid because each branch produces one
+value. When `if` is used as an expression, all branches must share the same type and `else` is
+mandatory. Without `else`, Nim treats it as an ordinary statement, so the value inside counts as
+unused: `let x = if cond: 1` is rejected with `has to be used (or discarded)`.
+
+## `case`: selecting on a value
+
+When you are testing one value against many possibilities, `case` reads better than a chain of
+`elif`.
+
+```{.nim}
+proc season(month: int): string =
+  case month
+  of 12, 1, 2: "winter"
+  of 3 .. 5: "spring"
+  of 6 .. 8: "summer"
+  of 9 .. 11: "autumn"
+  else: "unknown"
+
+for month in [1, 4, 7, 10, 13]:
+  echo month, ": ", season(month)
+```
+
+```{.txt}
+1: winter
+4: spring
+7: summer
+10: autumn
+13: unknown
+```
+
+A single `of` can hold a comma-separated list (`12, 1, 2`) or a range with `..` (`3 .. 5`). The
+value tested by `case` may be of an ordinal type—`int`, `char`, `bool`, `enum`—or a `string`. Ranges
+apply only to ordinal types: on a `string`, `of` takes value lists alone, and `of "a" .. "c"` is
+rejected with `range of string is invalid`.
+
+## `when`: the branch the compiler chooses
+
+`when` looks like `if`, but it is decided **at compile time**. Only the chosen branch is compiled.
+
+```{.nim}
+when defined(windows):
+  const PathSeparator = '\\'
+else:
+  const PathSeparator = '/'
+
+echo "separator: ", PathSeparator
+```
+
+```{.txt}
+separator: /
+```
+
+On Linux and macOS, `defined(windows)` is false, so the output is `/`. On Windows, only the line
+`const PathSeparator = '\\'` is compiled and the result is a backslash. The difference from `if` is
+clear here: with `if`, both branches must still compile even when one never runs. The same pattern
+appears in `when isMainModule:` or `when sizeof(int) == 8:`.
+
+## Reading the error: the condition must be `bool`
+
+Nim does not convert other values to boolean. The number `0`, the empty string, and `nil` are not
+`false`.
+
+```{.nim}
+var count = 3
+
+if count:
+  echo "yes"
+```
+
+```{.txt}
+main.nim(3, 4) Error: type mismatch: got 'int' for 'count' but expected 'bool'
+```
+
+| Part | Meaning |
+|---|---|
+| `main.nim(3, 4)` | file, line 3, column 4—where `count` sits in the condition |
+| `Error` | severity; it stops the build |
+| `got 'int'` | the type actually supplied |
+| `expected 'bool'` | the type `if` requires |
+
+The reading is simple: an `if` condition must be a `bool`. Write an explicit comparison instead,
+such as `if count > 0:`.
+
+## Reading the error: an incomplete `case`
+
+```{.nim}
+proc describe(n: int): string =
+  case n
+  of 0: return "zero"
+  of 1: return "one"
+
+echo describe(0)
+```
+
+```{.txt}
+main.nim(2, 3) Error: not all cases are covered
+```
+
+An `int` cannot be exhausted by `case`. The values `2`, `3`, and millions more have no branch. Nim
+rejects this up front instead of leaving the problem to runtime. Add `else:` to handle the rest. For
+a closed type such as `bool` or an `enum`, a complete list of `of` branches can exhaust the `case`
+without an `else`.
+
+## Exercises
+
+1. Change `temperature` in the first example to `5`, then predict the output before running it.
+2. Write an `if` expression that maps `age` to `"child"` (below 13), `"teen"` (13–19), or `"adult"`
+   (20 and up), then print the result.
+3. Write a procedure that takes a `char` and uses `case` to return `"vowel"` for
+   `'a'`/`'i'`/`'u'`/`'e'`/`'o'`, `"digit"` for `'0' .. '9'`, and `"other"` for the rest.
+4. The code below fails to compile. Fix it, then name the line and column the compiler points at:
+   ```{.nim}
+   var name = "Nim"
+
+   if name:
+     echo name
+   ```
+
+Answers are in [Appendix A](../appendix/answers.qmd).
+
+## Summary
+
+- `if` uses `elif`, needs no parentheses, and gets its blocks from indentation.
+- `if` is an expression; used as a value, all branches must share a type and `else` is required.
+- `case` supports value lists (`12, 1, 2`) and ranges (`3 .. 5`); an incomplete `of` set without
+  `else` is rejected by the compiler.
+- `when` picks a branch at compile time; only the chosen branch is compiled.
+- An `if` condition must be a `bool`; Nim does not treat `0` or `""` as false.
+
+## Next
+
+The next chapter covers [loops](loops.qmd): `for` with ranges, `while`, `countdown`, and how to use
+`break` and `continue` without making the flow hard to follow.

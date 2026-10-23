@@ -1,0 +1,199 @@
+# Printing and formatting output
+
+A program that shows nothing is hard to trust. That is why `echo` is usually the first line we
+write and the line we reach for most often to inspect a value.
+
+The catch is that `echo` has rules we rarely notice: it adds no separator between arguments, and a
+string prints as-is while other values print differently. This chapter covers `echo`, `repr`,
+interpolation, and number formatting.
+
+::: {.callout-note}
+## What you will be able to do
+
+After this chapter you can print several values in one `echo`, explain how `echo` differs from
+`repr`, write `&"..."` interpolation, control the width and precision of numbers, and say why
+`echo` and `stdout.write` behave differently around new lines.
+:::
+
+## `echo` and its arguments
+
+Save this as `hello.nim`, then run `nim r hello.nim`.
+
+```{.nim}
+let name = "Nim"
+let year = 2008
+let version = 2.2
+
+echo "Hello, ", name
+echo name, " was released in ", year
+echo "version ", version
+echo "a", "b", "c"
+```
+
+```{.txt}
+Hello, Nim
+Nim was released in 2008
+version 2.2
+abc
+```
+
+`echo` takes any number of arguments and prints them in order with no separator. Note the last
+line: `"a", "b", "c"` prints as `abc` with no spaces. Every space in the output above comes from a
+string we typed ourselves. After all arguments, `echo` adds exactly one new line.
+
+Since every value goes through `$`, `echo` can print almost any type: numbers, `char`, `bool`,
+even sequences. A sequence carries an `@` prefix, as in `@[1, 2, 3]`, and that shape makes it easy
+to inspect contents while chasing a bug.
+
+## `repr` and `$`
+
+Values print in different shapes depending on the context.
+
+```{.nim}
+let text = "Nim"
+
+echo text
+echo repr(text)
+
+let score = 42
+echo "score: " & $score
+```
+
+```{.txt}
+Nim
+"Nim"
+score: 42
+```
+
+`echo` uses `$` to turn a value into a string, so `"Nim"` prints as `Nim` with no quotes. `repr`
+does the opposite: it shows the machine-readable form. Quotes appear, and special characters such
+as a new line show up as `\n`. That is why `repr` helps when values are hard to tell apart on
+screen; an empty string shows as `""` rather than blank space with no trace. When joining with `&`,
+`$` must be called by hand, because `&` accepts only strings on both sides.
+
+## Interpolation with `&"..."`
+
+Glueing values together with commas gets tiring quickly. `std/strformat` offers a tidier form.
+
+```{.nim}
+import std/strformat
+import std/strutils
+
+let name = "Nim"
+let count = 3
+let price = 12.5
+
+echo &"{name} has {count} items"
+echo &"total: {float(count) * price}"
+echo &"upper: {name.toUpperAscii}"
+```
+
+```{.txt}
+Nim has 3 items
+total: 37.5
+upper: NIM
+```
+
+An `&` before a string opens interpolation: whatever sits in `{...}` is evaluated and the result
+drops in. The content may be an expression, not just a variable name. Without that prefix, braces
+stay plain text, so `echo "{name}"` prints `{name}` as-is. Note `float(count) * price`: Nim does
+not mix `int` and `float` silently, so the conversion must be written out.
+
+## Number formatting and alignment
+
+The content of `{...}` may carry a format rule after a colon.
+
+```{.nim}
+import std/strformat
+
+let name = "Nim"
+let count = 3
+let ratio = 12.5
+
+echo fmt"[{name:>6}]"
+echo fmt"[{name:<6}]"
+echo fmt"{count:04d}"
+echo fmt"total: {ratio:8.2f}"
+```
+
+```{.txt}
+[   Nim]
+[Nim   ]
+0003
+total:    12.50
+```
+
+`>6` aligns right within a width of 6, `<6` aligns left, and `^6` centers. For numbers, `04d`
+pads with zeros up to four digits, while `8.2f` uses width 8 with two digits after the decimal
+point. `fmt"..."` is the same as `&"..."`; `fmt` just makes it clear the string is meant for
+formatting. A format rule always follows the shape `{expression:rule}`, and the rule may be left
+out when the value can simply print as-is.
+
+## `echo` versus `write`
+
+`echo` always ends with a new line. When we want to print without moving to the next line, use
+`stdout.write`.
+
+```{.nim}
+echo "line 1"
+stdout.write "line 2 (no newline)"
+stdout.write "\n"
+echo "line 3"
+```
+
+```{.txt}
+line 1
+line 2 (no newline)
+line 3
+```
+
+The last line looks complete because we added `"\n"` ourselves after `write`. Because `write` adds
+nothing, we decide when the line breaks. This is the pattern used for a progress indicator that
+overwrites itself, or for output that must sit flush against other text.
+
+## When the import is missing
+
+`fmt` and `&"..."` come from `std/strformat`. Without that import, the name `fmt` is unknown. Save
+this as `missing_import.nim`:
+
+```{.nim}
+echo fmt"{42}"
+```
+
+```{.txt}
+missing_import.nim(1, 6) Error: undeclared identifier: 'fmt'
+```
+
+The message shows column 6, right at the first letter of `fmt`. The compiler found no symbol named
+`fmt` in any scope. The fix is one line above the code: `import std/strformat`. The same mistake can
+appear for `&"..."`, except the message takes the shape `type mismatch`, because the compiler
+mistakes `&` for the plain string concatenation operator. An `undeclared identifier` message always
+means the same thing: the name was never introduced to the file, usually through a forgotten
+`import`.
+
+## Exercises
+
+1. Print `"total: "` and an integer in one `echo`, with no interpolation, using several arguments.
+2. Predict the output:
+   ```{.nim}
+   echo "a", "b"
+   echo "a" & "b"
+   ```
+3. Write an interpolation that prints `3 + 4` as the sum, not as text.
+4. Print the number `7` right-aligned in width 4, using `fmt` and the `:>4` rule.
+5. Print `"loading"` without a new line, then print `"..."` on the same line.
+
+Answers are in [Appendix A](../appendix/answers.qmd).
+
+## Summary
+
+- `echo` adds no separator between arguments and closes with a single new line.
+- `echo` uses `$`; `repr` shows the machine-readable form, quotes included.
+- `&"..."` and `fmt"..."` drop expressions into text and need `import std/strformat`.
+- Format rules (`>6`, `04d`, `8.2f`) control width, zero padding, and precision.
+- `stdout.write` prints without a new line; add `"\n"` yourself when needed.
+
+## Next
+
+The next chapter covers operators: basic arithmetic and `div`/`mod`, comparisons, short-circuit
+logic, and the membership operators `in` and `notin`.

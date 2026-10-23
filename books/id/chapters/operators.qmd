@@ -1,0 +1,235 @@
+# Operator aritmetika, perbandingan, logika
+
+Di banyak bahasa, `+` pada dua bilangan bulat menghasilkan bilangan bulat, dan pembagian selalu
+bilangan pecahan. Nim membalik sebagian kebiasaan itu: `/` selalu menghasilkan `float`, sedangkan
+pembagian bulat punya operatornya sendiri, `div`.
+
+Kesalahpahaman soal operator kecil, tapi efeknya nyata: hasil yang salah tanpa error, atau tipe
+yang tidak terduga. Bab ini merangkum operator yang paling sering dipakai dan jebakan di
+belakangnya.
+
+::: {.callout-note}
+## Tujuan bab
+
+Setelah bab ini, pembaca bisa memakai `div` dan `mod` dengan benar untuk bilangan negatif,
+membedakan `/` dari `div`, membaca error `type mismatch` pada operand, serta memakai `and`, `or`,
+`not`, `in`, dan `notin` dengan pemahaman evaluasi singkat.
+:::
+
+## Aritmetika dasar
+
+Simpan sebagai `arithmetic.nim`, lalu jalankan dengan `nim r arithmetic.nim`.
+
+```{.nim}
+let a = 7
+let b = 2
+
+echo a + b
+echo a - b
+echo a * b
+echo a / b
+echo a div b
+echo a mod b
+echo -7 mod 3
+echo 7 mod -3
+```
+
+```{.txt}
+9
+5
+14
+3.5
+3
+1
+-1
+1
+```
+
+`a / b` menghasilkan `3.5`, bukan `3`: operator `/` selalu mengembalikan `float`. Pembagian bulat
+memakai `div`, yang memotong ke arah nol. `mod` memberi sisa, dan tandanya mengikuti bilangan yang
+dibagi — `-7 mod 3` bernilai `-1`, bukan `2`. Keduanya sering dipakai bersama: `div` memberi tahu
+berapa kali bilangan pembagi muat, `mod` memberi sisanya. Membagi dengan nol tidak mengembalikan
+nilai istimewa; program berhenti dengan `DivByZeroDefect`.
+
+## Pangkat dan akar
+
+Operator `^` bukan bawaan; ia datang dari `std/math` dan bekerja pada `float`.
+
+```{.nim}
+import std/math
+
+echo 2.0 ^ 10.0
+echo sqrt(2.0)
+echo pow(3.0, 3.0)
+```
+
+```{.txt}
+1024.0
+1.4142135623730951
+27.0
+```
+
+Untuk pangkat bilangan bulat, kalikan berulang di dalam perulangan atau konversi ke `float` lebih
+dulu. Menulis `2 ^ 10` dengan dua bilangan bulat tidak dikompilasi menjadi pangkat bulat, jadi
+niatnya perlu dibuat eksplisit.
+
+## Perbandingan
+
+Operator perbandingan mengembalikan `bool`: `==`, `!=`, `<`, `<=`, `>`, dan `>=`.
+
+```{.nim}
+let age = 20
+
+echo 18 <= age and age < 65
+echo age == 20
+echo age != 21
+echo 1 + 2 * 3 == 7
+echo "abc" == "abc"
+```
+
+```{.txt}
+true
+true
+true
+true
+true
+```
+
+Perhatikan baris pertama. Nim **tidak** mendukung penulisan berantai seperti `18 <= age < 65`; dua
+perbandingan harus disatukan dengan `and`. String dibandingkan secara leksikografis, jadi `"abc"`
+sama dengan `"abc"` persis, termasuk besar-kecil hurufnya.
+
+## Logika dan evaluasi singkat
+
+`and`, `or`, dan `not` bekerja pada `bool`. Yang penting: Nim berhenti mengevaluasi begitu hasilnya
+sudah pasti.
+
+```{.nim}
+proc check(item: string): bool =
+  echo "checking ", item
+  return false
+
+echo "start"
+if check("a") and check("b"):
+  echo "both true"
+echo "done"
+```
+
+```{.txt}
+start
+checking a
+done
+```
+
+Output tidak memuat `checking b`. Karena `check("a")` sudah `false`, `and` tahu hasil akhirnya
+pasti `false` dan melewati operan kedua. Sifat ini disebut *short-circuit*, dan bisa dipakai untuk
+menjaga agar ekspresi kedua tidak dijalankan saat kondisi pertama belum terpenuhi.
+
+## `in` dan `notin`
+
+Untuk memeriksa keanggotaan, gunakan `in`; kebalikannya `notin`.
+
+```{.nim}
+import std/strutils
+
+let x = 5
+
+echo x in 1..10
+echo x notin 1..3
+echo 'c' in {'a', 'b', 'c'}
+echo "ell" in "hello"
+echo 4 in [1, 2, 3]
+```
+
+```{.txt}
+true
+true
+true
+true
+false
+```
+
+`in` bekerja pada rentang, himpunan (`{...}`), larik, dan — lewat `strutils` — pada string. Baris
+terakhir bernilai `false` karena `4` memang tidak ada di dalam larik tersebut.
+
+## Prioritas operator
+
+Kalau ragu soal urutan evaluasi, tanda kurung adalah jawaban yang paling murah.
+
+```{.nim}
+echo 1 + 2 * 3
+echo (1 + 2) * 3
+echo 10 - 3 - 2
+echo not false or false
+echo 1 and 2
+```
+
+```{.txt}
+7
+9
+5
+true
+0
+```
+
+`*` lebih dulu daripada `+`, dan `-` dievaluasi dari kiri sehingga `10 - 3 - 2` bernilai `5`.
+`not` lebih kuat daripada `or`, jadi `not false or false` adalah `true`. Baris terakhir mengejutkan:
+`and` pada dua bilangan bukan logika, melainkan *bitwise*. `1 and 2` bernilai `0` karena tidak ada
+bit yang sama-sama bernilai satu. Hanya pakai `and` dan `or` pada `bool`; untuk bit gunakan
+operatornya dengan sadar.
+
+## Tipe yang tidak cocok
+
+Memperbandingkan dua tipe berbeda ditolak compiler. Simpan sebagai `type_error.nim`:
+
+```{.nim}
+let a = 5
+let b = "5"
+
+echo a == b
+```
+
+```{.txt}
+type_error.nim(4, 8) Error: type mismatch
+Expression: a == b
+  [1] a: int
+  [2] b: string
+```
+
+Pesan menunjukkan baris dan kolom, lalu mengutip ekspresi yang gagal beserta tipe setiap operan.
+Bagian yang paling berguna ada di bawahnya: compiler mendaftar semua versi `==` yang dikenalnya,
+supaya kita bisa melihat bahwa tidak ada yang menerima pasangan `int` dan `string`. Perbaikannya
+adalah menyamakan tipe lebih dulu, misalnya `a == parseInt(b)`.
+
+## Latihan
+
+1. Hitung `17 div 5` dan `17 mod 5`. Berapa hasilnya masing-masing?
+2. Prediksi outputnya:
+   ```{.nim}
+   echo 2 + 3 * 4
+   echo (2 + 3) * 4
+   ```
+3. Kenapa `-9 mod 4` bernilai `-1` dan bukan `3`? Jelaskan aturannya.
+4. Tulis kondisi yang bernilai `true` hanya kalau `x` berada di antara 1 dan 100. Ingat bahwa
+   penulisan berantai tidak didukung.
+5. Kode berikut error. Perbaiki dan jelaskan pesannya:
+   ```{.nim}
+   let n = 4
+   if n in "4":
+     echo "yes"
+   ```
+
+Jawaban ada di [Lampiran A](../appendix/answers.qmd).
+
+## Ringkasan
+
+- `/` selalu menghasilkan `float`; pembagian bulat memakai `div`, sisanya `mod`.
+- `mod` mengikuti tanda bilangan yang dibagi; membagi dengan nol menghentikan program.
+- `^` berasal dari `std/math` dan bekerja pada `float`.
+- `and` dan `or` mengevaluasi singkat; pada `int` keduanya berarti operasi bitwise.
+- `in` dan `notin` memeriksa keanggotaan pada rentang, himpunan, larik, dan string.
+
+## Selanjutnya
+
+Bab berikutnya membahas percabangan: `if`, ekspresi `if`, `case`, dan `when` untuk memilih jalur
+eksekusi.

@@ -1,0 +1,306 @@
+# Object dan constructor
+
+Tuple bagus untuk data kecil yang cepat dibongkar. Tapi begitu ada sepuluh field bernama, penanda
+berulang, dan aturan sendiri, tuple mulai menyulitkan. Objek memberi nama pada sekumpulan field,
+dan Nim menambahkan constructor literal yang membuatnya nyaman dipakai.
+
+Bab ini juga membongkar satu perbedaan yang sering mengejutkan: objek nilai dan `ref object`
+berperilaku berbeda saat disalin. Mengabaikannya adalah sumber bug klasik.
+
+::: {.callout-note}
+## Tujuan bab
+
+Setelah bab ini, pembaca bisa mendefinisikan `object` dan mengisinya lewat constructor, memakai
+nilai default, membedakan objek nilai dari `ref object`, menimpa `$`, dan membaca pesan error
+`undeclared field`.
+:::
+
+## Mendefinisikan objek dan mengisinya
+
+Deklarasikan objek dengan `type`, lalu tulis daftar field di bawahnya.
+
+```{.nim}
+type Person = object
+  name: string
+  age: int
+
+let ada = Person(name: "Ada", age: 36)
+echo ada.name, " is ", ada.age
+```
+
+```{.txt}
+Ada is 36
+```
+
+`Person(name: "Ada", age: 36)` adalah constructor literal. Nim membuatnya otomatis untuk setiap
+tipe objek, jadi tidak ada fungsi yang perlu ditulis sendiri. Field yang tidak disebut akan
+memakai nilai default.
+
+## Field yang bisa diubah
+
+Field boleh diubah selama variabelnya dideklarasikan `var`.
+
+```{.nim}
+type Point = object
+  x, y: int
+
+var p = Point(x: 1, y: 2)
+p.x = 10
+echo p.x, ",", p.y
+```
+
+```{.txt}
+10,2
+```
+
+`x, y: int` adalah singkatan untuk dua field bertipe sama.
+
+## Nilai default objek
+
+Objek yang dideklarasikan tanpa isi sudah aman dipakai; setiap field berisi default tipenya.
+
+```{.nim}
+type Counter = object
+  hits: int
+  label: string
+
+var c: Counter
+echo c.hits, "|", repr(c.label)
+```
+
+```{.txt}
+0|""
+```
+
+Sama seperti `var` tanpa nilai awal pada tipe dasar: tidak ada sampah memori yang perlu
+dikhawatirkan.
+
+## Objek sudah punya `$` bawaan
+
+Pembaca sering menduga `echo` menolak objek. Untuk objek nilai, Nim menyediakan `$` bawaan.
+
+```{.nim}
+type Person = object
+  name: string
+
+echo Person(name: "Ada")
+```
+
+```{.txt}
+(name: "Ada")
+```
+
+Keluarannya adalah bentuk literal kembali: nama field beserta nilainya. Cocok untuk inspeksi
+cepat, tapi biasanya belum enak dibaca manusia.
+
+## Menimpa `$` sendiri
+
+Untuk mengubah cara objek dicetak, definisikan `$` untuk tipe itu.
+
+```{.nim}
+type Person = object
+  name: string
+  age: int
+
+proc `$`(p: Person): string =
+  p.name & " (" & $p.age & ")"
+
+echo Person(name: "Ada", age: 36)
+```
+
+```{.txt}
+Ada (36)
+```
+
+Setelah `$` didefinisikan, `echo` memakainya otomatis. Aturan yang sama berlaku untuk `&`,
+interpolasi string, dan pemanggilan `$` eksplisit. Inilah cara idiomatis menambah representasi teks
+pada tipe sendiri.
+
+## `ref object`: disimpan di heap
+
+`ref object` menyimpan datanya di heap, dan variabelnya menyimpan penunjuk ke sana.
+
+```{.nim}
+type Node = ref object
+  value: int
+  next: Node
+
+var head = Node(value: 1)
+head.next = Node(value: 2)
+echo head.value, " -> ", head.next.value
+```
+
+```{.txt}
+1 -> 2
+```
+
+Field `next` bertipe `Node`, yaitu referensi ke node lain. Struktur berantai seperti inilah yang
+membuat `ref` praktis. `nil` adalah nilai yang sah untuk sebuah referensi.
+
+Deklarasi `ref` tanpa nilai awal berisi `nil`. Untuk mengisinya, pakai `new`.
+
+```{.nim}
+type Person = ref object
+  name: string
+
+var p = Person(name: "Ada")
+echo p.name
+
+var q: Person
+new(q)
+q.name = "Grace"
+echo q.name
+```
+
+```{.txt}
+Ada
+Grace
+```
+
+`new(q)` mengalokasikan objek lalu menyimpannya di `q`. Constructor literal seperti
+`Person(name: "Ada")` melakukan hal yang sama, lalu mengisi fieldnya.
+
+## `$` bawaan tidak berlaku untuk `ref`
+
+Objek nilai punya `$` bawaan, tapi referensinya tidak.
+
+```{.nim}
+type Person = ref object
+  name: string
+
+var p = Person(name: "Ada")
+echo p
+```
+
+```{.txt}
+main.nim(5, 1) Error: type mismatch
+Expression: echo p
+  [1] p: Person
+
+Expected one of (first mismatch at [position]):
+[1] proc echo(x: varargs[typed, `$`])
+```
+
+Pesannya tidak menyebut `$` secara gamblang, tapi baris terakhir memberi petunjuk: `echo` butuh
+tipe yang punya `$`. Ada dua perbaikan. Pertama, definisikan `$` untuk `Person`. Kedua, lepas
+referensinya dengan `echo p[]`, supaya `$` bawaan objek yang dipakai.
+
+## Nilai vs referensi: menyalin tidak selalu sama
+
+Perbedaan paling mahal antara keduanya muncul saat nilai disalin.
+
+```{.nim}
+type
+  Card = object
+    points: int
+  CardRef = ref object
+    points: int
+
+var a = Card(points: 1)
+var b = a
+b.points = 99
+echo "value: ", a.points, " ", b.points
+
+var c = CardRef(points: 1)
+var d = c
+d.points = 99
+echo "ref:   ", c.points, " ", d.points
+```
+
+```{.txt}
+value: 1 99
+ref:   99 99
+```
+
+Pada objek nilai, `var b = a` menyalin seluruh isinya, jadi mengubah `b` tidak menyentuh `a`.
+Pada `ref object`, `var d = c` menyalin penunjuknya, bukan datanya. Keduanya menunjuk objek yang
+sama, sehingga mengubah `d` ikut mengubah `c`.
+
+Aturannya: pakai `object` untuk nilai kecil yang ingin disalin, dan `ref object` untuk data besar
+atau saat beberapa bagian kode memang harus berbagi satu nilai.
+
+## Membaca error: field yang tidak ada
+
+Mengakses field yang tidak dideklarasikan ditolak compiler.
+
+```{.nim}
+type Person = object
+  name: string
+
+let ada = Person(name: "Ada")
+echo ada.email
+```
+
+```{.txt}
+main.nim(5, 9) Error: undeclared field: 'email'
+```
+
+Pesannya menyebut field yang dicari. Awali pemeriksaan dari deklarasi tipe: `Person` hanya punya
+`name`, jadi `email` memang tidak ada. Ini jenis error yang paling mudah diperbaiki, karena
+jawabannya ada di definisi tipe, bukan di baris pemakaiannya.
+
+## Warisan dasar
+
+Objek bisa mewarisi field dari objek lain lewat `object of`.
+
+```{.nim}
+type
+  Animal = ref object of RootObj
+    name: string
+  Dog = ref object of Animal
+    tricks: int
+
+proc describe(a: Animal): string =
+  a.name
+
+var rex = Dog(name: "Rex", tricks: 3)
+echo describe(rex), " knows ", rex.tricks, " tricks"
+```
+
+```{.txt}
+Rex knows 3 tricks
+```
+
+`Dog` mewarisi field `name` dari `Animal` dan menambah `tricks`. Prosedur yang menerima `Animal`
+juga menerima `Dog`, karena `Dog` adalah `Animal` yang lebih khusus. Warisan memakai `ref object`
+dengan `RootObj` sebagai akar hierarki. Bab ini berhenti di sini; pemilihan prosedur saat runtime
+dibahas di bagian menengah.
+
+## Latihan
+
+1. Tambahkan field `email: string` pada `Person`, isi lewat constructor, lalu cetak.
+2. Tanpa menjalankan, prediksi outputnya:
+   ```{.nim}
+   type Task = object
+     title: string
+     done: bool
+
+   var t = Task(title: "write")
+   echo t.done, " ", t.title
+   ```
+3. Tulis `type Book = ref object of RootObj` dengan field `title` dan `pages`, buat satu instance,
+   lalu cetak lewat prosedur yang menerima `Book`.
+4. Kode berikut gagal. Perbaiki tanpa mengubah `let`:
+   ```{.nim}
+   type Point = object
+     x: int
+
+   let p = Point(x: 1)
+   p.x = 2
+   echo p.x
+   ```
+
+Jawaban ada di [Lampiran A](../appendix/answers.qmd).
+
+## Ringkasan
+
+- `object` mengelompokkan field bernama; `Tipe(field: nilai)` adalah constructor literal.
+- Field yang tidak diisi memakai default tipenya, dan objek tanpa isi tetap aman dipakai.
+- Objek nilai punya `$` bawaan; `ref object` tidak, jadi definisikan `$` atau pakai `p[]`.
+- Menyalin objek nilai menggandakan datanya; menyalin `ref object` menggandakan penunjuknya.
+- `object of RootObj` mewariskan field; `new` mengalokasikan `ref` yang masih `nil`.
+
+## Selanjutnya
+
+Bab berikutnya membahas [enum dan set](enums-and-sets.qmd): himpunan nilai bernama dengan urutan
+tetap, dan himpunan bit untuk menguji keanggotaan dengan cepat.

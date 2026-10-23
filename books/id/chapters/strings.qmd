@@ -1,0 +1,244 @@
+# String, raw string, dan karakter
+
+Hampir setiap program menyentuh teks. Di Nim, `string` adalah barisan byte yang boleh diubah di
+tempat — berbeda dari bahasa yang memperlakukan string sebagai nilai beku. Perbedaan itu muncul di
+indeks, penggabungan, dan pesan error yang kadang tidak terduga.
+
+Bab ini mulai dari menulis teks harfiah, lalu bergerak ke cara mengambil sebagian isinya dan
+mengubahnya dengan aman.
+
+::: {.callout-note}
+## Tujuan bab
+
+Setelah bab ini, pembaca bisa menulis escape sequence dan raw string, mengambil karakter dan
+potongan teks dengan indeks dan slicing, membedakan `&` dari `add`, serta menjelaskan kenapa
+`s[0] = 'N'` ditolak saat `s` dideklarasikan `let`.
+:::
+
+## Escape sequence
+
+Simpan sebagai `escapes.nim`, lalu jalankan dengan `nim r escapes.nim`.
+
+```{.nim}
+echo "line 1\nline 2"
+echo "quote: \"ok\""
+echo "backslash: \\"
+echo "brace: { }"
+```
+
+```{.txt}
+line 1
+line 2
+quote: "ok"
+backslash: \
+brace: { }
+```
+
+Garis miring terbalik di dalam string membuka *escape sequence*. `\n` menjadi baris baru, `\"`
+menjadi tanda kutip yang tidak menutup string, dan `\\` menjadi satu garis miring. Perhatikan baris
+terakhir: kurung kurawal `{` biasa-biasa saja di string biasa. Karakter itu hanya punya arti
+khusus di dalam *interpolasi* `&"..."` yang dibahas di bab berikutnya.
+
+## Raw string
+
+Kadang kita justru butuh garis miring apa adanya, misalnya pada path Windows atau pola reguler.
+Awalan `r` mematikan semua escape:
+
+```{.nim}
+let path = r"C:\Users\nim\bin"
+let pattern = r"\d+\.\d+"
+
+echo path
+echo pattern
+```
+
+```{.txt}
+C:\Users\nim\bin
+\d+\.\d+
+```
+
+Tanpa `r`, `\U` dan `\d` bukan escape yang dikenal dan bisa memicu peringatan. Raw string juga
+tidak memperlakukan `"` sebagai penutup, jadi teks di atas terbaca persis seperti tertulis.
+
+## String multi-baris
+
+Untuk teks yang menempati beberapa baris, gunakan tiga tanda kutip:
+
+```{.nim}
+let banner = """
+line one
+line two
+"""
+
+echo banner.len
+echo banner
+echo "END"
+```
+
+```{.txt}
+18
+line one
+line two
+
+END
+```
+
+Perhatikan `len` bernilai 18. Isi string adalah `line one\nline two\n`: 8 + 1 + 8 + 1 karakter.
+Baris baru setelah `"""` pembuka ikut terhitung, dan itu sering menjadi sumber kesalahan hitung
+saat pembaca baru memakainya. Raw string tiga kutip juga tidak memproses escape.
+
+## Panjang dan indeks
+
+`len` memberi jumlah byte, dan indeks dimulai dari nol. Memanggil `len` murah: panjang string
+disimpan bersama datanya, bukan dihitung ulang setiap kali.
+
+```{.nim}
+let s = "Nim rocks"
+
+echo s.len
+echo s[0]
+echo s[^1]
+echo s[0..2]
+```
+
+```{.txt}
+9
+N
+s
+Nim
+```
+
+`s[^1]` menunjuk elemen terakhir; `^n` adalah gula untuk `s.len - n`. Karena `s[0]` menghasilkan
+`char`, bukan string satu huruf, operator pada `char` (seperti `.ord`) berlaku langsung. Mengambil
+indeks di luar rentang tidak dikembalikan sebagai `nil`; Nim menghentikan program dengan
+`IndexDefect` saat runtime.
+
+## Slicing
+
+Potongan teks diambil dengan rentang di dalam kurung siku. Kedua ujungnya ikut disertakan.
+
+```{.nim}
+let s = "Nim rocks"
+
+echo s[0..2]     # "Nim"
+echo s[4..8]     # "rocks"
+echo s[^5..^1]   # "rocks", counted from the end
+echo s[1..^2]    # "im rock"
+```
+
+```{.txt}
+Nim
+rocks
+rocks
+im rock
+```
+
+Rentang `a..b` berarti dari indeks `a` sampai `b`, keduanya masuk. Karena `^n` dihitung dari
+belakang, `s[^5..^1]` mengambil lima karakter terakhir. Slicing menghasilkan string baru; string
+aslinya tidak berubah.
+
+## `&` versus `add`
+
+Ada dua cara menggabungkan teks, dan bedanya soal waktu dan memori.
+
+```{.nim}
+var greeting = "Hello"
+greeting.add(", ")
+greeting.add("Nim")
+echo greeting
+
+let shout = greeting & "!"
+echo shout
+echo "count: " & $shout.len
+```
+
+```{.txt}
+Hello, Nim
+Hello, Nim!
+count: 11
+```
+
+`add` menambahkan langsung ke string yang sudah ada. Karena mengubah nilai, `greeting` harus `var`.
+Operator `&` membuat string baru dari dua sisi tanpa menyentuh yang lama; karena itu `shout` boleh
+`let`. Untuk menggabung banyak bagian sekaligus, `add` lebih hemat karena tidak menyalin berulang.
+Rangkaian `a & b & c` membuat string perantara di tiap langkah, sedangkan `add` menumbuhkan satu
+buffer yang sama.
+
+## Kenapa `s[0] = 'N'` ditolak
+
+String Nim memang bisa diubah di tempat, tapi hanya kalau pengikatnya `var`. Simpan sebagai
+`mutation.nim`:
+
+```{.nim}
+let s = "nim"
+s[0] = 'N'
+echo s
+```
+
+```{.txt}
+mutation.nim(2, 2) Error: 's[0]' cannot be assigned to
+```
+
+Pesan menunjuk baris 2, kolom 2, tepat di `[0]`. Yang ditolak adalah penugasan ke elemen, bukan
+penulisan string itu sendiri: `s` dibuat dengan `let`, jadi tidak ada bagiannya yang boleh
+diubah. Ganti `let` menjadi `var` dan program berjalan, mencetak `Nim`.
+
+## Memotong dan memecah teks
+
+Tugas sehari-hari seperti membersihkan spasi dan memecah baris CSV ada di `std/strutils`.
+
+```{.nim}
+import std/strutils
+
+let csv = "alpha, beta, gamma"
+let parts = csv.split(',')
+
+echo parts.len
+echo "[" & parts[1] & "]"
+echo "[" & parts[1].strip & "]"
+echo "[" & "  padded  ".strip & "]"
+```
+
+```{.txt}
+3
+[ beta]
+[beta]
+[padded]
+```
+
+`split` memecah string menjadi `seq[string]` pada setiap pemisah. Perhatikan hasil `split` masih
+menyimpan spasi setelah koma; `strip` menghapus spasi di kedua ujung. Baris output yang diapit
+kurung siku dibuat agar spasi tidak terlihat sekilas hilang.
+
+## Latihan
+
+1. Cetak satu string yang berisi tanda kutip ganda dan satu garis miring terbalik dengan escape
+   yang benar.
+2. Tanpa menjalankan, prediksi output:
+   ```{.nim}
+   echo "a" & "b" & "c"
+   echo "abc".len
+   ```
+3. Tulis path `C:\temp\new` memakai raw string, lalu cetak.
+4. Kode berikut gagal. Perbaiki, lalu jelaskan kenapa gagal:
+   ```{.nim}
+   let s = "abc"
+   s.add("d")
+   echo s
+   ```
+5. Ambil tiga karakter terakhir dari `"programming"` dengan slicing, lalu cetak hasilnya.
+
+Jawaban ada di [Lampiran A](../appendix/answers.qmd).
+
+## Ringkasan
+
+- `\n`, `\"`, dan `\\` adalah escape di string biasa; `r"..."` mematikannya.
+- Tiga kutip membentuk string multi-baris, dan baris baru setelah pembuka ikut terhitung.
+- `len` memberi jumlah byte, indeks mulai dari nol, dan `^n` dihitung dari belakang.
+- `add` mengubah string di tempat (butuh `var`); `&` membuat string baru.
+- `split` dan `strip` dari `std/strutils` memecah dan membersihkan teks.
+
+## Selanjutnya
+
+Bab berikutnya membahas cara menampilkan nilai: `echo`, `repr`, interpolasi `&"..."`, format angka,
+dan perbedaan `echo` dengan `write`.

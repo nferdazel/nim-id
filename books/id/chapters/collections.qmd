@@ -1,0 +1,241 @@
+# `array`, `seq`, dan `openArray`
+
+Dua kumpulan data yang tampak sama bisa berperilaku sangat berbeda. Yang satu ukurannya ditetapkan
+saat ditulis dan tidak pernah berubah; yang lain bisa bertambah saat program jalan. Salah memilih
+berarti menabrak dinding di tengah jalan.
+
+Nim mendorong kita menentukan pilihan sejak awal. `array` berukuran tetap dan disimpan langsung di
+tempatnya; `seq` berukuran dinamis dan bisa tumbuh. Bab ini memakai keduanya, lalu menunjukkan
+`openArray`: satu parameter prosedur yang menerima dua-duanya tanpa menyalin.
+
+::: {.callout-note}
+## Tujuan bab
+
+Setelah bab ini, pembaca bisa menulis `array` berukuran tetap, menumbuhkan `seq` dengan `add`,
+`insert`, dan `delete`, memakai indeks `[^1]` untuk elemen terakhir, menulis parameter `openArray`
+yang menerima `array` maupun `seq`, serta mengenali error indeks di luar batas.
+:::
+
+## `array`: ukuran tetap
+
+Simpan sebagai `main.nim`, lalu jalankan.
+
+```{.nim}
+var scores = [90, 75, 60]
+
+echo "len: ", scores.len
+echo "first: ", scores[0]
+echo "last: ", scores[^1]
+
+scores[1] = 80
+echo "all: ", scores
+```
+
+```{.txt}
+len: 3
+first: 90
+last: 60
+all: [90, 80, 60]
+```
+
+`[90, 75, 60]` adalah literal `array`; tipenya `array[3, int]`. Indeksnya mulai dari `0`, jadi
+elemen terakhir ada di `len - 1`. Nim menyediakan cara membaca dari belakang: `[^1]` berarti satu
+dari ujung, sama dengan `scores[2]` di sini.
+
+Elemen `array` boleh diubah satu per satu selama variabelnya `var`. Deklarasi `let scores` membuat
+seluruh larik tetap, termasuk elemennya.
+
+## `array[N, T]` dan nilai default
+
+```{.nim}
+var buffer: array[3, int]
+
+echo buffer
+buffer[0] = 7
+buffer[2] = 9
+echo buffer
+echo "len: ", buffer.len
+```
+
+```{.txt}
+[0, 0, 0]
+[7, 0, 9]
+len: 3
+```
+
+Tipe `array[3, int]` berarti tiga elemen bertipe `int`. Tanpa nilai awal, Nim mengisi semua elemen
+dengan default tipe elemennya—`0` untuk `int`, `""` untuk `string`. Panjangnya ikut menjadi bagian
+dari tipe: `array[3, int]` dan `array[4, int]` adalah dua tipe berbeda.
+
+## `seq`: ukuran bisa berubah
+
+```{.nim}
+var names = @["ada", "bob"]
+
+names.add("cyd")
+
+echo "len: ", names.len
+echo "last: ", names[^1]
+echo names
+```
+
+```{.txt}
+len: 3
+last: cyd
+@["ada", "bob", "cyd"]
+```
+
+Awalan `@` mengubah literal `array` menjadi `seq`, jadi `@["ada", "bob"]` bertipe `seq[string]`.
+`add` menambahkan satu elemen di ujung. Panjang `seq` diketahui saat program jalan, jadi jumlah
+elemen tidak ditulis dalam tipe.
+
+Perhatikan baris terakhir: `echo` mencetak `@["ada", "bob", "cyd"]`, lengkap dengan `@`. Tanda itu
+menandai bahwa nilainya `seq`, bukan `array`.
+
+## Menyisipkan dan menghapus
+
+```{.nim}
+var numbers = @[10, 20, 30, 40]
+
+numbers.insert(15, 1)
+echo "after insert: ", numbers
+
+numbers.delete(2)
+echo "after delete: ", numbers
+
+echo "first: ", numbers[0], " last: ", numbers[^1]
+```
+
+```{.txt}
+after insert: @[10, 15, 20, 30, 40]
+after delete: @[10, 15, 30, 40]
+first: 10 last: 40
+```
+
+`insert(15, 1)` menyisipkan nilai `15` di indeks `1`, dan elemen sesudahnya bergeser satu tempat.
+`delete(2)` menghapus elemen di indeks `2`; perhatikan bahwa indeksnya dihitung **setelah** sisipan,
+bukan sebelum. Keduanya mengubah panjang `seq`.
+
+## `seq` kosong dan pengisian bertahap
+
+```{.nim}
+var squares: seq[int] = @[]
+
+for i in 1 .. 4:
+  squares.add(i * i)
+
+echo squares
+echo "len: ", squares.len
+```
+
+```{.txt}
+@[1, 4, 9, 16]
+len: 4
+```
+
+`@[]` adalah `seq` kosong tanpa elemen. Karena kosong, tipenya tidak bisa disimpulkan dari isinya,
+jadi anotasinya wajib: `seq[int]`. Setelah itu `add` dipanggil berulang kali di dalam perulangan.
+
+## `openArray`: parameter yang menerima keduanya
+
+```{.nim}
+proc total(values: openArray[int]): int =
+  for value in values:
+    result = result + value
+
+let fixed = [1, 2, 3]
+let dynamic = @[4, 5, 6]
+
+echo "array: ", total(fixed)
+echo "seq: ", total(dynamic)
+```
+
+```{.txt}
+array: 6
+seq: 15
+```
+
+`openArray[int]` menerima `array` maupun `seq` bertipe elemen `int`, tanpa menyalin isinya. Ini
+jenis parameter yang dipakai `add`, `insert`, dan banyak prosedur `std/` lainnya. Bedanya dengan
+`array` dan `seq`: `openArray` hanya berlaku sebagai parameter, bukan tipe yang bisa disimpan di
+variabel atau dikembalikan dari prosedur. Prosedur yang menerima `openArray` juga tidak bisa
+mengubah panjangnya.
+
+Satu catatan tentang penyalinan: menugaskan `array` atau `seq` ke variabel baru menyalin isinya,
+bukan berbagi. Mengubah salinannya tidak menyentuh yang asli—berbeda dari `list` di Python.
+
+## Batas indeks dan error out-of-bounds
+
+Indeks yang sah untuk `array` dan `seq` berukuran `len` adalah `0` sampai `len - 1`. Indeks konstanta
+yang melewati batas ditangkap saat kompilasi:
+
+```{.nim}
+let values = [10, 20, 30]
+
+echo values[5]
+```
+
+```{.txt}
+main.nim(3, 13) Error: conversion from int literal(5) to range 0..2(int) is invalid
+```
+
+Nim menghitung ulang indeks terhadap rentang yang sah (`0..2` untuk tiga elemen). Karena `5` tidak
+masuk rentang itu, programnya tidak pernah dibuat.
+
+Kalau indeksnya baru diketahui saat program jalan, compiler tidak bisa menolong:
+
+```{.nim}
+let values = [10, 20, 30]
+var index = 5
+
+echo values[index]
+```
+
+```{.txt}
+Error: unhandled exception: index 5 not in 0 .. 2 [IndexDefect]
+```
+
+Program dikompilasi, lalu berhenti saat dijalankan. `IndexDefect` adalah pengecualian yang dilempar
+saat indeks keluar batas, dan pesannya menyebut indeks yang salah beserta rentang yang sah. Perilaku
+ini lebih aman daripada C, yang pada kasus serupa membaca memori di luar larik tanpa peringatan.
+Output di atas dipotong; keluaran lengkapnya juga memuat jejak tumpukan.
+
+Pemeriksaan ini menyala sejak awal, termasuk saat program dikompilasi dengan `-d:release`. Hanya
+`-d:danger` yang mematikannya; setelah itu contoh di atas mencetak nilai acak dari luar larik.
+
+## Latihan
+
+1. Buat `seq` berisi tiga nama, lalu sisipkan satu nama baru di awal tanpa menimpa elemen pertama.
+2. Tanpa menjalankan, prediksi outputnya:
+   ```{.nim}
+   var data = @[1, 2, 3]
+   data.delete(0)
+   data.add(data[^1] + 1)
+   echo data
+   ```
+3. Tulis prosedur `smallest(values: openArray[int]): int` yang mengembalikan nilai terkecil, lalu
+   panggil dengan sebuah `array` dan sebuah `seq`.
+4. `var x = @[]` gagal dikompilasi, sementara `var y: seq[int]` jalan dan panjangnya `0`. Jelaskan
+   kenapa keduanya berbeda.
+5. Kode berikut gagal. Perbaiki, lalu jelaskan kenapa compiler menolaknya:
+   ```{.nim}
+   var values = [10, 20, 30]
+   values.add(40)
+   ```
+
+Jawaban ada di [Lampiran A](../appendix/answers.qmd).
+
+## Ringkasan
+
+- `array` berukuran tetap dan ukurannya bagian dari tipe; `seq` bisa tumbuh dan dibuat dengan `@[...]`.
+- `[^1]` membaca elemen terakhir; indeks yang sah hanya `0` sampai `len - 1`.
+- `add`, `insert`, dan `delete` mengubah isi `seq`; `insert(item, index)` menyisipkan, `delete(index)`
+  menghapus.
+- `openArray[T]` sebagai parameter menerima `array` dan `seq` tanpa menyalin, tapi tidak bisa disimpan
+  atau dikembalikan.
+- Indeks konstan di luar batas ditolak saat kompilasi; indeks saat runtime melempar `IndexDefect`.
+
+## Selanjutnya
+
+Bab berikutnya membahas cara membungkus logika ke dalam [prosedur dan fungsi](procedures.qmd):
+parameter, nilai balik, dan perbedaan `proc` dengan `func`.

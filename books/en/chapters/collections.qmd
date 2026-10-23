@@ -1,0 +1,242 @@
+# `array`, `seq`, and `openArray`
+
+Two collections that look alike can behave very differently. One has its size fixed when it is
+written and never changes; the other can grow while the program runs. Picking wrong means hitting a
+wall halfway through.
+
+Nim pushes you to decide up front. An `array` has a fixed size and is stored in place; a `seq` has a
+dynamic size and can grow. This chapter uses both, then introduces `openArray`: a single procedure
+parameter that accepts either, without copying.
+
+::: {.callout-note}
+## What you will be able to do
+
+After this chapter you can write a fixed-size `array`, grow a `seq` with `add`, `insert`, and
+`delete`, use the index `[^1]` for the last element, write an `openArray` parameter that accepts both
+an `array` and a `seq`, and recognize an out-of-bounds index error.
+:::
+
+## `array`: fixed size
+
+Save this as `main.nim`, then run it.
+
+```{.nim}
+var scores = [90, 75, 60]
+
+echo "len: ", scores.len
+echo "first: ", scores[0]
+echo "last: ", scores[^1]
+
+scores[1] = 80
+echo "all: ", scores
+```
+
+```{.txt}
+len: 3
+first: 90
+last: 60
+all: [90, 80, 60]
+```
+
+`[90, 75, 60]` is an `array` literal; its type is `array[3, int]`. Indices start at `0`, so the last
+element sits at `len - 1`. Nim offers a way to read from the back: `[^1]` means one from the end,
+here the same as `scores[2]`.
+
+The elements of an `array` may be changed one by one as long as the variable is a `var`. Declaring
+`let scores` freezes the whole array, elements included.
+
+## `array[N, T]` and default values
+
+```{.nim}
+var buffer: array[3, int]
+
+echo buffer
+buffer[0] = 7
+buffer[2] = 9
+echo buffer
+echo "len: ", buffer.len
+```
+
+```{.txt}
+[0, 0, 0]
+[7, 0, 9]
+len: 3
+```
+
+The type `array[3, int]` means three elements of type `int`. Without an initial value, Nim fills
+every element with the element type's default—`0` for `int`, `""` for `string`. The length is part of
+the type: `array[3, int]` and `array[4, int]` are two different types.
+
+## `seq`: a size that can change
+
+```{.nim}
+var names = @["ada", "bob"]
+
+names.add("cyd")
+
+echo "len: ", names.len
+echo "last: ", names[^1]
+echo names
+```
+
+```{.txt}
+len: 3
+last: cyd
+@["ada", "bob", "cyd"]
+```
+
+The `@` prefix turns an `array` literal into a `seq`, so `@["ada", "bob"]` has type `seq[string]`.
+`add` appends one element at the end. A `seq`'s length is known while the program runs, so the number
+of elements is not written into the type.
+
+Note the last line: `echo` prints `@["ada", "bob", "cyd"]`, `@` included. That sign marks the value
+as a `seq`, not an `array`.
+
+## Inserting and deleting
+
+```{.nim}
+var numbers = @[10, 20, 30, 40]
+
+numbers.insert(15, 1)
+echo "after insert: ", numbers
+
+numbers.delete(2)
+echo "after delete: ", numbers
+
+echo "first: ", numbers[0], " last: ", numbers[^1]
+```
+
+```{.txt}
+after insert: @[10, 15, 20, 30, 40]
+after delete: @[10, 15, 30, 40]
+first: 10 last: 40
+```
+
+`insert(15, 1)` inserts the value `15` at index `1`, and everything after it shifts one place.
+`delete(2)` removes the element at index `2`; note that the index is counted **after** the insert,
+not before. Both change the length of the `seq`.
+
+## An empty `seq` and gradual filling
+
+```{.nim}
+var squares: seq[int] = @[]
+
+for i in 1 .. 4:
+  squares.add(i * i)
+
+echo squares
+echo "len: ", squares.len
+```
+
+```{.txt}
+@[1, 4, 9, 16]
+len: 4
+```
+
+`@[]` is an empty `seq` with no elements. Being empty, its type cannot be inferred from its contents,
+so the annotation is mandatory: `seq[int]`. After that, `add` is called repeatedly inside a loop.
+
+## `openArray`: a parameter that accepts both
+
+```{.nim}
+proc total(values: openArray[int]): int =
+  for value in values:
+    result = result + value
+
+let fixed = [1, 2, 3]
+let dynamic = @[4, 5, 6]
+
+echo "array: ", total(fixed)
+echo "seq: ", total(dynamic)
+```
+
+```{.txt}
+array: 6
+seq: 15
+```
+
+`openArray[int]` accepts an `array` or a `seq` whose element type is `int`, without copying the
+contents. This is the parameter kind used by `add`, `insert`, and many `std/` procedures. The
+difference from `array` and `seq`: `openArray` works only as a parameter, not as a type you can store
+in a variable or return from a procedure. A procedure that takes an `openArray` also cannot change
+its length.
+
+One note about copying: assigning an `array` or a `seq` to a new variable copies the contents
+instead of sharing them. Changing the copy does not touch the original—unlike a `list` in Python.
+
+## Index bounds and the out-of-bounds error
+
+The valid indices for an `array` or `seq` of length `len` run from `0` to `len - 1`. A constant index
+past the end is caught at compile time:
+
+```{.nim}
+let values = [10, 20, 30]
+
+echo values[5]
+```
+
+```{.txt}
+main.nim(3, 13) Error: conversion from int literal(5) to range 0..2(int) is invalid
+```
+
+Nim re-checks the index against the valid range (`0..2` for three elements). Since `5` does not fit
+that range, the program is never built.
+
+When the index is only known while the program runs, the compiler cannot help:
+
+```{.nim}
+let values = [10, 20, 30]
+var index = 5
+
+echo values[index]
+```
+
+```{.txt}
+Error: unhandled exception: index 5 not in 0 .. 2 [IndexDefect]
+```
+
+The program compiles, then stops when it runs. `IndexDefect` is the exception raised for an
+out-of-bounds index, and the message names the bad index along with the valid range. This behavior is
+safer than C, which in the same case reads memory outside the array with no warning. The output above
+is trimmed; the full output also contains a stack trace.
+
+The check is on from the start, even when the program is compiled with `-d:release`. Only `-d:danger`
+turns it off; after that the example above prints a random value from outside the array.
+
+## Exercises
+
+1. Create a `seq` holding three names, then insert a new name at the front without overwriting the
+   first element.
+2. Without running it, predict the output:
+   ```{.nim}
+   var data = @[1, 2, 3]
+   data.delete(0)
+   data.add(data[^1] + 1)
+   echo data
+   ```
+3. Write a procedure `smallest(values: openArray[int]): int` that returns the smallest value, then
+   call it with an `array` and with a `seq`.
+4. `var x = @[]` fails to compile, while `var y: seq[int]` runs and its length is `0`. Explain why
+   the two differ.
+5. The code below fails. Fix it, then explain why the compiler rejected it:
+   ```{.nim}
+   var values = [10, 20, 30]
+   values.add(40)
+   ```
+
+Answers are in [Appendix A](../appendix/answers.qmd).
+
+## Summary
+
+- An `array` has a fixed size that is part of the type; a `seq` can grow and is built with `@[...]`.
+- `[^1]` reads the last element; the only valid indices are `0` through `len - 1`.
+- `add`, `insert`, and `delete` change the contents of a `seq`; `insert(item, index)` inserts,
+  `delete(index)` removes.
+- `openArray[T]` as a parameter accepts both `array` and `seq` without copying, but cannot be stored
+  or returned.
+- A constant out-of-bounds index is rejected at compile time; a runtime index raises `IndexDefect`.
+
+## Next
+
+The next chapter covers wrapping logic into [procedures and functions](procedures.qmd): parameters,
+return values, and the difference between `proc` and `func`.

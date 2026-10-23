@@ -1,0 +1,171 @@
+# Komentar dan doc comment
+
+Komentar adalah bagian kode yang tidak dijalankan compiler. Karena itu banyak orang menganggapnya
+gratis, lalu menulis terlalu banyak. Di Nim ada tiga bentuk dengan aturan berbeda, dan salah satu di
+antaranya menjadi bahan dokumentasi. Salah menaruhnya membuat dokumentasi hilang tanpa satu pun
+pesan error.
+
+::: {.callout-note}
+## Tujuan bab
+
+Setelah bab ini, pembaca bisa memakai komentar baris `#`, komentar blok `#[ ]#`, dan doc comment
+`##` secara tepat, menghasilkan dokumentasi dengan `nim doc`, dan menulis contoh yang ikut diuji
+compiler lewat `runnableExamples`.
+:::
+
+## Komentar baris: `#`
+
+Bentuk paling dasar dimulai dengan `#`. Apa pun sesudahnya sampai akhir baris diabaikan.
+
+```{.nim}
+# This line is ignored by the compiler.
+echo "comments do not run"  # this one too
+```
+
+```{.txt}
+comments do not run
+```
+
+Komentar baris boleh berdiri sendiri di awal baris, atau menempel di ujung kode. Compiler membuang
+keduanya sebelum menghasilkan kode mesin, jadi tidak ada biaya di runtime. Yang perlu diperhatikan:
+komentar menjelaskan *kenapa*, bukan *apa*. `# tambah satu` di atas `total += 1` tidak memberi
+informasi apa pun.
+
+## Komentar blok: `#[ ... ]#`
+
+Untuk menonaktifkan beberapa baris sekaligus, pakai komentar blok. Bentuknya `#[` di awal dan `]#`
+di akhir.
+
+```{.nim}
+#[ This is a block comment.
+   It can span several lines. #[ Nested blocks work too. ]#
+]#
+echo "after the block"
+```
+
+```{.txt}
+after the block
+```
+
+Perhatikan bagian `#[ Nested blocks work too. ]#` di dalamnya. Nim menghitung kedalaman: setiap `#[`
+menambah satu tingkat, setiap `]#` menguranginya. Blok dalam harus ditutup lebih dulu, baru blok
+luar. Bahasa C tidak begitu; di sana `/* */` tidak bisa bersarang. Di Nim, menonaktifkan blok kode
+yang sudah berisi komentar blok tetap bekerja.
+
+## Ketika blok tidak ditutup
+
+Kalau `#[` dibiarkan terbuka, compiler tidak tahu kapan komentar berakhir. Simpan kode berikut
+sebagai `broken.nim`, lalu jalankan `nim r broken.nim`.
+
+```{.nim}
+#[ this block never ends
+echo "unreachable"
+```
+
+Compiler menolaknya:
+
+```{.txt}
+main.nim(3, 1) Error: end of multiline comment expected
+```
+
+Bacalah pesannya. `main.nim` adalah berkasnya, `(3, 1)` baris 3 kolom 1, dan `Error` berarti build
+berhenti. Isinya, "end of multiline comment expected", artinya compiler mencapai akhir berkas
+sebelum menemukan `]#`.
+
+Ada pelajaran penting di posisinya. Kita menulis `#[` di baris 1, tetapi compiler menunjuk baris 3 —
+baris kosong setelah baris terakhir. Compiler baru tahu komentarnya tidak pernah ditutup waktu
+mencapai akhir berkas. Jadi posisi yang dilaporkan adalah tempat compiler *menyadari* masalahnya,
+bukan selalu tempat kesalahannya ditulis. Karena itu, saat menemui error yang menunjuk di luar
+dugaan, periksa beberapa baris sebelumnya.
+
+## Doc comment: `##`
+
+Bentuk ketiga dimulai dengan `##`. Ini bukan komentar biasa, melainkan dokumentasi untuk deklarasi
+yang menyusulnya. Simpan kode berikut sebagai `area.nim`.
+
+```{.nim}
+## Computes the area of a rectangle.
+##
+## The result is in the same unit as the arguments.
+proc area(width, height: float): float =
+  width * height
+
+echo area(3.0, 4.0)
+```
+
+```{.txt}
+12.0
+```
+
+Terhadap program, `##` sama saja dengan `#`: tidak berpengaruh apa pun. Yang berbeda, perintah
+`nim doc area.nim` mengumpulkan semua doc comment dan menghasilkan berkas HTML di direktori
+`htmldocs/`, di sini `htmldocs/area.html`. Isinya persis dua baris penjelasan di atas prosedur tadi.
+
+Bedanya dengan `#` penting. Doc comment harus memakai `##`; komentar `#` di atas deklarasi tidak ikut
+masuk dokumentasi. Jadi kalau kita menulis `# Computes ...` di atas `proc area`, keterangan itu tetap
+tidak muncul di HTML meski terlihat sama di editor.
+
+## `runnableExamples`: dokumentasi yang diuji
+
+Doc comment bukan hanya teks. Blok `runnableExamples` di dalamnya berisi kode yang benar-benar
+dikompilasi dan dijalankan oleh `nim doc`. Simpan sebagai `double.nim`.
+
+```{.nim}
+proc double*(n: int): int =
+  ## Doubles an integer.
+  runnableExamples:
+    doAssert double(2) == 4
+  n * 2
+
+echo double(21)
+```
+
+```{.txt}
+42
+```
+
+Jalankan `nim doc double.nim`. Perintah itu mengompilasi blok contoh dan menjalankannya; kalau
+`doAssert` gagal, `nim doc` berhenti dengan kode keluar bukan nol. Artinya, contoh di dokumentasi
+tidak bisa "basi": dia ikut gagal begitu perilaku prosedurnya berubah. Ini alasan penulis pustaka
+Nim banyak memakai `runnableExamples` ketimbang contoh statis yang tak pernah diuji.
+
+Satu catatan: `nim doc` hanya menjalankan `runnableExamples` pada deklarasi yang diekspor (yang
+diakhiri tanda bintang, seperti `double*`). Prosedur privat tetap bisa punya doc comment, tetapi
+contohnya tidak ikut dijalankan.
+
+## Komentar yang berguna
+
+Setelah ketiga bentuk ini, pertanyaannya kapan menulis komentar. Tiga patokan yang membantu:
+
+- Jelaskan alasan, bukan mekanisme. `# retry because the API returns 429 during deploys` berguna;
+  `# loop three times` tidak.
+- Perbaiki nama atau struktur kalau komentar mulai menutupi kode yang rumit. Kode yang jelas tidak
+  butuh paragraf penjelasan.
+- Jangan menyimpan kode mati di dalam komentar. Riwayat versi sudah menyimpannya; kode yang
+  dikomentari hanya menua tanpa dipakai.
+
+## Latihan
+
+1. Tambahkan satu komentar baris pada contoh `echo` pertama yang menjelaskan alasan, bukan mengulang
+   kodenya.
+2. Pada komentar blok contoh kedua, hapus blok bersarang `#[ Nested blocks work too. ]#`. Apakah
+   keluaran program berubah? Mengapa?
+3. Pada contoh komentar yang tidak ditutup, di baris berapa compiler melaporkan error? Mengapa bukan
+   di baris tempat `#[` ditulis?
+4. Sebuah prosedur diberi keterangan dengan `#` alih-alih `##` tepat di atasnya. Apakah keterangan
+   itu muncul di `htmldocs/`? Jelaskan.
+5. Tulis prosedur berbagi pakai (diekspor) dengan doc comment dan satu blok `runnableExamples`, lalu
+   buktikan `nim doc` gagal kalau isi blok itu salah.
+
+## Ringkasan
+
+- `#` mengabaikan sisa baris; `#[ ... ]#` mengabaikan rentang dan boleh bersarang.
+- Komentar blok yang tidak ditutup dilaporkan di posisi akhir berkas, bukan di tempat `#[`.
+- `##` adalah doc comment; hanya bentuk ini yang masuk keluaran `nim doc` ke `htmldocs/`.
+- `runnableExamples` di dalam doc comment dikompilasi dan dijalankan `nim doc`.
+- Komentar yang baik menjelaskan alasan; kode mati tidak disimpan di dalam komentar.
+
+## Selanjutnya
+
+Bab berikutnya kembali ke kode: [variabel dan tiga kata kunci](variables.qmd) `var`, `let`, dan
+`const`, beserta cara memilih di antara ketiganya.

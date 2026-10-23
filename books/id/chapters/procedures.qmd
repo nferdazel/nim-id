@@ -1,0 +1,293 @@
+# Prosedur, parameter, dan nilai balik
+
+Di banyak bahasa, semua rutin disebut "fungsi". Nim memisahkan dua hal: rutin yang boleh mengubah
+keadaan di luar dirinya (`proc`), dan rutin yang dijamin tidak (`func`). Compiler menegakkan
+pemisahan itu, bukan sekadar menyarankannya.
+
+Bedanya terasa saat kode membesar. Sebuah `func` bisa dibaca tanpa bertanya "apa lagi yang dia
+ubah?", karena jawabannya selalu "tidak ada".
+
+::: {.callout-note}
+## Tujuan bab
+
+Setelah bab ini, pembaca bisa menulis prosedur bertipe jelas, memilih antara `proc` dan `func`,
+memakai parameter default, argumen bernama (*named argument*), `var` parameter, dan `openArray`,
+serta membaca pesan
+error `can have side effects`.
+:::
+
+## `proc`: rutin yang boleh punya efek samping
+
+Tulis daftar parameter bertipe di dalam tanda kurung, lalu tipe nilai balik setelah titik dua.
+
+```{.nim}
+proc greet(name: string): string =
+  "Hello, " & name
+
+echo greet("Nim")
+```
+
+```{.txt}
+Hello, Nim
+```
+
+Badan `greet` hanya satu ekspresi, dan ekspresi terakhir sebuah prosedur otomatis menjadi nilai
+baliknya. Jadi `return` tidak wajib.
+
+## `func`: janji tanpa efek samping
+
+Rutin yang hanya menghitung cocok dideklarasikan sebagai `func`.
+
+```{.nim}
+func square(x: int): int =
+  x * x
+
+echo square(7)
+```
+
+```{.txt}
+49
+```
+
+`func` sama seperti `proc` dengan satu jaminan tambahan: tidak menyentuh apa pun di luar dirinya.
+Contoh berikut sengaja salah. Simpan sebagai `main.nim`, lalu jalankan.
+
+```{.nim}
+func shout(text: string) =
+  echo text
+
+shout("hello")
+```
+
+```{.txt}
+main.nim(1, 6) Error: 'shout' can have side effects
+```
+
+Baca dari depan: berkas, posisi `(baris, kolom)`, tingkat, lalu isi pesannya. `(1, 6)` menunjuk
+baris 1 kolom 6, tepat di nama `shout`. Compiler menambahkan `Hint` yang menyebut `echo` sebagai
+penyebabnya. Perbaikan langsungnya: ganti `func` menjadi `proc`, karena `echo` menulis ke layar —
+sebuah efek samping.
+
+Aturan praktisnya: `func` untuk perhitungan murni, `proc` saat rutin memang mencetak, menulis
+berkas, atau mengubah argumennya.
+
+## `result` dan nilai balik yang dibangun bertahap
+
+Prosedur bertipe nilai balik punya variabel implisit bernama `result`. Nilai awalnya adalah
+default tipe (`0` untuk `int`, `""` untuk `string`), dan ekspresi terakhir menimpanya.
+
+```{.nim}
+proc total(items: seq[int]): int =
+  for item in items:
+    result = result + item
+
+echo total(@[1, 2, 3, 4])
+```
+
+```{.txt}
+10
+```
+
+`result` berguna saat nilai balik dibangun bertahap. Di `total`, tiap putaran menambah `result`
+tanpa variabel tambahan.
+
+## `return` untuk keluar lebih awal
+
+`return` menghentikan prosedur saat itu juga.
+
+```{.nim}
+proc classify(n: int): string =
+  if n < 0:
+    return "negative"
+  if n == 0:
+    return "zero"
+  "positive"
+
+echo classify(-3)
+echo classify(0)
+echo classify(9)
+```
+
+```{.txt}
+negative
+zero
+positive
+```
+
+Dua `if` pertama sudah menangani kasusnya, jadi baris terakhir hanya dieksekusi untuk bilangan
+positif — dan hasilnya menjadi nilai balik.
+
+## Parameter default dan argumen bernama
+
+Parameter boleh punya nilai bawaan. Pemanggil yang melewatkannya memakai nilai itu.
+
+```{.nim}
+proc greet(name: string, greeting = "Hello"): string =
+  greeting & ", " & name
+
+echo greet("Ada")
+echo greet("Ada", "Hi")
+```
+
+```{.txt}
+Hello, Ada
+Hi, Ada
+```
+
+Argumen juga boleh disebut namanya.
+
+```{.nim}
+proc box(width: int, height: int): string =
+  $width & "x" & $height
+
+echo box(width = 3, height = 4)
+echo box(height = 4, width = 3)
+```
+
+```{.txt}
+3x4
+3x4
+```
+
+Argumen bernama (*named argument*) membuat pemanggilan panjang tetap terbaca, dan urutannya tidak
+lagi penting.
+Satu aturan tetap berlaku: parameter tanpa nilai default harus ditulis sebelum parameter yang punya
+nilai default.
+
+## `var` parameter: menulis balik ke pemanggil
+
+Parameter biasa dioper sebagai salinan. Untuk mengubah nilai milik pemanggil, tandai parameter
+dengan `var`.
+
+```{.nim}
+proc double(x: var int) =
+  x = x * 2
+
+var count = 21
+double(count)
+echo count
+```
+
+```{.txt}
+42
+```
+
+Pemanggil harus mengoper variabel, bukan angka atau ekspresi. Inilah *pass by reference* di Nim,
+dan karena tertulis di deklarasi prosedur, pembaca tidak perlu menebaknya.
+
+## `openArray`: satu prosedur untuk larik dan barisan
+
+Parameter bertipe `seq[int]` hanya menerima barisan. `openArray[int]` menerima larik maupun
+barisan, tanpa menyalin isinya.
+
+```{.nim}
+proc total(values: openArray[int]): int =
+  for value in values:
+    result = result + value
+
+echo total([1, 2, 3])
+echo total(@[10, 20])
+```
+
+```{.txt}
+6
+30
+```
+
+Pemanggilan pertama mengirim larik, yang kedua mengirim barisan. Satu prosedur menangani
+keduanya. Batasnya: `openArray` tidak bisa diubah isinya dari dalam prosedur.
+
+## Overloading: nama sama, tipe berbeda
+
+Beberapa prosedur boleh memakai nama yang sama asalkan daftar parameternya berbeda. Compiler
+memilih berdasarkan tipe argumen.
+
+```{.nim}
+proc describe(value: int): string =
+  "int: " & $value
+
+proc describe(value: string): string =
+  "string: " & value
+
+echo describe(42)
+echo describe("answer")
+```
+
+```{.txt}
+int: 42
+string: answer
+```
+
+## `discard`: saat hasilnya memang dibuang
+
+Nim menolak nilai balik yang dibuang diam-diam. Kode berikut gagal dikompilasi:
+
+```{.nim}
+proc bump(counter: var int): int =
+  counter = counter + 1
+  counter
+
+var hits = 0
+bump(hits)
+echo hits
+```
+
+```{.txt}
+main.nim(6, 5) Error: expression 'bump(hits)' is of type 'int' and has to be used (or discarded)
+```
+
+Pesannya menyebut dua pilihan: pakai nilainya, atau buang dengan sadar. Karena kita hanya ingin
+efek sampingnya, tulis `discard`.
+
+```{.nim}
+proc bump(counter: var int): int =
+  counter = counter + 1
+  counter
+
+var hits = 0
+discard bump(hits)
+echo hits
+```
+
+```{.txt}
+1
+```
+
+`discard` bukan formalitas. Ia memaksa penulis kode mengakui bahwa sebuah nilai memang diabaikan.
+
+## Latihan
+
+1. Tambahkan parameter `punctuation = "!"` pada `greet`, lalu panggil dengan dan tanpa mengisinya.
+2. Tanpa menjalankan, prediksi outputnya:
+   ```{.nim}
+   proc scale(value: int, factor = 2): int =
+     value * factor
+
+   echo scale(5)
+   echo scale(5, factor = 10)
+   ```
+3. Tulis `proc average(values: openArray[float]): float` yang mengembalikan rata-rata, lalu
+   panggil sekali dengan larik dan sekali dengan barisan.
+4. Kode berikut gagal dikompilasi. Perbaiki, lalu jelaskan isi pesannya:
+   ```{.nim}
+   proc double(x: int): int =
+     value * 2
+
+   var n = 5
+   echo double(n)
+   ```
+
+Jawaban ada di [Lampiran A](../appendix/answers.qmd).
+
+## Ringkasan
+
+- `proc` boleh punya efek samping; `func` dijamin tidak, dan compiler menolak yang melanggar.
+- Ekspresi terakhir menjadi nilai balik; `result` untuk nilai bertahap, `return` untuk keluar awal.
+- Parameter default dan argumen bernama membuat pemanggilan panjang tetap terbaca.
+- `var` parameter menulis balik ke pemanggil; `openArray` menerima larik dan barisan.
+- Nilai balik yang tidak dipakai ditolak compiler; tulis `discard` kalau memang dibuang.
+
+## Selanjutnya
+
+Bab berikutnya membahas [tuple](tuples.qmd): menggabungkan beberapa nilai menjadi satu,
+mengembalikannya dari prosedur, dan membongkarnya kembali dalam satu baris.

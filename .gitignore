@@ -9,3 +9,5 @@ _pdf/
 *.pdf
 !assets/**/*.pdf
 books/*/assets/
+books/*/_variables.yml
+.m1/

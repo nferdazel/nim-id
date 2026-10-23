@@ -23,13 +23,15 @@ lebih cepat.
 | Perangkat | Versi |
 |---|---|
 | Nim | 2.2.12 |
-| Buku | 0.1.0 (draf, bab pertama) |
+| Buku | {{< var version >}} (draf, 16 bab) |
 
 ## Cara membaca
 
 Kalau baru pertama kali memakai Nim, baca berurutan. Kalau sudah pernah, lompat ke
 [Variabel](chapters/variables.qmd) dan lanjut dari situ. Setiap bab berakhir dengan latihan;
 jawabannya ada di [Lampiran A](appendix/answers.qmd).
+
+## Sumber
 
 Sumber buku dan pelaporan masalah: [github.com/nferdazel/nim-id](https://github.com/nferdazel/nim-id).
 

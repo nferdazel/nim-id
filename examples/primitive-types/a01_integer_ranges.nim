@@ -1,0 +1,6 @@
+echo "int8  ", low(int8), " .. ", high(int8), "  size ", sizeof(int8)
+echo "int16 ", low(int16), " .. ", high(int16), "  size ", sizeof(int16)
+echo "int32 ", low(int32), " .. ", high(int32), "  size ", sizeof(int32)
+echo "int64 ", low(int64), " .. ", high(int64), "  size ", sizeof(int64)
+echo "uint8 ", low(uint8), " .. ", high(uint8), "  size ", sizeof(uint8)
+echo "int   ", low(int), " .. ", high(int), "  size ", sizeof(int)

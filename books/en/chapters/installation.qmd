@@ -1,0 +1,168 @@
+# Installing Nim
+
+Most complaints that "Nim does not work" are not about Nim at all. The usual causes are a PATH that
+was never configured, a missing C compiler, or a version that differs from the one this book uses.
+This chapter installs Nim 2.2.12 and confirms three things: the `nim` command is found, a C compiler
+exists, and the version matches.
+
+::: {.callout-note}
+## What you will be able to do
+
+After this chapter you can install Nim 2.2.12 on Linux, macOS, Windows, or Termux, check its
+version, and fix a `command not found` message.
+:::
+
+## Three things must be right
+
+An install counts as done only when all three hold:
+
+1. The shell finds the `nim` command. Test it with `nim --version`.
+2. A C compiler (gcc or clang) is present. Nim translates to C first, so this is required.
+3. The version is 2.2.12, or at least 2.x. This book tests every example on 2.2.12.
+
+If any of these fails, the fix is in this chapter. Check from the top: `nim --version` tests the first
+and third requirements at once. If the command is not found, PATH is wrong. If it is found but the
+version differs, switch the version.
+
+## The quick route: `choosenim`
+
+The most practical official way to move between versions is `choosenim`. The following installs
+`choosenim` and then the latest stable release:
+
+```{.bash}
+curl https://nim-lang.org/choosenim/init.sh -sSf | sh
+```
+
+Follow the on-screen prompts. When it finishes, install the exact version this book uses:
+
+```{.bash}
+choosenim 2.2.12
+```
+
+`choosenim stable` installs the newest stable release, and `choosenim devel` installs the
+development branch. For this book, stay on 2.2.12 so the example output matches.
+
+One advantage of `choosenim`: it installs everything under your home directory, so no administrator
+rights are needed, and several versions can live side by side. Switching versions does not remove
+the others.
+
+## Through a package manager
+
+If you do not need to switch versions, a package manager is faster:
+
+| System | Command |
+|---|---|
+| macOS (Homebrew) | `brew install nim` |
+| Debian / Ubuntu | `sudo apt-get install nim` |
+| Fedora | `sudo dnf install nim` |
+| Arch Linux | `sudo pacman -S nim` |
+| Termux (Android) | `pkg install nim` |
+
+One caveat: distro repositories often lag behind. After installing, run `nim --version`. If the
+answer is not 2.2.x, use `choosenim` to get the version this book relies on.
+
+## Windows
+
+Download the release zip, extract it to a directory of your choice, and run `finish.exe` inside it.
+That small program adds the `bin` directory to PATH and offers to install MinGW. `choosenim` also
+works on Windows and is used far more often, because switching versions is easier with it.
+
+## Making sure PATH is right
+
+After installing, open a **new** terminal and run:
+
+```{.bash}
+nim --version
+```
+
+If the shell does not know the command yet, the answer looks like this:
+
+```{.txt}
+bash: nim: command not found
+```
+
+Read it from left to right. `bash` is the shell reporting it (on zsh the text reads
+`zsh: command not found: nim`). `nim` is the command being looked up. The rest states the outcome:
+the shell walked every directory in PATH, found nothing, and gave up.
+
+The fix is to add two directories to PATH. The `bin` directory where Nim is installed, and
+`~/.nimble/bin` where `choosenim` and `nimble` place binaries. For `choosenim`, add this line to your
+shell profile (`.zshrc` or `.bashrc`):
+
+```{.bash}
+export PATH="$HOME/.nimble/bin:$PATH"
+```
+
+Reload that file with `source ~/.zshrc`, or simply open a new terminal.
+
+## Checking the version and the C compiler
+
+Once `nim` is found, check the version:
+
+```{.txt}
+Nim Compiler Version 2.2.12 [MacOSX: arm64]
+```
+
+The part in square brackets names the system and architecture; it differs on every machine. The
+version number is what matters. Nimble, the package manager shipped with Nim, should also be there:
+
+```{.bash}
+nimble --version
+```
+
+Its first line resembles `nimble v0.24.1`. Finally, make sure the C compiler is ready. On macOS:
+
+```{.bash}
+xcode-select --install
+```
+
+On Linux, install `gcc` or `clang` through your package manager. On Windows, `finish.exe` handles
+MinGW. To confirm, run `gcc --version` or `clang --version`; either should answer with a version
+number, not `command not found`.
+
+## Checking all three at once
+
+The three requirements can be tested in one line. The `&&` operator runs the next command only if the
+previous one succeeded, so this chain stops exactly at the requirement that fails:
+
+```{.bash}
+nim --version && nimble --version && gcc --version
+```
+
+If the output stops after `Nim Compiler Version`, `nimble` is missing; if it stops after the `nimble`
+line, the C compiler is gone. This is faster than checking them one by one.
+
+## If the version differs
+
+If the installed version is not 2.2.12, the examples in this book will most likely still run. What
+changes most between versions is the wording of error messages and small details in the standard
+library. If the output on your machine differs from the book, the first step is to match versions:
+
+```{.bash}
+choosenim 2.2.12
+```
+
+After switching, run `nim --version` again to confirm the version really changed.
+
+## Exercises
+
+1. Install Nim, then copy the output of `nim --version` from your machine.
+2. Run `nim` in a terminal whose PATH is not configured yet. Write the message that appears, and
+   explain each part of it.
+3. Check the C compiler on your system. Which command confirms it, and what is its output?
+4. Nim is installed, but the C compiler is not. What happens when `nim c hello.nim` runs? Explain.
+5. With `choosenim`, write the sequence of commands to move from the latest stable release to
+   2.2.12, then back again.
+
+## Summary
+
+- Three requirements: `nim` on PATH, a working C compiler, and a 2.x version.
+- `choosenim` makes version switching easy; distro package managers are faster but often lag.
+- PATH must include Nim's `bin` directory and `~/.nimble/bin`.
+- `command not found` means the shell could not find the command on PATH, not that Nim is broken.
+- This book is tested on Nim 2.2.12; match the version if the output differs.
+
+## Next
+
+Nim is installed. [Workflow](workflow.qmd) lays out the daily habits: `nim r` to try things fast,
+`nim c` to build a binary, `nimble` to manage projects, and an editor that talks to the compiler.

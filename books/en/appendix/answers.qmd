@@ -3,6 +3,170 @@
 These are the most direct answers, not the only correct ones. What matters: the code runs, and you
 can explain why.
 
+## Chapter: What Nim is and why
+
+**1.** Change the string:
+
+```{.nim}
+echo "Hello, Sari"
+```
+
+```{.txt}
+Hello, Sari
+```
+
+**2.** The output is `55`. The sum of `1..10` is 55. The range is inclusive, so 10 counts.
+
+**3.** `echo` accepts several arguments but adds no separator. So the space is written into the
+string itself:
+
+```{.nim}
+echo "7 * 6 = ", 7 * 6
+```
+
+```{.txt}
+7 * 6 = 42
+```
+
+**4.** The declaration `var age: int` is fine by itself. What does not fit is the initial value. The
+compiler points at column 16, the start of the `"twenty"` literal; that is where a `string` appears
+where an `int` is required. Column 5 is the name `age`, and a name is never the problem.
+
+**5.** Not valid. `greet` requires a `string` parameter, while `42` is an `int`. The compiler rejects
+it without running the program:
+
+```{.txt}
+greet42.nim(3, 11) Error: type mismatch
+```
+
+A reasonable fix: pass a string, such as `echo greet("42")`, or change the parameter type.
+
+## Chapter: Installing Nim
+
+**1.** The output of `nim --version` on the machine used to write this chapter:
+
+```{.txt}
+Nim Compiler Version 2.2.12 [MacOSX: arm64]
+Compiled at 2026-09-08
+Copyright (c) 2006-2026 by Andreas Rumpf
+```
+
+The first line is what matters. The `[MacOSX: arm64]` part differs on every system.
+
+**2.** A sample message:
+
+```{.txt}
+bash: nim: command not found
+```
+
+`bash` is the shell reporting it. `nim` is the command being looked up. `command not found` is not
+from Nim; it is from the shell: it walked every directory in PATH, found no program named `nim`, and
+stopped. The fix is to add Nim's `bin` directory and `~/.nimble/bin` to PATH.
+
+**3.** The command is `gcc --version` or `clang --version`, depending on what is installed. Its
+output names a C compiler version. If it prints `command not found` instead, the C compiler is
+missing and must be installed first.
+
+**4.** The command `nim c hello.nim` passes the Nim front end, produces C code, and then fails at the
+step that invokes the C compiler. The message resembles:
+
+```{.txt}
+Error: execution of an external compiler program 'gcc ...' failed with exit code: 127
+```
+
+Nim translates code to C, and the C compiler builds the binary. Without a C compiler, the chain
+breaks in the middle. That is why the "make sure the C compiler is ready" step in this chapter is not
+optional.
+
+**5.** From the latest stable release to 2.2.12, then back:
+
+```{.bash}
+choosenim 2.2.12
+choosenim stable
+```
+
+`choosenim 2.2.12` installs and activates that version; `choosenim stable` returns to the latest
+stable release.
+
+## Chapter: Workflow: `nim r`, `nimble`, editor
+
+**1.** With `nim r hello.nim`, no new binary appears next to the source; intermediates go to the cache
+directory. With `nim c hello.nim`, a binary named `hello` appears in the working directory, then runs
+with `./hello`.
+
+**2.** The binary appears in the working directory, next to the source file, and its name follows the
+file: `join` on Linux and macOS, `join.exe` on Windows. The name can be changed with `-o:program`.
+
+**3.** Despite the `.txt` extension, Nim still compiles the contents: `nim c data.txt` succeeds and
+produces a binary named `data`. Nim does not require the `.nim` extension on the main file. The
+convention is still `.nim`, and when importing a module, Nim looks for a file named `<module>.nim`.
+So a `.txt` file cannot serve as an imported module. Keep Nim code in `.nim` files.
+
+**4.** Both report the same error. `nim check` stops after type and semantic checks, does not continue
+to binary generation, and exits with a non-zero code. `nim c` also stops with a non-zero code, but
+only after attempting the full compile. For fast feedback, `nim check` is lighter.
+
+**5.** Create and run:
+
+```{.bash}
+nimble init notes
+nimble build
+nimble run
+```
+
+`nimble init notes` creates a project directory with a `.nimble` file, `nimble build` builds it, and
+`nimble run` builds and runs it in one step.
+
+## Chapter: Comments and doc comments
+
+**1.** A comment that explains a reason, not a repetition of the code:
+
+```{.nim}
+# Greeting stays short so it fits one line on a 390 px screen.
+echo "comments do not run"
+```
+
+**2.** After the nested block is removed:
+
+```{.nim}
+#[ This is a block comment.
+   It can span several lines.
+]#
+echo "after the block"
+```
+
+```{.txt}
+after the block
+```
+
+The output does not change. Comments are discarded entirely before the program runs, so adding or
+removing their contents never changes the output.
+
+**3.** The error is reported on line 3, one line past the last line of code. The compiler marks `#[`
+as opened, but learns the comment was never closed only when it reaches the end of the file. That is
+why the reported position is often not the position of the mistake. A useful habit: inspect a few
+lines before the point it names.
+
+**4.** It does not appear. Only `##` is recognized as a doc comment and reaches the `nim doc` output.
+A `#` comment is ignored consistently, so the two look similar in the editor while only one produces
+documentation.
+
+**5.** A wrong example, so `nim doc` fails:
+
+```{.nim}
+proc double*(n: int): int =
+  ## Doubles an integer.
+  runnableExamples:
+    doAssert double(2) == 5
+  n * 2
+
+echo double(21)
+```
+
+Run `nim doc double.nim`; the exit code is non-zero because `doAssert` fails. The correct fix is
+`doAssert double(2) == 4`. Because `nim doc` runs this block, documentation examples cannot quietly
+go stale.
+
 ## Chapter: Variables
 
 **1.** `const` for a fixed value, `var` for one filled in later.
@@ -39,4 +203,500 @@ as an identifier that was never declared. The fix is to spell it exactly as decl
 var name = "Nim"
 name = "Nim 2"
 echo name
+```
+
+## Chapter: Primitive types and literals
+
+1. `echo 0xFF` prints `255`, `echo 0b1010` prints `10`, and `echo 1_000` prints `1000`. The prefix
+   sets the base; the underscore is ignored.
+
+2. The program stops with an `OverflowDefect`. The value is only known at runtime, so the compiler
+   cannot evaluate it ahead of time. When the line `n = n + 1` runs, 128 does not fit in an `int8`
+   and the overflow check halts the program:
+   ```{.txt}
+   Error: unhandled exception: over- or underflow [OverflowDefect]
+   ```
+
+3. Because 0.1 has no exact binary form. The `0.1` on the right is a `float64`, while
+   `float32(0.1)` keeps only about seven significant digits. Compared side by side, `float32(0.1)`
+   differs from `0.1` in the digits you cannot see. Compare the difference against a tolerance, not
+   with `==`.
+
+4. The result is 2. The `int(...)` conversion truncates toward zero; it does not round.
+
+5. `200` is past the `int8` limit (127). The clean fix is a type wide enough to hold it:
+   ```{.nim}
+   const Big: int16 = 200
+   ```
+
+## Chapter: Strings, raw strings, and characters
+
+1. The double quote and the backslash have to be escaped:
+   ```{.nim}
+   echo "quote: \" and slash: \\"
+   ```
+   Output:
+   ```{.txt}
+   quote: " and slash: \
+   ```
+
+2. Both print `ab`, then `3`:
+   ```{.txt}
+   ab
+   ab
+   3
+   ```
+
+3. A Windows path is cleanest as a raw string:
+   ```{.nim}
+   echo r"C:\temp\new"
+   ```
+   Output: `C:\temp\new`.
+
+4. It fails because `s` was declared with `let`. `add` changes the string in place and requires the
+   receiver to be a `var`. The message says `expression 's' is immutable, not 'var'`. The fix:
+   ```{.nim}
+   var s = "abc"
+   s.add("d")
+   echo s
+   ```
+
+5. The last three characters are taken with `^`:
+   ```{.nim}
+   echo "programming"[^3..^1]
+   ```
+   Output: `ing`.
+
+## Chapter: Printing and formatting output
+
+1. `echo "total: ", 42` prints `total: 42`. The gap after the colon comes from the string, not from
+   `echo`.
+
+2. Both print `ab`. The comma version uses two arguments; the `&` version joins them into one
+   string first. The result is the same:
+   ```{.txt}
+   ab
+   ab
+   ```
+
+3. The expression inside `{...}` is evaluated, so the sum is actually computed:
+   ```{.nim}
+   echo &"{3 + 4}"
+   ```
+   Output: `7`.
+
+4. `echo fmt"{7:>4}"` prints three spaces and then `7`, that is `   7`.
+
+5. To print without moving to the next line, use `write`:
+   ```{.nim}
+   stdout.write "loading"
+   stdout.write "..."
+   ```
+   Output: `loading...`.
+
+## Chapter: Arithmetic, comparison, and logic operators
+
+1. `17 div 5` is `3` (integer division, truncated), and `17 mod 5` is `2` (the remainder).
+
+2. `2 + 3 * 4` is `14` because `*` binds tighter; `(2 + 3) * 4` is `20`.
+
+3. `mod` takes its sign from the dividend. `-9 mod 4` is the same as `-(9 mod 4)`, so the result
+   is `-1`.
+
+4. The two comparisons must be joined with `and`:
+   ```{.nim}
+   echo 1 <= x and x <= 100
+   ```
+
+5. It fails because `in` turns into `contains("4", n)`, and no `contains` accepts a `string` on one
+   side and an `int` on the other. Match the operand types first:
+   ```{.nim}
+   import std/strutils
+   let n = 4
+   if $n in "4":
+     echo "yes"
+   ```
+   A more idiomatic alternative: `if n in 4..4:` or `if n == 4:`.
+
+## Chapter: Branching: `if`, `case`, `when`
+
+**1.** The output is `cold`. The value `5` is less than `10`, so the first `if` branch runs;
+`elif` and `else` are skipped.
+
+**2.** `age` is 15, so the `elif` branch is taken.
+
+```{.nim}
+let age = 15
+
+let group =
+  if age < 13: "child"
+  elif age < 20: "teen"
+  else: "adult"
+
+echo group
+```
+
+```{.txt}
+teen
+```
+
+**3.** One `of` can hold a list of `char`, and `'0' .. '9'` catches every digit.
+
+```{.nim}
+proc classify(c: char): string =
+  case c
+  of 'a', 'i', 'u', 'e', 'o': "vowel"
+  of '0' .. '9': "digit"
+  else: "other"
+
+echo classify('e'), " ", classify('7'), " ", classify('z')
+```
+
+```{.txt}
+vowel digit other
+```
+
+**4.** The compiler points at line 3, column 4—the position of `name` inside the condition. The
+condition has type `string`, not `bool`.
+
+```{.txt}
+main.nim(3, 4) Error: type mismatch: got 'string' for 'name' but expected 'bool'
+```
+
+The fix: test the string's length, not the string itself.
+
+```{.nim}
+var name = "Nim"
+
+if name.len > 0:
+  echo name
+```
+
+```{.txt}
+Nim
+```
+
+## Chapter: Loops: `for`, `while`, `break`, `continue`
+
+**1.** `countup(2, 10, 2)` starts at `2` and steps by two, so only even numbers are printed.
+
+```{.nim}
+for i in countup(2, 10, 2):
+  echo i
+```
+
+```{.txt}
+2
+4
+6
+8
+10
+```
+
+**2.** The output is `6`. `1 + 2 + 3 = 6`; the range `1 .. 3` is inclusive, so `3` is added too.
+
+**3.** `values[maxIndex]` holds the largest value seen so far; `maxIndex` records its position.
+
+```{.nim}
+let values = @[4, 9, 2, 7]
+
+var total = 0
+var maxIndex = 0
+
+for index, value in values:
+  total = total + value
+  if value > values[maxIndex]:
+    maxIndex = index
+
+echo "total: ", total
+echo "max index: ", maxIndex
+```
+
+```{.txt}
+total: 22
+max index: 1
+```
+
+**4.** The loop body never changes `n`, so `n > 0` is always true. Add the decrement inside the body.
+
+```{.nim}
+var n = 5
+
+while n > 0:
+  echo n
+  n = n - 1
+```
+
+```{.txt}
+5
+4
+3
+2
+1
+```
+
+## Chapter: `array`, `seq`, and `openArray`
+
+**1.** Index `0` inserts at the front; the old elements shift along, none is lost.
+
+```{.nim}
+var names = @["ada", "bob", "cyd"]
+
+names.insert("eve", 0)
+echo names
+```
+
+```{.txt}
+@["eve", "ada", "bob", "cyd"]
+```
+
+**2.** The output is `@[2, 3, 4]`. `delete(0)` drops `1`, leaving `@[2, 3]`. The last element at that
+point is `3`, so `add(3 + 1)` appends `4`.
+
+**3.** The starting value is taken from the first element so the comparison always has something to
+compare against.
+
+```{.nim}
+proc smallest(values: openArray[int]): int =
+  result = values[0]
+  for value in values:
+    if value < result:
+      result = value
+
+echo smallest([5, 3, 9])
+echo smallest(@[7, 2, 8])
+```
+
+```{.txt}
+3
+2
+```
+
+**4.** `@[]` carries no hint about its element type, so the compiler cannot infer one and rejects it
+with `cannot infer the type of the sequence`. In `var y: seq[int]`, the type is written explicitly;
+Nim fills it with an empty `seq`, and its length is `0`. So what the first case lacks is not an
+initial value but the element type.
+
+**5.** `values` has type `array[0..2, int]`; its size is part of the type and cannot change. `add`
+exists only for `seq`, so the compiler rejects it with `type mismatch`. The fix: use a `seq`.
+
+```{.nim}
+var values = @[10, 20, 30]
+values.add(40)
+echo values
+```
+
+```{.txt}
+@[10, 20, 30, 40]
+```
+
+## Chapter: Procedures, parameters, and return values
+
+**1.** Add a parameter with a default value, then call it with and without one.
+
+```{.nim}
+proc greet(name: string, punctuation = "!"): string =
+  "Hello, " & name & punctuation
+
+echo greet("Ada")
+echo greet("Ada", "?")
+```
+
+```{.txt}
+Hello, Ada!
+Hello, Ada?
+```
+
+**2.** The output is `10`, then `50`. The first call never fills `factor`, so it stays 2 and
+`5 * 2 = 10`. The second call overrides `factor` with 10 through a named argument, so
+`5 * 10 = 50`.
+
+**3.** Note the zero-size guard, so no division by zero happens.
+
+```{.nim}
+proc average(values: openArray[float]): float =
+  if values.len == 0:
+    return 0.0
+  for value in values:
+    result = result + value
+  result = result / float(values.len)
+
+echo average([1.0, 2.0, 3.0])
+echo average(@[10.0, 20.0])
+```
+
+```{.txt}
+2.0
+15.0
+```
+
+**4.** The compiler rejects the line `value * 2` with `Error: undeclared identifier: 'value'` at
+line 2, column 3. The declaration names the parameter `x`, while the body uses `value`, which was
+never declared. The fix is to make the names match.
+
+```{.nim}
+proc double(x: int): int =
+  x * 2
+
+var n = 5
+echo double(n)
+```
+
+```{.txt}
+10
+```
+
+## Chapter: Tuples and destructuring
+
+**1.** The `Range` type is declared as a named tuple, then filled with a literal.
+
+```{.nim}
+type Range = tuple[low, high: int]
+
+let r: Range = (low: 0, high: 10)
+echo r.low, " ", r.high
+```
+
+```{.txt}
+0 10
+```
+
+**2.** The output is `21`. The pattern `let (first, second) = pair` binds `first` to 1 and `second`
+to 2. Because `echo second, first` prints with no separator, the output is `2` followed by `1`.
+
+**3.** The `result` fields are filled one by one, and the caller unpacks them on a single line.
+
+```{.nim}
+proc stats(values: openArray[float]): tuple[count: int, total: float] =
+  result.count = values.len
+  for value in values:
+    result.total = result.total + value
+
+let (count, total) = stats([1.5, 2.5])
+echo count, " ", total
+```
+
+```{.txt}
+2 4.0
+```
+
+**4.** `Error: undeclared field: 'x'`. The anonymous tuple `(1, 2)` has no field names, only
+positions, so `.x` does not exist. Two valid fixes: use the index, or give the fields names.
+
+```{.nim}
+let pair = (1, 2)
+echo pair[0]
+```
+
+```{.txt}
+1
+```
+
+## Chapter: Objects and constructors
+
+**1.** A new field is simply added to the `object` declaration, then filled through the constructor.
+
+```{.nim}
+type Person = object
+  name: string
+  email: string
+
+let ada = Person(name: "Ada", email: "ada@example.com")
+echo ada.email
+```
+
+```{.txt}
+ada@example.com
+```
+
+**2.** The output is `false write`. The `done` field is never mentioned in the constructor, so it
+holds the `bool` default, `false`. The `title` field is set to `"write"`.
+
+**3.** `Book` inherits from `RootObj`, and the procedure takes a `Book` directly.
+
+```{.nim}
+type Book = ref object of RootObj
+  title: string
+  pages: int
+
+proc describe(b: Book): string =
+  b.title & ": " & $b.pages & " pages"
+
+let b = Book(title: "Nim", pages: 200)
+echo describe(b)
+```
+
+```{.txt}
+Nim: 200 pages
+```
+
+**4.** `Error: 'p.x' cannot be assigned to`. `p` was declared with `let`, so its whole contents are
+frozen, fields included. Since the `let` may not change, the fix is to write the correct value from
+the start.
+
+```{.nim}
+type Point = object
+  x: int
+
+let p = Point(x: 2)
+echo p.x
+```
+
+```{.txt}
+2
+```
+
+## Chapter: Enums and sets
+
+**1.** The new member takes the next ordinal, which is 3.
+
+```{.nim}
+type Color = enum
+  red, green, blue, yellow
+
+echo ord(yellow)
+```
+
+```{.txt}
+3
+```
+
+**2.** The output is `{red}`. The `-` operator is set difference: members of `second` that also sit
+in `first` are dropped. `green` is dropped, `red` stays, and `blue` was never in `first` to begin
+with.
+
+**3.** `excl` removes a member, `incl` adds one, and `in` tests membership.
+
+```{.nim}
+type Permission = enum
+  read, write, execute
+
+var allowed: set[Permission] = {read, write}
+allowed.excl write
+allowed.incl execute
+echo read in allowed
+echo write in allowed
+echo allowed
+```
+
+```{.txt}
+true
+false
+{read, execute}
+```
+
+**4.** `Error: type mismatch: got 'string' for '"red"' but expected 'Color = enum'`. Nim never turns
+text into an enum, because text and enum carry different meaning. The fix is to use the enum member
+directly, or an ordinal conversion when one is really needed.
+
+```{.nim}
+type Color = enum
+  red, green, blue
+
+let c: Color = red
+echo c
+```
+
+```{.txt}
+red
 ```

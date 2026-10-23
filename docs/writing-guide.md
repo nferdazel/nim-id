@@ -87,6 +87,17 @@ Panjang: 900–1.400 kata. Satu bab = satu sesi baca 10–15 menit. Lebih dari i
   satu per lima bab, selalu dengan alt text.
 - Tabel maksimal 4 kolom; lebih dari itu pecah jadi dua tabel.
 
+## PDF
+
+- Ukuran trim 178 × 233 mm, margin 16 × 18 mm, diatur di `assets/typst/typst-show.typ`
+  (partial Quarto, disalin ke tiap buku saat build).
+- **Jangan** memakai `papersize` di `_quarto.yml`: template `orange-book` mengabaikannya dan
+  memakai `paper-size`/`width`/`height`. Kalau trim berubah, ubah partial, bukan YAML.
+- `format: typst: lang: <id|en>` wajib ada; tanpa itu label "Daftar Isi"/"Lampiran" jatuh ke
+  bahasa Inggris.
+- PDF dibuat dari sumber yang sama dengan web. Kalau PDF gagal, `./task site` gagal — bukan
+  peringatan.
+
 ## Definition of Done
 
 - [ ] Bisa dibaca mandiri tanpa bab sebelumnya.

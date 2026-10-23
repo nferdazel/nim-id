@@ -1,0 +1,226 @@
+# Tuple dan destructuring
+
+Prosedur `minMax` perlu mengembalikan dua angka: nilai terkecil dan terbesar. Di banyak bahasa,
+jalan pintasnya adalah mengembalikan larik atau objek kecil. Nim punya cara yang lebih langsung:
+tuple, nilai gabungan berukuran tetap yang elemennya boleh berbeda tipe.
+
+Tuple itu kecil dan murah. Ia dipakai untuk mengembalikan beberapa nilai sekaligus, menamai
+pasangan, atau menampung data sementara yang belum perlu menjadi tipe penuh.
+
+::: {.callout-note}
+## Tujuan bab
+
+Setelah bab ini, pembaca bisa membuat tuple anonim dan bernama, mengakses fieldnya, membongkar
+nilainya ke beberapa variabel, dan memakai tuple sebagai nilai balik prosedur.
+:::
+
+## Tuple anonim: nilai yang menempel
+
+Bentuk paling sederhana adalah tuple anonim. Elemennya diakses lewat indeks.
+
+```{.nim}
+let pair = (1, "two")
+echo pair[0], " ", pair[1]
+```
+
+```{.txt}
+1 two
+```
+
+Tipe `pair` disimpulkan compiler sebagai `(int, string)`. Setiap elemen boleh berbeda tipe, dan
+ukurannya tetap sejak awal.
+
+## Tuple bernama: field yang punya nama
+
+Menambahkan nama field membuat tuple lebih mudah dibaca.
+
+```{.nim}
+type Point = tuple[x, y: int]
+
+let corner: Point = (x: 3, y: 4)
+echo corner.x, ",", corner.y
+```
+
+```{.txt}
+3,4
+```
+
+Perhatikan `(x: 3, y: 4)`, bukan `Point(x: 3, y: 4)`. Tuple tidak punya constructor seperti
+objek. Cara membuatnya selalu literal dengan nama field di dalam tanda kurung, dan tipenya
+ditulis lewat anotasi variabel.
+
+Bentuk pendek `x, y: int` menamai dua field sekaligus. Nama dan urutannya adalah bagian dari tipe,
+jadi `tuple[x, y: int]` dan `tuple[y, x: int]` adalah dua tipe yang berbeda, dan nilai satu tidak
+otomatis diterima yang lain.
+
+Tuple bernama juga menerima kombinasi field:
+
+```{.nim}
+type Person = tuple[name: string, age: int]
+
+let ada: Person = (name: "Ada", age: 36)
+echo ada.name, " is ", ada.age
+```
+
+```{.txt}
+Ada is 36
+```
+
+Karena fieldnya punya nama, tuple juga bisa dibandingkan langsung: `(1, "a") == (1, "b")` bernilai
+`false`, sedangkan `(1, "a") < (2, "a")` bernilai `true`.
+
+## Destructuring: satu baris, beberapa variabel
+
+Tuple bisa dibongkar langsung ke beberapa variabel. Nim menyebutnya *tuple unpacking*.
+
+```{.nim}
+let (a, b) = (1, 2)
+echo a + b
+
+var (x, y) = (10, 20)
+y = y + 1
+echo x, " ", y
+```
+
+```{.txt}
+3
+10 21
+```
+
+Bentuk `let (a, b) = ...` membuat dua variabel sekaligus. Dengan `var`, keduanya bisa diubah, tapi
+mengubah `y` tidak menyentuh `x`. Tanpa destructuring, kode yang sama butuh tiga baris.
+
+## Tuple sebagai nilai balik
+
+Nilai balik prosedur boleh bertipe tuple bernama.
+
+```{.nim}
+proc minMax(values: openArray[int]): tuple[min, max: int] =
+  result.min = values[0]
+  result.max = values[0]
+  for value in values:
+    if value < result.min:
+      result.min = value
+    if value > result.max:
+      result.max = value
+
+let (low, high) = minMax([3, 1, 4, 1, 5])
+echo low, "..", high
+```
+
+```{.txt}
+1..5
+```
+
+Di dalam prosedur, field `result` diisi satu per satu. Di sisi pemanggil, hasilnya langsung
+dibongkar dengan `let (low, high) = ...`. Tidak ada tipe bantu, tidak ada larik sementara.
+
+Batas praktisnya: tuple nyaman untuk dua sampai tiga nilai. Begitu field bertambah banyak, atau
+nilainya perlu aturan dan operasi sendiri, objek lebih tepat — dan itu bab berikutnya.
+
+## Membongkar di dalam perulangan
+
+Destructuring juga bekerja di kepala `for`.
+
+```{.nim}
+let words = @[(1, "one"), (2, "two")]
+
+for (number, word) in words:
+  echo number, " = ", word
+```
+
+```{.txt}
+1 = one
+2 = two
+```
+
+Setiap elemen barisan adalah tuple, dan `(number, word)` membongkarnya pada tiap putaran. Tanpa
+itu, pembaca harus menulis `item[0]` dan `item[1]`, yang tidak menjelaskan apa pun.
+
+## Melihat semua field sekaligus
+
+`fields` mengembalikan nilai setiap field secara berurutan.
+
+```{.nim}
+type Config = tuple[host: string, port: int]
+
+let config: Config = (host: "localhost", port: 8080)
+
+for value in fields(config):
+  echo value
+```
+
+```{.txt}
+localhost
+8080
+```
+
+Fungsi ini berguna saat semua field diolah berurutan, misalnya untuk validasi atau pencetakan.
+Urutannya mengikuti urutan deklarasi.
+
+## Membaca error: pola yang tidak cocok
+
+Jumlah variabel di kiri harus sama dengan jumlah elemen di kanan.
+
+```{.nim}
+let (a, b) = (1, 2, 3)
+echo a, b
+```
+
+```{.txt}
+main.nim(1, 5) Error: tuple with 2 elements expected, but got '(int, int, int)' with 3 elements
+```
+
+Pesan itu menyebut kedua belah pihak: pola menunggu 2 elemen, nilainya punya 3. Solusinya menambah
+variabel atau memakai elemen lain. Posisi `(1, 5)` menunjuk ke awal pola `(a, b)`.
+
+## Membaca error: tuple bukan objek
+
+Tuple tidak punya constructor, dan compiler menolaknya dengan jelas.
+
+```{.nim}
+type Point = tuple[x, y: int]
+
+let corner = Point(x: 3, y: 4)
+echo corner.x, ",", corner.y
+```
+
+```{.txt}
+main.nim(3, 19) Error: object constructor needs an object type
+```
+
+Pesannya singkat saja: sintaksis constructor hanya untuk `object`. Untuk tuple, pakai literal
+`(x: 3, y: 4)`.
+
+## Latihan
+
+1. Buat `type Range = tuple[low, high: int]`, isi dengan `(low: 0, high: 10)`, lalu cetak kedua
+   fieldnya.
+2. Tanpa menjalankan, prediksi outputnya:
+   ```{.nim}
+   let pair = (1, 2)
+   let (first, second) = pair
+   echo second, first
+   ```
+3. Tulis `proc stats(values: openArray[float]): tuple[count: int, total: float]`, lalu bongkar
+   hasilnya dalam satu baris.
+4. Kode berikut gagal. Perbaiki, lalu jelaskan pesannya:
+   ```{.nim}
+   let pair = (1, 2)
+   echo pair.x
+   ```
+
+Jawaban ada di [Lampiran A](../appendix/answers.qmd).
+
+## Ringkasan
+
+- Tuple adalah nilai gabungan berukuran tetap; elemennya boleh berbeda tipe.
+- Tuple anonim diakses lewat indeks, tuple bernama lewat field.
+- Tuple dibuat dengan literal, bukan dengan constructor bergaya objek.
+- `let (a, b) = ...` membongkar tuple dalam satu baris, dan juga bekerja di kepala `for`.
+- Prosedur bisa mengembalikan tuple, lalu pemanggil membongkarnya.
+
+## Selanjutnya
+
+Bab berikutnya membahas [objek](objects.qmd): tipe gabungan dengan field bernama, constructor, nilai
+default, dan dua bentuk penyimpanan — nilai dan referensi.

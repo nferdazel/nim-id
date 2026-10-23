@@ -11,7 +11,22 @@ book:
   language: id
   chapters:
     - index.qmd
+    - chapters/what-is-nim.qmd
+    - chapters/installation.qmd
+    - chapters/workflow.qmd
+    - chapters/comments.qmd
     - chapters/variables.qmd
+    - chapters/primitive-types.qmd
+    - chapters/strings.qmd
+    - chapters/printing.qmd
+    - chapters/operators.qmd
+    - chapters/conditionals.qmd
+    - chapters/loops.qmd
+    - chapters/collections.qmd
+    - chapters/procedures.qmd
+    - chapters/tuples.qmd
+    - chapters/objects.qmd
+    - chapters/enums-and-sets.qmd
   appendices:
     - appendix/answers.qmd
   search: true
@@ -33,5 +48,8 @@ format:
     code-overflow: wrap
     fig-cap-location: bottom
   typst:
+    lang: id
+    template-partials:
+      - assets/typst/typst-show.typ
     papersize: a5
     number-sections: true

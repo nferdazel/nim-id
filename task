@@ -9,6 +9,8 @@
 #   ./task pdf      render PDF kedua bahasa
 #   ./task dev      preview lokal (auto-reload)
 #   ./task check    contoh + site (gate sebelum commit)
+#   ./task versi    cetak versi dari berkas VERSION
+#   ./task rilis    naikkan versi otomatis dari commit, lalu commit + tag
 #   ./task help
 #
 # Skrip POSIX, bukan Taskfile/just: tanpa dependensi tooling baru, perintah yang sama dipakai
@@ -31,6 +33,8 @@ pemakaian: ./task <perintah>
   pdf      render PDF kedua bahasa
   dev      preview lokal (auto-reload)
   check    contoh + site (gate sebelum commit)
+  versi    cetak versi buku (dari berkas VERSION)
+  rilis    naikkan versi dari pesan commit, lalu commit + tag (--major/--minor/--patch)
 
 variabel lingkungan:
   QUARTO   path ke biner quarto (bawaan: quarto dari PATH)
@@ -49,18 +53,22 @@ case "${1:-help}" in
     ;;
   site)
     perlu "$QUARTO"
+    sh tools/gen-version.sh
     QUARTO="$QUARTO" bash tools/build-site.sh
     ;;
   id)
     perlu "$QUARTO"
+    sh tools/gen-version.sh
     "$QUARTO" render books/id
     ;;
   en)
     perlu "$QUARTO"
+    sh tools/gen-version.sh
     "$QUARTO" render books/en
     ;;
   pdf)
     perlu "$QUARTO"
+    sh tools/gen-version.sh
     "$QUARTO" render books/id --to typst
     "$QUARTO" render books/en --to typst
     ;;
@@ -68,9 +76,19 @@ case "${1:-help}" in
     perlu "$QUARTO"
     "$QUARTO" preview
     ;;
+  versi)
+    tr -d '[:space:]' < VERSION
+    echo
+    ;;
+  rilis)
+    shift
+    perlu git
+    sh tools/rilis.sh "$@"
+    ;;
   check)
     perlu nim
     perlu "$QUARTO"
+    sh tools/gen-version.sh
     bash tools/verify-examples.sh
     QUARTO="$QUARTO" bash tools/build-site.sh
     ;;

@@ -1,0 +1,227 @@
+# Tuples and destructuring
+
+A `minMax` procedure needs to return two numbers: the smallest and the largest. In many languages
+the shortcut is to return an array or a small object. Nim has a more direct option: the tuple, a
+fixed-size bundle whose elements may have different types.
+
+Tuples are small and cheap. They return several values at once, name a pair, or hold temporary
+data that does not need to become a full type yet.
+
+::: {.callout-note}
+## What you will be able to do
+
+After this chapter you can create anonymous and named tuples, access their fields, unpack their
+values into several variables, and use a tuple as a procedure's return value.
+:::
+
+## Anonymous tuples: values that stick together
+
+The simplest form is the anonymous tuple. Its elements are reached by index.
+
+```{.nim}
+let pair = (1, "two")
+echo pair[0], " ", pair[1]
+```
+
+```{.txt}
+1 two
+```
+
+The compiler infers the type of `pair` as `(int, string)`. Each element may have a different type,
+and the size is fixed from the start.
+
+## Named tuples: fields with names
+
+Adding field names makes a tuple easier to read.
+
+```{.nim}
+type Point = tuple[x, y: int]
+
+let corner: Point = (x: 3, y: 4)
+echo corner.x, ",", corner.y
+```
+
+```{.txt}
+3,4
+```
+
+Note `(x: 3, y: 4)`, not `Point(x: 3, y: 4)`. Tuples have no constructor like objects do. You
+always build one with a literal that names its fields, and you write the type in the variable
+annotation.
+
+The shorthand `x, y: int` names two fields at once. Their names and order are part of the type, so
+`tuple[x, y: int]` and `tuple[y, x: int]` are two different types, and one value is not
+automatically accepted by the other.
+
+Named tuples also take a mix of fields:
+
+```{.nim}
+type Person = tuple[name: string, age: int]
+
+let ada: Person = (name: "Ada", age: 36)
+echo ada.name, " is ", ada.age
+```
+
+```{.txt}
+Ada is 36
+```
+
+Because the fields have names, tuples also compare directly: `(1, "a") == (1, "b")` is `false`,
+while `(1, "a") < (2, "a")` is `true`.
+
+## Destructuring: one line, several variables
+
+A tuple can be unpacked straight into several variables. Nim calls this *tuple unpacking*.
+
+```{.nim}
+let (a, b) = (1, 2)
+echo a + b
+
+var (x, y) = (10, 20)
+y = y + 1
+echo x, " ", y
+```
+
+```{.txt}
+3
+10 21
+```
+
+The form `let (a, b) = ...` declares two variables at once. With `var` both may change, but
+changing `y` never touches `x`. Without destructuring, the same code needs three lines.
+
+## Tuples as return values
+
+A procedure's return type may be a named tuple.
+
+```{.nim}
+proc minMax(values: openArray[int]): tuple[min, max: int] =
+  result.min = values[0]
+  result.max = values[0]
+  for value in values:
+    if value < result.min:
+      result.min = value
+    if value > result.max:
+      result.max = value
+
+let (low, high) = minMax([3, 1, 4, 1, 5])
+echo low, "..", high
+```
+
+```{.txt}
+1..5
+```
+
+Inside the procedure, the `result` fields are filled one by one. On the caller's side the result is
+unpacked immediately with `let (low, high) = ...`. No helper type, no temporary array.
+
+The practical limit: tuples are comfortable for two or three values. Once the fields multiply, or
+the value needs rules and operations of its own, an object fits better — and that is the next
+chapter.
+
+## Unpacking inside a loop
+
+Destructuring also works in a `for` header.
+
+```{.nim}
+let words = @[(1, "one"), (2, "two")]
+
+for (number, word) in words:
+  echo number, " = ", word
+```
+
+```{.txt}
+1 = one
+2 = two
+```
+
+Each sequence element is a tuple, and `(number, word)` unpacks it on every pass. Without that, the
+reader would have to write `item[0]` and `item[1]`, which explains nothing.
+
+## Every field at once
+
+`fields` yields each field's value in order.
+
+```{.nim}
+type Config = tuple[host: string, port: int]
+
+let config: Config = (host: "localhost", port: 8080)
+
+for value in fields(config):
+  echo value
+```
+
+```{.txt}
+localhost
+8080
+```
+
+It is useful when all fields are processed in sequence, for validation or printing. The order
+follows the declaration order.
+
+## Reading the error: a pattern that does not fit
+
+The number of variables on the left must match the number of elements on the right.
+
+```{.nim}
+let (a, b) = (1, 2, 3)
+echo a, b
+```
+
+```{.txt}
+main.nim(1, 5) Error: tuple with 2 elements expected, but got '(int, int, int)' with 3 elements
+```
+
+The message names both sides: the pattern expects 2 elements, the value has 3. The fix is to add a
+variable or use other elements. The position `(1, 5)` points at the start of the pattern `(a, b)`.
+
+## Reading the error: a tuple is not an object
+
+Tuples have no constructors, and the compiler says so plainly.
+
+```{.nim}
+type Point = tuple[x, y: int]
+
+let corner = Point(x: 3, y: 4)
+echo corner.x, ",", corner.y
+```
+
+```{.txt}
+main.nim(3, 19) Error: object constructor needs an object type
+```
+
+The message stays short: constructor syntax belongs to `object`. For a tuple, use the literal
+`(x: 3, y: 4)`.
+
+## Exercises
+
+1. Create `type Range = tuple[low, high: int]`, fill it with `(low: 0, high: 10)`, and print both
+   fields.
+2. Without running it, predict the output:
+   ```{.nim}
+   let pair = (1, 2)
+   let (first, second) = pair
+   echo second, first
+   ```
+3. Write `proc stats(values: openArray[float]): tuple[count: int, total: float]`, then unpack the
+   result on a single line.
+4. The code below fails. Fix it, then explain the message:
+   ```{.nim}
+   let pair = (1, 2)
+   echo pair.x
+   ```
+
+Answers are in [Appendix A](../appendix/answers.qmd).
+
+## Summary
+
+- A tuple is a fixed-size bundle whose elements may have different types.
+- Anonymous tuples are reached by index, named ones by field.
+- Tuples are built with literals, not with object-style constructors.
+- `let (a, b) = ...` unpacks a tuple on one line, and also works in a `for` header.
+- A procedure can return a tuple, and the caller unpacks it.
+
+## Next
+
+The next chapter covers [objects](objects.qmd): composite types with named fields, constructors,
+default values, and two ways to store them — value and reference.

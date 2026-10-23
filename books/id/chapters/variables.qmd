@@ -168,7 +168,7 @@ huruf pertama**. Artinya dua penulisan berikut menunjuk variabel yang sama:
 ```{.nim}
 var user_name = "hello"
 
-# Ejaan berbeda, tapi ini identifier yang sama.
+# Different spelling style, same identifier.
 echo userName
 ```
 

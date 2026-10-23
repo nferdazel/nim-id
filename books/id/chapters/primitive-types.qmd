@@ -1,0 +1,238 @@
+# Tipe data primitif dan literal
+
+Di bahasa lain, satu tipe `int` cukup untuk semua bilangan. Di Nim bilangan bulat dipecah menurut
+lebar bit, dan pilihan itu menentukan rentang nilai sekaligus jumlah memori yang dipakai.
+
+Pilih terlalu sempit, program berhenti dengan `OverflowDefect` di tengah jalan. Pilih terlalu
+lebar, memori terbuang percuma. Bab ini memetakan tipe primitif Nim, literal yang membentuknya,
+dan cara berpindah antar tipe tanpa kehilangan data.
+
+::: {.callout-note}
+## Tujuan bab
+
+Setelah bab ini, pembaca bisa memilih tipe integer sesuai rentang yang dibutuhkan, membaca error
+overflow, menulis literal heksadesimal dan biner, serta mengonversi nilai antar tipe dengan sadar
+apa yang terjadi pada nilainya.
+:::
+
+## Rentang dan ukuran setiap tipe integer
+
+Simpan kode berikut sebagai `ranges.nim`, lalu jalankan dengan `nim r ranges.nim`.
+
+```{.nim}
+echo "int8  ", low(int8), " .. ", high(int8), "  size ", sizeof(int8)
+echo "int16 ", low(int16), " .. ", high(int16), "  size ", sizeof(int16)
+echo "int32 ", low(int32), " .. ", high(int32), "  size ", sizeof(int32)
+echo "int64 ", low(int64), " .. ", high(int64), "  size ", sizeof(int64)
+echo "uint8 ", low(uint8), " .. ", high(uint8), "  size ", sizeof(uint8)
+echo "int   ", low(int), " .. ", high(int), "  size ", sizeof(int)
+```
+
+```{.txt}
+int8  -128 .. 127  size 1
+int16 -32768 .. 32767  size 2
+int32 -2147483648 .. 2147483647  size 4
+int64 -9223372036854775808 .. 9223372036854775807  size 8
+uint8 0 .. 255  size 1
+int   -9223372036854775808 .. 9223372036854775807  size 8
+```
+
+`low` dan `high` memberi batas bawah dan atas sebuah tipe; `sizeof` memberi ukurannya dalam byte.
+Polanya konsisten: setiap tambahan satu bit menggandakan rentangnya.
+
+| Tipe | Rentang | Ukuran |
+|---|---|---|
+| `int8` | −128 sampai 127 | 1 byte |
+| `int16` | −32.768 sampai 32.767 | 2 byte |
+| `int32` | sekitar ±2,1 miliar | 4 byte |
+| `int64` | sekitar ±9,2 triliun | 8 byte |
+| `uint8` | 0 sampai 255 | 1 byte |
+| `int` | mengikuti mesin (64-bit di sini) | 8 byte |
+
+Tipe `int` adalah pilihan bawaan untuk bilangan bulat: lebarnya mengikuti mesin tempat program
+dijalankan. Pakai tipe berlebar tetap hanya kalau ukurannya memang penting, misalnya saat membaca
+format biner atau menghemat memori di dalam struktur besar.
+
+## Literal numerik
+
+Nilai yang sama bisa ditulis dengan beberapa cara. Semuanya menghasilkan bilangan, bukan teks.
+
+```{.nim}
+echo 255          # decimal
+echo 0xFF         # hexadecimal
+echo 0b1111_1111  # binary; the underscore is ignored
+echo 0o377        # octal
+echo 1_000_000    # underscores group digits
+echo 2e3          # scientific notation is a float
+```
+
+```{.txt}
+255
+255
+255
+255
+1000000
+2000.0
+```
+
+Awalan `0x` menandai heksadesimal, `0b` biner, dan `0o` oktal. Garis bawah di dalam angka hanya
+alat bantu mata; compiler mengabaikannya. Baris terakhir terlihat seperti bilangan bulat, tapi
+`2e3` adalah `float` — karena itu hasilnya `2000.0`, bukan `2000`.
+
+## Ketika nilai melewati batas
+
+`int8` berhenti di 127. Tambahkan satu, dan hasilnya tidak muat lagi. Simpan sebagai `overflow.nim`:
+
+```{.nim}
+var score: int8 = 127
+score = score + 1
+echo score
+```
+
+```{.txt}
+overflow.nim(2) overflow
+Error: unhandled exception: over- or underflow [OverflowDefect]
+```
+
+Pesan pertama menyebut berkas dan baris. Pesan kedua menyebut jenis masalahnya: `OverflowDefect`.
+Secara bawaan Nim memeriksa overflow dan menghentikan program, bukan diam-diam membungkus nilainya
+menjadi −128. Pemeriksaan itu bisa dimatikan dengan `--overflowChecks:off` (atau `-d:danger`),
+dan saat itu baris di atas benar-benar menghasilkan −128. Jangan lakukan itu untuk menghilangkan
+error; hasil yang membungkus hampir selalu bug yang lebih sulit dilacak.
+
+Kalau nilainya sudah diketahui saat menulis kode, compiler menangkapnya lebih awal:
+
+```{.nim}
+const TooBig: int8 = 127 + 1
+echo TooBig
+```
+
+```{.txt}
+Error: type mismatch: got 'int literal(128)' for '128' but expected 'int8'
+```
+
+Di sini tidak ada program yang dijalankan; compiler mengevaluasi `127 + 1` dan melihat hasilnya
+tidak cocok dengan `int8`.
+
+## Bilangan pecahan: `float32` dan `float64`
+
+Nim punya dua tipe pecahan utama. `float64` adalah bawaannya, dan `float` hanyalah nama lain
+untuknya.
+
+```{.nim}
+let single: float32 = 0.1'f32
+let double: float64 = 0.1
+
+echo single
+echo double
+echo float32(1.0) / float32(3.0)
+echo 1.0 / 3.0
+echo 0.1 + 0.2 == 0.3
+```
+
+```{.txt}
+0.1
+0.1
+0.33333334
+0.3333333333333333
+false
+```
+
+`float32` menyimpan sekitar tujuh angka penting, `float64` sekitar lima belas. Konsekuensinya
+`1.0 / 3.0` berbeda presisi saat dihitung sebagai `float32`. Akhiran `'f32` memaksa sebuah literal
+menjadi `float32`. Baris terakhir memperlihatkan hal yang sering mengejutkan: `0.1 + 0.2` dan `0.3`
+bukan nilai yang sama persis, karena keduanya tidak bisa disimpan dengan tepat dalam biner. Karena
+itu jangan membandingkan pecahan dengan `==`; bandingkan selisihnya dengan toleransi.
+
+## Konversi antar tipe
+
+Nim tidak mengubah tipe diam-diam. Perpindahan harus ditulis eksplisit.
+
+```{.nim}
+import std/strutils
+
+let count = 42
+let ratio = 2.75
+let text = "128"
+
+echo int(ratio)
+echo float(count)
+echo parseInt(text) + 1
+echo $count & " items"
+echo $ratio
+```
+
+```{.txt}
+2
+42.0
+129
+42 items
+2.75
+```
+
+`int(ratio)` membuang bagian pecahan; hasilnya 2, bukan 3, karena pemotongan terjadi ke arah nol.
+Sebaliknya `$` mengubah nilai menjadi string, dan `parseInt` melakukan arah kebalikannya. Perhatikan
+bahwa `int("128")` tidak bekerja — teks harus melewati `parseInt` lebih dulu.
+
+## `bool` dan `char`
+
+Dua tipe terakhir yang berdiri sendiri adalah `bool` dan `char`.
+
+```{.nim}
+let letter = 'A'
+let flag = true
+
+echo letter
+echo letter.ord
+echo char(letter.ord + 1)
+echo chr(67)
+echo flag and not false
+echo 'a' < 'b'
+echo '\n' == char(10)
+```
+
+```{.txt}
+A
+65
+B
+C
+true
+true
+true
+```
+
+`char` ditulis dengan kutip tunggal dan menyimpan satu byte. `.ord` memberinya kode numerik,
+`char(...)` dan `chr(...)` melakukan arah sebaliknya. Ekspresi `'\n' == char(10)` benar karena
+`\n` memang karakter dengan kode 10. `bool` hanya berisi `true` atau `false` dan menjadi bahan
+operator logika di bab operator.
+
+## Latihan
+
+1. Tulis tiga liter yaitu `0xFF`, `0b1010`, dan `1_000`. Prediksi output `echo` untuk masing-masing
+   sebelum menjalankannya.
+2. Apa yang terjadi pada kode ini, dan mengapa pesannya muncul saat runtime, bukan saat kompilasi?
+   ```{.nim}
+   var n: int8 = 127
+   n = n + 1
+   echo n
+   ```
+3. Kenapa `float32(0.1) == 0.1` bernilai `false`, padahal `0.1` dan `float32(0.1)` tampak sama?
+4. Konversi `2.99` menjadi `int`. Hasilnya 2 atau 3? Jelaskan mengapa.
+5. Kode `const Big: int8 = 200` gagal dikompilasi. Perbaiki tanpa menambah nilai lain, lalu
+   jelaskan mengapa tipe sebelumnya salah.
+
+Jawaban ada di [Lampiran A](../appendix/answers.qmd).
+
+## Ringkasan
+
+- `int8` sampai `int64` punya lebar tetap; `int` mengikuti ukuran mesin.
+- Awalan `0x`, `0b`, dan `0o` menulis literal dalam basis lain; `_` diabaikan.
+- Overflow pada bilangan bulat menghentikan program dengan `OverflowDefect`, bukan membungkus
+  diam-diam.
+- `float` sama dengan `float64`; jangan bandingkan pecahan dengan `==`.
+- Konversi selalu eksplisit: `int(...)`, `float(...)`, `$`, dan `parseInt`.
+
+## Selanjutnya
+
+Bab berikutnya membahas `string`: escape sequence, raw string, string multi-baris, serta cara
+mengambil sebagian teks dengan indeks dan slicing.

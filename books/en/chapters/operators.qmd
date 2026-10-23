@@ -1,0 +1,232 @@
+# Arithmetic, comparison, and logic operators
+
+In many languages, `+` on two integers yields an integer and division always yields a fraction.
+Nim flips part of that habit: `/` always produces a `float`, while integer division gets its own
+operator, `div`.
+
+Misreading an operator is a small mistake with a real effect: a wrong result with no error, or an
+unexpected type. This chapter collects the operators you reach for most and the traps behind them.
+
+::: {.callout-note}
+## What you will be able to do
+
+After this chapter you can use `div` and `mod` correctly for negative numbers, tell `/` apart from
+`div`, read a `type mismatch` error on operands, and use `and`, `or`, `not`, `in`, and `notin`
+knowing how short-circuit evaluation works.
+:::
+
+## Basic arithmetic
+
+Save this as `arithmetic.nim`, then run `nim r arithmetic.nim`.
+
+```{.nim}
+let a = 7
+let b = 2
+
+echo a + b
+echo a - b
+echo a * b
+echo a / b
+echo a div b
+echo a mod b
+echo -7 mod 3
+echo 7 mod -3
+```
+
+```{.txt}
+9
+5
+14
+3.5
+3
+1
+-1
+1
+```
+
+`a / b` yields `3.5`, not `3`: the `/` operator always returns a `float`. Integer division uses
+`div`, which truncates toward zero. `mod` gives the remainder, and its sign follows the dividend —
+`-7 mod 3` is `-1`, not `2`. The two are often used together: `div` tells you how many times the
+divisor fits, `mod` gives what is left over. Dividing by zero does not return a special value; the
+program stops with a `DivByZeroDefect`.
+
+## Powers and roots
+
+The `^` operator is not built in; it comes from `std/math` and works on `float`.
+
+```{.nim}
+import std/math
+
+echo 2.0 ^ 10.0
+echo sqrt(2.0)
+echo pow(3.0, 3.0)
+```
+
+```{.txt}
+1024.0
+1.4142135623730951
+27.0
+```
+
+For an integer power, multiply in a loop or convert to `float` first. Writing `2 ^ 10` with two
+integers does not compile into integer exponentiation, so the intent has to be made explicit.
+
+## Comparison
+
+The comparison operators return a `bool`: `==`, `!=`, `<`, `<=`, `>`, and `>=`.
+
+```{.nim}
+let age = 20
+
+echo 18 <= age and age < 65
+echo age == 20
+echo age != 21
+echo 1 + 2 * 3 == 7
+echo "abc" == "abc"
+```
+
+```{.txt}
+true
+true
+true
+true
+true
+```
+
+Look at the first line. Nim does **not** support chained forms such as `18 <= age < 65`; two
+comparisons must be joined with `and`. Strings compare lexicographically, so `"abc"` equals `"abc"`
+exactly, case included.
+
+## Logic and short-circuit evaluation
+
+`and`, `or`, and `not` work on `bool`. What matters: Nim stops evaluating as soon as the result is
+certain.
+
+```{.nim}
+proc check(item: string): bool =
+  echo "checking ", item
+  return false
+
+echo "start"
+if check("a") and check("b"):
+  echo "both true"
+echo "done"
+```
+
+```{.txt}
+start
+checking a
+done
+```
+
+The output has no `checking b`. Since `check("a")` is already `false`, `and` knows the final result
+must be `false` and skips the second operand. This property is called *short-circuit*, and it can
+guard the second expression against running before the first condition holds.
+
+## `in` and `notin`
+
+To test membership, use `in`; its opposite is `notin`.
+
+```{.nim}
+import std/strutils
+
+let x = 5
+
+echo x in 1..10
+echo x notin 1..3
+echo 'c' in {'a', 'b', 'c'}
+echo "ell" in "hello"
+echo 4 in [1, 2, 3]
+```
+
+```{.txt}
+true
+true
+true
+true
+false
+```
+
+`in` works on a range, a set (`{...}`), an array, and — through `strutils` — a string. The last
+line is `false` because `4` really is not in that array.
+
+## Operator precedence
+
+When unsure about the order of evaluation, parentheses are the cheapest answer.
+
+```{.nim}
+echo 1 + 2 * 3
+echo (1 + 2) * 3
+echo 10 - 3 - 2
+echo not false or false
+echo 1 and 2
+```
+
+```{.txt}
+7
+9
+5
+true
+0
+```
+
+`*` binds tighter than `+`, and `-` evaluates left to right, so `10 - 3 - 2` is `5`. `not` binds
+tighter than `or`, so `not false or false` is `true`. The last line surprises people: `and` on two
+numbers is not logic but *bitwise*. `1 and 2` is `0` because no bit is set in both. Only use `and`
+and `or` on `bool`; for bits, use the operators deliberately.
+
+## Mismatched types
+
+Comparing two different types is rejected by the compiler. Save this as `type_error.nim`:
+
+```{.nim}
+let a = 5
+let b = "5"
+
+echo a == b
+```
+
+```{.txt}
+type_error.nim(4, 8) Error: type mismatch
+Expression: a == b
+  [1] a: int
+  [2] b: string
+```
+
+The message shows the line and column, then quotes the failing expression with the type of each
+operand. The most useful part sits below that: the compiler lists every `==` it knows, so you can
+see that none accepts the pair `int` and `string`. The fix is to match the types first, for example
+`a == parseInt(b)`.
+
+## Exercises
+
+1. Compute `17 div 5` and `17 mod 5`. What is each result?
+2. Predict the output:
+   ```{.nim}
+   echo 2 + 3 * 4
+   echo (2 + 3) * 4
+   ```
+3. Why is `-9 mod 4` equal to `-1` and not `3`? Explain the rule.
+4. Write a condition that is `true` only when `x` lies between 1 and 100. Remember that chained
+   comparison is not supported.
+5. The code below fails. Fix it and explain the message:
+   ```{.nim}
+   let n = 4
+   if n in "4":
+     echo "yes"
+   ```
+
+Answers are in [Appendix A](../appendix/answers.qmd).
+
+## Summary
+
+- `/` always yields a `float`; integer division uses `div` and the remainder uses `mod`.
+- `mod` follows the sign of the dividend; dividing by zero stops the program.
+- `^` comes from `std/math` and works on `float`.
+- `and` and `or` short-circuit; on `int` they mean bitwise operations.
+- `in` and `notin` test membership in a range, a set, an array, and a string.
+
+## Next
+
+The next chapter covers branching: `if`, `if` expressions, `case`, and `when` for choosing a path
+of execution.

@@ -1,0 +1,158 @@
+# What Nim is and why
+
+Nim is often pitched in one line: it reads like Python and runs like C. That line is true, but it
+explains nothing. A more useful description: Nim is a compiled, statically typed language, and the
+result is a single binary that runs without a virtual machine.
+
+This chapter shows what those two properties mean in practice. We start with the smallest program,
+watch what happens when the code is wrong, and then weigh when Nim is worth choosing.
+
+::: {.callout-note}
+## What you will be able to do
+
+After this chapter you can explain what "compiled" and "statically typed" mean, run your first Nim
+program, and read the type error the compiler prints.
+:::
+
+## Compiled, not interpreted
+
+A Python program is read and executed line by line by an interpreter. A Nim program is translated
+first. The compiler reads a `.nim` file, produces C code, and then calls a C compiler to build a
+binary. That binary is what runs.
+
+Three consequences follow:
+
+- Mistakes are found before the program runs, not when the bad line is finally executed.
+- The program runs as fast as C, because it becomes C.
+- The result is a single file you can copy to another machine without installing Nim there.
+
+The cost: every change needs a recompile. For small programs, that is a matter of seconds. As a
+program grows, the difference gets more expensive: a bug that only appears in production costs far
+more than one caught before the program runs.
+
+## The first program
+
+Save the following as `hello.nim`, then run `nim r hello.nim`.
+
+```{.nim}
+echo "Hello, Nim"
+```
+
+```{.txt}
+Hello, Nim
+```
+
+`echo` writes its arguments to stdout and ends the line. There is no `main`, no semicolons, and
+indentation defines the blocks. A single file may hold top-level statements like this one.
+
+## Types are checked before the program runs
+
+This is the difference from Python. In Nim, every value has a type the compiler already knows. When
+the types do not match, the program never runs. Try this.
+
+```{.nim}
+var age: int = "twenty"
+echo age
+```
+
+The compiler rejects it:
+
+```{.txt}
+main.nim(1, 16) Error: type mismatch: got 'string' for '"twenty"' but expected 'int'
+```
+
+Read it from left to right:
+
+| Part | Meaning |
+|---|---|
+| `main.nim` | the file with the problem |
+| `(1, 16)` | line 1, column 16 |
+| `Error` | severity; the build stops here |
+| `got 'string' ... but expected 'int'` | the value is a `string`, but an `int` is required |
+
+There is no output, because no program runs. To a beginner this feels like an obstacle. Over time it
+becomes an advantage: the same mistake in Python surfaces only when that line executes, perhaps
+after real user data has arrived.
+
+## Procedures and loops
+
+Nim stays compact as programs grow. A procedure is written with `proc`, and the last expression in
+its body becomes the return value.
+
+```{.nim}
+proc greet(name: string): string =
+  "Hello, " & name
+
+echo greet("Nim")
+```
+
+```{.txt}
+Hello, Nim
+```
+
+`&` joins two strings. The line `"Hello, " & name` is the last expression, so it is what gets
+returned. No `return` is needed as long as there is no branch.
+
+Loops use the same indentation:
+
+```{.nim}
+var total = 0
+for n in 1..5:
+  total += n
+echo total
+```
+
+```{.txt}
+15
+```
+
+`1..5` is an inclusive range: 1, 2, 3, 4, 5. The `+=` operator adds to the existing value. `total`
+uses `var` because its value changes; the chapter on [variables](variables.qmd) covers the choice
+between `var`, `let`, and `const` in full.
+
+## One codebase, many targets
+
+The default backend is C. C++, Objective-C, and JavaScript backends are also available. The command
+`nim c --backend:js hello.nim` produces a JavaScript file from the same code. For most programs we
+rarely pick a backend by hand.
+
+Nim 2.x uses ORC as its default memory management. ORC counts references and collects cycles, and
+destructors run when a value leaves its scope. No garbage collector stops the whole program to
+sweep memory. For everyday code, what matters is this: we never call `free`, and forgetting to
+release memory is not a fatal mistake.
+
+Nim also has *templates* and *macros*: code that runs at compile time to produce other code. That is
+why Nim can offer domain-specific syntax and thin boilerplate without giving up performance. We will
+meet them much later, since both need a firmer grasp of types first.
+
+## When Nim fits, and when it does not
+
+Nim fits when you need a native binary, predictable memory use, and readable code. Command-line
+tools, network services, data processors, and programs shipped as a single file all qualify.
+
+Nim is not the first choice when the ecosystem decides. For machine learning, Python libraries are
+far more complete. For web work with the most job openings, JavaScript and Go are safer bets. Being
+honest about this is more useful than selling one language as the answer to everything.
+
+## Exercises
+
+1. Change the `hello` program above so it prints your name instead of `Nim`.
+2. In the addition example, change `1..5` to `1..10`. Predict the output before running it.
+3. Write a program that prints `7 * 6` together with its result. Save it as `kali.nim`.
+4. The code `var age: int = "twenty"` fails to compile. Explain why the compiler points at column
+   16, and not at column 5 where the name `age` sits.
+5. Without running it, decide whether `echo greet(42)` on the `greet` example is valid. Explain your
+   reasoning.
+
+## Summary
+
+- Nim compiles to C and then to a binary; no virtual machine runs while the program executes.
+- Types are checked at compile time, so a type error stops the build before any output.
+- `echo` writes to stdout; a procedure uses `proc` with its last expression as the return value.
+- The backend can be swapped (C, C++, Objective-C, JavaScript); the default memory manager is ORC.
+- Nim's ecosystem is smaller than Python's or JavaScript's; choose Nim for a need, not a trend.
+
+## Next
+
+[Installing Nim](installation.qmd) sets up version 2.2.12 on your machine through `choosenim`, a
+package manager, or a ready binary, and then confirms that `nim --version` answers.

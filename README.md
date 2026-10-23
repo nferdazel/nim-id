@@ -20,7 +20,12 @@ Butuh [Nim](https://nim-lang.org/install.html) 2.2.12 dan [Quarto](https://quart
 ./task pdf       # PDF kedua bahasa
 ./task dev       # preview lokal
 ./task check     # contoh + site (gate sebelum commit)
+./task versi     # cetak nomor versi buku
+./task rilis     # naikkan versi dari commit, lalu commit + tag
 ```
+
+Versi buku ada di `VERSION` (semver, tag `vX.Y.Z`), naik otomatis lewat `./task rilis`; aturannya di
+[docs/release.md](docs/release.md).
 
 `task` adalah skrip POSIX, bukan Taskfile/just. Kalau Quarto tidak ada di `PATH`:
 `QUARTO=$HOME/.local/opt/bin/quarto ./task site`.
@@ -32,12 +37,12 @@ books/
   id/                     # project Quarto Indonesia (akar situs)
     _quarto.yml
     index.qmd
-    chapters/variables.qmd
+    chapters/*.qmd        # 16 bab, nama berkas bahasa Inggris
     appendix/answers.qmd
   en/                     # project Quarto English (/en/), nama berkas sama
     _quarto.yml
     index.qmd
-    chapters/variables.qmd
+    chapters/*.qmd        # 16 bab, nama berkas bahasa Inggris
     appendix/answers.qmd
 examples/
   variables/              # satu folder per bab, dipakai kedua bahasa

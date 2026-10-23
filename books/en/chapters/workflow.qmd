@@ -1,0 +1,187 @@
+# Workflow: `nim r`, `nimble`, editor
+
+Nim is installed. The next question is no longer "how do I write a program" but "which commands do I
+use every day". Four habits cover most work: `nim r` to try things fast, `nim c` to build a binary,
+`nimble` to manage a project, and an editor that talks to the compiler.
+
+::: {.callout-note}
+## What you will be able to do
+
+After this chapter you can choose between `nim r` and `nim c`, read an error that points at a file
+and column, use `nimble` for a project, and set up an editor with `nimsuggest`.
+:::
+
+## `nim r`: compile, then run
+
+Save the following as `hello.nim`, then run `nim r hello.nim`.
+
+```{.nim}
+let message = "hello from a compiled binary"
+echo message
+```
+
+```{.txt}
+hello from a compiled binary
+```
+
+`nim r` stands for *run*: the compiler compiles the file, keeps intermediate results in a cache,
+runs the program, and stops. Notice that no new binary appears next to `hello.nim`. This is the
+fastest way to test a piece of code.
+
+## `nim c`: produce a binary
+
+When the result needs to run repeatedly, compile once and then run that binary directly. Save the
+following as `join.nim`, then run `nim c join.nim`:
+
+```{.nim}
+import std/strutils
+
+let words = ["nim", "is", "fast"]
+echo words.join(", ")
+```
+
+```{.txt}
+nim, is, fast
+```
+
+`nim c` leaves a binary named `join` in the same directory. Run it with `./join`. On Windows the name
+is `join.exe`. The binary name follows the source file name; change it with `-o:program`. Add `-r`
+to `nim c` to run it right away: `nim c -r join.nim`.
+
+## Release builds
+
+By default, `nim c` produces a *debug build*: fast to compile, but slow to run and still full of
+checks. For a finished result, use a release build:
+
+```{.bash}
+nim c -d:release join.nim
+```
+
+A release build enables optimization and turns off some checks, such as array bounds checking. The
+program then runs faster, with the caveat that mistakes the disabled checks would have caught may
+slip through. Do not reach for `-d:release` before the logic is correct.
+
+## Where the build output goes
+
+Two locations are worth telling apart:
+
+- `nim c` places the binary in the working directory, next to the source file unless `-o` is given.
+- `nim r` keeps intermediate results in a cache directory, usually under `~/.cache/nim/`.
+
+The cache directory can be moved with `--nimcache:path`. Its contents are intermediates that can be
+regenerated: safe to delete at any time, and refilled on the next compile. If a build looks strange,
+deleting the cache is the cheap first step.
+
+## Reading an error message
+
+The most useful part of this workflow is the habit of reading compiler messages. Save the following
+as `square.nim`, then run `nim r square.nim`.
+
+```{.nim}
+proc square(n: int): int =
+  n * n
+
+echo square("four")
+```
+
+The program does not run. The compiler prints:
+
+```{.txt}
+main.nim(4, 12) Error: type mismatch
+Expression: square("four")
+  [1] "four": string
+
+Expected one of (first mismatch at [position]):
+[1] proc square(n: int): int
+```
+
+Read from the first line:
+
+| Part | Meaning |
+|---|---|
+| `main.nim` | the file with the problem |
+| `(4, 12)` | line 4, column 12 — the position of the bad argument |
+| `Error` | severity; the build stops |
+| `type mismatch` | the category: the types do not fit |
+
+The remaining lines are evidence. `Expression: square("four")` shows the expression under
+inspection. The line `[1] "four": string` names the first argument and its type. The
+`Expected one of` section lists candidate procedures, and `[1] proc square(n: int): int` states the
+requirement: parameter `n` must be an `int`. So the problem is simple: `"four"` is a `string`, not an
+`int`.
+
+A good habit: read the first line to learn *where* and *what*, then read the rest only when you need
+the reason. For procedure-call errors, the `Expected one of` list often already contains the answer.
+
+## `nim check`: fast feedback
+
+If you only want to know whether the types are right, without producing a binary, use `nim check`:
+
+```{.bash}
+nim check square.nim
+```
+
+`nim check` runs type and semantic checks, then stops. On the file above, its first output matches
+what came before, a `type mismatch` on line 4, and its exit code is non-zero. This is the command
+editors run in the background, because it is far lighter than `nim c`.
+
+## `nimble`: projects and packages
+
+Nimble is installed together with Nim. It has two roles: package manager and project scaffold. For a
+new project:
+
+```{.bash}
+nimble init notes
+```
+
+That command creates a `notes` directory containing a `notes.nimble` file, code in `src/`, and a
+test skeleton in `tests/`. Once it exists, the common commands are:
+
+| Command | Purpose |
+|---|---|
+| `nimble build` | build the project |
+| `nimble run` | build, then run it |
+| `nimble test` | run the tests |
+| `nimble tasks` | list the defined tasks |
+| `nimble install <package>` | install a third-party package |
+
+A `.nimble` file declares the name, version, and dependencies through `requires`. This book
+deliberately uses only the standard library, so there are no dependencies to install yet. It is
+enough to know `nimble` is there, and to return to it when the project grows.
+
+## Editor and `nimsuggest`
+
+Nim ships `nimsuggest`, a server that answers an editor's questions: what is the type of this symbol,
+where is it defined, what names fit at this position. Most Nim editors use it behind the scenes for
+autocompletion and for showing errors as you write.
+
+Only two things need setting up: make sure `nimsuggest` is on PATH (usually it already is, since it
+is installed with Nim), and point the editor at the right project. Without the server, the editor
+still works, but you lose the fast feedback. While the editor is not ready, `nim check` from the
+terminal can stand in.
+
+## Exercises
+
+1. Run `hello.nim` with `nim r`, then with `nim c` and `./hello`. Compare: which files appear in the
+   working directory in each case?
+2. After `nim c join.nim`, where does the binary appear, and what is it called on Linux, macOS, and
+   Windows?
+3. You deliberately name a file `data.txt` but write Nim code inside it. What happens when
+   `nim c data.txt` runs? Explain.
+4. Run `nim check square.nim` and `nim c square.nim`. Compare their output and their exit codes.
+5. Create a new project with `nimble init`, then name the commands to build and run it.
+
+## Summary
+
+- `nim r` compiles and runs right away; it leaves no binary next to the source.
+- `nim c` produces a binary named like the source file; rename it with `-o`, run it immediately with
+  `-r`.
+- `-d:release` makes the program faster but disables some checks; use it after the logic is correct.
+- An error message points at the file, line, and column; the first line states what, the rest
+  explains why.
+- `nimble` manages projects and packages; `nimsuggest` feeds the editor behind the scenes.
+
+## Next
+
+[Comments and doc comments](comments.qmd) covers the three forms. One of them becomes documentation
+material and is checked by the compiler, so it is not just a note to yourself.

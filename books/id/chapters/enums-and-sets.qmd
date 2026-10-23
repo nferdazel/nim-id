@@ -1,0 +1,260 @@
+# Enum dan set
+
+Kode yang memakai `"red"`, `"green"`, `"blue"` sebagai status mudah salah ketik, dan compiler tidak
+bisa menolong. Kode yang memakai `0`, `1`, `2` lebih ringkas, tapi setelah sebulan tidak ada yang
+ingat angka `2` itu apa. Enum menutup dua celah itu: nama yang dibaca manusia, dengan urutan yang
+ditentukan compiler.
+
+Set melangkah lebih jauh. Kalau nilainya sudah menjadi enum, sekumpulan nilai bisa disimpan
+sebagai bit, dan pertanyaan "apakah ini termasuk?" dijawab satu operasi.
+
+::: {.callout-note}
+## Tujuan bab
+
+Setelah bab ini, pembaca bisa mendefinisikan enum, membaca nilai ordinalnya, mengubah integer
+menjadi enum, dan memakai `set` beserta `incl`, `excl`, serta `in`.
+:::
+
+## Enum: nama dengan urutan tetap
+
+```{.nim}
+type Color = enum
+  red, green, blue
+
+echo red
+echo blue
+```
+
+```{.txt}
+red
+blue
+```
+
+`echo` mencetak namanya, bukan angkanya. Setiap anggota punya posisi berurutan sesuai urutan
+penulisannya.
+
+## Nilai ordinal dengan `ord`
+
+Posisi itu disebut nilai ordinal, dan `ord` mengambilnya.
+
+```{.nim}
+type Color = enum
+  red, green, blue
+
+echo ord(red), " ", ord(green), " ", ord(blue)
+```
+
+```{.txt}
+0 1 2
+```
+
+Anggota pertama selalu bernilai 0, kecuali ditentukan lain secara eksplisit. Karena punya urutan,
+anggota enum juga bisa dibandingkan: `red < blue` bernilai `true`.
+
+## Mengubah integer menjadi enum
+
+Nilai ordinal bisa dikembalikan menjadi anggota. Bentuk `Color(1)` disebut konversi tipe.
+
+```{.nim}
+type Color = enum
+  red, green, blue
+
+let c = Color(1)
+echo c
+echo $c
+```
+
+```{.txt}
+green
+green
+```
+
+Dua baris terakhir mencetak hal yang sama, karena `echo` memakai `$` yang sama. Kalau nilainya
+literal, rentangnya diperiksa saat kompilasi: `Color(9)` ditolak dengan
+`9 can't be converted to Color`.
+
+## Set: himpunan nilai
+
+`set[Color]` menyimpan sekumpulan anggota. Literalnya memakai `{}`.
+
+```{.nim}
+type Color = enum
+  red, green, blue
+
+let palette: set[Color] = {red, blue}
+echo palette
+```
+
+```{.txt}
+{red, blue}
+```
+
+Himpunan kosong ditulis `{}`, dan tipe dasarnya harus ditulis di anotasi. Tanpa itu compiler
+menolak dengan `cannot infer the type of the set`, karena `{}` bisa berarti set tipe apa pun.
+
+## `incl` dan `excl`: menambah dan membuang
+
+Untuk mengubah isi set, pakai `incl` dan `excl`. Keduanya butuh variabel `var`.
+
+```{.nim}
+type Color = enum
+  red, green, blue
+
+var palette: set[Color] = {}
+palette.incl green
+palette.incl blue
+palette.excl blue
+echo palette
+```
+
+```{.txt}
+{green}
+```
+
+`incl` yang menambahkan anggota yang sudah ada tidak melakukan apa-apa; set tidak menyimpan
+duplikat.
+
+## `in`: menguji keanggotaan
+
+```{.nim}
+type Color = enum
+  red, green, blue
+
+let palette: set[Color] = {red, blue}
+echo green in palette
+echo red in palette
+```
+
+```{.txt}
+false
+true
+```
+
+`in` mengembalikan `bool`, jadi hasilnya bisa langsung dipakai sebagai kondisi `if`. Pencariannya
+satu operasi bit, tidak bergantung pada banyaknya anggota.
+
+## Iterasi set
+
+Set bisa diiterasi, dan anggotanya keluar dalam urutan ordinal.
+
+```{.nim}
+type Color = enum
+  red, green, blue
+
+let palette: set[Color] = {red, blue}
+for color in palette:
+  echo color
+```
+
+```{.txt}
+red
+blue
+```
+
+Perhatikan bahwa `blue` muncul setelah `red`, walaupun urutan penulisan literalnya bisa berbeda.
+Urutannya ditentukan enum, bukan oleh set.
+
+## Operasi himpunan
+
+Set mendukung gabungan, irisan, dan selisih dengan operator biasa.
+
+```{.nim}
+type Color = enum
+  red, green, blue
+
+let warm: set[Color] = {red}
+let cool: set[Color] = {blue}
+echo warm + cool
+echo warm * cool
+```
+
+```{.txt}
+{red, blue}
+{}
+```
+
+`warm + cool` adalah gabungan. Karena kedua himpunan tidak beririsan, `warm * cool` kosong. `card`
+memberi jumlah anggota, misalnya `card({red, green})` bernilai `2`.
+
+## Himpunan bit untuk tipe dasar
+
+Set tidak terbatas pada enum. Tipe ordinal apa pun bisa jadi dasarnya, termasuk `char`.
+
+```{.nim}
+var seen: set[char] = {}
+for c in "hello":
+  seen.incl c
+echo 'h' in seen
+echo 'z' in seen
+echo card(seen)
+```
+
+```{.txt}
+true
+false
+4
+```
+
+Kita membaca teks karakter demi karakter, dan set menyimpan mana yang sudah muncul. `card` bernilai
+4 karena `hello` hanya memuat empat huruf berbeda.
+
+Dasar set harus ordinal dengan paling banyak 2^16 nilai. `set[int]` melewati batas itu, dan
+compiler menolaknya: `set is too large; use std/sets for ordinal types with more than 2^16
+elements`. Untuk himpunan besar, pakai `std/sets`.
+
+## Membaca error: integer bukan enum
+
+```{.nim}
+type Color = enum
+  red, green, blue
+
+let c: Color = 1
+echo c
+```
+
+```{.txt}
+main.nim(4, 16) Error: type mismatch: got 'int literal(1)' for '1' but expected 'Color = enum'
+```
+
+Pesannya menyebut dua tipe yang bertabrakan: nilai `1` bertipe integer, sedangkan tempatnya
+menunggu `Color`. Nim tidak mengubah integer menjadi enum diam-diam. Konversinya harus ditulis
+eksplisit lewat `Color(1)`, dan penulisan itulah tempat pembaca melihat niatnya.
+
+## Latihan
+
+1. Tambahkan anggota `yellow` pada `Color`, lalu cetak `ord(yellow)`.
+2. Tanpa menjalankan, prediksi outputnya:
+   ```{.nim}
+   type Color = enum
+     red, green, blue
+
+   let first = {red, green}
+   let second = {green, blue}
+   echo first - second
+   ```
+3. Tulis enum `Permission` dengan `read`, `write`, dan `execute`, bangun set izin, lalu uji dua
+   keanggotaan.
+4. Kode berikut gagal. Perbaiki, lalu jelaskan pesannya:
+   ```{.nim}
+   type Color = enum
+     red, green, blue
+
+   let c: Color = "red"
+   echo c
+   ```
+
+Jawaban ada di [Lampiran A](../appendix/answers.qmd).
+
+## Ringkasan
+
+- `enum` memberi nama pada nilai berurutan; `ord` mengambil posisinya, dimulai dari 0.
+- `Color(...)` mengubah integer menjadi enum secara eksplisit; literal di luar rentang ditolak.
+- `set[Color]` menyimpan himpunan anggota, ditulis `{red, blue}`; himpunan kosong `{}` butuh
+  anotasi tipe.
+- `incl`, `excl`, `in`, `+`, `*`, `-`, dan `card` mengolah set; iterasi mengikuti urutan ordinal.
+- Set juga bekerja untuk tipe ordinal lain seperti `char`, sampai 2^16 nilai.
+
+## Selanjutnya
+
+Bab berikutnya membuka bagian menengah: modul dan `import`, cara memecah kode ke beberapa berkas
+yang bisa dipakai ulang.

@@ -1,0 +1,242 @@
+# Strings, raw strings, and characters
+
+Almost every program touches text. In Nim, `string` is a sequence of bytes that may be changed in
+place — unlike languages that treat a string as a frozen value. That difference shows up in
+indexing, concatenation, and occasionally in an unexpected error message.
+
+This chapter starts with writing text literally, then moves on to taking part of it and changing it
+safely.
+
+::: {.callout-note}
+## What you will be able to do
+
+After this chapter you can write escape sequences and raw strings, take a character or a slice of
+text with indexing and slicing, tell `&` apart from `add`, and explain why `s[0] = 'N'` is
+rejected when `s` is declared with `let`.
+:::
+
+## Escape sequences
+
+Save this as `escapes.nim`, then run `nim r escapes.nim`.
+
+```{.nim}
+echo "line 1\nline 2"
+echo "quote: \"ok\""
+echo "backslash: \\"
+echo "brace: { }"
+```
+
+```{.txt}
+line 1
+line 2
+quote: "ok"
+backslash: \
+brace: { }
+```
+
+A backslash inside a string opens an *escape sequence*. `\n` becomes a new line, `\"` becomes a
+quote that does not end the string, and `\\` becomes a single backslash. Note the last line: a
+brace `{` is nothing special in an ordinary string. It only has meaning inside the *interpolation*
+`&"..."` covered in the next chapter.
+
+## Raw strings
+
+Sometimes we want the backslash left exactly as it is, for example in a Windows path or a regular
+expression. The `r` prefix turns off every escape:
+
+```{.nim}
+let path = r"C:\Users\nim\bin"
+let pattern = r"\d+\.\d+"
+
+echo path
+echo pattern
+```
+
+```{.txt}
+C:\Users\nim\bin
+\d+\.\d+
+```
+
+Without `r`, `\U` and `\d` are not recognized escapes and can raise a warning. A raw string also
+does not treat `"` specially, so the text above reads exactly as written.
+
+## Multi-line strings
+
+For text that spans several lines, use three quotes:
+
+```{.nim}
+let banner = """
+line one
+line two
+"""
+
+echo banner.len
+echo banner
+echo "END"
+```
+
+```{.txt}
+18
+line one
+line two
+
+END
+```
+
+Notice `len` is 18. The content is `line one\nline two\n`: 8 + 1 + 8 + 1 characters. The newline
+after the opening `"""` counts, and that is a common source of counting mistakes for newcomers.
+A triple-quoted raw string does not process escapes either.
+
+## Length and indexing
+
+`len` gives the number of bytes, and indexing starts at zero. Calling `len` is cheap: a string
+keeps its length alongside its data instead of recounting every time.
+
+```{.nim}
+let s = "Nim rocks"
+
+echo s.len
+echo s[0]
+echo s[^1]
+echo s[0..2]
+```
+
+```{.txt}
+9
+N
+s
+Nim
+```
+
+`s[^1]` points at the last element; `^n` is sugar for `s.len - n`. Because `s[0]` yields a `char`,
+not a one-letter string, operators that work on `char` (such as `.ord`) apply directly. Reading an
+index out of range does not return `nil`; Nim stops the program at runtime with an `IndexDefect`.
+
+## Slicing
+
+A slice of text is taken with a range inside square brackets. Both ends are included.
+
+```{.nim}
+let s = "Nim rocks"
+
+echo s[0..2]     # "Nim"
+echo s[4..8]     # "rocks"
+echo s[^5..^1]   # "rocks", counted from the end
+echo s[1..^2]    # "im rock"
+```
+
+```{.txt}
+Nim
+rocks
+rocks
+im rock
+```
+
+A range `a..b` means from index `a` through `b`, both included. Since `^n` counts from the back,
+`s[^5..^1]` takes the last five characters. Slicing produces a new string; the original is
+untouched.
+
+## `&` versus `add`
+
+There are two ways to join text, and the difference is about time and memory.
+
+```{.nim}
+var greeting = "Hello"
+greeting.add(", ")
+greeting.add("Nim")
+echo greeting
+
+let shout = greeting & "!"
+echo shout
+echo "count: " & $shout.len
+```
+
+```{.txt}
+Hello, Nim
+Hello, Nim!
+count: 11
+```
+
+`add` appends straight to the string that already exists. Because that changes the value,
+`greeting` must be a `var`. The `&` operator builds a new string from both sides without touching
+the old one, so `shout` may be a `let`. When joining many pieces in a row, `add` is cheaper because
+it does not copy everything again each time. A chain like `a & b & c` builds a temporary string at
+every step, while `add` grows one buffer in place.
+
+## Why `s[0] = 'N'` is rejected
+
+A Nim string can be changed in place, but only when its binding is a `var`. Save this as
+`mutation.nim`:
+
+```{.nim}
+let s = "nim"
+s[0] = 'N'
+echo s
+```
+
+```{.txt}
+mutation.nim(2, 2) Error: 's[0]' cannot be assigned to
+```
+
+The message points at line 2, column 2, right at `[0]`. What is rejected is the assignment to an
+element, not the string itself: `s` was made with `let`, so no part of it may change. Change `let`
+to `var` and the program runs, printing `Nim`.
+
+## Trimming and splitting text
+
+Everyday tasks such as cleaning whitespace and splitting a CSV line live in `std/strutils`.
+
+```{.nim}
+import std/strutils
+
+let csv = "alpha, beta, gamma"
+let parts = csv.split(',')
+
+echo parts.len
+echo "[" & parts[1] & "]"
+echo "[" & parts[1].strip & "]"
+echo "[" & "  padded  ".strip & "]"
+```
+
+```{.txt}
+3
+[ beta]
+[beta]
+[padded]
+```
+
+`split` breaks a string into a `seq[string]` at each separator. Note the pieces still hold the
+space after the comma; `strip` removes whitespace at both ends. The output lines are wrapped in
+brackets so that the spaces do not silently disappear.
+
+## Exercises
+
+1. Print a single string that contains a double quote and a backslash, using the right escapes.
+2. Without running it, predict the output:
+   ```{.nim}
+   echo "a" & "b" & "c"
+   echo "abc".len
+   ```
+3. Write the path `C:\temp\new` using a raw string, then print it.
+4. The code below fails. Fix it, then explain why it fails:
+   ```{.nim}
+   let s = "abc"
+   s.add("d")
+   echo s
+   ```
+5. Take the last three characters of `"programming"` with slicing, then print the result.
+
+Answers are in [Appendix A](../appendix/answers.qmd).
+
+## Summary
+
+- `\n`, `\"`, and `\\` are escapes in an ordinary string; `r"..."` turns them off.
+- Three quotes build a multi-line string, and the newline after the opener counts.
+- `len` gives the number of bytes, indexing starts at zero, and `^n` counts from the back.
+- `add` changes a string in place (needs `var`); `&` builds a new string.
+- `split` and `strip` from `std/strutils` break and clean text.
+
+## Next
+
+The next chapter covers showing values: `echo`, `repr`, interpolation with `&"..."`, number
+formatting, and how `echo` differs from `write`.

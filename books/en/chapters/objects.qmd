@@ -1,0 +1,303 @@
+# Objects and constructors
+
+Tuples are fine for small data unpacked quickly. Once there are ten named fields, repeated
+boilerplate, and rules of their own, a tuple starts to hurt. An object gives a name to a set of
+fields, and Nim adds a literal constructor that makes it pleasant to use.
+
+This chapter also unpacks one difference that keeps surprising people: value objects and
+`ref object`s behave differently when copied. Ignoring that is a classic source of bugs.
+
+::: {.callout-note}
+## What you will be able to do
+
+After this chapter you can define an `object` and fill it with a constructor, use default values,
+tell a value object from a `ref object`, override `$`, and read the `undeclared field` error.
+:::
+
+## Defining an object and filling it
+
+Declare the object with `type`, then list the fields below it.
+
+```{.nim}
+type Person = object
+  name: string
+  age: int
+
+let ada = Person(name: "Ada", age: 36)
+echo ada.name, " is ", ada.age
+```
+
+```{.txt}
+Ada is 36
+```
+
+`Person(name: "Ada", age: 36)` is the literal constructor. Nim generates it for every object type,
+so there is no function to write yourself. A field you leave out takes its default value.
+
+## Fields that may change
+
+Fields may change as long as the variable was declared `var`.
+
+```{.nim}
+type Point = object
+  x, y: int
+
+var p = Point(x: 1, y: 2)
+p.x = 10
+echo p.x, ",", p.y
+```
+
+```{.txt}
+10,2
+```
+
+`x, y: int` is shorthand for two fields of the same type.
+
+## Object default values
+
+An object declared without a value is safe to use right away; every field holds its type's default.
+
+```{.nim}
+type Counter = object
+  hits: int
+  label: string
+
+var c: Counter
+echo c.hits, "|", repr(c.label)
+```
+
+```{.txt}
+0|""
+```
+
+This matches `var` without a value on a primitive type: no garbage memory to worry about.
+
+## Objects already have a `$`
+
+Readers often assume `echo` rejects objects. For value objects, Nim provides a built-in `$`.
+
+```{.nim}
+type Person = object
+  name: string
+
+echo Person(name: "Ada")
+```
+
+```{.txt}
+(name: "Ada")
+```
+
+The output is the literal form again: field names with their values. Good for a quick inspection,
+though usually not pleasant to read.
+
+## Overriding `$` yourself
+
+To change how an object prints, define `$` for that type.
+
+```{.nim}
+type Person = object
+  name: string
+  age: int
+
+proc `$`(p: Person): string =
+  p.name & " (" & $p.age & ")"
+
+echo Person(name: "Ada", age: 36)
+```
+
+```{.txt}
+Ada (36)
+```
+
+Once `$` exists, `echo` picks it up automatically. The same rule applies to `&`, string
+interpolation, and explicit `$` calls. This is the idiomatic way to give a type a text
+representation.
+
+## `ref object`: stored on the heap
+
+A `ref object` keeps its data on the heap, and the variable holds a pointer to it.
+
+```{.nim}
+type Node = ref object
+  value: int
+  next: Node
+
+var head = Node(value: 1)
+head.next = Node(value: 2)
+echo head.value, " -> ", head.next.value
+```
+
+```{.txt}
+1 -> 2
+```
+
+The `next` field is typed `Node`, a reference to another node. Chained structures like this are
+what make `ref` practical. `nil` is a valid value for a reference.
+
+A `ref` declared without a value holds `nil`. To fill it, use `new`.
+
+```{.nim}
+type Person = ref object
+  name: string
+
+var p = Person(name: "Ada")
+echo p.name
+
+var q: Person
+new(q)
+q.name = "Grace"
+echo q.name
+```
+
+```{.txt}
+Ada
+Grace
+```
+
+`new(q)` allocates the object and stores it in `q`. A literal constructor such as
+`Person(name: "Ada")` does the same thing, then fills the fields.
+
+## The built-in `$` does not cover `ref`
+
+A value object has a built-in `$`, its reference does not.
+
+```{.nim}
+type Person = ref object
+  name: string
+
+var p = Person(name: "Ada")
+echo p
+```
+
+```{.txt}
+main.nim(5, 1) Error: type mismatch
+Expression: echo p
+  [1] p: Person
+
+Expected one of (first mismatch at [position]):
+[1] proc echo(x: varargs[typed, `$`])
+```
+
+The message never says `$` outright, but the last line hints at it: `echo` needs a type that has
+one. There are two fixes. First, define `$` for `Person`. Second, dereference with `echo p[]` so the
+object's built-in `$` is used.
+
+## Value vs reference: copying is not always the same
+
+The priciest difference between the two shows up when a value is copied.
+
+```{.nim}
+type
+  Card = object
+    points: int
+  CardRef = ref object
+    points: int
+
+var a = Card(points: 1)
+var b = a
+b.points = 99
+echo "value: ", a.points, " ", b.points
+
+var c = CardRef(points: 1)
+var d = c
+d.points = 99
+echo "ref:   ", c.points, " ", d.points
+```
+
+```{.txt}
+value: 1 99
+ref:   99 99
+```
+
+With a value object, `var b = a` copies the whole contents, so changing `b` never touches `a`. With
+a `ref object`, `var d = c` copies the pointer, not the data. Both point at the same object, so
+changing `d` changes `c` too.
+
+The rule: use `object` for small values you want copied, and `ref object` for large data or when
+several parts of the code really must share one value.
+
+## Reading the error: a field that does not exist
+
+Reaching for an undeclared field is rejected by the compiler.
+
+```{.nim}
+type Person = object
+  name: string
+
+let ada = Person(name: "Ada")
+echo ada.email
+```
+
+```{.txt}
+main.nim(5, 9) Error: undeclared field: 'email'
+```
+
+The message names the field it was looking for. Start from the type declaration: `Person` has only
+`name`, so `email` truly does not exist. This is the easiest error class to fix, because the answer
+lives in the type definition, not in the line that used it.
+
+## Basic inheritance
+
+An object can inherit fields from another object with `object of`.
+
+```{.nim}
+type
+  Animal = ref object of RootObj
+    name: string
+  Dog = ref object of Animal
+    tricks: int
+
+proc describe(a: Animal): string =
+  a.name
+
+var rex = Dog(name: "Rex", tricks: 3)
+echo describe(rex), " knows ", rex.tricks, " tricks"
+```
+
+```{.txt}
+Rex knows 3 tricks
+```
+
+`Dog` inherits the `name` field from `Animal` and adds `tricks`. A procedure taking `Animal` also
+accepts a `Dog`, because a `Dog` is a more specific `Animal`. Inheritance uses `ref object` with
+`RootObj` at the root of the hierarchy. This chapter stops here; runtime procedure selection is
+covered in the intermediate part.
+
+## Exercises
+
+1. Add an `email: string` field to `Person`, fill it with the constructor, then print it.
+2. Without running it, predict the output:
+   ```{.nim}
+   type Task = object
+     title: string
+     done: bool
+
+   var t = Task(title: "write")
+   echo t.done, " ", t.title
+   ```
+3. Write `type Book = ref object of RootObj` with `title` and `pages` fields, create one instance,
+   then print it through a procedure that takes a `Book`.
+4. The code below fails. Fix it without changing the `let`:
+   ```{.nim}
+   type Point = object
+     x: int
+
+   let p = Point(x: 1)
+   p.x = 2
+   echo p.x
+   ```
+
+Answers are in [Appendix A](../appendix/answers.qmd).
+
+## Summary
+
+- An `object` groups named fields; `Type(field: value)` is the literal constructor.
+- Omitted fields take their type's default, and an object without a value is safe to use.
+- Value objects have a built-in `$`; `ref object`s do not, so define `$` or use `p[]`.
+- Copying a value object duplicates the data; copying a `ref object` duplicates the pointer.
+- `object of RootObj` inherits fields; `new` allocates a `ref` that still holds `nil`.
+
+## Next
+
+The next chapter covers [enums and sets](enums-and-sets.qmd): named values with a fixed order, and
+bit sets for fast membership tests.

@@ -1,0 +1,290 @@
+# Procedures, parameters, and return values
+
+In many languages, every routine is called a "function". Nim splits that into two things: a
+routine that may change the world outside itself (`proc`), and one guaranteed not to (`func`).
+The compiler enforces the split rather than merely recommending it.
+
+The difference shows up as code grows. A `func` can be read without asking "what else does it
+change?", because the answer is always "nothing".
+
+::: {.callout-note}
+## What you will be able to do
+
+After this chapter you can write procedures with explicit types, choose between `proc` and `func`,
+use default parameters, named arguments, `var` parameters, and `openArray`, and read the
+`can have side effects` error.
+:::
+
+## `proc`: a routine that may have side effects
+
+Write the typed parameter list in parentheses, then the return type after a colon.
+
+```{.nim}
+proc greet(name: string): string =
+  "Hello, " & name
+
+echo greet("Nim")
+```
+
+```{.txt}
+Hello, Nim
+```
+
+The body of `greet` is a single expression, and the last expression of a procedure automatically
+becomes its return value. `return` is optional.
+
+## `func`: a promise of no side effects
+
+A routine that only computes belongs in a `func`.
+
+```{.nim}
+func square(x: int): int =
+  x * x
+
+echo square(7)
+```
+
+```{.txt}
+49
+```
+
+`func` is `proc` with one extra guarantee: it touches nothing outside itself. The next example is
+deliberately wrong. Save it as `main.nim`, then run it.
+
+```{.nim}
+func shout(text: string) =
+  echo text
+
+shout("hello")
+```
+
+```{.txt}
+main.nim(1, 6) Error: 'shout' can have side effects
+```
+
+Read it from the front: file, position `(line, column)`, severity, then the message. `(1, 6)`
+points at line 1, column 6, right on the name `shout`. The compiler adds a `Hint` naming `echo` as
+the cause. The direct fix is to change `func` to `proc`, because `echo` writes to the screen — a
+side effect.
+
+The rule of thumb: `func` for pure computation, `proc` when the routine really does print, write a
+file, or change its arguments.
+
+## `result` and a value built in steps
+
+A procedure with a return type has an implicit variable named `result`. It starts at the type's
+default (`0` for `int`, `""` for `string`), and the last expression overwrites it.
+
+```{.nim}
+proc total(items: seq[int]): int =
+  for item in items:
+    result = result + item
+
+echo total(@[1, 2, 3, 4])
+```
+
+```{.txt}
+10
+```
+
+`result` earns its keep when the value is built in steps. In `total`, every pass adds to `result`
+without an extra variable.
+
+## `return` to leave early
+
+`return` stops the procedure right there.
+
+```{.nim}
+proc classify(n: int): string =
+  if n < 0:
+    return "negative"
+  if n == 0:
+    return "zero"
+  "positive"
+
+echo classify(-3)
+echo classify(0)
+echo classify(9)
+```
+
+```{.txt}
+negative
+zero
+positive
+```
+
+The first two `if` branches already handle their cases, so the last line runs only for positive
+numbers — and its value becomes the return value.
+
+## Default parameters and named arguments
+
+A parameter may carry a default value. A caller that skips it gets that value.
+
+```{.nim}
+proc greet(name: string, greeting = "Hello"): string =
+  greeting & ", " & name
+
+echo greet("Ada")
+echo greet("Ada", "Hi")
+```
+
+```{.txt}
+Hello, Ada
+Hi, Ada
+```
+
+Arguments may also be named.
+
+```{.nim}
+proc box(width: int, height: int): string =
+  $width & "x" & $height
+
+echo box(width = 3, height = 4)
+echo box(height = 4, width = 3)
+```
+
+```{.txt}
+3x4
+3x4
+```
+
+Named arguments keep long calls readable, and argument order no longer matters. One rule still
+holds: parameters without a default must come before parameters that have one.
+
+## `var` parameters: writing back to the caller
+
+An ordinary parameter is passed as a copy. To change the caller's value, mark the parameter with
+`var`.
+
+```{.nim}
+proc double(x: var int) =
+  x = x * 2
+
+var count = 21
+double(count)
+echo count
+```
+
+```{.txt}
+42
+```
+
+The caller must pass a variable, not a number or an expression. This is *pass by reference* in
+Nim, and because it is written in the procedure's declaration, the reader never has to guess.
+
+## `openArray`: one procedure for arrays and sequences
+
+A parameter typed `seq[int]` accepts only a sequence. `openArray[int]` accepts both arrays and
+sequences without copying them.
+
+```{.nim}
+proc total(values: openArray[int]): int =
+  for value in values:
+    result = result + value
+
+echo total([1, 2, 3])
+echo total(@[10, 20])
+```
+
+```{.txt}
+6
+30
+```
+
+The first call passes an array, the second a sequence. One procedure handles both. The limit:
+`openArray` values cannot be changed from inside the procedure.
+
+## Overloading: same name, different types
+
+Several procedures may share a name as long as their parameter lists differ. The compiler picks
+one by the argument types.
+
+```{.nim}
+proc describe(value: int): string =
+  "int: " & $value
+
+proc describe(value: string): string =
+  "string: " & value
+
+echo describe(42)
+echo describe("answer")
+```
+
+```{.txt}
+int: 42
+string: answer
+```
+
+## `discard`: when the result really is unused
+
+Nim refuses a return value dropped in silence. The code below fails to compile:
+
+```{.nim}
+proc bump(counter: var int): int =
+  counter = counter + 1
+  counter
+
+var hits = 0
+bump(hits)
+echo hits
+```
+
+```{.txt}
+main.nim(6, 5) Error: expression 'bump(hits)' is of type 'int' and has to be used (or discarded)
+```
+
+The message offers two choices: use the value, or throw it away on purpose. Since we want only the
+side effect, write `discard`.
+
+```{.nim}
+proc bump(counter: var int): int =
+  counter = counter + 1
+  counter
+
+var hits = 0
+discard bump(hits)
+echo hits
+```
+
+```{.txt}
+1
+```
+
+`discard` is not a formality. It forces the author to admit that a value really is ignored.
+
+## Exercises
+
+1. Add a `punctuation = "!"` parameter to `greet`, then call it with and without a value.
+2. Without running it, predict the output:
+   ```{.nim}
+   proc scale(value: int, factor = 2): int =
+     value * factor
+
+   echo scale(5)
+   echo scale(5, factor = 10)
+   ```
+3. Write `proc average(values: openArray[float]): float` that returns the mean, then call it once
+   with an array and once with a sequence.
+4. The code below fails to compile. Fix it, then explain its message:
+   ```{.nim}
+   proc double(x: int): int =
+     value * 2
+
+   var n = 5
+   echo double(n)
+   ```
+
+Answers are in [Appendix A](../appendix/answers.qmd).
+
+## Summary
+
+- `proc` may have side effects; `func` is guaranteed not to, and the compiler rejects violations.
+- The last expression is the return value; `result` builds one in steps, `return` leaves early.
+- Default parameters and named arguments keep long calls readable.
+- A `var` parameter writes back to the caller; `openArray` accepts arrays and sequences.
+- An unused return value is a compile error; write `discard` when you mean it.
+
+## Next
+
+The next chapter covers [tuples](tuples.qmd): bundling several values into one, returning them from
+a procedure, and unpacking them again on a single line.

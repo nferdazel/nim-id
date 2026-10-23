@@ -1,0 +1,1 @@
+type mismatch: got 'string' for '"red"' but expected 'Color = enum'

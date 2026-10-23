@@ -1,0 +1,256 @@
+# Enums and sets
+
+Code that uses `"red"`, `"green"`, `"blue"` as status values breaks on a typo, and the compiler
+cannot help. Code that uses `0`, `1`, `2` is terser, but a month later nobody remembers what `2`
+meant. An enum closes both gaps: human-readable names with an order the compiler decides.
+
+Sets go further. Once the values are an enum, a collection of them fits into bits, and the question
+"is this one of them?" becomes a single operation.
+
+::: {.callout-note}
+## What you will be able to do
+
+After this chapter you can define an enum, read its ordinal values, convert an integer to an enum,
+and use `set` with `incl`, `excl`, and `in`.
+:::
+
+## Enums: names with a fixed order
+
+```{.nim}
+type Color = enum
+  red, green, blue
+
+echo red
+echo blue
+```
+
+```{.txt}
+red
+blue
+```
+
+`echo` prints the name, not the number. Each member has a position in declaration order.
+
+## Ordinal values with `ord`
+
+That position is called the ordinal value, and `ord` reads it.
+
+```{.nim}
+type Color = enum
+  red, green, blue
+
+echo ord(red), " ", ord(green), " ", ord(blue)
+```
+
+```{.txt}
+0 1 2
+```
+
+The first member is always 0 unless set explicitly. Because they have an order, enum
+members can also be compared: `red < blue` is `true`.
+
+## Converting an integer to an enum
+
+The ordinal value can be turned back into a member. The form `Color(1)` is a type conversion.
+
+```{.nim}
+type Color = enum
+  red, green, blue
+
+let c = Color(1)
+echo c
+echo $c
+```
+
+```{.txt}
+green
+green
+```
+
+The last two lines print the same thing, because `echo` uses the same `$`. When the value is a
+literal, the range is checked at compile time: `Color(9)` is rejected with
+`9 can't be converted to Color`.
+
+## Sets: collections of values
+
+A `set[Color]` stores a collection of members. Its literal uses `{}`.
+
+```{.nim}
+type Color = enum
+  red, green, blue
+
+let palette: set[Color] = {red, blue}
+echo palette
+```
+
+```{.txt}
+{red, blue}
+```
+
+The empty set is `{}`, and its base type must be written in the annotation. Without it the compiler
+says `cannot infer the type of the set`, because `{}` could be a set of anything.
+
+## `incl` and `excl`: adding and removing
+
+To change a set's contents, use `incl` and `excl`. Both need a `var` variable.
+
+```{.nim}
+type Color = enum
+  red, green, blue
+
+var palette: set[Color] = {}
+palette.incl green
+palette.incl blue
+palette.excl blue
+echo palette
+```
+
+```{.txt}
+{green}
+```
+
+`incl` of a member already present does nothing; a set never stores duplicates.
+
+## `in`: testing membership
+
+```{.nim}
+type Color = enum
+  red, green, blue
+
+let palette: set[Color] = {red, blue}
+echo green in palette
+echo red in palette
+```
+
+```{.txt}
+false
+true
+```
+
+`in` returns a `bool`, so the result slots straight into an `if` condition. The lookup is a single
+bit operation, independent of how many members there are.
+
+## Iterating a set
+
+A set can be iterated, and its members come out in ordinal order.
+
+```{.nim}
+type Color = enum
+  red, green, blue
+
+let palette: set[Color] = {red, blue}
+for color in palette:
+  echo color
+```
+
+```{.txt}
+red
+blue
+```
+
+Note that `blue` comes after `red`, even though a literal may list them in another order. The order
+is decided by the enum, not by the set.
+
+## Set operations
+
+Sets support union, intersection, and difference with ordinary operators.
+
+```{.nim}
+type Color = enum
+  red, green, blue
+
+let warm: set[Color] = {red}
+let cool: set[Color] = {blue}
+echo warm + cool
+echo warm * cool
+```
+
+```{.txt}
+{red, blue}
+{}
+```
+
+`warm + cool` is the union. Since the two sets do not overlap, `warm * cool` is empty. `card`
+returns the member count, for example `card({red, green})` is `2`.
+
+## Bit sets for primitive types
+
+Sets are not limited to enums. Any ordinal type can be the base, including `char`.
+
+```{.nim}
+var seen: set[char] = {}
+for c in "hello":
+  seen.incl c
+echo 'h' in seen
+echo 'z' in seen
+echo card(seen)
+```
+
+```{.txt}
+true
+false
+4
+```
+
+We read a text character by character and the set records which ones have appeared. `card` is 4
+because `hello` contains only four distinct letters.
+
+A set's base must be an ordinal type with at most 2^16 values. `set[int]` goes past that limit, and
+the compiler rejects it: `set is too large; use std/sets for ordinal types with more than 2^16
+elements`. For larger collections, use `std/sets`.
+
+## Reading the error: an integer is not an enum
+
+```{.nim}
+type Color = enum
+  red, green, blue
+
+let c: Color = 1
+echo c
+```
+
+```{.txt}
+main.nim(4, 16) Error: type mismatch: got 'int literal(1)' for '1' but expected 'Color = enum'
+```
+
+The message names both clashing types: the value `1` is an integer, while the slot expects a
+`Color`. Nim never converts an integer to an enum in silence. The conversion must be written
+explicitly as `Color(1)`, and that spelling is where the reader sees the intent.
+
+## Exercises
+
+1. Add a `yellow` member to `Color`, then print `ord(yellow)`.
+2. Without running it, predict the output:
+   ```{.nim}
+   type Color = enum
+     red, green, blue
+
+   let first = {red, green}
+   let second = {green, blue}
+   echo first - second
+   ```
+3. Write an enum `Permission` with `read`, `write`, and `execute`, build a set of permissions, then
+   test two memberships.
+4. The code below fails. Fix it, then explain the message:
+   ```{.nim}
+   type Color = enum
+     red, green, blue
+
+   let c: Color = "red"
+   echo c
+   ```
+
+Answers are in [Appendix A](../appendix/answers.qmd).
+
+## Summary
+
+- An `enum` gives names to ordered values; `ord` reads the position, starting at 0.
+- `Color(...)` converts an integer to an enum explicitly; out-of-range literals are rejected.
+- `set[Color]` stores members, written `{red, blue}`; the empty `{}` needs a type annotation.
+- `incl`, `excl`, `in`, `+`, `*`, `-`, and `card` work on sets; iteration follows ordinal order.
+- Sets also work for other ordinal types such as `char`, up to 2^16 values.
+
+## Next
+
+The next chapter opens the intermediate part: modules and `import`, splitting code into reusable
+files.

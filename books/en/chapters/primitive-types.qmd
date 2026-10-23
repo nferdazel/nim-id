@@ -1,0 +1,237 @@
+# Primitive types and literals
+
+In many languages a single `int` type covers every number. Nim splits integers by bit width, and
+that choice decides both the range of values and how much memory each one takes.
+
+Pick a width that is too narrow and the program stops mid-run with an `OverflowDefect`. Pick one
+that is too wide and memory goes to waste. This chapter maps Nim's primitive types, the literals
+that build them, and how to move between types without losing data.
+
+::: {.callout-note}
+## What you will be able to do
+
+After this chapter you can choose an integer type that fits the range you need, read an overflow
+error, write hexadecimal and binary literals, and convert between types knowing what happens to
+the value.
+:::
+
+## The range and size of every integer type
+
+Save the following as `ranges.nim`, then run `nim r ranges.nim`.
+
+```{.nim}
+echo "int8  ", low(int8), " .. ", high(int8), "  size ", sizeof(int8)
+echo "int16 ", low(int16), " .. ", high(int16), "  size ", sizeof(int16)
+echo "int32 ", low(int32), " .. ", high(int32), "  size ", sizeof(int32)
+echo "int64 ", low(int64), " .. ", high(int64), "  size ", sizeof(int64)
+echo "uint8 ", low(uint8), " .. ", high(uint8), "  size ", sizeof(uint8)
+echo "int   ", low(int), " .. ", high(int), "  size ", sizeof(int)
+```
+
+```{.txt}
+int8  -128 .. 127  size 1
+int16 -32768 .. 32767  size 2
+int32 -2147483648 .. 2147483647  size 4
+int64 -9223372036854775808 .. 9223372036854775807  size 8
+uint8 0 .. 255  size 1
+int   -9223372036854775808 .. 9223372036854775807  size 8
+```
+
+`low` and `high` give the bottom and top of a type; `sizeof` gives its size in bytes. The pattern
+is consistent: one extra bit doubles the range.
+
+| Type | Range | Size |
+|---|---|---|
+| `int8` | −128 to 127 | 1 byte |
+| `int16` | −32,768 to 32,767 | 2 bytes |
+| `int32` | roughly ±2.1 billion | 4 bytes |
+| `int64` | roughly ±9.2 quintillion | 8 bytes |
+| `uint8` | 0 to 255 | 1 byte |
+| `int` | machine width (64-bit here) | 8 bytes |
+
+`int` is the default for whole numbers: its width follows the machine the program runs on. Reach
+for a fixed-width type only when the size genuinely matters, such as reading a binary format or
+saving memory inside a large structure.
+
+## Numeric literals
+
+The same value can be written several ways. Every form produces a number, not text.
+
+```{.nim}
+echo 255          # decimal
+echo 0xFF         # hexadecimal
+echo 0b1111_1111  # binary; the underscore is ignored
+echo 0o377        # octal
+echo 1_000_000    # underscores group digits
+echo 2e3          # scientific notation is a float
+```
+
+```{.txt}
+255
+255
+255
+255
+1000000
+2000.0
+```
+
+The `0x` prefix marks hexadecimal, `0b` binary, and `0o` octal. An underscore inside a number is
+only there to help the eye; the compiler ignores it. The last line looks like a whole number, but
+`2e3` is a `float` — that is why it prints `2000.0`, not `2000`.
+
+## When a value crosses the line
+
+`int8` stops at 127. Add one and the result no longer fits. Save this as `overflow.nim`:
+
+```{.nim}
+var score: int8 = 127
+score = score + 1
+echo score
+```
+
+```{.txt}
+overflow.nim(2) overflow
+Error: unhandled exception: over- or underflow [OverflowDefect]
+```
+
+The first line names the file and line. The second names the problem: `OverflowDefect`. By default
+Nim checks for overflow and stops the program instead of quietly wrapping the value to −128. Those
+checks can be turned off with `--overflowChecks:off` (or `-d:danger`), and then the line above
+really does produce −128. Do not do that just to silence the error; a wrapped value is almost
+always a bug that is harder to track down.
+
+When the value is already known while writing the code, the compiler catches it earlier:
+
+```{.nim}
+const TooBig: int8 = 127 + 1
+echo TooBig
+```
+
+```{.txt}
+Error: type mismatch: got 'int literal(128)' for '128' but expected 'int8'
+```
+
+No program runs here; the compiler evaluates `127 + 1` and sees the result does not fit an `int8`.
+
+## Fractions: `float32` and `float64`
+
+Nim has two main floating-point types. `float64` is the default, and `float` is just another name
+for it.
+
+```{.nim}
+let single: float32 = 0.1'f32
+let double: float64 = 0.1
+
+echo single
+echo double
+echo float32(1.0) / float32(3.0)
+echo 1.0 / 3.0
+echo 0.1 + 0.2 == 0.3
+```
+
+```{.txt}
+0.1
+0.1
+0.33333334
+0.3333333333333333
+false
+```
+
+`float32` keeps about seven significant digits, `float64` about fifteen. As a result `1.0 / 3.0`
+comes out with different precision when computed as `float32`. The `'f32` suffix forces a literal
+to become `float32`. The last line shows something that often surprises people: `0.1 + 0.2` and
+`0.3` are not exactly the same value, because neither can be stored exactly in binary. Never
+compare fractions with `==`; compare the difference against a tolerance.
+
+## Converting between types
+
+Nim never changes a type behind your back. Every move is written out.
+
+```{.nim}
+import std/strutils
+
+let count = 42
+let ratio = 2.75
+let text = "128"
+
+echo int(ratio)
+echo float(count)
+echo parseInt(text) + 1
+echo $count & " items"
+echo $ratio
+```
+
+```{.txt}
+2
+42.0
+129
+42 items
+2.75
+```
+
+`int(ratio)` throws away the fraction; the result is 2, not 3, because the cut goes toward zero.
+In the other direction, `$` turns a value into a string and `parseInt` goes back. Note that
+`int("128")` does not work — text must go through `parseInt` first.
+
+## `bool` and `char`
+
+The last two types that stand on their own are `bool` and `char`.
+
+```{.nim}
+let letter = 'A'
+let flag = true
+
+echo letter
+echo letter.ord
+echo char(letter.ord + 1)
+echo chr(67)
+echo flag and not false
+echo 'a' < 'b'
+echo '\n' == char(10)
+```
+
+```{.txt}
+A
+65
+B
+C
+true
+true
+true
+```
+
+A `char` is written with single quotes and holds one byte. `.ord` gives its numeric code, while
+`char(...)` and `chr(...)` go the other way. The expression `'\n' == char(10)` is true because
+`\n` really is the character with code 10. A `bool` holds only `true` or `false` and feeds the
+logic operators in the operators chapter.
+
+## Exercises
+
+1. Write the three literals `0xFF`, `0b1010`, and `1_000`. Predict the `echo` output for each
+   before running them.
+2. What happens in the code below, and why does the message appear at runtime rather than at
+   compile time?
+   ```{.nim}
+   var n: int8 = 127
+   n = n + 1
+   echo n
+   ```
+3. Why is `float32(0.1) == 0.1` false, even though `0.1` and `float32(0.1)` look the same?
+4. Convert `2.99` to `int`. Is the result 2 or 3? Explain why.
+5. The line `const Big: int8 = 200` fails to compile. Fix it without adding another value, then
+   explain why the original type was wrong.
+
+Answers are in [Appendix A](../appendix/answers.qmd).
+
+## Summary
+
+- `int8` through `int64` have fixed widths; `int` follows the machine size.
+- The prefixes `0x`, `0b`, and `0o` write literals in other bases; `_` is ignored.
+- Integer overflow stops the program with an `OverflowDefect` instead of wrapping quietly.
+- `float` is the same as `float64`; never compare fractions with `==`.
+- Conversion is always explicit: `int(...)`, `float(...)`, `$`, and `parseInt`.
+
+## Next
+
+The next chapter covers `string`: escape sequences, raw strings, multi-line strings, and how to
+take part of a text with indexing and slicing.

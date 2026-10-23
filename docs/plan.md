@@ -328,11 +328,13 @@ Sudah ada di `~/Projects/nim-id`:
 
 Temuan yang mengubah rencana:
 
-1. **`papersize` diabaikan pada project book.** Dokumen tunggal menghormatinya (A5 benar-benar
-   A5), book tetap A4. Trim 7 × 9,19 inci butuh override `template-partials` milik
-   `orange-book/page.typ`.
-2. **Label struktural masih Inggris** ("Contents", "Appendices") meski `lang: id`; Quarto belum
-   punya terjemahan Indonesia untuk kunci itu. Perlu override judul TOC/apendiks.
+1. **`papersize` diabaikan pada project book.** Dokumen tunggal menghormatinya, book tetap A4.
+   Penyebabnya: template `orange-book` memakai parameter `paper-size`/`width`/`height`, bukan
+   `papersize`. Solusi (sudah terpasang): override `template-partials: assets/typst/typst-show.typ`
+   lalu isi `width: 178mm, height: 233mm`. Hasil terukur: 504,6 × 660,5 pt = 178 × 233 mm.
+2. **Label struktural awalnya Inggris** ("Contents", "Appendices") karena `lang` tidak sampai ke
+   template typst. Solusi: `format: typst: lang: id` (Quarto sudah punya `_language-id.yml`),
+   menghasilkan "Daftar Isi" dan "Lampiran".
 3. **Struktur awal (satu project + profil) tidak bisa dipakai.** Quarto menuntut `index.qmd` di
    akar project, dan `output-dir` per format diabaikan pada book. Solusinya dua project terpisah
    (`books/id`, `books/en`), yang sekaligus memberi URL bersih.
@@ -356,5 +358,6 @@ Sisa:
 - [x] Deploy otomatis lewat webhook: repo GitHub `nferdazel/nim-id` (publik), hook `nim-id` di
       `/srv/qouver/config/webhook.json` (HMAC-SHA256), `monorepo/` di server, health check ke
       origin langsung dengan retry (bukan lewat Cloudflare).
-- [ ] Trim size 7 × 9,19 inci + label Indonesia di PDF (kosmetik, boleh digeser ke M1).
+- [x] Trim PDF 178 × 233 mm + label Indonesia ("Daftar Isi", "Lampiran"). Margin 16 × 18 mm,
+      ukuran huruf 10 pt, diatur di `assets/typst/typst-show.typ`.
 - [ ] CI pertama kali harus dijalankan di GitHub untuk memvalidasi aksi `setup-nim`/`quarto-actions`.

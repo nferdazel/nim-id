@@ -1,0 +1,202 @@
+# `echo` dan format keluaran
+
+Program yang tidak menampilkan apa pun sulit dipercaya. Karena itu `echo` biasanya jadi baris
+pertama yang kita tulis dan baris yang paling sering dipakai untuk memeriksa nilai.
+
+Masalahnya, `echo` punya aturan yang jarang disadari: ia tidak menambahkan pemisah di antara
+argumen, dan nilai string dicetak apa adanya sementara bentuk lain dicetak berbeda. Bab ini
+membahas `echo`, `repr`, interpolasi, dan format angka.
+
+::: {.callout-note}
+## Tujuan bab
+
+Setelah bab ini, pembaca bisa menampilkan beberapa nilai dalam satu `echo`, menjelaskan bedanya
+`echo` dengan `repr`, menulis interpolasi `&"..."`, mengatur lebar dan presisi angka, serta tahu
+kenapa `echo` dan `stdout.write` berperilaku berbeda soal baris baru.
+:::
+
+## `echo` dan argumennya
+
+Simpan sebagai `hello.nim`, lalu jalankan dengan `nim r hello.nim`.
+
+```{.nim}
+let name = "Nim"
+let year = 2008
+let version = 2.2
+
+echo "Hello, ", name
+echo name, " was released in ", year
+echo "version ", version
+echo "a", "b", "c"
+```
+
+```{.txt}
+Hello, Nim
+Nim was released in 2008
+version 2.2
+abc
+```
+
+`echo` menerima berapa pun argumen dan mencetaknya berurutan tanpa pemisah. Perhatikan baris
+terakhir: `"a", "b", "c"` tercetak `abc` tanpa spasi. Semua spasi pada output di atas datang dari
+string yang kita tulis sendiri. Setelah semua argumen, `echo` menambahkan tepat satu baris baru.
+
+Karena setiap nilai diubah lewat `$`, `echo` bisa menampilkan hampir semua tipe: bilangan, `char`,
+`bool`, sampai barisan. Barisan ditandai `@` di depannya, misalnya `@[1, 2, 3]`, dan bentuk itu
+memudahkan pemeriksaan isi saat memburu bug.
+
+## `repr` dan `$`
+
+Nilai dicetak dalam bentuk yang berbeda menurut konteks.
+
+```{.nim}
+let text = "Nim"
+
+echo text
+echo repr(text)
+
+let score = 42
+echo "score: " & $score
+```
+
+```{.txt}
+Nim
+"Nim"
+score: 42
+```
+
+`echo` memakai `$` untuk mengubah nilai menjadi string, jadi `"Nim"` tercetak sebagai `Nim` tanpa
+tanda kutip. `repr` sebaliknya menampilkan bentuk yang bisa dibaca mesin: tanda kutip muncul, dan
+karakter khusus seperti baris baru ditampilkan sebagai `\n`. Karena itu `repr` berguna saat nilai
+sulit dibedakan di layar; string kosong tampil sebagai `""`, bukan ruang kosong tanpa jejak. Saat
+menggabung dengan `&`, `$` harus dipanggil manual karena `&` hanya menerima string di kedua
+sisinya.
+
+## Interpolasi dengan `&"..."`
+
+Menempelkan banyak nilai dengan tanda koma cepat melelahkan. `std/strformat` menyediakan bentuk
+yang lebih rapi.
+
+```{.nim}
+import std/strformat
+import std/strutils
+
+let name = "Nim"
+let count = 3
+let price = 12.5
+
+echo &"{name} has {count} items"
+echo &"total: {float(count) * price}"
+echo &"upper: {name.toUpperAscii}"
+```
+
+```{.txt}
+Nim has 3 items
+total: 37.5
+upper: NIM
+```
+
+Awalan `&` sebelum string membuka interpolasi: apa pun di dalam `{...}` dievaluasi dan hasilnya
+disisipkan. Isinya boleh ekspresi, bukan hanya nama variabel. Tanpa awalan itu, kurung kurawal
+tetap teks biasa, jadi `echo "{name}"` mencetak `{name}` apa adanya. Perhatikan
+`float(count) * price`: Nim tidak mencampur `int` dan `float` diam-diam, jadi konversi harus
+ditulis eksplisit.
+
+## Format angka dan perataan
+
+Isi `{...}` boleh diberi aturan format setelah titik dua.
+
+```{.nim}
+import std/strformat
+
+let name = "Nim"
+let count = 3
+let ratio = 12.5
+
+echo fmt"[{name:>6}]"
+echo fmt"[{name:<6}]"
+echo fmt"{count:04d}"
+echo fmt"total: {ratio:8.2f}"
+```
+
+```{.txt}
+[   Nim]
+[Nim   ]
+0003
+total:    12.50
+```
+
+`>6` meratakan ke kanan dalam lebar 6, `<6` ke kiri, dan `^6` ke tengah. Untuk bilangan,
+`04d` mengisi dengan nol sampai empat digit, sedangkan `8.2f` memakai lebar 8 dengan dua angka di
+belakang koma. `fmt"..."` sama dengan `&"..."`; `fmt` hanya menegaskan bahwa string itu memang
+untuk diformat. Aturan format selalu mengikuti pola `{ekspresi:aturan}`, dan aturannya boleh
+dihilangkan kalau nilainya cukup ditampilkan apa adanya.
+
+## `echo` versus `write`
+
+`echo` selalu menutup dengan baris baru. Kalau kita ingin mencetak tanpa pindah baris, gunakan
+`stdout.write`.
+
+```{.nim}
+echo "line 1"
+stdout.write "line 2 (no newline)"
+stdout.write "\n"
+echo "line 3"
+```
+
+```{.txt}
+line 1
+line 2 (no newline)
+line 3
+```
+
+Baris terakhir tampak utuh karena kita sendiri yang menambahkan `"\n"` setelah `write`. Karena
+`write` tidak menambahkan apa pun, kita yang mengatur kapan baris berganti. Ini pola yang dipakai
+untuk indikator kemajuan yang menimpa dirinya sendiri, atau output yang menempel tanpa spasi.
+
+## Kalau lupa import
+
+`fmt` dan `&"..."` berasal dari `std/strformat`. Tanpa import itu, nama `fmt` tidak dikenal.
+Simpan sebagai `missing_import.nim`:
+
+```{.nim}
+echo fmt"{42}"
+```
+
+```{.txt}
+missing_import.nim(1, 6) Error: undeclared identifier: 'fmt'
+```
+
+Pesan menunjukkan kolom 6, tepat di huruf pertama `fmt`. Compiler tidak menemukan simbol bernama
+`fmt` di scope mana pun. Solusinya satu baris di atas kode: `import std/strformat`. Kesalahan yang
+sama bisa muncul untuk `&"..."`, hanya saja pesannya berbentuk `type mismatch` karena compiler
+mengira `&` adalah operator penggabung string biasa. Pesan `undeclared identifier` selalu berarti
+hal yang sama: nama itu belum diperkenalkan ke berkas, biasanya lewat `import` yang terlupa.
+
+## Latihan
+
+1. Cetak `"total: "` dan sebuah bilangan bulat dalam satu `echo` tanpa interpolasi, memakai
+   beberapa argumen.
+2. Prediksi outputnya:
+   ```{.nim}
+   echo "a", "b"
+   echo "a" & "b"
+   ```
+3. Tulis interpolasi yang mencetak `3 + 4` sebagai hasil penjumlahan, bukan sebagai teks.
+4. Cetak bilangan `7` rata kanan dalam lebar 4, memakai `fmt` dan aturan `:>4`.
+5. Cetak `"loading"` tanpa baris baru, lalu cetak `"..."` di baris yang sama.
+
+Jawaban ada di [Lampiran A](../appendix/answers.qmd).
+
+## Ringkasan
+
+- `echo` tidak menambahkan pemisah antar argumen dan menutup dengan satu baris baru.
+- `echo` memakai `$`; `repr` menampilkan bentuk yang bisa dibaca mesin, lengkap dengan tanda kutip.
+- `&"..."` dan `fmt"..."` menyisipkan ekspresi ke dalam teks dan butuh `import std/strformat`.
+- Aturan format (`>6`, `04d`, `8.2f`) mengatur lebar, pengisian nol, dan presisi.
+- `stdout.write` mencetak tanpa baris baru; tambahkan `"\n"` sendiri bila perlu.
+
+## Selanjutnya
+
+Bab berikutnya membahas operator: aritmetika dasar dan `div`/`mod`, perbandingan, logika dengan
+evaluasi singkat, serta operator keanggotaan `in` dan `notin`.
