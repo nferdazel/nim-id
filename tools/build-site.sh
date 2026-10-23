@@ -29,7 +29,7 @@ cp -a books/en/_book/. public/en/
 # Cache busting: nama berkas CSS tetap (Quarto tidak memberi hash), sedangkan Cloudflare
 # menyimpan aset berhari-hari. Sematkan versi di URL supaya rilis baru tidak memakai CSS lama.
 versi="$(tr -d '[:space:]' < VERSION)"
-find public -name '*.html' -exec perl -pi -e "s|assets/ku\.css|assets/ku.css?v=${versi}|g" {} +
+find public -name '*.html' -exec perl -pi -e "s|assets/ku\.css|assets/ku.css?v=${versi}|g; s|\.pdf\"|.pdf?v=${versi}\"|g" {} +
 
 printf 'public/: %s berkas\n' "$(find public -type f | wc -l | tr -d ' ')"
 find public -name '*.pdf' | sed 's|^|  |'
