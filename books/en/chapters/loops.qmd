@@ -45,7 +45,7 @@ where the last index is always `len - 1`. The safe style for repeating `n` times
 `for i in 0 ..< n:`.
 
 The variable `i` lives only inside the loop body and cannot be changed. Writing `i = 5` inside is
-rejected with `'i' cannot be assigned to`—deliberately, so the count cannot be corrupted from within.
+rejected with `'i' cannot be assigned to`, deliberately, so the count cannot be corrupted from within.
 
 A range may also be empty. `for i in 5 .. 3:` does not run its body at all, and that is not an error.
 When you truly want to count down, use `countdown`, not a reversed range.

@@ -148,7 +148,7 @@ red
 blue
 ```
 
-Note that `blue` comes after `red`, even though a literal may list them in another order. The order
+`blue` comes after `red`, even though a literal may list them in another order. The order
 is decided by the enum, not by the set.
 
 ## Set operations

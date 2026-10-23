@@ -116,7 +116,7 @@ Inside the procedure, the `result` fields are filled one by one. On the caller's
 unpacked immediately with `let (low, high) = ...`. No helper type, no temporary array.
 
 The practical limit: tuples are comfortable for two or three values. Once the fields multiply, or
-the value needs rules and operations of its own, an object fits better — and that is the next
+the value needs rules and operations of its own, an object fits better, and that is the next
 chapter.
 
 ## Unpacking inside a loop
@@ -224,4 +224,4 @@ Answers are in [Appendix A](../appendix/answers.qmd).
 ## Next
 
 The next chapter covers [objects](objects.qmd): composite types with named fields, constructors,
-default values, and two ways to store them — value and reference.
+default values, and two ways to store them: value and reference.

@@ -77,7 +77,7 @@ echo 2e3          # scientific notation is a float
 
 The `0x` prefix marks hexadecimal, `0b` binary, and `0o` octal. An underscore inside a number is
 only there to help the eye; the compiler ignores it. The last line looks like a whole number, but
-`2e3` is a `float` — that is why it prints `2000.0`, not `2000`.
+`2e3` is a `float`, which is why it prints `2000.0`, not `2000`.
 
 ## When a value crosses the line
 
@@ -170,8 +170,8 @@ echo $ratio
 ```
 
 `int(ratio)` throws away the fraction; the result is 2, not 3, because the cut goes toward zero.
-In the other direction, `$` turns a value into a string and `parseInt` goes back. Note that
-`int("128")` does not work — text must go through `parseInt` first.
+In the other direction, `$` turns a value into a string and `parseInt` goes back. `int("128")` does
+not work: text must go through `parseInt` first.
 
 ## `bool` and `char`
 

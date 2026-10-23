@@ -1,7 +1,7 @@
 # Strings, raw strings, and characters
 
 Almost every program touches text. In Nim, `string` is a sequence of bytes that may be changed in
-place — unlike languages that treat a string as a frozen value. That difference shows up in
+place, unlike languages that treat a string as a frozen value. That difference shows up in
 indexing, concatenation, and occasionally in an unexpected error message.
 
 This chapter starts with writing text literally, then moves on to taking part of it and changing it

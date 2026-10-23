@@ -45,7 +45,7 @@ echo 7 mod -3
 ```
 
 `a / b` yields `3.5`, not `3`: the `/` operator always returns a `float`. Integer division uses
-`div`, which truncates toward zero. `mod` gives the remainder, and its sign follows the dividend —
+`div`, which truncates toward zero. `mod` gives the remainder, and its sign follows the dividend:
 `-7 mod 3` is `-1`, not `2`. The two are often used together: `div` tells you how many times the
 divisor fits, `mod` gives what is left over. Dividing by zero does not return a special value; the
 program stops with a `DivByZeroDefect`.
@@ -147,7 +147,7 @@ true
 false
 ```
 
-`in` works on a range, a set (`{...}`), an array, and — through `strutils` — a string. The last
+`in` works on a range, a set (`{...}`), an array, and, through `strutils`, a string. The last
 line is `false` because `4` really is not in that array.
 
 ## Operator precedence
@@ -207,8 +207,8 @@ see that none accepts the pair `int` and `string`. The fix is to match the types
    echo (2 + 3) * 4
    ```
 3. Why is `-9 mod 4` equal to `-1` and not `3`? Explain the rule.
-4. Write a condition that is `true` only when `x` lies between 1 and 100. Remember that chained
-   comparison is not supported.
+4. Write a condition that is `true` only when `x` lies between 1 and 100. Chained comparison is
+   not supported, so use two comparisons.
 5. The code below fails. Fix it and explain the message:
    ```{.nim}
    let n = 4

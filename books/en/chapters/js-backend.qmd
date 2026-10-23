@@ -108,7 +108,7 @@ only in a browser, this example is deliberately left out of this book's verifica
 Including it is simple: one line, `<script src="main.js"></script>`, in the page, and the script runs
 after the page loads. There is no install step as there is for a binary.
 
-Two limits are worth remembering. First, code that uses threads, pointers, or files is not portable
+Two limits matter here. First, code that uses threads, pointers, or files is not portable
 to JavaScript. Second, the output is larger and its speed differs from a C binary. Choose the target
 by where the program will run, not by which language features are available.
 

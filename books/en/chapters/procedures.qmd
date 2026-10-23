@@ -64,7 +64,7 @@ main.nim(1, 6) Error: 'shout' can have side effects
 
 Read it from the front: file, position `(line, column)`, severity, then the message. `(1, 6)`
 points at line 1, column 6, right on the name `shout`. The compiler adds a `Hint` naming `echo` as
-the cause. The direct fix is to change `func` to `proc`, because `echo` writes to the screen — a
+the cause. The direct fix is to change `func` to `proc`, because `echo` writes to the screen, a
 side effect.
 
 The rule of thumb: `func` for pure computation, `proc` when the routine really does print, write a
@@ -114,7 +114,7 @@ positive
 ```
 
 The first two `if` branches already handle their cases, so the last line runs only for positive
-numbers — and its value becomes the return value.
+numbers, and its value becomes the return value.
 
 ## Default parameters and named arguments
 

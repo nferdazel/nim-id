@@ -61,7 +61,7 @@ score: 15
 In the previous example the types were never written. The compiler inferred them from the initial
 value: `"Nim"` is a `string`, `2008` is an `int`. This is called *type inference*.
 
-When the type needs to be explicit — to save memory, or because the value is assigned later — write
+When the type needs to be explicit (to save memory, or because the value is assigned later), write
 it after the name, separated by a colon:
 
 ```{.nim}

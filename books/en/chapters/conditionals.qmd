@@ -5,7 +5,7 @@ a path: balance sufficient or not, name empty or filled, system Unix or Windows.
 
 `if` is familiar to anyone who has written code before. Three things are specific to Nim: `if` can
 produce a value directly, `case` demands that every possibility be covered, and `when` picks a
-branch **at compile time**—the branch that loses is not compiled at all.
+branch **at compile time**: the branch that loses is not compiled at all.
 
 ::: {.callout-note}
 ## What you will be able to do
@@ -95,7 +95,7 @@ for month in [1, 4, 7, 10, 13]:
 ```
 
 A single `of` can hold a comma-separated list (`12, 1, 2`) or a range with `..` (`3 .. 5`). The
-value tested by `case` may be of an ordinal type—`int`, `char`, `bool`, `enum`—or a `string`. Ranges
+value tested by `case` may be of an ordinal type (`int`, `char`, `bool`, `enum`) or a `string`. Ranges
 apply only to ordinal types: on a `string`, `of` takes value lists alone, and `of "a" .. "c"` is
 rejected with `range of string is invalid`.
 
@@ -139,7 +139,7 @@ main.nim(3, 4) Error: type mismatch: got 'int' for 'count' but expected 'bool'
 
 | Part | Meaning |
 |---|---|
-| `main.nim(3, 4)` | file, line 3, column 4—where `count` sits in the condition |
+| `main.nim(3, 4)` | file, line 3, column 4, where `count` sits in the condition |
 | `Error` | severity; it stops the build |
 | `got 'int'` | the type actually supplied |
 | `expected 'bool'` | the type `if` requires |

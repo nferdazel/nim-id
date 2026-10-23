@@ -100,7 +100,7 @@ Read from the first line:
 | Part | Meaning |
 |---|---|
 | `main.nim` | the file with the problem |
-| `(4, 12)` | line 4, column 12 — the position of the bad argument |
+| `(4, 12)` | line 4, column 12, the position of the bad argument |
 | `Error` | severity; the build stops |
 | `type mismatch` | the category: the types do not fit |
 

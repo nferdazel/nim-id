@@ -81,9 +81,9 @@ suite "isEven":
 ```
 
 To stop in the middle of a test, use `require`. The difference from `check`: `check` records the
-failure but keeps going through the rest of the test, whereas `require` stops the whole test run right there; `teardown` does not get to run either.
-Use `require` when the next step makes no sense without the previous one, for example dividing by a
-value you just proved is not zero.
+failure but keeps going through the rest of the test. `require` stops the whole run right there, so
+`teardown` does not get to run either. Use `require` when the next step makes no sense without the
+previous one, for example dividing by a value you just proved is not zero.
 
 `expect` checks that a block raises an exception of a given type. The block must not pass silently;
 if it does, the test fails. This is how you test the error path, not only the happy path.

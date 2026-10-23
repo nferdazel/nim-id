@@ -64,7 +64,7 @@ len: 3
 ```
 
 The type `array[3, int]` means three elements of type `int`. Without an initial value, Nim fills
-every element with the element type's default—`0` for `int`, `""` for `string`. The length is part of
+every element with the element type's default: `0` for `int`, `""` for `string`. The length is part of
 the type: `array[3, int]` and `array[4, int]` are two different types.
 
 ## `seq`: a size that can change
@@ -113,7 +113,7 @@ first: 10 last: 40
 ```
 
 `insert(15, 1)` inserts the value `15` at index `1`, and everything after it shifts one place.
-`delete(2)` removes the element at index `2`; note that the index is counted **after** the insert,
+`delete(2)` removes the element at index `2`; the index is counted **after** the insert,
 not before. Both change the length of the `seq`.
 
 ## An empty `seq` and gradual filling
@@ -162,7 +162,7 @@ in a variable or return from a procedure. A procedure that takes an `openArray` 
 its length.
 
 One note about copying: assigning an `array` or a `seq` to a new variable copies the contents
-instead of sharing them. Changing the copy does not touch the original—unlike a `list` in Python.
+instead of sharing them. Changing the copy does not touch the original, unlike a `list` in Python.
 
 ## Index bounds and the out-of-bounds error
 

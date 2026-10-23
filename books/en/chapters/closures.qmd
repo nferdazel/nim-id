@@ -122,7 +122,7 @@ echo current()
 
 ## Capturing `var` and `let`
 
-The rule to keep in mind: a closure captures the variable, not its value. Both `var` and `let` are
+The rule: a closure captures the variable, not its value. Both `var` and `let` are
 read through the same variable as the enclosing scope; the difference is that a `let` cannot be
 reassigned once the closure exists.
 

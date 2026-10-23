@@ -69,8 +69,8 @@ Read the message. `main.nim` is the file, `(3, 1)` is line 3, column 1, and `Err
 stops. The text, "end of multiline comment expected", says the compiler reached the end of the file
 before finding `]#`.
 
-There is an important lesson in the position. We wrote `#[` on line 1, but the compiler points at
-line 3 — the empty line after the last one. The compiler learns the comment was never closed only
+The position it reports is misleading at first. We wrote `#[` on line 1, but the compiler points at
+line 3, the empty line after the last one. The compiler learns the comment was never closed only
 when it reaches the end of the file. So the position it reports is where the compiler *noticed* the
 problem, not always where the mistake was written. When you meet an error that points somewhere
 unexpected, look a few lines earlier.
