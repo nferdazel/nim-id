@@ -175,15 +175,15 @@ di dokumentasi tidak bisa diam-diam basi.
 ```{.nim}
 import std/strformat
 
-const Tahun = 2026
-var pesan = ""
+const Year = 2026
+var message = ""
 
-pesan = &"terbit {Tahun}"
-echo pesan
+message = &"released in {Year}"
+echo message
 ```
 
 ```{.txt}
-terbit 2026
+released in 2026
 ```
 
 **2.** Outputnya `2-1`. Baris `let b = a` menyalin **nilai** `a` saat itu juga, yaitu `1`.
