@@ -1,0 +1,4 @@
+Infix
+  Ident "+"
+  IntLit 1
+  IntLit 2

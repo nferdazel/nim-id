@@ -1,0 +1,314 @@
+# Macros: code that builds code
+
+A template replaces one piece of code with another, but it only pastes text. It cannot read the shape
+of its arguments, check their types, or decide what code to build from your data. At that point
+`macro` takes over: a procedure that runs at compile time and takes code as data.
+
+This chapter starts from templates, shows the point where they run out, then builds a macro step by
+step. Every example is tested on Nim 2.2.12.
+
+::: {.callout-note}
+## What you will be able to do
+
+After this chapter you can explain how `template` and `macro` differ, read an AST with `NimNode` and
+`treeRepr`, use `quote do`, choose `untyped` or `typed`, build nodes with `newTree`, and know when to
+stay with templates.
+:::
+
+## Templates first: code substitution
+
+A template inserts code at the call site.
+
+```{.nim}
+template swapVals(a, b: untyped) =
+  let tmp = a
+  a = b
+  b = tmp
+
+var x = 1
+var y = 2
+swapVals(x, y)
+echo x, " ", y
+```
+
+```{.txt}
+2 1
+```
+
+`swapVals` works for any type, because its body is copied as written. That is a template's strength:
+light, and free at runtime.
+
+## The limit of templates: arguments evaluated every time
+
+Because the body is copied as written, a template argument used twice is also evaluated twice.
+
+```{.nim}
+template doubler(x: untyped): untyped =
+  x + x
+
+var calls = 0
+proc bump(): int =
+  inc calls
+  calls
+
+echo doubler(bump())
+echo "calls: ", calls
+```
+
+```{.txt}
+3
+calls: 2
+```
+
+`bump()` appears twice in the template body, so `calls` increases twice: the first call returns `1`,
+the second `2`, and the result is `3`. If the argument is expensive or changes state, this is a bug.
+
+## Macros: taking code as data
+
+A `macro` is a procedure the compiler runs at compile time. It receives its arguments as an
+*abstract syntax tree* (AST) and returns a new AST. The form `quote do` builds that AST with
+something that looks like ordinary code.
+
+```{.nim}
+import std/macros
+
+macro doubler(x: untyped): untyped =
+  result = quote do:
+    block:
+      let it = `x`
+      it + it
+
+var calls = 0
+proc bump(): int =
+  inc calls
+  calls
+
+echo doubler(bump())
+echo "calls: ", calls
+```
+
+```{.txt}
+2
+calls: 1
+```
+
+`quote do` produces an AST holding `block`, `let`, and the addition. A backtick splices a value from
+outside into the result: `` `x` `` puts the argument's AST at that spot. Since the value is stored
+first in `let it`, `bump()` runs once. The `let it` inside `quote do` is marked internally, so it
+never clashes with a caller's `it`.
+
+| | `template` | `macro` |
+|---|---|---|
+| Works on | code pasted as written | the AST as data |
+| Arguments | cannot be read as data | `NimNode`, can be inspected |
+| Needs an import | no | `std/macros` |
+
+## Seeing the AST: `NimNode` and `treeRepr`
+
+The result of `quote do`, and every macro argument, has type `NimNode`. `treeRepr` prints it.
+
+```{.nim}
+import std/macros
+
+macro showAst(x: untyped): untyped =
+  let tree = x.treeRepr
+  result = quote do:
+    echo `tree`
+
+showAst(1 + 2)
+```
+
+```{.txt}
+Infix
+  Ident "+"
+  IntLit 1
+  IntLit 2
+```
+
+`1 + 2` is not text but an `Infix` node with three children: the operator and two operands. Every
+node has a *kind*, such as `nnkInfix`, `nnkIdent`, and `nnkIntLit`. This is what "code as data"
+means.
+
+## `untyped`: raw syntax
+
+A macro argument can be declared `untyped` or `typed`. `untyped` accepts any shape of code, even
+something that is not yet valid as an expression.
+
+```{.nim}
+import std/macros
+
+macro showAst(x: untyped): untyped =
+  let tree = x.treeRepr
+  result = quote do:
+    echo `tree`
+
+showAst(mysteryName)
+```
+
+```{.txt}
+Ident "mysteryName"
+```
+
+`mysteryName` was never declared, but the macro does not complain, because its content is only
+printed as a tree. Once that tree enters the code the macro produces, the compiler checks it.
+
+## `typed`: checked code
+
+`typed` asks the compiler to check the argument first, then hands over an AST that already has a
+type. Such an argument carries type information, which `getType` can retrieve.
+
+```{.nim}
+import std/macros
+
+macro typedDebug(x: typed): untyped =
+  let typeName = $x.getType
+  result = quote do:
+    echo `typeName`, ": ", `x`
+
+typedDebug(1 + 2)
+typedDebug("a" & "b")
+```
+
+```{.txt}
+int: 3
+string: ab
+```
+
+`$x.getType` turns the type node into text, such as `int` or `string`, and the result is spliced into
+the output. This is exactly what a template cannot reach.
+
+## Building nodes yourself: `newTree`
+
+`quote do` is convenient, but it writes only a fixed shape. For a shape decided at compile time,
+build the nodes by hand.
+
+```{.nim}
+import std/macros
+
+macro add(a, b: untyped): untyped =
+  result = newTree(nnkInfix, ident"+", a, b)
+
+macro double(x: typed): untyped =
+  result = newTree(nnkInfix, ident"*", x, newLit(2))
+
+echo add(1, 2)
+echo double(21)
+```
+
+```{.txt}
+3
+42
+```
+
+`newTree(nnkInfix, ident"+", a, b)` builds the same node as `1 + 2`. `ident` makes a name, `newLit`
+makes a literal. `quote do` still reads better; reach for `newTree` when the shape depends on data.
+
+## Generating many pieces of code from one list
+
+The real power appears when generated code depends on compile-time data.
+
+```{.nim}
+import std/macros
+
+const Names = ["alice", "bob"]
+
+macro makeGreeters(): untyped =
+  result = newStmtList()
+  for name in Names:
+    let procName = ident("greet" & name)
+    result.add quote do:
+      proc `procName`(): string =
+        "hello, " & `name`
+
+makeGreeters()
+echo greetalice()
+echo greetbob()
+```
+
+```{.txt}
+hello, alice
+hello, bob
+```
+
+This macro takes no argument: it reads `Names` and creates one procedure per name. `newStmtList`
+assembles a list of statements, and `ident` joins the prefix with the name. A template cannot do
+this: it cannot loop over data and invent new names.
+
+## When you do not need a macro
+
+Before writing a macro, ask whether a template is enough. Templates are simpler, need no
+`import std/macros`, and their errors read better.
+
+If all you need is a value computed at compile time, `const` with a `func` already covers it.
+
+```{.nim}
+func square(x: int): int = x * x
+
+const Area = square(3)
+
+echo Area
+```
+
+```{.txt}
+9
+```
+
+`square(3)` is computed by the compiler and stored as a constant. No macro is involved.
+
+The rule of thumb:
+
+- Replace code with code, without reading the argument's shape: `template`.
+- Need a value at compile time: `const` or a `static:` block.
+- Need to read the AST, the type, or generate code from data: `macro`.
+
+## Reading errors: `typed` demands a valid argument
+
+A typed macro checks its argument before its body runs.
+
+```{.nim}
+import std/macros
+
+macro echoType(x: typed): untyped =
+  let typeName = $x.getType
+  result = quote do:
+    echo `typeName`
+
+echoType(nonexistent)
+```
+
+```{.txt}
+main.nim(8, 10) Error: undeclared identifier: 'nonexistent'
+candidates (edit distance, scope distance); see '--spellSuggest':
+ (5, 4): 'nnkIdent'
+ (5, 4): 'toNimIdent'
+```
+
+Line 8 points at the call, column 10 at `nonexistent`. Because the parameter is `typed`, the
+compiler does not run the macro until the argument is valid. Change it to `untyped` and the macro
+runs, with the problem surfacing elsewhere. Pick `untyped` when a macro must accept a shape that is
+not yet valid, such as a list of names it will declare itself.
+
+## Exercises
+
+1. Write a template `minOf(a, b)` that returns the smaller value, then print `minOf(3, 7)`.
+2. Without running it, predict `doubler(bump() + bump())` with the template above and the final value
+   of `calls`.
+3. Write a macro `triple(x)` that returns `x * 3` using `quote do`, then print `triple(4)`.
+4. Macro `echoType` uses `$x.getType`. Explain why that fails if the parameter becomes `untyped`.
+5. Write a macro `dumpAst(x)` that prints its argument's `treeRepr`, then call it with `2 * 3`.
+
+Answers are in [Appendix A](../appendix/answers.qmd).
+
+## Summary
+
+- A `template` pastes code as written; an argument used twice is evaluated twice.
+- A `macro` is a compile-time procedure that takes `NimNode` and returns `NimNode`.
+- `quote do` builds an AST; a backtick splices a node or value from outside, and its local names are
+  safe from clashes.
+- `treeRepr` prints the AST; `getType` works only on a `typed` argument.
+- Macros need `import std/macros`; prefer `template` and `const` before writing a macro.
+
+## Next
+
+The next chapter covers [concepts and type matching](concepts.qmd): constraining a generic procedure
+by the shape of a type rather than its name.
