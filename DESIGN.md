@@ -124,6 +124,9 @@ ENERGY 2 / RHYTHM 2 / MOTION 1
 - Bab aktif: garis navy 2px di kiri, teks tinta, tanpa latar.
 - Nomor bab di sidebar tabular, lebar tetap, rata kanan supaya judul sejajar.
 - Kotak pencarian: hanya garis bawah, bukan kotak berbingkai.
+- Catatan penyimpangan: `book: parts` dipakai bersama format typst, jadi PDF ikut
+  mendapat halaman judul bagian (114 → 118 halaman). Itu konsekuensi langsung dari
+  struktur parts yang diminta, bukan perubahan pada `assets/typst/**`.
 
 ### Blok kode dan keluaran
 
