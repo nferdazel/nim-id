@@ -1,0 +1,4 @@
+open config
+read config
+parse config
+close config

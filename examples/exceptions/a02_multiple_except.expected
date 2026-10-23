@@ -1,0 +1,6 @@
+value: value error
+value: done
+io: other error: disk full
+io: done
+none: ok
+none: done

@@ -1,0 +1,246 @@
+# Exceptions and the `raises` effect
+
+An operation can fail halfway: the file is missing, its contents are not a number, the network
+drops. Letting the program stop dead is not an option. Nim uses exceptions, and adds something few
+languages have: the compiler tracks which exceptions a procedure may throw. This chapter uses both
+at once.
+
+::: {.callout-note}
+## What you will be able to do
+
+After this chapter you can catch and throw exceptions, define your own exception type, annotate
+procedures with `raises`, and read the `can raise an unlisted exception` error.
+:::
+
+## `try`, `except`, and `raise`
+
+`raise` throws an exception. `try` catches it, so the program can continue along another path.
+
+```{.nim}
+try:
+  raise newException(ValueError, "bad input")
+except ValueError as e:
+  echo "caught: ", e.msg
+```
+
+```{.txt}
+caught: bad input
+```
+
+`newException` builds an exception value from a type and a message. The keyword `as e` binds the
+caught exception to the name `e`, and `e.msg` is its message. Without `try`, an exception that
+reaches the top stops the program with a stack trace.
+
+## Several `except` clauses and `finally`
+
+One `try` may have several `except` clauses. They are tried from top to bottom, and only the first
+match runs.
+
+```{.nim}
+proc fail(mode: string) =
+  if mode == "value":
+    raise newException(ValueError, "bad value")
+  elif mode == "io":
+    raise newException(IOError, "disk full")
+
+for mode in ["value", "io", "none"]:
+  try:
+    fail(mode)
+    echo mode, ": ok"
+  except ValueError:
+    echo mode, ": value error"
+  except CatchableError as e:
+    echo mode, ": other error: ", e.msg
+  finally:
+    echo mode, ": done"
+```
+
+```{.txt}
+value: value error
+value: done
+io: other error: disk full
+io: done
+none: ok
+none: done
+```
+
+Two things matter here. The order of the `except` clauses decides the result: `ValueError` is caught
+first, and the rest fall through to `CatchableError`, the looser parent type. `finally` always runs,
+whether the `try` block succeeds, fails, or is left by an uncaught exception. That is the right place
+to release resources.
+
+## Your own exception types
+
+Exceptions are objects that inherit from each other. All rest on `Exception`. Its two big branches are
+`CatchableError` and `Defect`. A custom type descends from `CatchableError`.
+
+```{.nim}
+type NegativeAge = object of CatchableError
+
+proc checkAge(age: int) =
+  if age < 0:
+    raise newException(NegativeAge, "age cannot be negative")
+
+try:
+  checkAge(-3)
+except NegativeAge as e:
+  echo "caught: ", e.msg
+```
+
+```{.txt}
+caught: age cannot be negative
+```
+
+`Defect` covers program errors such as an out-of-bounds index, and it is deliberately not caught by
+`except CatchableError`. So `except CatchableError` catches every error that is reasonable to
+recover from, not the ones that signal a flawed program.
+
+## `raise` with more useful context
+
+An exception often rises from a lower layer, then needs a note before it is passed on.
+
+```{.nim}
+import std/strutils
+
+proc parseAge(text: string): int =
+  try:
+    result = parseInt(text)
+  except ValueError:
+    raise newException(ValueError, "not a number: " & text)
+
+try:
+  echo parseAge("42")
+  echo parseAge("abc")
+except ValueError as e:
+  echo "error: ", e.msg
+```
+
+```{.txt}
+42
+error: not a number: abc
+```
+
+`parseAge` catches the `ValueError` from `parseInt`, then throws a new one with a clearer message.
+Notice that `parseInt("abc")` throws on its own, so `42` is printed first, and only then does the
+second line stop and get caught. A `raise` with no value inside `except` re-throws the exception
+being handled.
+
+## The `raises` effect: who may throw
+
+Nim tracks the exceptions that may leave a procedure. This is the `raises` effect, and the compiler
+checks it like an ordinary type. A procedure with `raises: []` promises to throw no exception at all.
+
+```{.nim}
+proc risky(): int =
+  raise newException(ValueError, "boom")
+
+proc safe(): int {.raises: [].} =
+  risky()
+
+try:
+  echo safe()
+except ValueError as e:
+  echo "forced: ", e.msg
+```
+
+```{.txt}
+main.nim(4, 28) template/generic instantiation from here
+main.nim(5, 8) Error: risky() can raise an unlisted exception: ref ValueError
+```
+
+Read it from the bottom: line `(5, 8)` points at the `risky()` call, and the message names the
+`ValueError` that is not in the list. The line above it, `template/generic instantiation from here`,
+points at where the check entered on line `(4, 28)`.
+
+A `raises` list may also name the types that are allowed.
+
+```{.nim}
+proc mayFail(ok: bool): int {.raises: [ValueError].} =
+  if ok:
+    1
+  else:
+    raise newException(ValueError, "failed")
+
+try:
+  echo mayFail(true)
+  echo mayFail(false)
+except ValueError as e:
+  echo "error: ", e.msg
+```
+
+```{.txt}
+1
+error: failed
+```
+
+This check runs at compile time. The old `--effect:off` switch that disabled it is gone in Nim
+2.2.12.
+
+```{.txt}
+command line(1, 2) Error: invalid command line option: '--effect'
+```
+
+## `defer`: cleanup that always runs
+
+`defer` schedules a statement to run when the enclosing block ends, whatever happens in between.
+
+```{.nim}
+proc loadConfig() =
+  echo "open config"
+  defer:
+    echo "close config"
+  echo "read config"
+  echo "parse config"
+
+loadConfig()
+```
+
+```{.txt}
+open config
+read config
+parse config
+close config
+```
+
+`defer` is like `finally`, but written right where the resource is opened, not far below in a
+`finally` block. For one or two lines of cleanup, this form is easier to follow.
+
+## Exercises
+
+1. Catch the `ValueError` from `parseInt("x")` and print its message with `e.msg`.
+2. Without running it, predict the output:
+   ```{.nim}
+   try:
+     raise newException(IOError, "a")
+   except ValueError:
+     echo "value"
+   except CatchableError:
+     echo "caught"
+   finally:
+     echo "done"
+   ```
+3. Create `type TooLarge = object of CatchableError` and throw it when an `int` exceeds 100.
+4. The code below fails to compile. Explain its message, then fix it:
+   ```{.nim}
+   proc readValue(): int =
+     raise newException(ValueError, "missing")
+
+   proc useIt(): int {.raises: [].} =
+     readValue()
+   ```
+5. Write `proc openLog()` that prints `open` and `close` with `defer`, plus one line in between.
+
+Answers are in [Appendix A](../appendix/answers.qmd).
+
+## Summary
+
+- `raise` throws, `try` catches, `as e` gives access to the message through `e.msg`.
+- Several `except` clauses are tried in order; `finally` always runs.
+- Exceptions inherit from each other; build your own from `CatchableError`, not `Defect`.
+- The `raises` effect is checked at compile time; `raises: []` means nothing is thrown.
+- `defer` runs cleanup at the end of a block, no matter what happens.
+
+## Next
+
+The next chapter covers [iterators](iterators.qmd): how to produce values one at a time, and when an
+iterator saves more than a sequence does.
