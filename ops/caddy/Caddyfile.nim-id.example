@@ -1,0 +1,35 @@
+# Caddyfile.nim-id.example — blok Caddy untuk situs buku di nim.qouver.com.
+#
+# Ini CERMIN dari blok yang hidup di /etc/caddy/Caddyfile (sumber kebenaran di server).
+# Kalau blok di server berubah, ubah berkas ini di commit yang sama.
+#
+# Situs ini statis saja: tidak ada container, tidak ada image, tidak ada tag :local/:prev.
+# Yang dipakai dari kontrak deploy: ref-guard fail-closed, flock, fetch/reset, health check.
+
+nim.qouver.com {
+	log {
+		import log_access
+	}
+
+	encode zstd gzip
+	import base_security_headers
+	import block_dotfiles
+
+	# Quarto memakai <style>/<script> inline untuk tema dan pencarian.
+	header Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'"
+
+	# Hasil render Quarto. `deploy-static.sh` yang mengisi direktori ini.
+	root * /srv/qouver/apps/nim-id/web
+	try_files {path} {path}.html
+	file_server
+
+	# Aset ber-hash/tidak berubah sering: cache lama. HTML selalu revalidasi.
+	@aset path /fonts/* *.woff2 *.css *.js *.svg *.png *.jpg *.webp
+	header @aset Cache-Control "public, max-age=2592000"
+	@lain not path /fonts/* *.woff2 *.css *.js *.svg *.png *.jpg *.webp
+	header @lain Cache-Control "no-cache"
+
+	# PDF rilis: jangan di-cache lama, supaya versi baru langsung terlihat.
+	@pdf path *.pdf
+	header @pdf Cache-Control "public, max-age=300"
+}
