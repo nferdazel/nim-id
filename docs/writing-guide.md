@@ -24,7 +24,11 @@ Nim. Jangan menjelaskan apa itu variabel. Jelaskan apa yang **berbeda** di Nim.
 - **Kode selalu bahasa Inggris**: identifier, komentar, dan string. Prosa yang menjelaskan.
   Alasannya: satu set `examples/` dipakai kedua buku, dan satu verifikasi berlaku untuk keduanya.
 - Blok `output` **identik** di kedua bahasa karena kodenya sama. Jangan diterjemahkan.
-- Istilah mengikuti [`glossary.md`](glossary.md), yang memetakan istilah Indonesia ke bahasa Inggris.
+- Istilah mengikuti [`glossary.md`](glossary.md). Kosakata teknis inti (`*output*`, `*line*`,
+  `*argument*`, `*memory*`, `*flag*`, `*integer*`, `*float*`) tetap Inggris dan dicetak miring di
+  prosa Indonesia. Kata kerja teknis juga Inggris bentuk dasar: `return`, `call`, `read`, `write`,
+  `print`, termasuk bentuk pasifnya (`di-return`). Judul bagian internal tetap Indonesia: Latihan,
+  Ringkasan, Selanjutnya.
 - Commit yang hanya menyentuh satu bahasa harus menyebut apakah sisi lain perlu disusul.
 
 ## Kalimat

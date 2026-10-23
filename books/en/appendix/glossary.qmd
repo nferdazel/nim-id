@@ -1,7 +1,7 @@
 # Glossary
 
 | Term | Definition | Chapter |
-|---|---|---|
+| --- | --- | --- |
 | compiler | a program that translates source code into a binary | [Variables: `var`, `let`, `const`](../chapters/variables.qmd) |
 | compile time | while compilation runs; before the program starts | [Variables: `var`, `let`, `const`](../chapters/variables.qmd) |
 | runtime | while the program is running | [Variables: `var`, `let`, `const`](../chapters/variables.qmd) |
@@ -43,6 +43,7 @@
 | garbage collector | the automatic memory manager in the classic GC mode | [What Nim is and why](../chapters/what-is-nim.qmd) |
 | destructor | a `=destroy` procedure called when a value is dropped | [What Nim is and why](../chapters/what-is-nim.qmd) |
 | scope | the region of code where a name can be used | [Comments and doc comments](../chapters/comments.qmd) |
+| comment | a note in code that the compiler ignores | [Comments and doc comments](../chapters/comments.qmd) |
 | line comment | a `#` comment to the end of the line | [Comments and doc comments](../chapters/comments.qmd) |
 | block comment | a `#[ ... ]#` comment that can nest | [Comments and doc comments](../chapters/comments.qmd) |
 | doc comment | a `##` comment that `nim doc` reads | [Comments and doc comments](../chapters/comments.qmd) |
@@ -70,6 +71,7 @@
 | overloading | several same-named procedures with different parameter lists | [Procedures, parameters, and return values](../chapters/procedures.qmd) |
 | return value | the value a procedure returns | [Procedures, parameters, and return values](../chapters/procedures.qmd) |
 | side effect | a change beyond the return value (`echo`, writing a file, mutating a `var`) | [Procedures, parameters, and return values](../chapters/procedures.qmd) |
+| argument | a value passed when a procedure is called | [Procedures, parameters, and return values](../chapters/procedures.qmd) |
 | named argument | an argument written together with its parameter name | [Procedures, parameters, and return values](../chapters/procedures.qmd) |
 | reference | a value that points to an object on the heap (`ref object`) | [Objects and constructors](../chapters/objects.qmd) |
 | value copy | copying the contents of a value, not its address | [Objects and constructors](../chapters/objects.qmd) |
@@ -77,6 +79,8 @@
 | anonymous procedure | a nameless procedure used as a value | [Closures and captured variables](../chapters/closures.qmd) |
 | capture | a closure using a variable from an outer scope | [Closures and captured variables](../chapters/closures.qmd) |
 | calling convention | the rules for how a procedure is called (`nimcall`, `closure`) | [Closures and captured variables](../chapters/closures.qmd) |
+| calling | the act of running a procedure | [Closures and captured variables](../chapters/closures.qmd) |
+| caller | the code that calls a procedure | [Closures and captured variables](../chapters/closures.qmd) |
 | hygienic | a macro or template that does not leak names to the caller | [Templates: code expanded by the compiler](../chapters/templates.qmd) |
 | template expansion | template code copied by the compiler to the call site | [Templates: code expanded by the compiler](../chapters/templates.qmd) |
 | generic instantiation | forming a concrete type from a generic at the point of use | [Generics: types and procedures](../chapters/generics.qmd) |
@@ -85,6 +89,7 @@
 | address | the location of a value in memory, obtained with `addr` | [`ref`, `ptr`, and `nil`](../chapters/refs-and-pointers.qmd) |
 | dereference | reading the value a pointer points to | [`ref`, `ptr`, and `nil`](../chapters/refs-and-pointers.qmd) |
 | reference counting | counting the users of a value to know when to free it | [Memory management: ARC, ORC, and `=destroy`](../chapters/memory-management.qmd) |
+| memory | where a program keeps data while it runs | [Memory management: ARC, ORC, and `=destroy`](../chapters/memory-management.qmd) |
 | memory management mode | the compiler's choice of memory manager (`--mm:arc`, `--mm:orc`) | [Memory management: ARC, ORC, and `=destroy`](../chapters/memory-management.qmd) |
 | resource | something that must be released after use (a file, a socket) | [Files, directories, and OS](../chapters/files-and-os.qmd) |
 | module | a file or folder that holds code and can be imported | [Modules, `import`, and `export`](../chapters/modules.qmd) |
@@ -124,9 +129,25 @@
 | transaction | a group of changes that must all succeed or none at all | [Storing data: `Table`, JSON, and SQLite](../chapters/database.qmd) |
 | package | a distributable unit of code that can be installed | [Building and publishing a nimble package](../chapters/nimble-packages.qmd) |
 | maintainer | the person responsible for looking after a package | [Building and publishing a nimble package](../chapters/nimble-packages.qmd) |
+| output | data a program sends out | - |
+| input | data that goes into a program | - |
+| result | a value produced by an operation or procedure | - |
+| line | one line of code or text | - |
+| print | sending text to the output | - |
+| assignment | writing a value into a variable or field | - |
+| comparison | an operation that compares two values and yields a `bool` | - |
+| flag | a boolean value that marks a state | - |
+| integer | a whole-number type | - |
+| float | a fractional-number type | - |
+| message | text a program sends to the reader or the system | - |
 | warning | a compiler message about code worth checking | [Workflow: `nim r`, `nimble`, editor](../chapters/workflow.qmd) |
 | test | an automated check of code behaviour | [`unittest` and test discipline](../chapters/unit-testing.qmd) |
 | release | a version that is published and tagged | [Workflow: `nim r`, `nimble`, editor](../chapters/workflow.qmd) |
+| regular expression | a text pattern used by `std/re` | - |
+| capture group | the parenthesised part of a pattern captured by `matches` | - |
+| seed | the starting value of a random generator | - |
+| timestamp | seconds since 1970 | - |
+| channel | a message queue between threads in Nim | - |
 | endpoint | an address and method served by an API | [An HTTP API with `asynchttpserver`](../chapters/http-api.qmd) |
 
 New terms go into the master list first, and only then into a chapter.

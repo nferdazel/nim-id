@@ -96,7 +96,26 @@ TERLARANG = {
     "direktori": "directory",
     "konstruktor": "constructor",
     "destruktor": "destructor",
+    # keputusan istilah: kosakata teknis inti memakai bentuk Inggris
+    "keluaran": "output",
+    "masukan": "input",
+    "baris": "line (atau row untuk tabel)",
+    "argumen": "argument",
+    "komentar": "comment",
+    "pesan": "message",
+    "memori": "memory",
+    "penugasan": "assignment",
+    "perbandingan": "comparison",
+    "percabangan": "branching",
+    "pemanggilan": "calling",
+    "pemanggil": "caller",
+    "saklar": "flag",
+    "bilangan bulat": "integer",
 }
+
+# Akhiran yang membuat istilah terlarang lolos dari pencocokan kata utuh (`pustakanya`,
+# `tesnya`, `ruang lingkupnya`). Dicocokkan hanya di belakang istilah, bukan di depannya.
+AKHIRAN = r"(?:nya|lah|kah|pun|ku|mu)?"
 
 FENCE = re.compile(r"```.*?```", re.S)
 INLINE = re.compile(r"`[^`]*`")
@@ -120,7 +139,7 @@ def main():
         for baris_no, baris in enumerate(teks.splitlines(), 1):
             rendah = baris.lower()
             for salah, benar in TERLARANG.items():
-                if re.search(r"\b" + re.escape(salah) + r"\b", rendah):
+                if re.search(r"\b" + re.escape(salah) + AKHIRAN + r"\b", rendah):
                     rel = berkas.relative_to(ROOT)
                     print(f"{rel}:{baris_no}: '{salah}' seharusnya '{benar}'")
                     temuan += 1
