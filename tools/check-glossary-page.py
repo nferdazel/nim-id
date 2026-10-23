@@ -12,15 +12,16 @@ import sys
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 SUMBER = ROOT / "docs/glossary.md"
+# (berkas, kolom judul, indeks kolom istilah Indonesia)
 HALAMAN = [
-    (ROOT / "books/id/appendix/glossary.qmd", "Istilah"),
-    (ROOT / "books/en/appendix/glossary.qmd", "Term"),
+    (ROOT / "books/id/appendix/glossary.qmd", "Istilah", 0),
+    (ROOT / "books/en/appendix/glossary.qmd", "Term", 1),
 ]
 
 PEMISAH = re.compile(r"^\|[\s:|-]+\|$")
 
 
-def istilah(berkas):
+def istilah(berkas, kolom=0):
     hasil = []
     for baris in berkas.read_text().splitlines():
         baris = baris.strip()
@@ -29,7 +30,9 @@ def istilah(berkas):
         sel = [s.strip() for s in baris.strip("|").split("|")]
         if not sel or sel[0] in ("Istilah", "Term"):
             continue
-        hasil.append(sel[0].strip("`"))
+        if len(sel) <= kolom:
+            continue
+        hasil.append(sel[kolom].strip("`"))
     return hasil
 
 
@@ -41,7 +44,7 @@ def main():
     acuan = istilah(SUMBER)
     masalah = 0
 
-    for berkas, kolom in HALAMAN:
+    for berkas, kolom, indeks in HALAMAN:
         rel = berkas.relative_to(ROOT)
         if not berkas.exists():
             print(f"GAGAL  {rel}: tidak ada")
@@ -52,7 +55,7 @@ def main():
             print(f"GAGAL  {rel}: kolom '{kolom}' tidak ditemukan")
             masalah += 1
 
-        hal = istilah(berkas)
+        hal = istilah(berkas, indeks)
         hilang = [t for t in acuan if t not in hal]
         lebih = [t for t in hal if t not in acuan]
         if hilang:
