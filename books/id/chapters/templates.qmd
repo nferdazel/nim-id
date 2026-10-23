@@ -1,0 +1,283 @@
+# Template: kode yang diperluas compiler
+
+*Template* ditulis mirip prosedur, tapi cara kerjanya berbeda. Compiler tidak memanggilnya; ia
+menyalin badan template ke tempat pemanggilan, lalu mengompilasi hasil salinan itu. Karena itu
+template bisa menerima argumen yang belum punya tipe, sesuatu yang tidak bisa dilakukan prosedur.
+
+Kebebasan ini ada harganya. Kode yang disalin bisa mengevaluasi ekspresi lebih dari sekali, dan nama
+di dalam template bisa bertabrakan dengan nama pemanggil. Nim menutup masalah kedua dengan aturan
+hygiene, dan menyediakan dua jalan keluar saat kita memang butuh menembusnya.
+
+::: {.callout-note}
+## Tujuan bab
+
+Setelah bab ini, pembaca bisa menulis template, menjelaskan hygiene dan kapan memakai `{.inject.}`
+dan `{.dirty.}`, serta memilih antara template, generic, dan prosedur biasa dengan alasan yang
+jelas.
+:::
+
+## Template pertama: `swap`
+
+Template dideklarasikan dengan kata kunci `template`. Parameter `untyped` berarti argumennya
+disalin apa adanya, belum diperiksa tipenya.
+
+```{.nim}
+template swap(a, b: untyped) =
+  let tmp = a
+  a = b
+  b = tmp
+
+var x = 1
+var y = 2
+swap(x, y)
+echo x, " ", y
+```
+
+```{.txt}
+2 1
+```
+
+Compiler menyalin tiga baris badan `swap` ke tempat pemanggilan dengan `a` menjadi `x` dan `b`
+menjadi `y`. Hasilnya sama seperti menulis pertukaran itu langsung. Argumennya tidak disalin
+nilainya, jadi `swap` bekerja untuk variabel `int` maupun `string`.
+
+## Hygiene: nama di dalam template tidak bocor
+
+`swap` mendeklarasikan `tmp`. Kalau nama itu bocor ke pemanggil, setiap variabel bernama `tmp` di
+luar akan tertimpa. Nim mencegahnya lewat hygiene: simbol yang dideklarasikan di dalam template
+mendapat nama unik, sehingga tidak mungkin bentrok.
+
+```{.nim}
+template swap(a, b: untyped) =
+  let tmp = a
+  a = b
+  b = tmp
+
+var tmp = 100
+var p = 1
+var q = 2
+swap(p, q)
+echo p, " ", q, " ", tmp
+```
+
+```{.txt}
+2 1 100
+```
+
+`tmp` milik pemanggil tetap `100`. `tmp` di dalam template mendapat nama internal yang berbeda, jadi
+keduanya hidup berdampingan tanpa saling mengganggu.
+
+## Template untuk `min` tiga nilai
+
+Pustaka standar sudah menyediakan `min` untuk dua nilai, dan itu prosedur, bukan template. Untuk
+melihat ekspansi template pada perhitungan, kita menulis `min` versi tiga nilai.
+
+```{.nim}
+template min(a, b, c: untyped): untyped =
+  if a < b:
+    if a < c: a else: c
+  else:
+    if b < c: b else: c
+
+echo min(9, 2, 5)
+echo min(4, 8, 1)
+```
+
+```{.txt}
+2
+1
+```
+
+Tipe balik ditulis `untyped`, karena template tidak menetapkan tipe hasil. Ekspresi yang dihasilkan
+menggantikan seluruh pemanggilan, jadi `echo min(9, 2, 5)` menjadi `echo` atas ekspresi `if`.
+
+## Versi generic dari `min`
+
+Prosedur generic bisa menyelesaikan pekerjaan yang sama untuk satu tipe per versi.
+
+```{.nim}
+proc minOf3[T](a, b, c: T): T =
+  if a < b:
+    if a < c: a else: c
+  else:
+    if b < c: b else: c
+
+echo minOf3(9, 2, 5)
+echo minOf3(4, 8, 1)
+```
+
+```{.txt}
+2
+1
+```
+
+Keluarannya sama. Yang berbeda adalah cara kerjanya, dan perbedaan itu baru terlihat saat argumennya
+punya efek samping.
+
+## Ekspansi versus pemanggilan
+
+Template menyalin, prosedur memanggil. Kalau argumen template dipakai dua kali di dalam badan, ia
+juga dievaluasi dua kali.
+
+```{.nim}
+var calls = 0
+
+proc next(): int =
+  calls += 1
+  calls
+
+template min(a, b, c: untyped): untyped =
+  if a < b:
+    if a < c: a else: c
+  else:
+    if b < c: b else: c
+
+proc minOf3[T](a, b, c: T): T =
+  if a < b:
+    if a < c: a else: c
+  else:
+    if b < c: b else: c
+
+echo "template: ", min(next(), 100, 99), " (calls: ", calls, ")"
+calls = 0
+echo "proc: ", minOf3(next(), 100, 99), " (calls: ", calls, ")"
+```
+
+```{.txt}
+template: 3 (calls: 3)
+proc: 1 (calls: 1)
+```
+
+`a` muncul tiga kali di dalam badan template, jadi `next()` dipanggil tiga kali, dan `calls` naik
+sampai 3. Prosedur `minOf3` menerima nilainya sebagai argumen, jadi `next()` dipanggil sekali.
+Pelajaran praktisnya: jangan oper ekspresi berharga mahal atau punya efek samping ke template.
+
+## Membaca pesan error: simbol yang tidak terlihat
+
+Hygiene bekerja dua arah. Simbol yang dideklarasikan template tidak terlihat oleh pemanggil.
+
+```{.nim}
+template declareX() =
+  var x = 5
+
+proc run() =
+  declareX()
+  echo x
+
+run()
+```
+
+```{.txt}
+main.nim(6, 8) Error: undeclared identifier: 'x'
+```
+
+`x` dibuat di dalam template, dan hygiene memberinya nama unik, jadi `echo x` di `run` tidak
+menemukan apa pun. Ini bukan bug; inilah yang membuat template aman dipakai tanpa harus hafal nama
+variabel internalnya.
+
+## `{.dirty.}`: mematikan hygiene
+
+Kalau kita memang ingin simbol template terlihat oleh pemanggil, tandai template dengan
+`{.dirty.}`. Sejak itu, deklarasinya memakai nama apa adanya.
+
+```{.nim}
+template declareX() {.dirty.} =
+  var x = 5
+
+proc run() =
+  declareX()
+  echo x
+
+run()
+```
+
+```{.txt}
+5
+```
+
+Versi `dirty` berjalan karena `x` memakai nama biasa. Harga yang dibayar: `x` sekarang bisa bentrok
+dengan variabel pemanggil. Pakai `{.dirty.}` hanya kalau memang perlu, dan beri nama yang jelas.
+
+## `{.inject.}`: membuka satu simbol saja
+
+`{.dirty.}` mematikan hygiene untuk seluruh template. Kalau hanya satu simbol yang perlu terlihat,
+tandai simbol itu dengan `{.inject.}`, dan sisanya tetap higienis.
+
+```{.nim}
+template countTo(body: untyped) =
+  var count {.inject.} = 0
+  body
+  echo "count: ", count
+
+countTo:
+  count += 2
+  count += 3
+```
+
+```{.txt}
+count: 5
+```
+
+`count` disuntikkan ke lingkup pemanggil, sehingga blok di bawah `countTo:` bisa menambahnya.
+Blok itu adalah argumen `body`, yang ikut disalin ke tempatnya. Cara ini dipakai serangkaian
+template di pustaka standar, misalnya untuk mengukur waktu sebuah blok kode.
+
+## Template, generic, atau prosedur
+
+Pilih berdasarkan kebutuhan, bukan kebiasaan.
+
+| | Template | Generic | Prosedur |
+|---|---|---|---|
+| Kapan dikerjakan | disalin saat kompilasi | dibuat per tipe saat kompilasi | dipanggil saat runtime |
+| Tipe argumen | bebas, sering `untyped` | satu tipe per versi | sudah tetap |
+| Efek samping argumen | bisa berulang | sekali | sekali |
+
+Aturan singkatnya: pakai prosedur untuk pekerjaan biasa, generic kalau algoritmanya sama untuk
+banyak tipe, dan template hanya saat kita butuh bekerja pada level teks kode, misalnya membuat
+konstruksi bahasa baru dari potongan yang ada.
+
+## Latihan
+
+1. Tulis `template twice(body: untyped)` yang menjalankan `body` dua kali, lalu pakai untuk
+   mencetak "ping" dua kali.
+2. Tanpa menjalankan, prediksi keluarannya:
+   ```{.nim}
+   template square(x: untyped): untyped =
+     x * x
+
+   var n = 0
+   proc next(): int =
+     n += 1
+     n
+   echo square(next())
+   echo n
+   ```
+3. Kenapa `tmp` di dalam `swap` tidak menimpa `tmp` milik pemanggil? Sebutkan istilahnya.
+4. Template berikut ingin mengekspos `total` ke pemanggil, tetapi gagal. Perbaiki dengan cara yang
+   paling sempit, lalu jelaskan kenapa:
+   ```{.nim}
+   template sumUp(body: untyped) =
+     var total = 0
+     body
+     echo total
+
+   sumUp:
+     total += 4
+   ```
+
+Jawaban ada di [Lampiran A](../appendix/answers.qmd).
+
+## Ringkasan
+
+- Template menyalin badannya ke tempat pemanggilan; hasilnya dikompilasi bersama kode pemanggil.
+- Hygiene memberi nama unik pada simbol template, sehingga tidak bocor maupun bentrok.
+- Argumen template bisa dievaluasi berkali-kali; ini berbeda dari prosedur yang mengevaluasinya
+  sekali.
+- `{.inject.}` membuka satu simbol, `{.dirty.}` mematikan hygiene untuk seluruh template.
+- Pakai prosedur untuk pekerjaan biasa, generic untuk algoritma lintas tipe, template untuk
+  menyusun potongan kode.
+
+## Selanjutnya
+
+Bab berikutnya membahas *macro*: template yang berjalan pada struktur kode, bukan pada teks,
+sehingga bisa memutuskan bentuk keluaran berdasarkan isi argumennya.

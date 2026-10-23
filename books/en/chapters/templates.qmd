@@ -1,0 +1,284 @@
+# Templates: code expanded by the compiler
+
+A *template* is written much like a procedure, but it works differently. The compiler does not call
+it; it copies the template body into the call site and compiles the resulting copy. That is why a
+template can take arguments that have no type yet, something a procedure cannot do.
+
+This freedom has a price. Copied code can evaluate an expression more than once, and names inside a
+template can collide with names at the call site. Nim closes the second problem with hygiene, and
+offers two escapes for when we genuinely need to break through it.
+
+::: {.callout-note}
+## What you will be able to do
+
+After this chapter you can write a template, explain hygiene and when to use `{.inject.}` and
+`{.dirty.}`, and choose between a template, a generic, and an ordinary procedure with a clear
+reason.
+:::
+
+## A first template: `swap`
+
+A template is declared with the `template` keyword. The `untyped` parameter means the argument is
+copied as written, before its type is checked.
+
+```{.nim}
+template swap(a, b: untyped) =
+  let tmp = a
+  a = b
+  b = tmp
+
+var x = 1
+var y = 2
+swap(x, y)
+echo x, " ", y
+```
+
+```{.txt}
+2 1
+```
+
+The compiler copies the three body lines of `swap` into the call site, with `a` becoming `x` and `b`
+becoming `y`. The result is the same as writing the exchange by hand. The arguments are not copied
+by value, so `swap` works for `int` variables as well as `string` variables.
+
+## Hygiene: names inside a template do not leak
+
+`swap` declares `tmp`. If that name leaked to the caller, every variable named `tmp` outside would
+be overwritten. Nim prevents this with hygiene: a symbol declared inside a template gets a unique
+name, so a clash is impossible.
+
+```{.nim}
+template swap(a, b: untyped) =
+  let tmp = a
+  a = b
+  b = tmp
+
+var tmp = 100
+var p = 1
+var q = 2
+swap(p, q)
+echo p, " ", q, " ", tmp
+```
+
+```{.txt}
+2 1 100
+```
+
+The caller's `tmp` is still `100`. The `tmp` inside the template gets a different internal name, so
+the two live side by side without interfering.
+
+## A template for `min` of three values
+
+The standard library already provides `min` for two values, and it is a procedure, not a template.
+To see a template expand during a computation, we write a three-value `min`.
+
+```{.nim}
+template min(a, b, c: untyped): untyped =
+  if a < b:
+    if a < c: a else: c
+  else:
+    if b < c: b else: c
+
+echo min(9, 2, 5)
+echo min(4, 8, 1)
+```
+
+```{.txt}
+2
+1
+```
+
+The return type is written `untyped`, because a template does not fix the result type. The produced
+expression replaces the whole call, so `echo min(9, 2, 5)` becomes an `echo` of an `if` expression.
+
+## The generic version of `min`
+
+A generic procedure can do the same job, with one version per type.
+
+```{.nim}
+proc minOf3[T](a, b, c: T): T =
+  if a < b:
+    if a < c: a else: c
+  else:
+    if b < c: b else: c
+
+echo minOf3(9, 2, 5)
+echo minOf3(4, 8, 1)
+```
+
+```{.txt}
+2
+1
+```
+
+The output is the same. What differs is how it works, and that difference only shows when the
+arguments have side effects.
+
+## Expansion versus call
+
+A template copies, a procedure calls. If a template argument is used twice in the body, it is also
+evaluated twice.
+
+```{.nim}
+var calls = 0
+
+proc next(): int =
+  calls += 1
+  calls
+
+template min(a, b, c: untyped): untyped =
+  if a < b:
+    if a < c: a else: c
+  else:
+    if b < c: b else: c
+
+proc minOf3[T](a, b, c: T): T =
+  if a < b:
+    if a < c: a else: c
+  else:
+    if b < c: b else: c
+
+echo "template: ", min(next(), 100, 99), " (calls: ", calls, ")"
+calls = 0
+echo "proc: ", minOf3(next(), 100, 99), " (calls: ", calls, ")"
+```
+
+```{.txt}
+template: 3 (calls: 3)
+proc: 1 (calls: 1)
+```
+
+`a` appears three times in the template body, so `next()` is called three times and `calls` reaches
+3. The procedure `minOf3` receives its values as arguments, so `next()` is called once. The
+practical lesson: never pass a costly or side-effecting expression to a template.
+
+## Reading an error: a symbol that stays hidden
+
+Hygiene works both ways. A symbol declared by a template is not visible to the caller.
+
+```{.nim}
+template declareX() =
+  var x = 5
+
+proc run() =
+  declareX()
+  echo x
+
+run()
+```
+
+```{.txt}
+main.nim(6, 8) Error: undeclared identifier: 'x'
+```
+
+`x` is created inside the template, and hygiene gives it a unique name, so `echo x` in `run` finds
+nothing. This is not a bug; it is what makes a template safe to use without memorizing its internal
+variable names.
+
+## `{.dirty.}`: turning hygiene off
+
+When we do want a template symbol visible to the caller, mark the template `{.dirty.}`. From then
+on, its declarations use their plain names.
+
+```{.nim}
+template declareX() {.dirty.} =
+  var x = 5
+
+proc run() =
+  declareX()
+  echo x
+
+run()
+```
+
+```{.txt}
+5
+```
+
+The `dirty` version works because `x` keeps its plain name. The price: `x` can now clash with a
+variable at the call site. Use `{.dirty.}` only when necessary, and give the names clearly.
+
+## `{.inject.}`: opening a single symbol
+
+`{.dirty.}` turns hygiene off for the whole template. When only one symbol must be visible, mark
+that symbol `{.inject.}`, and the rest stays hygienic.
+
+```{.nim}
+template countTo(body: untyped) =
+  var count {.inject.} = 0
+  body
+  echo "count: ", count
+
+countTo:
+  count += 2
+  count += 3
+```
+
+```{.txt}
+count: 5
+```
+
+`count` is injected into the caller's scope, so the block under `countTo:` can add to it. That block
+is the `body` argument, which is copied into place. A family of standard library templates uses this
+technique, for example to time a block of code.
+
+## Template, generic, or procedure
+
+Choose by need, not by habit.
+
+| | Template | Generic | Procedure |
+|---|---|---|---|
+| When it runs | copied at compile time | built per type at compile time | called at runtime |
+| Argument type | free, often `untyped` | one type per version | already fixed |
+| Argument side effects | may repeat | once | once |
+
+The short rule: use a procedure for ordinary work, a generic when the algorithm is the same for many
+types, and a template only when we need to work at the level of code text, for example to build new
+language constructs out of existing pieces.
+
+## Exercises
+
+1. Write `template twice(body: untyped)` that runs `body` twice, then use it to print `"ping"` two
+   times.
+2. Without running it, predict the output:
+   ```{.nim}
+   template square(x: untyped): untyped =
+     x * x
+
+   var n = 0
+   proc next(): int =
+     n += 1
+     n
+   echo square(next())
+   echo n
+   ```
+3. Why does `tmp` inside `swap` not overwrite the caller's `tmp`? Name the mechanism.
+4. The template below wants to expose `total` to the caller, but it fails. Fix it in the narrowest
+   way, then explain why:
+   ```{.nim}
+   template sumUp(body: untyped) =
+     var total = 0
+     body
+     echo total
+
+   sumUp:
+     total += 4
+   ```
+
+Answers are in [Appendix A](../appendix/answers.qmd).
+
+## Summary
+
+- A template copies its body into the call site; the result is compiled together with the caller's
+  code.
+- Hygiene gives template symbols unique names, so they neither leak nor clash.
+- Template arguments may be evaluated several times; this differs from a procedure, which evaluates
+  them once.
+- `{.inject.}` opens a single symbol, `{.dirty.}` turns hygiene off for the whole template.
+- Use a procedure for ordinary work, a generic for algorithms across types, and a template for
+  assembling code pieces.
+
+## Next
+
+The next chapter covers *macros*: templates that run on code structure rather than text, so they can
+decide the output shape from the contents of their arguments.
