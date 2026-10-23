@@ -42,6 +42,7 @@ jobs:
         run: |
           python3 tools/lint-glossary.py
           python3 tools/check-parity.py
+          python3 tools/check-glossary-page.py
 
       - name: "Pasang Quarto 1.10.19"
         uses: quarto-dev/quarto-actions/setup@v2

@@ -93,6 +93,7 @@ case "${1:-help}" in
     perlu python3
     python3 tools/lint-glossary.py
     python3 tools/check-parity.py
+    python3 tools/check-glossary-page.py
     bash tools/verify-examples.sh
     QUARTO="$QUARTO" bash tools/build-site.sh
     ;;

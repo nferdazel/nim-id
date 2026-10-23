@@ -64,6 +64,12 @@ shopt -s nullglob
 for dir in "$root"/examples/*/; do
   for src in "$dir"*.nim; do
     nama="$(basename "$src" .nim)"
+    # Hanya berkas contoh: aNN_* atau nama yang memang diawali angka. Berkas pendukung
+    # (store.nim, helper.nim) dilewati; ia ikut terverifikasi lewat pemakainya.
+    case "$nama" in
+      a[0-9][0-9]_* | [0-9]*) ;;
+      *) continue ;;
+    esac
     rel="${src#"$root"/}"
     stdout_file="$out/$nama.out"
     stderr_file="$out/$nama.err"
