@@ -1,0 +1,282 @@
+# Building and publishing a nimble package
+
+Useful code has a bad habit: it gets copied. The first copy still matches the original, the tenth
+differs in five places, and nobody knows which one is right. A package is how Nim breaks that habit:
+one directory, one version number, one place to fetch the newest code from.
+
+::: {.callout-note}
+## What you will be able to do
+
+After this chapter you can lay out a package, write its `.nimble` file, use `nimble check` and
+`nimble test`, pick versions with semantic versioning, and publish a package to a Git repository.
+:::
+
+## One package, one directory
+
+A nimble package is a directory with a `<name>.nimble` file at its root. The rest follows a shared
+convention:
+
+```{.txt}
+textstats/
+  textstats.nimble
+  README.md
+  src/
+    textstats.nim
+  tests/
+    test_textstats.nim
+```
+
+`src/textstats.nim` is the front door. A user writes `import textstats` and the compiler looks for
+that file. Extra modules go in `src/textstats/` and are imported as `import textstats/utils`; a
+`private/` directory hides them from users. `tests/` holds tests, `README.md` a short usage note.
+
+`nimble init` creates this skeleton:
+
+```{.bash}
+nimble init textstats
+```
+
+The wizard asks for the package type (library, binary, hybrid), version, description, license, and
+lowest supported Nim version. It then writes `textstats.nimble`, `src/textstats.nim`,
+`src/textstats/submodule.nim`, `tests/test1.nim`, and `tests/config.nims`. Delete what you do not
+need; only the `.nimble` file and the code in `src/` are required.
+
+## What goes in the `.nimble` file
+
+The `.nimble` file is Nim code that nimble runs while reading the package. Its basic shape:
+
+```{.ini}
+# Package
+
+version       = "0.1.0"
+author        = "Sari Dewi"
+description   = "Count words and build titles"
+license       = "MIT"
+srcDir        = "src"
+
+
+# Dependencies
+
+requires "nim >= 2.0.0"
+```
+
+| Line | Meaning |
+|---|---|
+| `version` | the package version, used by nimble to pick a compatible release |
+| `author` | the maintainer name, shown in the package list |
+| `description` | a one line summary of the package |
+| `license` | an SPDX identifier, such as `MIT` |
+| `srcDir` | the directory holding the code; required when it is not next to the `.nimble` file |
+| `requires` | dependencies, including the lowest supported Nim version |
+
+`requires` accepts version ranges: `>=`, `<`, `==`, `^=` (latest compatible release), and `~=`
+(latest release bumping the last digit). So `requires "nim ^= 2.0.0"` means Nim 2.0.0 up to but
+excluding 3.0.0. This book needs only the lowest Nim version.
+
+A `.nimble` file may also declare `task` entries, for example one that builds documentation:
+
+```{.ini}
+task docs, "Build the documentation":
+  exec "nim doc --outdir:docs src/textstats.nim"
+```
+
+That task runs with `nimble docs`; `nimble tasks` lists them all.
+
+## A library module and its user
+
+Code that deserves to be a package is used without knowing what is inside. Below are a small module
+and a program that uses it. Inside a package the first file lives at `src/textstats.nim`.
+
+```{.nim}
+## A tiny reusable module: the kind of code that belongs in a package.
+
+import std/strutils
+
+proc wordCount*(text: string): int =
+  ## Count the words in `text`.
+  text.splitWhitespace().len
+
+proc titleCase*(text: string): string =
+  ## Capitalize the first letter of every word.
+  for word in text.splitWhitespace():
+    if result.len > 0:
+      result.add ' '
+    result.add word[0].toUpperAscii & word[1 .. ^1].toLowerAscii
+
+when isMainModule:
+  echo wordCount("nim is a small language")
+  echo titleCase("nim is a small language")
+```
+
+```{.txt}
+5
+Nim Is A Small Language
+```
+
+The star in `wordCount*` exports that procedure; without it the procedure stays private to its
+module. `when isMainModule` runs only when the file is compiled as the main program, so one file
+serves as both library and runnable example, and importing it prints nothing.
+
+The user needs one import:
+
+```{.nim}
+import a01_textstats
+
+echo wordCount("hello brave new world")
+echo titleCase("hello brave new world")
+```
+
+```{.txt}
+4
+Hello Brave New World
+```
+
+Inside the package that file lives at `src/textstats.nim` and the import is `import textstats`; the
+example is named `a01_textstats.nim` and the import follows it. The module name follows the file
+name. If an import clashes, add an alias:
+
+```{.nim}
+import a01_textstats as ts
+
+echo ts.wordCount("packages are just boxes")
+echo ts.titleCase("packages are just boxes")
+```
+
+```{.txt}
+4
+Packages Are Just Boxes
+```
+
+A wrong module name fails at compile time, not at runtime:
+
+```{.nim}
+import textstats_helpers
+```
+
+```{.txt}
+main.nim(1, 8) Error: cannot open file: textstats_helpers
+```
+
+`main.nim` is the file, `(1, 8)` is line 1 column 8, the start of the module name. `cannot open file`
+means the compiler walked its module search path, starting from the calling file's directory, and
+found no `textstats_helpers.nim`.
+
+## Day to day nimble commands
+
+Two commands carry most of the work while developing:
+
+```{.bash}
+nimble check
+nimble test
+```
+
+`nimble check` validates the package structure. `nimble test` compiles and runs every file in
+`tests/` whose name begins with `t`; when everything passes, the last line reads
+`Success: All tests passed`.
+
+A binary package declares `bin` in its `.nimble` file; then `nimble build` produces the binary and
+`nimble run` builds and runs it. A library has no binary, so `nimble build` stops with
+`Nothing to build`; use `nimble check` and `nimble test` instead. `nimble c` compiles a single file.
+
+The install command:
+
+```{.bash}
+nimble install
+```
+
+With no package name, `nimble install` installs the package in the working directory into `~/.nimble`,
+handy for testing before publication. Once published, a user writes `nimble install textstats`. A
+package missing from the official list still installs straight from its Git repository URL.
+
+## Versions: major, minor, patch
+
+A version number is not decoration: users rely on it to decide when updating is safe, and nimble to
+pick a release. The standard rule, semantic versioning (*semver*), reads `0.1.0` as
+`major.minor.patch`:
+
+| Digit | Bumped when |
+|---|---|
+| `patch` | a bug is fixed without changing how the code is used |
+| `minor` | a capability is added and stays compatible |
+| `major` | something changes that breaks user code |
+
+Below `1.0.0` any minor release may break compatibility, so users should pin a narrow range such as
+`requires "textstats >= 0.1.0 & < 0.2.0"`. From `1.0.0` on the promise is stronger: a breaking change
+must bump the major number.
+
+## Publishing to a Git repository
+
+Nimble stores no package code, only a list of names and repository URLs. So the code must be in Git
+first:
+
+```{.bash}
+git init
+git add .
+git commit -m "textstats 0.1.0"
+git remote add origin git@github.com:sari/textstats.git
+git push -u origin main
+```
+
+Once the repository exists, the package is registered once; every later release is marked with a tag:
+
+```{.bash}
+git tag v0.2.0
+git push origin main --tags
+nimble publish
+```
+
+Nimble reads version-shaped tags such as `v0.2.0` to learn which releases exist, so bump `version`,
+commit, then tag. `nimble publish` needs a GitHub account and a personal access token and proposes
+the package to the official list in `nim-lang/packages`. Once per package, not per release.
+
+## When a package deserves to be published
+
+Not all code needs to be a package. If only one program uses it, keep it as a module in that project.
+A package earns its keep when:
+
+- the same code is used by two projects or more;
+- `README.md` shows how to use it: install, import, call;
+- tests pass with `nimble test`, so users dare to update;
+- the license is explicit, or nobody else may use it;
+- the name is not already taken by another package in the official list.
+
+`0.1.0` is fine for a young package: publishing early and fixing fast beats waiting for "perfect",
+because mistakes only show up once someone uses the code.
+
+## Exercises
+
+1. Name four things that must be in place before a package deserves to be published.
+2. Without running it, predict the output:
+   ```{.nim}
+   import a01_textstats as ts
+
+   echo ts.titleCase("NIM DOES NOT CARE")
+   ```
+3. Lay out a package named `notes`: one module at `src/notes.nim`, one test file in `tests/`, and
+   `notes.nimble`. Write out the contents of `notes.nimble`.
+4. The code below fails to compile. Fix it, then explain the message:
+   ```{.nim}
+   import notes_helpers
+
+   echo "loaded"
+   ```
+5. Pick the next version for these changes: (a) adding a new procedure, (b) fixing a typo in an
+   error message, (c) renaming a procedure users already call.
+
+Answers are in [Appendix A](../appendix/answers.qmd).
+
+## Summary
+
+- A nimble package is a directory with `<name>.nimble` at the root, code in `src/`, tests in `tests/`.
+- The `.nimble` file holds `version`, `author`, `description`, `license`, `srcDir`, and `requires`.
+- A procedure used from outside must be exported with `*`; `when isMainModule` separates the demo
+  from the library.
+- `nimble check` and `nimble test` carry development; `nimble build` is for packages that have a
+  binary.
+- Semantic versioning tells users when updating is safe; releases are marked with Git tags, and
+  `nimble publish` runs once per package.
+
+## Next
+
+Published code is not automatically fast. The next chapter measures instead of guessing:
+[benchmarking](benchmarking.qmd).
