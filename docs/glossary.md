@@ -116,6 +116,18 @@ diterjemahkan ke bahasa Indonesia secara paksa; kolom **Jangan** mencatat varian
 | distinct | distinct | tipe baru dengan representasi sama tetapi tidak saling tukar | — | variants-and-distinct |
 | alias tipe | type alias | nama lain untuk tipe yang sudah ada, tanpa tipe baru | — | variants-and-distinct |
 
+| berkas | file | satuan penyimpanan di sistem berkas | file | files-and-os |
+| direktori | directory | wadah berkas dan direktori lain | folder (kecuali sehari-hari) | files-and-os |
+| jalur | path | lokasi berkas dalam sistem berkas | path | files-and-os |
+| variabel lingkungan | environment variable | nilai konfigurasi dari proses induk | env var | files-and-os |
+| utas | thread | jalur eksekusi di dalam satu proses | thread | async |
+| putaran peristiwa | event loop | pengatur tugas async dalam satu utas | event loop | async |
+| suite | suite | kumpulan tes dalam `unittest` | — | unit-testing |
+| kasus uji | test case | satu pemeriksaan di dalam suite | test case | unit-testing |
+| FFI | foreign function interface | cara memanggil kode bahasa lain, di sini C | — | ffi-c |
+| ABI | application binary interface | aturan tata letak dan pemanggilan di tingkat biner | — | ffi-c |
+| peramban | browser | program yang menjalankan hasil kompilasi JavaScript | browser (kecuali di kode) | js-backend |
+
 Aturan singkat:
 
 - Istilah di kolom pertama dipakai di teks Indonesia; kolom English di teks Inggris.
