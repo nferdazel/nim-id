@@ -154,6 +154,8 @@ After switching, run `nim --version` again to confirm the version really changed
 5. With `choosenim`, write the sequence of commands to move from the latest stable release to
    2.2.12, then back again.
 
+Answers are in [Appendix A](../appendix/answers.qmd).
+
 ## Summary
 
 - Three requirements: `nim` on PATH, a working C compiler, and a 2.x version.

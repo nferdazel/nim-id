@@ -1,0 +1,256 @@
+# Regular expressions with `std/re`
+
+Comparing strings with `==` only works when they are exactly the same. Once the rule gets fuzzy, for
+example "pull the name and the age out of one line", a chain of `split` and `strip` piles up and
+becomes hard to read. A regular expression writes that rule once, as a single pattern. Nim ships the
+pattern engine in its standard library, in the `std/re` module.
+
+::: {.callout-note}
+## What you will be able to do
+
+After this chapter you can write a pattern with `re"..."`, use `match`, `find`, and `findAll`,
+replace and split text with `replace`, `replacef`, and `split`, read capture groups, turn on `(?i)`,
+and tell when a regular expression is overkill because `strutils` is enough.
+:::
+
+## One pattern, two groups
+
+`re"..."` turns the pattern text into a `Regex` value. The shortest form uses the `=~` template,
+which fills a `matches` array with the capture groups. Save it as `main.nim`, then run
+`nim c -r main.nim`.
+
+```{.nim}
+import std/re
+
+let line = "Ada, 36"
+
+# =~ declares a `matches` array that holds the capture groups.
+if line =~ re"(\w+),\s*(\d+)":
+  echo "name: ", matches[0]
+  echo "age: ", matches[1]
+else:
+  echo "no match"
+```
+
+```{.txt}
+name: Ada
+age: 36
+```
+
+`matches[0]` is not the whole match; it is the first group, the contents of the first pair of
+parentheses. The second group lands in `matches[1]`. Nim keeps no separate slot for the whole match
+in this array; when you need that value, wrap the entire pattern in parentheses.
+
+The pattern symbols you will use most: `\w` matches one letter or digit, `\d` matches one digit,
+and `\s` matches one space. Adding `+` means "one time or more", so `\w+` swallows a whole word.
+
+## `match` is anchored, `find` scans
+
+These two procedures are easy to mix up. `match` tests the pattern from the start of the string, as
+if nailed to position zero. `find` scans the whole string and returns the index of the first match,
+or `-1` when there is none.
+
+```{.nim}
+import std/re
+
+let text = "Ada Lovelace, 36"
+
+# match is anchored at the start of the string; find scans the whole string.
+echo "match from start: ", text.match(re"Ada")
+echo "match in the middle: ", text.match(re"Lovelace")
+echo "find in the middle: ", text.find(re"Lovelace")
+
+# The openArray overload fills the capture groups and returns the start index.
+var captures: array[2, string]
+if text.find(re"(\w+),\s*(\d+)", captures) >= 0:
+  echo "name: ", captures[0]
+  echo "age: ", captures[1]
+```
+
+```{.txt}
+match from start: true
+match in the middle: false
+find in the middle: 4
+name: Lovelace
+age: 36
+```
+
+To collect the capture groups as well, allocate the array first, then hand it to the `find` variant
+that takes an `openArray[string]`. That version returns the index and fills the array; `-1` means no
+match, so the result is tested with `>= 0`.
+
+## Every match with `findAll`
+
+`findAll` gathers every matching piece. It has two forms: an iterator that yields one match per
+turn, and a procedure that returns a `seq[string]`. Using it directly inside `echo` picks the
+second form.
+
+```{.nim}
+import std/re
+
+let log = "2024-03-01 INFO ok 2024-03-02 WARN slow"
+
+echo "dates: ", log.findAll(re"\d{4}-\d{2}-\d{2}")
+echo "levels: ", log.findAll(re"\b[A-Z]{4}\b")
+
+for word in log.findAll(re"[a-z]+"):
+  echo "word: ", word
+```
+
+```{.txt}
+dates: @["2024-03-01", "2024-03-02"]
+levels: @["INFO", "WARN"]
+word: ok
+word: slow
+```
+
+The `\b` marker stands for a word boundary, so `\b[A-Z]{4}\b` matches only a four-letter uppercase
+word that stands on its own. Braces set an exact repetition count.
+
+One trap: an empty pattern such as `re"a*"` matches the empty string anywhere. The `findAll`
+iterator deliberately stops on an empty match so the loop does not run forever.
+
+## Replacing and splitting
+
+`replace` swaps every match for new text. To put capture groups back in, use `replacef` with `$1`,
+`$2`, and so on. `split` cuts the string on every match and returns a sequence of the pieces.
+
+```{.nim}
+import std/re
+
+let raw = "  Ada   Lovelace  "
+
+echo "[", raw.replace(re"\s+", " "), "]"
+echo "[", raw.replace(re"^\s+|\s+$", ""), "]"
+
+let phone = "0812-3456-7890"
+echo phone.replace(re"\D", "")
+
+# replacef understands $1, $2, ... for the capture groups.
+let name = "Ada Lovelace"
+echo name.replacef(re"(\w+)\s+(\w+)", "$2, $1")
+
+# split cuts the string on every match of the pattern.
+let record = "ada, 36,london"
+echo record.split(re",\s*")
+```
+
+```{.txt}
+[ Ada Lovelace ]
+[Ada   Lovelace]
+081234567890
+Lovelace, Ada
+@["ada", "36", "london"]
+```
+
+The pattern `^\s+|\s+$` holds two rules separated by `|`: one anchored at the start, one at the end.
+Because `replace` swaps every match, both are cut in one call, while the spaces inside the sentence
+stay untouched. The marker `\D` is the opposite of `\d`: anything that is not a digit.
+
+## Flags and escaped characters
+
+A small flag such as `(?i)` goes at the start of the pattern and applies until the end. To make one
+character count as a plain letter, put a `\` in front of it.
+
+```{.nim}
+import std/re
+import std/strutils
+
+# (?i) makes the rest of the pattern case-insensitive.
+echo "NIM".match(re"(?i)nim")
+echo "NIM".match(re"nim")
+
+# re"..." is a raw string: write one backslash, not two.
+echo "a.b".match(re"a\.b")
+echo "axb".match(re"a\.b")
+
+# For a fixed prefix or suffix, strutils is shorter than a regex.
+echo "report.txt".endsWith(".txt")
+```
+
+```{.txt}
+true
+false
+true
+false
+true
+```
+
+`re"..."` is a raw string, so a backslash is written once. A plain string needs two, `"\\d"`, to
+produce the same backslash. Without `\`, the dot character means "any letter", so `a.b` also matches
+`axb`.
+
+## Intentional error: forgetting to import `std/re`
+
+The names from `std/re` do not appear out of nowhere. Drop the `import`, and the compiler stops at
+the first token.
+
+```{.nim}
+let pattern = re"(\d+)"
+echo "abc 12".findAll(pattern)
+```
+
+```{.txt}
+main.nim(1, 15) Error: undeclared identifier: 're'
+```
+
+Read it from the left: file, position `(line, column)`, severity, then the message. The position
+`(1, 15)` is the start of `re` in `re"(\d+)"`. `undeclared identifier` means the name is used
+without ever being imported. The shortest fix: add `import std/re` on the first line.
+
+One thing worth knowing: `re` processes the pattern at runtime. A pattern with a typo, say an
+unclosed parenthesis, raises an exception only when the program runs, not at compile time.
+
+## When a regular expression is overkill
+
+A regular expression quickly turns into text nobody else can read. For fixed prefixes and suffixes,
+`strutils` is shorter. The example above uses `endsWith(".txt")`, not a pattern.
+
+- Use `strutils` when you look for one literal piece: `startsWith`, `endsWith`, `contains`.
+- Use a regular expression when the shape repeats, branches, or needs capture groups.
+- Break a long pattern into named pieces; do not let one line hold all of it.
+
+A regular expression is not a parser either. For nested structure such as JSON or HTML, use a module
+that actually understands it, such as `std/json`.
+
+## Exercises
+
+1. Change the first example so the pattern also captures the city in `Ada, 36, London`, then print
+   that city.
+2. Without running it, predict the output:
+   ```{.nim}
+   import std/re
+
+   for m in "one1two22three333".findAll(re"\d+"):
+     echo m
+   ```
+3. Write from scratch: a procedure that takes a `seq[string]` of email addresses and returns a
+   `seq[string]` of the domain names, that is, the part after `@`.
+4. The code below fails to compile. Fix it, then explain its message:
+   ```{.nim}
+   import std/re
+
+   if "Ada, 36" =~ re"(\w+), (\d+)":
+     echo matches[0]
+
+   echo matches[1]
+   ```
+5. Name one text task that `strutils` handles better than a regular expression.
+
+Answers are in [Appendix A](../appendix/answers.qmd).
+
+## Summary
+
+- `re"..."` turns text into a `Regex`; the `=~` template fills a `matches` array with the capture
+  groups.
+- `match` is anchored at the start of the string, `find` scans the whole string and returns an
+  index.
+- `findAll` collects every match; `replace`, `replacef`, and `split` change and split text.
+- `(?i)` turns on case-insensitive matching; `re"..."` is a raw string.
+- Patterns are processed at runtime, so a bad pattern shows up only when the program runs.
+
+## Next
+
+The next chapter leaves text behind and moves to time: [time and random
+numbers](times-and-random.qmd), reading the clock, reformatting dates, and producing random numbers
+you can repeat.

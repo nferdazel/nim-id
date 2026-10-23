@@ -1,0 +1,264 @@
+# *Time* dan *random*
+
+Dua hal membuat program terasa hidup: jam dan keberuntungan. Keduanya menyimpan jebakan yang sama
+untuk *test*. Jam mengembalikan sesuatu yang berbeda tiap kali dipanggil, dan angka acak tanpa *seed*
+juga. Nim menaruh kedua *module* itu di **standard library**: `std/times` dan `std/random`.
+
+::: {.callout-note}
+## Tujuan bab
+
+Setelah bab ini, pembaca bisa membentuk `DateTime` dengan `dateTime`, memformatnya dengan `format`,
+mengurai teks dengan `parse`, menghitung selisih waktu, memakai `initRand` dengan *seed* tetap, serta
+menjelaskan kenapa `now()` berbahaya di dalam *test*.
+:::
+
+## Membentuk dan memformat `DateTime`
+
+`DateTime` menyimpan tanggal dan jam bersama zona waktunya. Bentuknya lewat *procedure* `dateTime`,
+yang menerima tahun, bulan, hari, jam, menit, detik, *nanosecond*, dan zona. Bulan ditulis sebagai
+*value* enum seperti `mMar`, bukan angka, supaya urutan *argument* tidak mudah tertukar.
+
+```{.nim}
+import std/times
+
+let launch = dateTime(2024, mMar, 1, 9, 30, 0, 0, utc())
+
+echo launch.format("yyyy-MM-dd HH:mm:ss")
+echo launch.format("ddd d MMM yyyy")
+echo launch
+echo launch.hour, ":", launch.minute
+```
+
+```{.txt}
+2024-03-01 09:30:00
+Fri 1 Mar 2024
+2024-03-01T09:30:00Z
+9:30
+```
+
+Simpan sebagai `main.nim`, lalu jalankan `nim c -r main.nim`. Setiap contoh di bab ini memberi
+`utc()` sebagai zona, sehingga *output*-nya sama di mesin mana pun. Zona bawaan `dateTime` adalah
+`local()`, yang mengikuti jam dinding komputer.
+
+*Specifier* `format` yang umum: `yyyy` untuk tahun empat digit, `MM` untuk bulan dua digit, `dd` untuk
+hari, dan `HH:mm:ss` untuk jam, menit, serta detik. Bentuk `MMM` menghasilkan nama bulan yang
+disingkat, `MMMM` nama panjang, sedangkan `ddd` nama hari. Field seperti `launch.hour` dan
+`launch.minute` mengambil bagian *DateTime* tanpa memformat ulang.
+
+Di Nim 2.2.12, nama lama untuk *procedure* ini adalah `initDateTime`, dan namanya sudah ditandai
+`deprecated`. Pakai `dateTime`.
+
+## Mengurai teks menjadi waktu
+
+`parse` adalah kebalikan `format`. Ia menerima teks, pola, dan zona, lalu mengembalikan `DateTime`.
+*Value* itu bisa dipecah menjadi field seperti `year`, `month`, atau `monthday`.
+
+```{.nim}
+import std/times
+
+let created = parse("2024-03-01 09:30:00", "yyyy-MM-dd HH:mm:ss", utc())
+
+echo created
+echo created.format("d MMM yyyy")
+echo created.monthday, " ", created.month, " ", created.year
+
+# The same format turns a date-only string into a midnight DateTime.
+let dateOnly = parse("2024-03-01", "yyyy-MM-dd", utc())
+echo dateOnly.hour, ":", dateOnly.minute
+```
+
+```{.txt}
+2024-03-01T09:30:00Z
+1 Mar 2024
+1 March 2024
+0:0
+```
+
+Selama polanya cocok, hasilnya pasti. Teks tanpa jam, seperti `"2024-03-01"`, menjadi tengah malam,
+yaitu jam `0` dan menit `0`. Kalau teksnya tidak cocok, `parse` melempar `exception`, bukan
+mengembalikan *value* kosong. Kasus itu dibahas di bagian *error*.
+
+## Selisih waktu dan *timestamp*
+
+`DateTime` bisa ditambah `Duration`, dikurangi `Duration`, atau dikurangi sesama `DateTime` yang
+menghasilkan `Duration`. `Duration` punya *procedure* seperti `inSeconds`, `inMinutes`, dan
+`inHours` untuk mengubahnya menjadi angka.
+
+```{.nim}
+import std/times
+
+let start = dateTime(2024, mMar, 1, 23, 30, 0, 0, utc())
+let deadline = start + initDuration(hours = 2)
+
+echo deadline
+echo deadline - start
+echo (deadline - start).inMinutes
+echo start.toTime.toUnix
+```
+
+```{.txt}
+2024-03-02T01:30:00Z
+2 hours
+120
+1709335800
+```
+
+Contohnya melintasi pergantian bulan: 1 Maret pukul 23:30 ditambah dua jam menjadi 2 Maret pukul
+01:30. Nim mengurus pergantian tanggalnya sendiri. Cetakan `2 hours` datang dari `$` pada `Duration`.
+
+Untuk berbicara dengan sistem lain, waktu sering perlu diubah menjadi angka. `toTime` mengubah
+`DateTime` menjadi `Time`, dan `toUnix` mengembalikan detik sejak 1 Januari 1970 UTC. Angka inilah
+yang biasanya disimpan di basis data atau dikirim lewat JSON.
+
+## Angka acak yang bisa diulang
+
+Generasi acak di Nim punya *generator* dengan *state*. `randomize(seed)` menyetel *generator* global,
+sedangkan `initRand(seed)` mengembalikan *generator* sendiri yang bisa disimpan di *variable*.
+Memberi *seed* tetap membuat urutannya sama setiap kali program dijalankan.
+
+```{.nim}
+import std/random
+
+randomize(1234)
+echo rand(100)
+echo rand(100)
+echo rand(1.0 .. 10.0)
+
+# A fresh generator with the same seed repeats the sequence from the start.
+var r = initRand(1234)
+echo r.rand(100)
+echo r.rand(100)
+```
+
+```{.txt}
+1
+10
+1.8034521390576308
+1
+10
+```
+
+*Line* `1` dan `10` muncul dua kali karena *generator* baru dengan *seed* `1234` mengulang urutan dari
+awal. Sifat inilah yang membuat *test* berguna. Tanpa *seed* tetap, `randomize()` mengambil entropi
+dari sistem, dan *test* yang bergantung padanya akan gagal sesekali tanpa pola.
+
+Angka dari `rand(100)` ada di *range* `0` sampai `99`; batas atasnya eksklusif. Untuk
+*range* pecahan, serahkan `HSlice` seperti `1.0 .. 10.0`.
+
+## Memilih dan mengocok
+
+Dua *procedure* yang menghemat kode: `sample` memilih satu *element*, `shuffle` mengocok urutan di
+tempat. Keduanya menerima *generator* sebagai *argument* pertama, jadi hasilnya bisa diulang.
+
+```{.nim}
+import std/random
+
+var r = initRand(1234)
+
+let names = @["ada", "grace", "linus", "margaret"]
+echo r.sample(names)
+echo r.sample(names)
+
+var deck = @[1, 2, 3, 4, 5]
+r.shuffle(deck)
+echo deck
+```
+
+```{.txt}
+linus
+ada
+@[5, 3, 1, 4, 2]
+```
+
+`sample` tidak mengubah *seq* asalnya. `shuffle` mengubahnya di tempat, jadi *seq* itu harus
+disimpan di *variable* `var`. Mengocok salinan sementara lalu membuangnya adalah *error* yang
+sering terjadi.
+
+## Bahaya `now()` di dalam *test*
+
+`now()` mengembalikan waktu saat *procedure* itu dipanggil. Di dalam *test*, itu berarti hasilnya
+bergantung pada kapan *test* dijalankan, dan kegagalannya muncul sesekali tanpa bisa diulang.
+
+Jalan keluarnya sederhana: jangan panggil `now()` di dalam *procedure* yang diuji. Terima `DateTime`
+sebagai parameter, lalu kirim *value* tetap di dalam *test*.
+
+```{.nim}
+import std/[times, unittest]
+
+proc isWeekend(dt: DateTime): bool =
+  dt.weekday in {dSat, dSun}
+
+suite "isWeekend":
+  test "Saturday is a weekend":
+    check isWeekend(dateTime(2024, mApr, 6, 12, 0, 0, 0, utc()))
+
+  test "Wednesday is not a weekend":
+    check not isWeekend(dateTime(2024, mApr, 3, 12, 0, 0, 0, utc()))
+```
+
+```{.txt}
+
+[Suite] isWeekend
+  [OK] Saturday is a weekend
+  [OK] Wednesday is not a weekend
+```
+
+*Procedure* itu murni: *output*-nya hanya bergantung pada *argument*-nya. Di program sungguhan, *caller*
+tingkat atas yang memanggil `now()` sekali, lalu meneruskan *value* itu ke bawah.
+
+## Error sengaja: format yang tidak cocok
+
+`parse` memeriksa setiap bagian teks terhadap polanya. Satu angka di luar *range* sudah cukup untuk
+menghentikan program.
+
+```{.nim}
+import std/times
+
+let bad = parse("2024-13-01", "yyyy-MM-dd", utc())
+echo bad
+```
+
+```{.txt}
+Error: unhandled exception: Failed to parse '2024-13-01' with format 'yyyy-MM-dd'. Failed on pattern 'MM' [TimeParseError]
+```
+
+*Message*-nya menyebut teks aslinya, polanya, dan bagian yang gagal, di sini `MM`. Output lengkapnya juga
+memuat jejak *stack*. Perbaikannya adalah memeriksa teks lebih dulu, atau membungkus `parse` dengan
+`try` dan `except TimeParseError`.
+
+## Latihan
+
+1. Ubah contoh pertama supaya hanya mencetak nama hari dalam seminggu, seperti `Friday`.
+2. Tanpa menjalankan, prediksi *output*-nya:
+   ```{.nim}
+   import std/times
+
+   let lastDay = dateTime(2024, mDec, 31, 23, 59, 0, 0, utc())
+   echo lastDay + initDuration(minutes = 2)
+   ```
+3. Tulis dari nol: *procedure* yang melempar dadu bernilai 1 sampai 6, dengan *generator* ber-*seed*
+   tetap sehingga lemparan pertama selalu sama.
+4. Kode berikut gagal *di-compile*. Perbaiki, lalu jelaskan *message*-nya:
+   ```{.nim}
+   import std/times
+
+   let created: Date = dateTime(2024, mMar, 1, 0, 0, 0, 0, utc())
+   echo created
+   ```
+5. Kenapa *procedure* yang memanggil `now()` langsung sulit diuji? Sebutkan satu cara menghindarinya.
+
+Jawaban ada di [Lampiran A](../appendix/answers.qmd).
+
+## Ringkasan
+
+- `dateTime` membentuk `DateTime`; `format` menuliskannya, `parse` membacanya kembali.
+- Selalu berikan `utc()` supaya *output* contoh tidak bergantung pada zona mesin.
+- `DateTime` dan `Duration` bisa dijumlahkan; `toUnix` mengubah waktu menjadi detik sejak 1970.
+- `initRand` dengan *seed* tetap membuat angka acak bisa diulang di dalam *test*.
+- Panggilan `now()` disembunyikan di *caller* tingkat atas; *procedure* yang diuji menerima
+  `DateTime` sebagai parameter.
+
+## Selanjutnya
+
+Bab berikutnya menambah tenaga: [*Thread* dan *Channel*](threads.qmd), menjalankan pekerjaan di
+beberapa *thread* sekaligus dan mengirim *result*-nya kembali dengan aman.

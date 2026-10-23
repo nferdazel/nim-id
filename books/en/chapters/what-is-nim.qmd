@@ -144,6 +144,8 @@ honest about this is more useful than selling one language as the answer to ever
 5. Without running it, decide whether `echo greet(42)` on the `greet` example is valid. Explain your
    reasoning.
 
+Answers are in [Appendix A](../appendix/answers.qmd).
+
 ## Summary
 
 - Nim compiles to C and then to a binary; no virtual machine runs while the program executes.

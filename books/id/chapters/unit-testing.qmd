@@ -1,15 +1,15 @@
 # `unittest` dan disiplin pengujian
 
 *Test* yang tidak pernah dijalankan tidak membuktikan apa pun. Nim menyertakan `unittest` di *library*
-standar, jadi tidak ada *package* yang perlu dipasang. Bab ini menulis *test* yang benar-benar berjalan,
-lalu membaca keluarannya. Yang dibawa pulang bukan kerangkanya, melainkan kebiasaan menjalankannya
+standar, jadi tidak ada *package* yang perlu dipasang. Bab ini write *test* yang benar-benar berjalan,
+lalu read *output*-nya. Yang dibawa pulang bukan kerangkanya, melainkan kebiasaan menjalankannya
 setiap kali kode berubah.
 
 ::: {.callout-note}
 ## Tujuan bab
 
-Setelah bab ini, pembaca bisa menulis `suite` dan `test`, memakai `check`, `require`, dan `expect`,
-membaca keluaran lulus dan gagal, serta mengenali `undeclared identifier` saat lupa mengimpor
+Setelah bab ini, pembaca bisa write `suite` dan `test`, memakai `check`, `require`, dan `expect`,
+read *output* lulus dan gagal, serta mengenali `undeclared identifier` saat lupa mengimpor
 `std/unittest`.
 :::
 
@@ -40,15 +40,15 @@ suite "add":
 
 Tiga hal yang perlu diperhatikan.
 
-- `suite` mengelompokkan *test*. Namanya muncul di keluaran dengan awalan `[Suite]`.
-- `test` adalah satu kasus uji. Setiap kasus yang lulus dicetak `[OK]`, menjorok dua spasi.
-- Baris pertama keluaran memang kosong. Itu bawaan `unittest`, bukan salah tulis di buku ini.
+- `suite` mengelompokkan *test*. Namanya muncul di *output* dengan awalan `[Suite]`.
+- `test` adalah satu kasus uji. Setiap kasus yang lulus di-print `[OK]`, menjorok dua spasi.
+- *Line* pertama *output* memang kosong. Itu bawaan `unittest`, bukan salah tulis di buku ini.
 
 `check` menerima *expression* `bool`; kalau bernilai `false`, *test*-nya ditandai gagal. Karena itu
-perbandingan ditulis apa adanya di dalamnya, bukan string atau hasil lain.
+*comparison* di-write apa adanya di dalamnya, bukan string atau *result* lain.
 
 Beri nama *test* sebagai perilaku, bukan sebagai nama *procedure*. `"adds two positive numbers"` lebih
-berguna daripada `"test add"`, karena saat *test* gagal, nama itulah yang muncul di keluaran dan
+berguna daripada `"test add"`, karena saat *test* gagal, nama itulah yang muncul di *output* dan
 menunjuk ke janji yang rusak. Nama yang baik membuat kegagalan bisa dipahami tanpa membuka kodenya.
 
 ## `check`, `require`, dan `expect`
@@ -87,7 +87,7 @@ kalau langkah berikutnya tidak masuk akal tanpa langkah sebelumnya, misalnya mem
 yang baru saja dipastikan bukan nol.
 
 `expect` memeriksa bahwa sebuah blok melempar *exception* dengan *type* tertentu. Blok di dalamnya
-tidak boleh lolos tanpa error; kalau lolos, tesnya gagal. Ini cara menguji *path* error, bukan hanya
+tidak boleh lolos tanpa error; kalau lolos, *test*-nya gagal. Ini cara menguji *path* error, bukan hanya
 *path* sukses.
 
 ```{.nim}
@@ -119,10 +119,10 @@ suite "divide":
   [OK] keeps running after a passing require
 ```
 
-Ketiga *tool* itu cukup untuk sebagian besar *test*. Keluarannya sama: `[OK]` untuk *test* yang lulus.
+Ketiga *tool* itu cukup untuk sebagian besar *test*. *Output*-nya sama: `[OK]` untuk *test* yang lulus.
 
 Kalau tiap kasus butuh keadaan awal yang sama, `unittest` menyediakan `setup` dan `teardown`. Blok
-`setup` berjalan sebelum tiap `test`, dan `teardown` sesudahnya. Keduanya ditulis di dalam blok
+`setup` berjalan sebelum tiap `test`, dan `teardown` sesudahnya. Keduanya di-write di dalam blok
 `suite`; di tingkat atas namanya tidak dikenali. Pakai kalau setiap *test* butuh data segar, misalnya *file* sementara
 yang harus dibuat dan dihapus ulang.
 
@@ -140,28 +140,28 @@ suite "add":
 tests.nim(1, 1) Error: undeclared identifier: 'suite'
 ```
 
-Pesan ini menunjuk baris 1, kolom 1: huruf pertama `suite`. `undeclared identifier` berarti nama itu
-tidak dikenal di *scope* mana pun. Perbaikannya menambahkan `import std/unittest` di baris
+*Message* ini menunjuk *line* 1, kolom 1: huruf pertama `suite`. `undeclared identifier` berarti nama itu
+tidak dikenal di *scope* mana pun. Perbaikannya menambahkan `import std/unittest` di *line*
 pertama.
 
 Ini pola yang sama dengan *module* lain. Nama dari **standard library** tidak pernah masuk sendiri; ia
-harus diimpor dulu. Kebiasaan yang menghemat waktu: tulis `import` di baris pertama, sebelum
-menulis tesnya. Dalam proyek nimble, *file* *test* diletakkan di *directory* `tests/`, dan `nimble test`
+harus diimpor dulu. Kebiasaan yang menghemat waktu: tulis `import` di *line* pertama, sebelum
+write *test*-nya. Dalam proyek nimble, *file* *test* diletakkan di *directory* `tests/`, dan `nimble test`
 menjalankan semuanya. Isinya tetap sama: `unittest`, dan *exit code* bukan nol kalau ada yang gagal.
 
 ## Saat *test* gagal
 
-*Test* yang gagal mencetak baris `[FAILED]`, dan di atasnya baris `Check failed:` yang memuat *file*,
-baris, kolom, serta *value* yang dibandingkan. Prosesnya juga keluar dengan kode bukan nol.
+*Test* yang gagal print *line* `[FAILED]`, dan di atasnya *line* `Check failed:` yang memuat *file*,
+*line*, kolom, serta *value* yang dibandingkan. Prosesnya juga keluar dengan kode bukan nol.
 
-*Exit code* itu yang penting untuk otomatisasi. CI tidak membaca teks keluarannya; ia hanya
+*Exit code* itu yang penting untuk otomatisasi. CI tidak read teks *output*-nya; ia hanya
 memeriksa apakah prosesnya sukses. Selama satu *test* gagal, seluruh proses dianggap gagal, dan
 penggabungan ditahan. Karena itu *test* berfungsi sebagai gerbang, bukan sekadar laporan.
 
 ## Latihan
 
 1. Tulis `suite` untuk *procedure* yang menghitung faktorial, dengan tiga kasus: nol, satu, dan lima.
-2. Tanpa menjalankan, prediksi keluarannya:
+2. Tanpa menjalankan, prediksi *output*-nya:
    ```{.nim}
    import std/unittest
 
@@ -171,7 +171,7 @@ penggabungan ditahan. Karena itu *test* berfungsi sebagai gerbang, bukan sekadar
      test "first char":
        check "nim"[0] == 'n'
    ```
-3. Kode berikut gagal *di-compile*. Perbaiki dan jelaskan pesannya:
+3. Kode berikut gagal *di-compile*. Perbaiki dan jelaskan *message*-nya:
    ```{.nim}
    import std/unittest
 
@@ -180,7 +180,7 @@ penggabungan ditahan. Karena itu *test* berfungsi sebagai gerbang, bukan sekadar
        check 1 + 1
    ```
 4. Jalankan `test` yang memakai `expect` untuk *exception* yang tidak dilempar. Jelaskan kenapa
-   tesnya gagal.
+   *test*-nya gagal.
 
 Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
@@ -190,7 +190,7 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 - `suite` mengelompokkan, `test` menandai satu kasus, dan `check` membandingkan *expression* `bool`.
 - `require` menghentikan seluruh proses *test* lebih awal; `expect` memastikan sebuah *exception*
   dilempar.
-- *Test* yang lulus dicetak `[OK]`, yang gagal `[FAILED]`, dan proses gagal itu keluar dengan kode
+- *Test* yang lulus di-print `[OK]`, yang gagal `[FAILED]`, dan proses gagal itu keluar dengan kode
   bukan nol.
 - Lupa `import std/unittest` menghasilkan `undeclared identifier` di *compile*.
 

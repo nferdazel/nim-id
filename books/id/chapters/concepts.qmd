@@ -1,19 +1,19 @@
 # Konsep dan pencocokan *type*
 
 *Procedure* generic dengan `[T]` menerima *type* apa saja. Itu sering terlalu longgar: badan *procedure*
-memakai `x.name`, tapi tidak ada yang mencegah pemanggilan dengan `int`. Batasan seperti
+memakai `x.name`, tapi tidak ada yang mencegah *calling* dengan `int`. Batasan seperti
 `[T: SomeInteger]` membantu, tapi daftarnya sudah ditentukan bahasa. Konsep menutup celah itu:
-batasan yang ditulis sendiri, berdasarkan bentuk *type*.
+batasan yang di-write sendiri, berdasarkan bentuk *type*.
 
 Bab ini membangun konsep dari yang sederhana sampai yang digabung, memakainya untuk memilih
-overloading, dan membaca pesan error ketika syaratnya tidak terpenuhi. Semua contoh diuji di Nim
+overloading, dan membaca *error message* ketika syaratnya tidak terpenuhi. Semua contoh diuji di Nim
 2.2.12.
 
 ::: {.callout-note}
 ## Tujuan bab
 
-Setelah bab ini, pembaca bisa menulis `concept`, memakainya sebagai batasan generic, menggabung
-syarat dengan `and` dan `or`, memakai konsep untuk memilih overloading, dan membaca pesan
+Setelah bab ini, pembaca bisa write `concept`, memakainya sebagai batasan generic, menggabung
+syarat dengan `and` dan `or`, memakai konsep untuk memilih overloading, dan membaca *message*
 `concept predicate failed`.
 :::
 
@@ -35,7 +35,7 @@ echo total(@[1.5, 2.5])
 4.0
 ```
 
-`SomeNumber` mencakup *type* bilangan. Satu *procedure*, dua *type* berbeda, tanpa menulis ulang. Batasan
+`SomeNumber` mencakup *type* bilangan. Satu *procedure*, dua *type* berbeda, tanpa write ulang. Batasan
 seperti ini berguna selama bentuk yang diinginkan sudah ada di **standard library**. Begitu yang
 dibutuhkan adalah "punya field `name`", tidak ada nama bawaan yang menolong.
 
@@ -73,7 +73,7 @@ bukan keturunan atau nama *type*.
 
 ## Dua syarat berarti keduanya harus benar
 
-Beberapa baris di dalam satu konsep digabung dengan `and` secara implisit.
+Beberapa *line* di dalam satu konsep digabung dengan `and` secara implisit.
 
 ```{.nim}
 type
@@ -129,7 +129,7 @@ sized 3
 ```
 
 `Label` hanya cocok dengan `Named`, `Box` hanya cocok dengan `Sized`, jadi compiler tidak ragu.
-Kalau satu *type* memenuhi keduanya, pemanggilan menjadi ambigu dan harus diselesaikan dengan cara
+Kalau satu *type* memenuhi keduanya, *calling* menjadi ambigu dan harus diselesaikan dengan cara
 lain. Karena itu, jaga agar konsep tetap sempit.
 
 ## Menggabungkan konsep dengan `and`
@@ -157,7 +157,7 @@ echo show(Employee(name: "Ada", age: 36))
 Ada (36)
 ```
 
-`Named and Aged` menuntut kedua syarat sekaligus. Bedanya dengan dua baris di dalam satu konsep:
+`Named and Aged` menuntut kedua syarat sekaligus. Bedanya dengan dua *line* di dalam satu konsep:
 `and` di sini menggabungkan konsep yang bisa dipakai ulang secara terpisah.
 
 ## Menggabungkan konsep dengan `or`
@@ -199,7 +199,7 @@ field yang dijamin ada. Ini pola yang sering muncul begitu `or` dipakai.
 
 ## Membaca error: predicate gagal
 
-Memanggil *procedure* dengan *type* yang tidak memenuhi konsep ditolak compiler.
+Call *procedure* dengan *type* yang tidak memenuhi konsep ditolak compiler.
 
 ```{.nim}
 type
@@ -226,10 +226,10 @@ main.nim(3, 6) Named: expression '' has no type (or is ambiguous)
 main.nim(3, 5) Named: concept predicate failed
 ```
 
-Bacalah dari bawah. Baris terakhir, `concept predicate failed`, menyebut penyebab sebenarnya. Baris
-di atasnya menunjuk *file* dan baris konsep, yaitu `Named` di baris 3, lalu merinci *expression* mana
+Bacalah dari bawah. *Line* terakhir, `concept predicate failed`, menyebut penyebab sebenarnya. *Line*
+di atasnya menunjuk *file* dan *line* konsep, yaitu `Named` di *line* 3, lalu merinci *expression* mana
 yang gagal. Compiler mencoba `x.name` pada `int`, menemukan tidak ada field `name`, dan melaporkannya
-berulang untuk tiap bagian *expression*. Pesannya panjang, tapi arahnya jelas: periksa konsep di baris
+berulang untuk tiap bagian *expression*. *Message*-nya panjang, tapi arahnya jelas: periksa konsep di *line*
 yang ditunjuk.
 
 ## Batas konsep
@@ -256,7 +256,7 @@ Untuk *type* yang benar-benar harus terdaftar, warisan atau `distinct` lebih tep
 
 ## Latihan
 
-1. Tulis konsep `Sized` yang menuntut `x.size is int`, lalu *procedure* yang mencetak ukurannya untuk
+1. Tulis konsep `Sized` yang menuntut `x.size is int`, lalu *procedure* yang print ukurannya untuk
    *type* `Box`.
 2. Apakah `type Num = object` dengan field `name: int` cocok dengan `Named`? Jalankan untuk membuktikan.
 3. Gabungkan dua konsep dengan `and`, lalu pakai sebagai batasan satu *procedure*.
@@ -268,10 +268,10 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 ## Ringkasan
 
 - `concept` menyaring *type* berdasarkan bentuk, misalnya `x.name is string`.
-- Beberapa baris di dalam satu konsep digabung dengan `and` secara implisit.
+- Beberapa *line* di dalam satu konsep digabung dengan `and` secara implisit.
 - `and` dan `or` menyatukan konsep; `or` menuntut badan *procedure* memeriksa cabang dengan `when`.
 - Konsep bisa memilih overloading selama tiap *type* hanya cocok dengan satu kandidat.
-- Konsep bukan *type*: `var x: Named` ditolak, dan pesan gagalnya berbentuk
+- Konsep bukan *type*: `var x: Named` ditolak, dan *message* gagalnya berbentuk
   `concept predicate failed`.
 
 ## Selanjutnya

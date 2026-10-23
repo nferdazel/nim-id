@@ -1,4 +1,4 @@
-# Cheat sheet {.unnumbered}
+# Cheat sheet
 
 This page gathers the syntax used most often. Every snippet is written in English, as in the whole
 book, and tested on Nim 2.2.12.

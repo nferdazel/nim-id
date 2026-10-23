@@ -1,22 +1,22 @@
 # CLI dengan `parseopt`
 
 *Tool* *command line* hampir selalu dimulai dari masalah yang sama: membongkar `seq[string]` dari
-`commandLineParams()` menjadi *option* dan argumen. Tanpa bantuan, kode itu penuh `if` dan pemeriksaan
+`commandLineParams()` menjadi *option* dan *argument*. Tanpa bantuan, kode itu penuh `if` dan pemeriksaan
 *index* yang mudah salah. Nim mengirim pemecahnya di **standard library**: `std/parseopt`.
 
 ::: {.callout-note}
 ## Tujuan bab
 
-Setelah bab ini, pembaca bisa membaca argumen dengan `initOptParser`, membedakan `cmdLongOption`,
+Setelah bab ini, pembaca bisa read *argument* dengan `initOptParser`, membedakan `cmdLongOption`,
 `cmdShortOption`, `cmdArgument`, dan `cmdEnd`, menangani *option* bernilai, memakai iterator `getopt`,
-menulis teks `usage` beserta *exit code*, serta membaca pesan `undeclared identifier` saat lupa
+menulis teks `usage` beserta *exit code*, serta membaca *message* `undeclared identifier` saat lupa
 mengimpor.
 :::
 
 ## Satu putaran, satu token
 
-`initOptParser` menerima *seq* argumen dan mengembalikan parser. Tiap panggilan `next` memajukan
-parser ke satu token. Supaya keluarannya tetap sama setiap kali, contoh memberi argumen tetap,
+`initOptParser` menerima *seq* *argument* dan return parser. Tiap panggilan `next` memajukan
+parser ke satu token. Supaya *output*-nya tetap sama setiap kali, contoh memberi *argument* tetap,
 bukan mengambil dari `commandLineParams()`. Simpan sebagai `main.nim`, lalu jalankan
 `nim c -r main.nim`.
 
@@ -49,11 +49,11 @@ Parser memberi tahu jenis tiap token lewat `kind`. Empat *value itu*:
 |---|---|---|
 | `cmdLongOption` | *option* panjang | `--verbose` |
 | `cmdShortOption` | *option* pendek | `-n` |
-| `cmdArgument` | argumen biasa | `input.txt` |
-| `cmdEnd` | argumen habis | akhir *seq* |
+| `cmdArgument` | *argument* biasa | `input.txt` |
+| `cmdEnd` | *argument* habis | akhir *seq* |
 
 Untuk *option*, `key` berisi nama tanpa tanda hubung, dan `val` berisi *value itu*. Untuk `cmdArgument`,
-`key` berisi argumen itu sendiri. `repr` dipakai pada `val` supaya string kosong terlihat sebagai
+`key` berisi *argument* itu sendiri. `repr` dipakai pada `val` supaya string kosong terlihat sebagai
 `""`, bukan ruang kosong yang tak kelihatan.
 
 ## *Option* bernilai dan iterator `getopt`
@@ -96,7 +96,7 @@ verbose=true
 output=report.txt count=2
 ```
 
-*Value* *option* ditulis dengan pemisah `=` atau `:`, misalnya `--output=report.txt` atau
+*Value* *option* di-write dengan pemisah `=` atau `:`, misalnya `--output=report.txt` atau
 `-o:report.txt`. Keduanya diterima mode bawaan `NimMode`. *Option* yang tidak punya *value* diisi lewat
 `shortNoVal` dan `longNoVal`. Untuk `--verbose` dan `-v`, keduanya ditandai sebagai *flag*, sehingga
 token berikutnya tidak ikut diserap. Selama `longNoVal` tidak kosong, *option* yang tidak tercantum di
@@ -107,7 +107,7 @@ Dengan `getopt(args)` polos tanpa `longNoVal`, bentuk `--count 2` tidak menyerap
 ## *Subcommand* sederhana
 
 Banyak *tool* punya *subcommand* seperti `add` dan `list`. `parseopt` tidak mengenal konsep itu, tetapi
-*subcommand* hanyalah argumen pertama yang tidak diawali tanda hubung. Kenali lewat `cmdArgument`
+*subcommand* hanyalah *argument* pertama yang tidak diawali tanda hubung. Kenali lewat `cmdArgument`
 pertama.
 
 ```{.nim}
@@ -144,15 +144,15 @@ force: true
 files: @["notes.txt"]
 ```
 
-Argumen pertama menjadi `command`; sisanya dikumpulkan ke `files`. `--force` ditandai lewat
+*Argument* pertama menjadi `command`; sisanya dikumpulkan ke `files`. `--force` ditandai lewat
 `longNoVal` supaya `notes.txt` tidak dianggap *value itu*. Pola ini cukup sampai sekitar lima
 *subcommand*; di atas itu, pisahkan tiap *subcommand* ke *procedure* sendiri.
 
 ## `usage`, `--help`, dan *exit code*
 
 Program yang baik menjelaskan dirinya saat diminta, dan memberi *exit code* yang bisa dibaca skrip
-lain. *Exit code* `0` berarti sukses; angka bukan nol menandai kegagalan. Contoh mengembalikan kode
-sebagai `int` supaya hasilnya bisa diprediksi, lalu memanggil `quit` di program sungguhan.
+lain. *Exit code* `0` berarti sukses; angka bukan nol menandai kegagalan. Contoh return kode
+sebagai `int` supaya *result*-nya bisa diprediksi, lalu call `quit` di program sungguhan.
 
 ```{.nim}
 import std/parseopt
@@ -189,9 +189,9 @@ exit code: 0
 exit code: 2
 ```
 
-Di program nyata, `status` dipanggil sekali di akhir: `quit(status(commandLineParams()))`. Nama
+Di program nyata, `status` di-call sekali di akhir: `quit(status(commandLineParams()))`. Nama
 `help` dan `h` sengaja digabung, sehingga `--help` dan `-h` berperilaku sama. Satu blok `usage`
-menjadi satu-satunya tempat teks bantuan ditulis, jadi tidak ada dua daftar yang bisa saling
+menjadi satu-satunya tempat teks bantuan di-write, jadi tidak ada dua daftar yang bisa saling
 berbeda.
 
 ```bash
@@ -199,12 +199,12 @@ $ ./notes --help
 usage: notes [--help] <command> [<file>...]
 ```
 
-## Argumen tambahan setelah `--`
+## *Argument* tambahan setelah `--`
 
 Terkadang sebuah nama *file* dimulai dengan tanda hubung, misalnya `-draft.txt`. Parser akan
 mengira itu sebuah *option*. Tanda `--` menandai akhir bagian *option*. Parser melaporkannya sebagai *option*
 panjang dengan nama kosong: hentikan putaran di situ, lalu ambil sisa token dengan `remainingArgs`.
-Parser tidak mengubah token berikutnya menjadi argumen dengan sendirinya.
+Parser tidak mengubah token berikutnya menjadi *argument* dengan sendirinya.
 
 ```{.nim}
 import std/parseopt
@@ -232,7 +232,7 @@ files: @["file one.txt", "file two.txt"]
 ```
 
 Tanda `--` muncul sebagai `cmdLongOption` dengan `key` kosong. Begitu ditemukan, putaran berhenti,
-dan `remainingArgs` mengembalikan sisa *seq*. Varian `cmdLineRest` mengembalikan sisa itu sebagai
+dan `remainingArgs` return sisa *seq*. Varian `cmdLineRest` return sisa itu sebagai
 satu string, bukan *seq*.
 
 ## Error sengaja: lupa mengimpor `std/parseopt`
@@ -249,10 +249,10 @@ echo parser.kind
 main.nim(1, 14) Error: undeclared identifier: 'initOptParser'
 ```
 
-Baca dari kiri: *file*, posisi `(baris, kolom)`, tingkat, lalu pesannya. Posisi `(1, 14)` adalah
+Baca dari kiri: *file*, posisi `(baris, kolom)`, tingkat, lalu *message*-nya. Posisi `(1, 14)` adalah
 awal nama yang tidak dikenal, tepat setelah `let parser = `. `undeclared identifier` berarti nama
-itu dipakai tanpa pernah dideklarasikan atau diimpor. Baris `candidates` di bawahnya mencetak nama
-yang jarak editnya dekat; pada contoh ini tidak ada yang relevan. Perbaikan terpendek: tambahkan `import std/parseopt` di baris
+itu dipakai tanpa pernah dideklarasikan atau diimpor. *Line* `candidates` di bawahnya print nama
+yang jarak editnya dekat; pada contoh ini tidak ada yang relevan. Perbaikan terpendek: tambahkan `import std/parseopt` di *line*
 pertama.
 
 ## Kapan `parseopt` cukup
@@ -266,9 +266,9 @@ standar selalu tersedia bersama compiler.
 
 ## Latihan
 
-1. Tambahkan *option* `--quiet` pada contoh pertama supaya *loop itu* berhenti mencetak token dan
-   hanya mencetak `quiet mode` di akhir.
-2. Tanpa menjalankan, prediksi keluarannya: token apa saja yang muncul dari *seq* ini, dan apa
+1. Tambahkan *option* `--quiet` pada contoh pertama supaya *loop itu* berhenti print token dan
+   hanya print `quiet mode` di akhir.
+2. Tanpa menjalankan, prediksi *output*-nya: token apa saja yang muncul dari *seq* ini, dan apa
    isi `key` serta `val` masing-masing?
    ```{.nim}
    import std/parseopt
@@ -276,9 +276,9 @@ standar selalu tersedia bersama compiler.
    for kind, key, val in getopt(@["-ab", "--name=ana"]):
      echo "[", kind, "] key=", key, " val=", val
    ```
-3. Tulis dari nol: *tool* yang menerima `--count N` lalu mencetak `count` sebanyak N kali, dengan
+3. Tulis dari nol: *tool* yang menerima `--count N` lalu print `count` sebanyak N kali, dengan
    *value* bawaan N sama dengan 3.
-4. Kode berikut gagal *di-compile*. Perbaiki, lalu jelaskan isi pesannya:
+4. Kode berikut gagal *di-compile*. Perbaiki, lalu jelaskan isi *message*-nya:
    ```{.nim}
    import std/parseopt
 
@@ -293,14 +293,14 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
 ## Ringkasan
 
-- `initOptParser` dan `next` membongkar argumen satu token demi satu token.
+- `initOptParser` dan `next` membongkar *argument* satu token demi satu token.
 - Empat jenis token: `cmdLongOption`, `cmdShortOption`, `cmdArgument`, dan `cmdEnd`.
 - Iterator `getopt` menyembunyikan putaran manual; `shortNoVal` dan `longNoVal` menandai *option* tanpa
   *value*.
 - *Exit code* `0` berarti sukses; kembalikan `int` lalu panggil `quit`.
-- `--` menghentikan pemrosesan *option*; sisa argumen diambil dengan `remainingArgs`.
+- `--` menghentikan pemrosesan *option*; sisa *argument* diambil dengan `remainingArgs`.
 
 ## Selanjutnya
 
-Bab berikutnya menaikkan taruhan: dari *tool* yang membaca argumen menjadi layanan yang menerima
+Bab berikutnya menaikkan taruhan: dari *tool* yang read *argument* menjadi layanan yang menerima
 permintaan. Lanjut ke [HTTP API dengan `asynchttpserver`](http-api.qmd).

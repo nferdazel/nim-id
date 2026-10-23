@@ -1,18 +1,18 @@
-# Percabangan: `if`, `case`, `when`
+# *Branching*: `if`, `case`, `when`
 
-Program yang mengerjakan hal yang sama untuk semua masukan jarang berguna. Cepat atau lambat kita
+Program yang mengerjakan hal yang sama untuk semua *input* jarang berguna. Cepat atau lambat kita
 perlu memilih *path*: saldo cukup atau tidak, nama kosong atau terisi, sistemnya Unix atau Windows.
 
-`if` sudah akrab bagi siapa pun yang pernah menulis di bahasa lain. Yang khas di Nim ada tiga: `if`
+`if` sudah akrab bagi siapa pun yang pernah write di bahasa lain. Yang khas di Nim ada tiga: `if`
 bisa langsung menghasilkan *value*, `case` menuntut semua kemungkinan tertutup, dan `when` memilih
 cabang **saat *compile***: cabang yang tidak terpilih tidak ikut *di-compile*.
 
 ::: {.callout-note}
 ## Tujuan bab
 
-Setelah bab ini, pembaca bisa menulis `if`/`elif`/`else`, mengambil *value* dari sebuah `if`, memakai
-`case` dengan *set* dan *range*, memisahkan kode per sistem operasi lewat `when`, dan membaca
-pesan `type mismatch` serta `not all cases are covered`.
+Setelah bab ini, pembaca bisa write `if`/`elif`/`else`, mengambil *value* dari sebuah `if`, memakai
+`case` dengan *set* dan *range*, memisahkan kode per sistem operasi lewat `when`, dan read
+*message* `type mismatch` serta `not all cases are covered`.
 :::
 
 ## `if`, `elif`, `else`
@@ -36,14 +36,14 @@ cool
 
 Tiga hal yang berbeda dari banyak bahasa lain:
 
-- Kondisi tidak perlu tanda kurung. Titik dua `:` menutup kondisi, dan isi blok ditulis menjorok.
+- Kondisi tidak perlu tanda kurung. Titik dua `:` menutup kondisi, dan isi blok di-write menjorok.
 - Indentasi menentukan batas blok, jadi jangan mencampur tab dan spasi dalam satu *file*. Gaya resmi
   Nim memakai dua spasi.
 - Nim memakai kata kunci `elif`. `else if` tidak dikenal compiler.
 
 ## `if` sebagai *expression*
 
-Di Nim, `if` adalah *expression*: hasilnya bisa langsung disimpan ke *variable*.
+Di Nim, `if` adalah *expression*: *result*-nya bisa langsung disimpan ke *variable*.
 
 ```{.nim}
 let score = 72
@@ -63,10 +63,10 @@ grade: B
 label: keep going
 ```
 
-Perhatikan bentuk satu baris `if score >= 75: 'A' else: 'B'`. Bentuk ini valid karena setiap cabang
+Perhatikan bentuk satu *line* `if score >= 75: 'A' else: 'B'`. Bentuk ini valid karena setiap cabang
 menghasilkan satu *value*. Kalau `if` dipakai sebagai *expression*, semua cabang harus bertipe sama, dan
 `else` wajib ada. Tanpa `else`, Nim memperlakukannya sebagai *statement* biasa, sehingga *value* di
-dalamnya dianggap tidak terpakai: `let x = if cond: 1` ditolak dengan pesan
+dalamnya dianggap tidak terpakai: `let x = if cond: 1` ditolak dengan *message*
 `has to be used (or discarded)`.
 
 ## `case`: memilih berdasarkan *value*
@@ -98,7 +98,7 @@ for month in [1, 4, 7, 10, 13]:
 Satu `of` bisa memuat daftar *value* yang dipisah koma (`12, 1, 2`) atau *range* dengan `..`
 (`3 .. 5`). *Value* yang diuji `case` boleh bertipe ordinal (`int`, `char`, `bool`, `enum`) atau
 `string`. *Range* hanya berlaku untuk *type* ordinal: pada `string`, `of` menerima daftar *value* saja,
-dan `of "a" .. "c"` ditolak dengan pesan `range of string is invalid`.
+dan `of "a" .. "c"` ditolak dengan *message* `range of string is invalid`.
 
 ## `when`: cabang yang dipilih compiler
 
@@ -118,12 +118,12 @@ echo "separator: ", PathSeparator
 separator: /
 ```
 
-Di Linux dan macOS, `defined(windows)` bernilai salah, jadi outputnya `/`. Di Windows, hanya baris
-`const PathSeparator = '\\'` yang *di-compile* dan hasilnya backslash. Perbedaan dengan `if` jelas di
+Di Linux dan macOS, `defined(windows)` bernilai salah, jadi *output*-nya `/`. Di Windows, hanya *line*
+`const PathSeparator = '\\'` yang *di-compile* dan *result*-nya backslash. Perbedaan dengan `if` jelas di
 sini: pada `if`, kedua cabang harus tetap bisa *di-compile* meski salah satu tidak pernah jalan.
 Pola ini juga dipakai untuk `when isMainModule:` atau `when sizeof(int) == 8:`.
 
-## Membaca pesan error: kondisi harus `bool`
+## Membaca *error message*: kondisi harus `bool`
 
 Nim tidak mengonversi *value* lain menjadi boolean. Angka `0`, string kosong, dan `nil` bukan `false`.
 
@@ -140,15 +140,15 @@ main.nim(3, 4) Error: type mismatch: got 'int' for 'count' but expected 'bool'
 
 | Bagian | Arti |
 |---|---|
-| `main.nim(3, 4)` | *file*, baris 3, kolom 4: posisi `count` di kondisi |
+| `main.nim(3, 4)` | *file*, *line* 3, kolom 4: posisi `count` di kondisi |
 | `Error` | tingkat keparahan; menghentikan *compile* |
 | `got 'int'` | *type* yang benar-benar diberikan |
 | `expected 'bool'` | *type* yang diharapkan `if` |
 
-Bacanya sederhana: kondisi `if` harus bertipe `bool`. Perbaikannya tulis perbandingan yang jelas,
+Bacanya sederhana: kondisi `if` harus bertipe `bool`. Perbaikannya tulis *comparison* yang jelas,
 misalnya `if count > 0:`.
 
-## Membaca pesan error: `case` yang tidak lengkap
+## Membaca *error message*: `case` yang tidak lengkap
 
 ```{.nim}
 proc describe(n: int): string =
@@ -170,12 +170,12 @@ tanpa `else`.
 
 ## Latihan
 
-1. Ubah `temperature` di contoh pertama menjadi `5`, lalu prediksi outputnya sebelum menjalankan.
+1. Ubah `temperature` di contoh pertama menjadi `5`, lalu prediksi *output*-nya sebelum menjalankan.
 2. Tulis *expression* `if` yang mengubah *value* `age` menjadi `"anak"` (di bawah 13), `"remaja"` (13–19),
-   atau `"dewasa"` (20 ke atas), lalu cetak hasilnya.
-3. Tulis *procedure* yang menerima `char` dan memakai `case` untuk mengembalikan `"vowel"` untuk
+   atau `"dewasa"` (20 ke atas), lalu print *result*-nya.
+3. Tulis *procedure* yang menerima `char` dan memakai `case` untuk return `"vowel"` untuk
    `'a'`/`'i'`/`'u'`/`'e'`/`'o'`, `"digit"` untuk `'0' .. '9'`, dan `"other"` untuk sisanya.
-4. Kode berikut gagal *di-compile*. Perbaiki, lalu sebutkan baris dan kolom yang ditunjuk compiler:
+4. Kode berikut gagal *di-compile*. Perbaiki, lalu sebutkan *line* dan kolom yang ditunjuk compiler:
    ```{.nim}
    var name = "Nim"
 

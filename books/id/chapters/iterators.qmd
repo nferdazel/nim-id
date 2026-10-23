@@ -1,6 +1,6 @@
 # Iterator dan `yield`
 
-*Seq* (`seq`) menyimpan semua *element itu* di memori. Itu boros kalau *element itu* banyak, atau baru
+*Seq* (`seq`) menyimpan semua *element itu* di *memory*. Itu boros kalau *element itu* banyak, atau baru
 bisa dihitung saat dibutuhkan. Nim punya iterator: rutin yang menghasilkan *value* satu per satu, saat
 diminta. *Value itu* tidak disimpan; yang berpindah adalah posisi iteratornya. Karena itu iterator bisa
 melewati data yang sangat besar, atau bahkan data yang belum ada, tanpa menunggu semuanya siap.
@@ -8,8 +8,8 @@ melewati data yang sangat besar, atau bahkan data yang belum ada, tanpa menunggu
 ::: {.callout-note}
 ## Tujuan bab
 
-Setelah bab ini, pembaca bisa menulis iterator dengan `yield`, memakainya di dalam `for`, memakai
-`items` dan `pairs`, membuat iterator closure yang bisa dilanjutkan, serta membaca pesan error saat
+Setelah bab ini, pembaca bisa write iterator dengan `yield`, memakainya di dalam `for`, memakai
+`items` dan `pairs`, membuat iterator closure yang bisa dilanjutkan, serta membaca *error message* saat
 iterator inline diperlakukan sebagai *value*.
 :::
 
@@ -36,14 +36,14 @@ for value in countTo(3):
 
 `for` menjalankan iterator sampai habis. Setiap `yield` menyerahkan satu *value*, lalu iterator
 berhenti sebentar dan dilanjutkan pada putaran berikutnya. Karena *value* keluar satu per satu,
-pemanggil bisa berhenti kapan saja tanpa menghitung sisanya.
+*caller* bisa berhenti kapan saja tanpa menghitung sisanya.
 
 Iterator tanpa penanda khusus default-nya inline: compiler menyalin badannya ke tempat pemakaian.
-Hasilnya sama cepat dengan *loop* yang ditulis tangan.
+*Result*-nya sama cepat dengan *loop* yang ditulis tangan.
 
 ## Iterator menerima parameter
 
-Iterator menerima parameter seperti *procedure*.
+Iterator menerima *parameter* seperti *procedure*.
 
 ```{.nim}
 iterator evens(numbers: openArray[int]): int =
@@ -61,7 +61,7 @@ for n in evens([1, 2, 3, 4, 5, 6]):
 6
 ```
 
-`evens` hanya mengeluarkan bilangan genap dari masukannya. Parameter `openArray[int]` menerima *array*
+`evens` hanya mengeluarkan bilangan genap dari *input*-nya. *Parameter* `openArray[int]` menerima *array*
 maupun *seq*, jadi satu iterator menangani keduanya.
 
 ## `items` dan `pairs`
@@ -86,7 +86,7 @@ Grace
 ```
 
 `items` mengeluarkan *element*, `pairs` mengeluarkan *index* bersama *element*. Bentuk `for name in names`
-sebenarnya singkatan dari `for name in items(names)`; menulis `items` dan `pairs` secara eksplisit
+sebenarnya singkatan dari `for name in items(names)`; write `items` dan `pairs` secara eksplisit
 kadang memperjelas mana yang sedang dipakai.
 
 ## Closure iterator dan `finished`
@@ -116,7 +116,7 @@ while true:
 ```
 
 `countBetween` adalah fungsi yang bisa dilanjutkan. `var it = countBetween` menyiapkan iteratornya,
-dan argumen `(3, 5)` diberikan pada tiap pemanggilan. `finished(it)` bernilai `true` setelah iterator
+dan *argument* `(3, 5)` diberikan pada tiap *calling*. `finished(it)` bernilai `true` setelah iterator
 selesai. Perhatikan urutannya: panggil dulu, periksa `finished`, baru pakai *value itu*. Manual Nim
 memperingatkan bahwa `finished` baru bernilai `true` satu putaran setelah *value* terakhir keluar, jadi
 *value* pada putaran itu harus dibuang.
@@ -144,8 +144,8 @@ for n in numbers():
 3
 ```
 
-`countTo` menangkap `n`, lalu mengembalikan iterator anonim yang memakainya. Pola ini memisahkan
-penyiapan dari pengambilan *value*, dan hasilnya bisa langsung dipakai di `for`.
+`countTo` menangkap `n`, lalu return iterator anonim yang memakainya. Pola ini memisahkan
+penyiapan dari pengambilan *value*, dan *result*-nya bisa langsung dipakai di `for`.
 
 ## Membaca error: iterator inline bukan *value*
 
@@ -165,32 +165,32 @@ let it = countTo
 main.nim(7, 5) Error: invalid type: 'iterator (n: int): int{.inline, noSideEffect, gcsafe.}' for let
 ```
 
-Pesannya menuliskan *type* lengkapnya, termasuk penanda `{.inline.}`, dan menolak `let`. Solusinya:
+*Message*-nya menuliskan *type* lengkapnya, termasuk penanda `{.inline.}`, dan menolak `let`. Solusinya:
 pakai langsung di `for`, atau tandai iteratornya `{.closure.}` kalau memang perlu disimpan sebagai
 *value*.
 
 ## Iterator atau *seq*?
 
-Iterator tidak menyimpan *element*, jadi ia hemat memori dan bisa berhenti lebih awal. Harganya: satu
+Iterator tidak menyimpan *element*, jadi ia hemat *memory* dan bisa berhenti lebih awal. Harganya: satu
 *element* hanya bisa dilewati sekali. Tidak ada *index* acak, tidak ada `.len`, dan tidak bisa diurutkan.
 
-*Seq* menampilkan semua *element* di memori. Ia cocok kalau *element itu* perlu diindeks, diurutkan, atau
+*Seq* menampilkan semua *element* di *memory*. Ia cocok kalau *element itu* perlu diindeks, diurutkan, atau
 dipakai berkali-kali.
 
 Aturan praktisnya: pilih iterator kalau alirannya besar atau tak terbatas, dan kalau pencarian sering
-berhenti di tengah. Pilih *seq* kalau butuh koleksi utuh. Membaca baris log raksasa sambil mencari
+berhenti di tengah. Pilih *seq* kalau butuh koleksi utuh. Read *line* log raksasa sambil mencari
 satu pola adalah contoh yang sering: iterator berhenti begitu pola ketemu, tanpa memuat seluruh
 *file*.
 
-Dari sisi kecepatan, iterator inline dilipat ke kode pemanggil tanpa biaya tambahan. Iterator closure
-melibatkan pemanggilan fungsi, jadi sedikit lebih mahal. Keduanya tetap lebih hemat memori daripada
+Dari sisi kecepatan, iterator inline dilipat ke kode *caller* tanpa biaya tambahan. Iterator closure
+melibatkan *calling* fungsi, jadi sedikit lebih mahal. Keduanya tetap lebih hemat *memory* daripada
 membangun *seq* yang hanya dilewati sekali.
 
 ## Latihan
 
 1. Tulis `iterator multiples(n: int, step: int): int` yang mengeluarkan kelipatan `step` sampai `n`,
    lalu pakai di dalam `for`.
-2. Tanpa menjalankan, prediksi outputnya:
+2. Tanpa menjalankan, prediksi *output*-nya:
    ```{.nim}
    iterator counts(): int =
      yield 1
@@ -216,5 +216,5 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
 ## Selanjutnya
 
-Bab berikutnya membahas [tuple](tuples.qmd): menggabungkan beberapa *value* menjadi satu, dan
-membongkarnya kembali dalam satu baris.
+Bab berikutnya membahas [closure](closures.qmd): *procedure* yang mengingat *variable* di sekitarnya,
+dan kapan sifat itu lebih berguna daripada *procedure* biasa.

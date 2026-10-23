@@ -79,7 +79,7 @@ Setiap cabang `of` hanya menyentuh field milik cabang itu, jadi tidak ada akses 
 
 ## Field umum sebelum `case`
 
-Field yang ditulis sebelum `case` dimiliki semua cabang.
+Field yang di-write sebelum `case` dimiliki semua cabang.
 
 ```{.nim}
 type
@@ -129,8 +129,8 @@ echo c.radius
 main.nim(11, 14) Error: a case selecting discriminator 'kind' with value 'circle' appears in the object construction, but the field(s) 'width' are in conflict with this value.
 ```
 
-Pesan itu panjang, tapi pesannya tunggal: `kind` bernilai `circle`, sementara `width` hanya ada di
-cabang `rect`. Perbaikannya jelas dari isi pesan, yaitu hapus `width` dan isi `radius`, atau ubah
+*Message* itu panjang, tapi *message*-nya tunggal: `kind` bernilai `circle`, sementara `width` hanya ada di
+cabang `rect`. Perbaikannya jelas dari isi *message*, yaitu hapus `width` dan isi `radius`, atau ubah
 `kind` menjadi `rect`.
 
 ## Error saat runtime: `FieldDefect`
@@ -198,7 +198,7 @@ echo float(price)
 main.nim(3, 22) Error: type mismatch: got 'float64' for '10.0' but expected 'Dollars = distinct float'
 ```
 
-Compiler menolak `10.0` karena *type itu* `float64`, bukan `Dollars`. Tulis `Dollars(10.0)`. Pesan
+Compiler menolak `10.0` karena *type itu* `float64`, bukan `Dollars`. Tulis `Dollars(10.0)`. *Message*
 errornya menyebut kedua *type*, jadi arah perbaikannya langsung terbaca.
 
 ## `distinct` vs alias *type*
@@ -224,7 +224,7 @@ found 5
 ```
 
 `Alias(3)` dan `4` sama-sama `int`, jadi keduanya diterima tanpa konversi. `UserId` berbeda: *value itu*
-harus ditulis `int(UserId(5))` sebelum masuk. Pakai alias kalau hanya butuh nama pendek untuk *type*
+harus di-write `int(UserId(5))` sebelum masuk. Pakai alias kalau hanya butuh nama pendek untuk *type*
 yang sama. Pakai `distinct` kalau *value itu* tidak boleh tertukar, seperti id, satuan, atau nominal
 uang.
 
@@ -250,7 +250,7 @@ echo total
 15.5 USD
 ```
 
-`{.borrow.}` meminjam badan `+` dari `float` supaya tidak ditulis ulang. Karena operasinya dipilih
+`{.borrow.}` meminjam badan `+` dari `float` supaya tidak di-write ulang. Karena operasinya dipilih
 satu per satu, `distinct` memaksa kita berpikir soal satuan sebelum mencampur *value*.
 
 ## Error: memakai `distinct` sebagai *type* dasarnya
@@ -276,9 +276,9 @@ perbaikannya. Inilah pengaman yang tidak dimiliki alias *type*.
 
 1. Tambahkan varian ketiga `triangle` dengan field `base` dan `altitude` pada `Shape`, lalu perluas
    `area`.
-2. Tanpa menjalankan, prediksi keluaran bila `Shape(kind: circle, width: 3.0)` diganti menjadi
+2. Tanpa menjalankan, prediksi *output* bila `Shape(kind: circle, width: 3.0)` diganti menjadi
    `Shape(kind: circle, radius: 3.0)`. Jelaskan.
-3. Tulis *type* `Meters = distinct int` beserta *procedure* `$`-nya, lalu cetak satu *value itu*.
+3. Tulis *type* `Meters = distinct int` beserta *procedure* `$`-nya, lalu print satu *value itu*.
 4. Ubah `type UserId = distinct int` menjadi alias `int`. Apa yang hilang dari program, dan kenapa
    itu penting?
 5. Jelaskan kenapa `echo Shape(kind: rect, width: 3.0, height: 4.0).radius` gagal saat berjalan,

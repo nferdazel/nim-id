@@ -1,10 +1,10 @@
 # Tuple dan destructuring
 
-*Procedure* `minMax` perlu mengembalikan dua angka: *value* terkecil dan terbesar. Di banyak bahasa,
-jalan pintasnya adalah mengembalikan *array* atau *object* kecil. Nim punya cara yang lebih langsung:
+*Procedure* `minMax` perlu return dua angka: *value* terkecil dan terbesar. Di banyak bahasa,
+jalan pintasnya adalah return *array* atau *object* kecil. Nim punya cara yang lebih langsung:
 tuple, *value* gabungan berukuran tetap yang *element itu* boleh berbeda *type*.
 
-Tuple itu kecil dan murah. Ia dipakai untuk mengembalikan beberapa *value* sekaligus, menamai
+Tuple itu kecil dan murah. Ia dipakai untuk return beberapa *value* sekaligus, menamai
 pasangan, atau menampung data sementara yang belum perlu menjadi *type* penuh.
 
 ::: {.callout-note}
@@ -47,7 +47,7 @@ echo corner.x, ",", corner.y
 
 Perhatikan `(x: 3, y: 4)`, bukan `Point(x: 3, y: 4)`. Tuple tidak punya *constructor* seperti
 *object*. Cara membuatnya selalu literal dengan nama field di dalam tanda kurung, dan *type itu*
-ditulis lewat anotasi *variable*.
+di-write lewat anotasi *variable*.
 
 Bentuk pendek `x, y: int` menamai dua field sekaligus. Nama dan urutannya adalah bagian dari *type*,
 jadi `tuple[x, y: int]` dan `tuple[y, x: int]` adalah dua *type* yang berbeda, dan *value* satu tidak
@@ -69,7 +69,7 @@ Ada is 36
 Karena fieldnya punya nama, tuple juga bisa dibandingkan langsung: `(1, "a") == (1, "b")` bernilai
 `false`, sedangkan `(1, "a") < (2, "a")` bernilai `true`.
 
-## Destructuring: satu baris, beberapa *variable*
+## Destructuring: satu *line*, beberapa *variable*
 
 Tuple bisa dibongkar langsung ke beberapa *variable*. Nim menyebutnya *tuple unpacking*.
 
@@ -88,7 +88,7 @@ echo x, " ", y
 ```
 
 Bentuk `let (a, b) = ...` membuat dua *variable* sekaligus. Dengan `var`, keduanya bisa diubah, tapi
-mengubah `y` tidak menyentuh `x`. Tanpa destructuring, kode yang sama butuh tiga baris.
+mengubah `y` tidak menyentuh `x`. Tanpa destructuring, kode yang sama butuh tiga *line*.
 
 ## Tuple sebagai **return value**
 
@@ -112,7 +112,7 @@ echo low, "..", high
 1..5
 ```
 
-Di dalam *procedure*, field `result` diisi satu per satu. Di sisi pemanggil, hasilnya langsung
+Di dalam *procedure*, field `result` diisi satu per satu. Di sisi *caller*, *result*-nya langsung
 dibongkar dengan `let (low, high) = ...`. Tidak ada *type* bantu, tidak ada *array* sementara.
 
 Batas praktisnya: tuple nyaman untuk dua sampai tiga *value*. Begitu field bertambah banyak, atau
@@ -135,11 +135,11 @@ for (number, word) in words:
 ```
 
 Setiap *element* *seq* adalah tuple, dan `(number, word)` membongkarnya pada tiap putaran. Tanpa
-itu, pembaca harus menulis `item[0]` dan `item[1]`, yang tidak menjelaskan apa pun.
+itu, pembaca harus write `item[0]` dan `item[1]`, yang tidak menjelaskan apa pun.
 
 ## Melihat semua field sekaligus
 
-`fields` mengembalikan *value* setiap field secara berurutan.
+`fields` return *value* setiap field secara berurutan.
 
 ```{.nim}
 type Config = tuple[host: string, port: int]
@@ -171,7 +171,7 @@ echo a, b
 main.nim(1, 5) Error: tuple with 2 elements expected, but got '(int, int, int)' with 3 elements
 ```
 
-Pesan itu menyebut kedua belah pihak: pola menunggu 2 *element*, *value itu* punya 3. Solusinya menambah
+*Message* itu menyebut kedua belah pihak: pola menunggu 2 *element*, *value itu* punya 3. Solusinya menambah
 *variable* atau memakai *element* lain. Posisi `(1, 5)` menunjuk ke awal pola `(a, b)`.
 
 ## Membaca error: tuple bukan *object*
@@ -189,22 +189,22 @@ echo corner.x, ",", corner.y
 main.nim(3, 19) Error: object constructor needs an object type
 ```
 
-Pesannya singkat saja: sintaksis *constructor* hanya untuk `object`. Untuk tuple, pakai literal
+*Message*-nya singkat saja: sintaksis *constructor* hanya untuk `object`. Untuk tuple, pakai literal
 `(x: 3, y: 4)`.
 
 ## Latihan
 
-1. Buat `type Range = tuple[low, high: int]`, isi dengan `(low: 0, high: 10)`, lalu cetak kedua
+1. Buat `type Range = tuple[low, high: int]`, isi dengan `(low: 0, high: 10)`, lalu print kedua
    fieldnya.
-2. Tanpa menjalankan, prediksi outputnya:
+2. Tanpa menjalankan, prediksi *output*-nya:
    ```{.nim}
    let pair = (1, 2)
    let (first, second) = pair
    echo second, first
    ```
 3. Tulis `proc stats(values: openArray[float]): tuple[count: int, total: float]`, lalu bongkar
-   hasilnya dalam satu baris.
-4. Kode berikut gagal. Perbaiki, lalu jelaskan pesannya:
+   *result*-nya dalam satu *line*.
+4. Kode berikut gagal. Perbaiki, lalu jelaskan *message*-nya:
    ```{.nim}
    let pair = (1, 2)
    echo pair.x
@@ -217,8 +217,8 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 - Tuple adalah *value* gabungan berukuran tetap; *element itu* boleh berbeda *type*.
 - Tuple anonim diakses lewat *index*, tuple bernama lewat field.
 - Tuple dibuat dengan literal, bukan dengan *constructor* bergaya *object*.
-- `let (a, b) = ...` membongkar tuple dalam satu baris, dan juga bekerja di kepala `for`.
-- *Procedure* bisa mengembalikan tuple, lalu pemanggil membongkarnya.
+- `let (a, b) = ...` membongkar tuple dalam satu *line*, dan juga bekerja di kepala `for`.
+- *Procedure* bisa return tuple, lalu *caller* membongkarnya.
 
 ## Selanjutnya
 

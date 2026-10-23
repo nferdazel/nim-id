@@ -1,0 +1,265 @@
+# Threads and channels
+
+Some work cannot be made async. Crunching numbers, compressing data, or processing images keeps the
+CPU busy from start to finish, so waiting on an event loop does not help. What you need is a second
+path of execution that really runs at the same time. Nim provides one through `Thread[T]`,
+`createThread`, and `joinThread`, plus `Channel[T]` to send the results back.
+
+::: {.callout-note}
+## What you will be able to do
+
+After this chapter you can create a thread with `createThread`, wait for it with `joinThread`, send
+results through `Channel[T]`, check `compileOption("threads")`, and choose between threads and
+`async`.
+:::
+
+## A first thread
+
+A procedure that runs on its own thread is marked with the `{.thread.}` pragma. It takes a single
+argument value, given at creation time. The result does not come back as a return value; it is sent
+through a `Channel` instead.
+
+```{.nim}
+import std/typedthreads
+
+var results: Channel[int]
+
+proc square(n: int) {.thread.} =
+  results.send(n * n)
+
+proc main() =
+  results.open()
+  var worker: Thread[int]
+  createThread(worker, square, 5)
+  worker.joinThread()
+  echo results.recv()
+  results.close()
+
+main()
+```
+
+```{.txt}
+25
+```
+
+Save it as `main.nim`, then run `nim c -r main.nim`. The module is named `std/typedthreads`; the name
+`std/threads` does not exist in Nim 2.2.12. `Thread[int]` means the procedure takes one `int`.
+`createThread(worker, square, 5)` runs `square(5)` on a new thread, and `joinThread` waits until that
+work is done.
+
+`Channel[int]` is a queue that is safe to use across threads. `send` puts one value in, `recv` takes
+out the value that waited longest. Because `joinThread` is called first, `recv` is certain to find
+the value that was already sent. `close` releases the channel once it is no longer needed.
+
+A thread procedure takes a single argument. When several values have to travel together, wrap them
+in a `tuple`. A procedure with no argument uses `Thread[void]`, as in the next example.
+
+## A `Channel` for a fixed order
+
+The second thread runs at any moment, so printing from inside it makes the output depend on the
+scheduler. A `Channel` fixes that: the worker only sends messages, and the main thread prints them
+in queue order.
+
+```{.nim}
+import std/typedthreads
+
+var messages: Channel[string]
+
+proc produce() {.thread.} =
+  for word in ["alpha", "beta", "gamma"]:
+    messages.send(word)
+  messages.send("done")
+
+proc main() =
+  messages.open()
+  var worker: Thread[void]
+  createThread(worker, produce)
+  worker.joinThread()
+  while true:
+    let message = messages.recv()
+    if message == "done":
+      break
+    echo "got: ", message
+  messages.close()
+
+main()
+```
+
+```{.txt}
+got: alpha
+got: beta
+got: gamma
+```
+
+The `"done"` message is the end marker. Because the queue returns messages in the order they went
+in, the output is always `alpha`, then `beta`, then `gamma`. This is how to keep an example
+deterministic even with more than one path of execution: do not depend on time, depend on queue
+order.
+
+## Typed channels
+
+A `Channel` fixes its type when it is declared, and every message has to match that type. When the
+data has several parts, wrap all of them in a `tuple`.
+
+```{.nim}
+import std/typedthreads
+
+type Count = tuple[text: string, characters: int]
+
+var results: Channel[Count]
+
+proc count(text: string) {.thread.} =
+  results.send((text, text.len))
+
+proc main() =
+  results.open()
+  var worker: Thread[string]
+  createThread(worker, count, "Nim")
+  worker.joinThread()
+  let (text, characters) = results.recv()
+  echo text, " has ", characters, " characters"
+  results.close()
+
+main()
+```
+
+```{.txt}
+Nim has 3 characters
+```
+
+`Channel[Count]` only accepts a `tuple[string, int]`. Each thread has its own heap, so a `ref`
+object from one thread must not be used in another. Wrapping a result into one value and sending it
+through a `Channel` is the safe pattern. Another option is a global variable, as in the first
+example.
+
+## `--threads:on` is no longer needed
+
+In Nim 2.x thread support is on by default, together with the `--mm:orc` memory mode. The extra
+`--threads:on` pragma is no longer required. To prove it, `system` offers
+`compileOption("threads")`.
+
+```{.nim}
+import std/typedthreads
+
+echo "threads enabled: ", compileOption("threads")
+
+proc hello() {.thread.} =
+  echo "hello from the worker"
+
+proc main() =
+  var worker: Thread[void]
+  createThread(worker, hello)
+  worker.joinThread()
+  echo "back on the main thread"
+
+main()
+```
+
+```{.txt}
+threads enabled: true
+hello from the worker
+back on the main thread
+```
+
+If you really want to turn threads off, use `--threads:off`; then `compileOption("threads")` is
+`false`. For this chapter the default is already correct.
+
+## Threads or `async`?
+
+Both run work at the same time, but for different loads.
+
+| Load | Choice |
+|---|---|
+| waiting on a socket, file, or the network | `async` |
+| computing on the CPU without a pause | threads |
+| many idle connections | `async` |
+
+The `async` model uses one thread and rotates the tasks that are waiting, so it fits work that is
+dominated by waiting. A thread uses another CPU core, so it fits work that is dominated by
+computation. Threads are more expensive to create, and memory is not shared for free, so they are
+not worth one per tiny task.
+
+Each thread has its own heap, so a `ref` object created in one thread must not be used in another.
+When data has to cross a thread boundary, send it through a `Channel` or keep it in a simple global
+variable.
+
+One old note: `std/threadpool` with `spawn`, `^`, and `sync` still exists, but it is marked
+`deprecated` in Nim 2.2.12. The compiler suggests nimble packages such as `malebolgia`, `taskpools`,
+or `weave`. This chapter uses the standard library only, so `Thread` and `Channel` are what it
+reaches for.
+
+## Intentional error: the wrong `Channel` type
+
+A `Channel` checks the type of its messages at compile time. Taking a message as a different type is
+rejected before the program runs.
+
+```{.nim}
+import std/typedthreads
+
+var channel: Channel[string]
+
+proc produce() {.thread.} =
+  channel.send("42")
+
+proc main() =
+  channel.open()
+  var worker: Thread[void]
+  createThread(worker, produce)
+  worker.joinThread()
+  let n: int = channel.recv()
+  echo n + 1
+  channel.close()
+
+main()
+```
+
+```{.txt}
+main.nim(13, 23) Error: type mismatch: got 'string' for 'recv(channel)' but expected 'int'
+```
+
+The `type mismatch` message names the type it found and the type it expected. `Channel[string]` can
+only hand out a `string`. There are two fixes: change the type of the target variable to `string`,
+or change the channel type to `Channel[int]` and send a number from the start.
+
+## Exercises
+
+1. Change the first example so the worker sends two results, then read both with `recv`.
+2. Without running it, predict the output:
+   ```{.nim}
+   import std/typedthreads
+
+   var channel: Channel[int]
+
+   proc addOne(a: int) {.thread.} =
+     channel.send(a + 1)
+
+   proc main() =
+     channel.open()
+     var worker: Thread[int]
+     createThread(worker, addOne, 41)
+     worker.joinThread()
+     echo channel.recv()
+     channel.close()
+
+   main()
+   ```
+3. Write from scratch: one thread sends five numbers through a `Channel[int]`, and the main thread
+   adds them up while the queue still has messages.
+4. When is a thread a better fit than `async`? Name one workload.
+5. The code in the error section fails to compile. Fix it by changing the channel type, then explain
+   its message.
+
+Answers are in [Appendix A](../appendix/answers.qmd).
+
+## Summary
+
+- The `{.thread.}` pragma marks a procedure that runs on its own thread.
+- `createThread` starts a thread, `joinThread` waits for it to finish.
+- `Channel[T]` moves values of one type between threads with a fixed queue order.
+- In Nim 2.x threads are on by default; `compileOption("threads")` is `true`.
+- Use `async` for work that waits, threads for work that computes.
+
+## Next
+
+Part C has one step left: bringing modules, a data file, subcommands, and tests together into one
+whole program in [the final project: notes from the terminal](final-project.qmd).

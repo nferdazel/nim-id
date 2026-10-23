@@ -1,30 +1,30 @@
-# Manajemen memori: ARC, ORC, dan `=destroy`
+# Manajemen *memory*: ARC, ORC, dan `=destroy`
 
-Program yang mengalokasikan tanpa pernah membersihkan akan tumbuh sampai kehabisan memori. Di
+Program yang mengalokasikan tanpa pernah membersihkan akan tumbuh sampai kehabisan *memory*. Di
 bahasa dengan garbage collector, itu diurus otomatis; di Nim 2.x, keputusannya diambil saat
-*compile* lewat mode memori. Bab ini menjelaskan ARC dan ORC, lalu hook yang dipanggil compiler
+*compile* lewat mode *memory*. Bab ini menjelaskan ARC dan ORC, lalu hook yang di-call compiler
 pada saat yang tepat: `=destroy`, `=copy`, dan `=sink`.
 
 ::: {.callout-note}
 ## Tujuan bab
 
-Setelah bab ini, pembaca bisa menjelaskan perbedaan ARC dan ORC, memverifikasi mode memori yang
-aktif, memakai `--mm:arc` dan `--mm:orc`, menulis `=destroy` untuk *type* yang memegang sumber daya,
+Setelah bab ini, pembaca bisa menjelaskan perbedaan ARC dan ORC, memverifikasi mode *memory* yang
+aktif, memakai `--mm:arc` dan `--mm:orc`, write `=destroy` untuk *type* yang memegang sumber daya,
 serta membaca error tanda tangan hook yang salah.
 :::
 
-## Dua mode memori: ARC dan ORC
+## Dua mode *memory*: ARC dan ORC
 
 ARC dan ORC sama-sama menghitung referensi. Setiap kali sebuah `ref` disalin, jumlah *pointer*-nya
-bertambah; setiap kali satu hilang, jumlahnya berkurang. Ketika angka itu mencapai nol, memorinya
+bertambah; setiap kali satu hilang, jumlahnya berkurang. Ketika angka itu mencapai nol, *memory*-nya
 dibebaskan saat itu juga. Tidak ada jeda seperti pada garbage collector klasik.
 
 Bedanya satu: ORC menambahkan pendeteksi siklus. Dua *object* yang saling menunjuk tidak akan pernah
 turun ke nol dengan penghitungan biasa; ORC menemukan pasangan seperti itu dan membebaskannya.
-ARC tidak, sehingga siklus menjadi kebocoran memori.
+ARC tidak, sehingga siklus menjadi kebocoran *memory*.
 
 Pendeteksian itu tidak berjalan setiap saat. ORC baru menyisir siklus setelah jumlah *object* yang
-dialokasikan melewati ambang bawaan (128), atau saat `GC_fullCollect()` dipanggil. Pada program
+dialokasikan melewati ambang bawaan (128), atau saat `GC_fullCollect()` di-call. Pada program
 kecil, siklus bisa belum terkumpul waktu program selesai, jadi jangan menyimpulkan ORC gagal hanya
 dari satu percobaan singkat.
 
@@ -49,16 +49,16 @@ orc
 
 ## Mengubah mode dengan `--mm`
 
-Untuk memilih mode lain, berikan flag ke compiler. *File* contoh `a06_mm_arc.nim` berisi kode yang
+Untuk memilih mode lain, berikan *flag* ke compiler. *File* contoh `a06_mm_arc.nim` berisi kode yang
 sama dengan di atas, dengan *file* `a06_mm_arc.mode` berisi `--mm:arc`. Jalankan dengan
-`nim c -r --mm:arc main.nim`, dan keluarannya menjadi `arc`, karena flag itu mendefinisikan
-`gcArc` dan bukan `gcOrc`. Ganti flag menjadi `--mm:orc` untuk kembali ke mode bawaan. Verifikasi
+`nim c -r --mm:arc main.nim`, dan *output*-nya menjadi `arc`, karena *flag* itu mendefinisikan
+`gcArc` dan bukan `gcOrc`. Ganti *flag* menjadi `--mm:orc` untuk kembali ke mode bawaan. Verifikasi
 seperti ini lebih meyakinkan daripada menghafal mana yang berlaku.
 
 ## `=destroy`: membersihkan saat *value* dibuang
 
-Kalau *type* memegang sumber daya di luar memori terkelola, definisikan `=destroy` agar sumber daya
-itu dilepas. Berikut urutan pemanggilannya.
+Kalau *type* memegang sumber daya di luar *memory* terkelola, definisikan `=destroy` agar sumber daya
+itu dilepas. Berikut urutan *calling*-nya.
 
 ```{.nim}
 type Box = object
@@ -91,8 +91,8 @@ after block
 destroy outer
 ```
 
-Bacalah urutannya. `make()` mencetak `make`, lalu mengembalikan sebuah `Box`; *value* itu disimpan di
-`y`. Di akhir blok, `y` keluar dari *scope* dan `=destroy` dipanggil untuknya, jadi
+Bacalah urutannya. `make()` print `make`, lalu return sebuah `Box`; *value* itu disimpan di
+`y`. Di akhir blok, `y` keluar dari *scope* dan `=destroy` di-call untuknya, jadi
 `destroy temp` muncul sebelum `after block`. `x` baru dibuang di akhir `main()`, jadi
 `destroy outer` paling akhir.
 
@@ -106,7 +106,7 @@ Dari urutan di atas, aturannya jelas:
 - **Penimpaan.** Saat sebuah *variable* ditimpa *value* baru, *value* lamanya dibuang lebih dulu, kecuali
   *type itu* punya hook `=copy` atau `=sink` sendiri: hook itulah yang bertanggung jawab.
 
-Yang tidak terjadi: `=destroy` tidak dipanggil tepat saat *value* dibuat, dan tidak dipanggil untuk
+Yang tidak terjadi: `=destroy` tidak di-call tepat saat *value* dibuat, dan tidak di-call untuk
 `ptr` yang menunjuk ke *value* itu.
 
 ## `=copy`: menyalin dengan aturan sendiri
@@ -131,12 +131,12 @@ copying a
 b = a
 ```
 
-`var b = a` menyalin dari sebuah *variable*, jadi `=copy` yang dipanggil. Definisi di atas menyalin
+`var b = a` menyalin dari sebuah *variable*, jadi `=copy` yang di-call. Definisi di atas menyalin
 fieldnya secara dangkal. Untuk *type* yang memegang *file* atau *pointer*, `=copy` perlu membuat
 salinan yang benar-benar terpisah, bukan menyalin *pointer*-nya.
 
 Hook di atas juga belum membuang *value* lama di `dest`. Itu disengaja supaya contohnya pendek:
-begitu kita menulis `=copy` sendiri, tanggung jawab itu pindah ke kita. Pada *type* pemilik sumber
+begitu kita write `=copy` sendiri, tanggung jawab itu pindah ke kita. Pada *type* pemilik sumber
 daya, awali hook dengan `=destroy(dest)`, kalau tidak sumber daya lama bocor setiap kali *value*
 ditimpa.
 
@@ -163,9 +163,9 @@ d = temp
 ```
 
 `Box(name: "temp")` adalah *value* sementara; menugaskannya ke `d` bisa memindahkan isinya, jadi
-`=sink` dipanggil. Kalau sumbernya *variable* biasa, *path* yang dipakai `=copy`. Sama seperti
+`=sink` di-call. Kalau sumbernya *variable* biasa, *path* yang dipakai `=copy`. Sama seperti
 `=copy`, hook ini mengambil alih tanggung jawab membuang *value* lama: `d` berisi `old` sebelum
-ditimpa, dan contoh di atas tidak memanggil `=destroy(dest)`, jadi *type* pemilik sumber daya perlu
+ditimpa, dan contoh di atas tidak call `=destroy(dest)`, jadi *type* pemilik sumber daya perlu
 menambahkannya sendiri.
 
 ## `move`: memindahkan tanpa hook
@@ -187,7 +187,7 @@ b = a
 a = ""
 ```
 
-`move(a)` memindahkan *value* tanpa memanggil `=copy` maupun `=sink`, lalu mengosongkan `a` lewat
+`move(a)` memindahkan *value* tanpa call `=copy` maupun `=sink`, lalu mengosongkan `a` lewat
 `=wasMoved`; sebuah `string` kembali menjadi `""`. Setelah `move`, isi `a` tidak boleh diandalkan
 lagi.
 
@@ -211,20 +211,20 @@ echo b.name
 main.nim(4, 1) Error: signature for '=copy' must be proc[T: object](x: var T; y: T)
 ```
 
-Parameter kedua harus bertipe sama dengan parameternya sendiri. Pesan itu menuliskan bentuk yang
+*Parameter* kedua harus bertipe sama dengan *parameter*-nya sendiri. *Message* itu menuliskan bentuk yang
 diharapkan lengkap: `proc[T: object](x: var T; y: T)`. Samakan tanda tangannya dengan bentuk itu.
 
 ## Aturan praktis
 
 Biarkan hook bawaan kalau *type* hanya berisi data biasa; compiler sudah menyediakan `=destroy`,
 `=copy`, dan `=sink` yang benar. Tulis hook sendiri hanya saat *type* memegang sumber daya di luar
-memori terkelola, misalnya *file*, *socket*, atau memori yang dialokasikan manual.
+*memory* terkelola, misalnya *file*, *socket*, atau *memory* yang dialokasikan manual.
 
 ## Latihan
 
-1. Tulis *type* `Handle` dengan `=destroy` yang mencetak `close`; alokasikan di dalam sebuah blok dan
-   amati kapan pesannya muncul.
-2. Tanpa menjalankan, prediksi outputnya:
+1. Tulis *type* `Handle` dengan `=destroy` yang print `close`; alokasikan di dalam sebuah blok dan
+   amati kapan *message*-nya muncul.
+2. Tanpa menjalankan, prediksi *output*-nya:
    ```{.nim}
    type Box = object
      name: string
@@ -237,9 +237,9 @@ memori terkelola, misalnya *file*, *socket*, atau memori yang dialokasikan manua
      echo "in block"
    echo "end"
    ```
-3. Kenapa `move(a)` mengosongkan `a` tetapi tidak memanggil `=sink`?
+3. Kenapa `move(a)` mengosongkan `a` tetapi tidak call `=sink`?
 4. Jelaskan kenapa ORC bisa membebaskan dua *object* yang saling menunjuk, sedangkan ARC tidak.
-5. Kode berikut gagal *di-compile*. Perbaiki, lalu jelaskan pesan error-nya:
+5. Kode berikut gagal *di-compile*. Perbaiki, lalu jelaskan *error message*-nya:
    ```{.nim}
    type Person = ref object
      name: string
@@ -257,10 +257,10 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
 - Nim 2.x memakai ORC secara bawaan; ARC sama tanpa pendeteksi siklus.
 - `defined(gcOrc)` dan `defined(gcArc)` mendeteksi mode; `--mm:arc` dan `--mm:orc` memilihnya.
-- `=destroy` dipanggil di akhir *scope*, saat *value* sementara habis, dan saat *value* ditimpa.
+- `=destroy` di-call di akhir *scope*, saat *value* sementara habis, dan saat *value* ditimpa.
 - `=copy` menyalin dari *variable*, `=sink` menyerap *value* sementara, `move` memindahkan tanpa
   keduanya.
-- Tulis hook hanya kalau *type* memegang sumber daya di luar memori terkelola.
+- Tulis hook hanya kalau *type* memegang sumber daya di luar *memory* terkelola.
 
 ## Selanjutnya
 

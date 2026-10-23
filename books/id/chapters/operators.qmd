@@ -1,10 +1,10 @@
-# Operator aritmetika, perbandingan, logika
+# Operator aritmetika, *comparison*, logika
 
-Di banyak bahasa, `+` pada dua bilangan bulat menghasilkan bilangan bulat, dan pembagian selalu
-bilangan pecahan. Nim membalik sebagian kebiasaan itu: `/` selalu menghasilkan `float`, sedangkan
+Di banyak bahasa, `+` pada dua *integer* menghasilkan *integer*, dan pembagian selalu
+*float*. Nim membalik sebagian kebiasaan itu: `/` selalu menghasilkan `float`, sedangkan
 pembagian bulat punya operatornya sendiri, `div`.
 
-Kesalahpahaman soal operator kecil, tapi *effect itu* nyata: hasil yang salah tanpa error, atau *type*
+Kesalahpahaman soal operator kecil, tapi *effect itu* nyata: *result* yang salah tanpa error, atau *type*
 yang tidak terduga. Bab ini merangkum operator yang paling sering dipakai dan jebakan di
 belakangnya.
 
@@ -45,10 +45,10 @@ echo 7 mod -3
 1
 ```
 
-`a / b` menghasilkan `3.5`, bukan `3`: operator `/` selalu mengembalikan `float`. Pembagian bulat
+`a / b` menghasilkan `3.5`, bukan `3`: operator `/` selalu return `float`. Pembagian bulat
 memakai `div`, yang memotong ke arah nol. `mod` memberi sisa, dan tandanya mengikuti bilangan yang
 dibagi. Jadi, `-7 mod 3` bernilai `-1`, bukan `2`. Keduanya sering dipakai bersama: `div` memberi tahu
-berapa kali bilangan pembagi muat, `mod` memberi sisanya. Membagi dengan nol tidak mengembalikan
+berapa kali bilangan pembagi muat, `mod` memberi sisanya. Membagi dengan nol tidak return
 *value* istimewa; program berhenti dengan `DivByZeroDefect`.
 
 ## Pangkat dan akar
@@ -69,13 +69,13 @@ echo pow(3.0, 3.0)
 27.0
 ```
 
-Untuk pangkat bilangan bulat, kalikan berulang di dalam *loop* atau konversi ke `float` lebih
-dulu. Menulis `2 ^ 10` dengan dua bilangan bulat tidak *di-compile* menjadi pangkat bulat, jadi
+Untuk pangkat *integer*, kalikan berulang di dalam *loop* atau konversi ke `float` lebih
+dulu. Write `2 ^ 10` dengan dua *integer* tidak *di-compile* menjadi pangkat bulat, jadi
 niatnya perlu dibuat eksplisit.
 
-## Perbandingan
+## *Comparison*
 
-Operator perbandingan mengembalikan `bool`: `==`, `!=`, `<`, `<=`, `>`, dan `>=`.
+Operator *comparison* return `bool`: `==`, `!=`, `<`, `<=`, `>`, dan `>=`.
 
 ```{.nim}
 let age = 20
@@ -95,13 +95,13 @@ true
 true
 ```
 
-Perhatikan baris pertama. Nim **tidak** mendukung penulisan berantai seperti `18 <= age < 65`; dua
-perbandingan harus disatukan dengan `and`. String dibandingkan secara leksikografis, jadi `"abc"`
+Perhatikan *line* pertama. Nim **tidak** mendukung penulisan berantai seperti `18 <= age < 65`; dua
+*comparison* harus disatukan dengan `and`. String dibandingkan secara leksikografis, jadi `"abc"`
 sama dengan `"abc"` persis, termasuk besar-kecil hurufnya.
 
 ## Logika dan *short-circuit*
 
-`and`, `or`, dan `not` bekerja pada `bool`. Yang penting: Nim berhenti mengevaluasi begitu hasilnya
+`and`, `or`, dan `not` bekerja pada `bool`. Yang penting: Nim berhenti mengevaluasi begitu *result*-nya
 sudah pasti.
 
 ```{.nim}
@@ -121,7 +121,7 @@ checking a
 done
 ```
 
-Output tidak memuat `checking b`. Karena `check("a")` sudah `false`, `and` tahu hasil akhirnya
+*Output* tidak memuat `checking b`. Karena `check("a")` sudah `false`, `and` tahu *result* akhirnya
 pasti `false` dan melewati operan kedua. Sifat ini disebut *short-circuit*, dan bisa dipakai untuk
 menjaga agar *expression* kedua tidak dijalankan saat kondisi pertama belum terpenuhi.
 
@@ -149,7 +149,7 @@ true
 false
 ```
 
-`in` bekerja pada *range*, *set* (`{...}`), dan *array*; lewat `strutils`, juga pada string. Baris
+`in` bekerja pada *range*, *set* (`{...}`), dan *array*; lewat `strutils`, juga pada string. *Line*
 terakhir bernilai `false` karena `4` memang tidak ada di dalam *array* tersebut.
 
 ## Prioritas operator
@@ -173,7 +173,7 @@ true
 ```
 
 `*` lebih dulu daripada `+`, dan `-` dievaluasi dari kiri sehingga `10 - 3 - 2` bernilai `5`.
-`not` lebih kuat daripada `or`, jadi `not false or false` adalah `true`. Baris terakhir mengejutkan:
+`not` lebih kuat daripada `or`, jadi `not false or false` adalah `true`. *Line* terakhir mengejutkan:
 `and` pada dua bilangan bukan logika, melainkan *bitwise*. `1 and 2` bernilai `0` karena tidak ada
 bit yang sama-sama bernilai satu. Hanya pakai `and` dan `or` pada `bool`; untuk bit gunakan
 operatornya dengan sadar.
@@ -196,15 +196,15 @@ Expression: a == b
   [2] b: string
 ```
 
-Pesan menunjukkan baris dan kolom, lalu mengutip *expression* yang gagal beserta *type* setiap operan.
+*Message* menunjukkan *line* dan kolom, lalu mengutip *expression* yang gagal beserta *type* setiap operan.
 Bagian yang paling berguna ada di bawahnya: compiler mendaftar semua versi `==` yang dikenalnya,
 supaya kita bisa melihat bahwa tidak ada yang menerima pasangan `int` dan `string`. Perbaikannya
 adalah menyamakan *type* lebih dulu, misalnya `a == parseInt(b)`.
 
 ## Latihan
 
-1. Hitung `17 div 5` dan `17 mod 5`. Berapa hasilnya masing-masing?
-2. Prediksi outputnya:
+1. Hitung `17 div 5` dan `17 mod 5`. Berapa *result*-nya masing-masing?
+2. Prediksi *output*-nya:
    ```{.nim}
    echo 2 + 3 * 4
    echo (2 + 3) * 4
@@ -212,7 +212,7 @@ adalah menyamakan *type* lebih dulu, misalnya `a == parseInt(b)`.
 3. Kenapa `-9 mod 4` bernilai `-1` dan bukan `3`? Jelaskan aturannya.
 4. Tulis kondisi yang bernilai `true` hanya kalau `x` berada di antara 1 dan 100. Ingat bahwa
    penulisan berantai tidak didukung.
-5. Kode berikut error. Perbaiki dan jelaskan pesannya:
+5. Kode berikut error. Perbaiki dan jelaskan *message*-nya:
    ```{.nim}
    let n = 4
    if n in "4":
@@ -231,5 +231,5 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
 ## Selanjutnya
 
-Bab berikutnya membahas percabangan: `if`, *expression* `if`, `case`, dan `when` untuk memilih *path*
+Bab berikutnya membahas *branching*: `if`, *expression* `if`, `case`, dan `when` untuk memilih *path*
 eksekusi.

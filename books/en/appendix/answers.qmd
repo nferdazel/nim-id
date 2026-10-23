@@ -1,4 +1,4 @@
-# Exercise Answers {.unnumbered}
+# Exercise Answers
 
 These are the most direct answers, not the only correct ones. What matters: the code runs, and you
 can explain why.
@@ -1832,7 +1832,7 @@ proc handle(req: Request) {.async.} =
 JSON, or the wrong method for that route. `Http404` is used when the route does not exist at all,
 for example a GET to `/missing`.
 
-## Chapter: Databases with `std/tables` and `db_sqlite`
+## Chapter: Storing data: `Table`, JSON, and SQLite
 
 **1.** Add one book, then sort as before:
 
@@ -2099,6 +2099,243 @@ symbol given at build time instead, for example `when defined(debug)`.
 If the toolchain is missing, the build stops in the C compiler with
 `fatal error: 'windows.h' file not found`, because the Windows headers are not available. If the
 target is not given, what comes out is a host binary that cannot run on Windows.
+
+## Chapter: Regular expressions with `std/re`
+
+**1.** Add a third group, then print `matches[2]`:
+
+```{.nim}
+import std/re
+
+let line = "Ada, 36, London"
+
+if line =~ re"(\w+),\s*(\d+),\s*(\w+)":
+  echo "name: ", matches[0]
+  echo "age: ", matches[1]
+  echo "city: ", matches[2]
+```
+
+```{.txt}
+name: Ada
+age: 36
+city: London
+```
+
+Each pair of parentheses adds one group, and the order follows their position in the pattern.
+
+**2.** The output is three lines: `1`, `22`, then `333`. The pattern `\d+` is greedy, so every run of
+digits is taken whole.
+
+```{.txt}
+1
+22
+333
+```
+
+**3.**
+
+```{.nim}
+import std/re
+
+proc domains(emails: openArray[string]): seq[string] =
+  for email in emails:
+    var parts: array[1, string]
+    if email.find(re"@([\w.-]+)", parts) >= 0:
+      result.add parts[0]
+
+echo domains(@["ada@example.com", "grace@navy.mil"])
+```
+
+```{.txt}
+@["example.com", "navy.mil"]
+```
+
+`find` fills the array with the capture groups; the first group already holds the part after `@`.
+
+**4.** `=~` declares the `matches` array inside the `if`, so the name is not visible after that block.
+The compiler points at line 6, where `matches[1]` is used outside its scope. Move both `echo` calls
+into the body of the `if`:
+
+```{.nim}
+import std/re
+
+if "Ada, 36" =~ re"(\w+), (\d+)":
+  echo matches[0]
+  echo matches[1]
+```
+
+```{.txt}
+Ada
+36
+```
+
+**5.** Checking a fixed suffix, for example `endsWith(".txt")`, or a fixed prefix with `startsWith`.
+No pattern has to be written, and `strutils` is easier to read.
+
+## Chapter: Time and random numbers
+
+**1.** The pattern `dddd` prints the full weekday name:
+
+```{.nim}
+import std/times
+
+let launch = dateTime(2024, mMar, 1, 9, 30, 0, 0, utc())
+echo launch.format("dddd")
+```
+
+```{.txt}
+Friday
+```
+
+**2.** The output is `2025-01-01T00:01:00Z`. Minute 59 plus two minutes crosses the hour boundary,
+and Nim rolls the date forward on its own.
+
+```{.txt}
+2025-01-01T00:01:00Z
+```
+
+**3.**
+
+```{.nim}
+import std/random
+
+proc roll(r: var Rand): int =
+  r.rand(1 .. 6)
+
+var r = initRand(1234)
+echo roll(r)
+```
+
+```{.txt}
+3
+```
+
+A fixed seed makes the first roll always `3`, so the result can be trusted inside a test.
+
+**4.** There is no type named `Date`; the one available is `DateTime`. The compiler rejects it as an
+`undeclared identifier`. The fix drops the type annotation and lets Nim infer it:
+
+```{.nim}
+import std/times
+
+let created = dateTime(2024, mMar, 1, 0, 0, 0, 0, utc())
+echo created
+```
+
+```{.txt}
+2024-03-01T00:00:00Z
+```
+
+**5.** `now()` reads the machine time when the test runs, so its output changes every time and a
+failure is hard to repeat. The way out: take a `DateTime` as a parameter and pass a fixed value from
+the test.
+
+## Chapter: Threads and channels
+
+**1.** Send two values, then call `recv` twice:
+
+```{.nim}
+import std/typedthreads
+
+var results: Channel[int]
+
+proc two(n: int) {.thread.} =
+  results.send(n)
+  results.send(n * n)
+
+proc main() =
+  results.open()
+  var worker: Thread[int]
+  createThread(worker, two, 5)
+  worker.joinThread()
+  echo results.recv()
+  echo results.recv()
+  results.close()
+
+main()
+```
+
+```{.txt}
+5
+25
+```
+
+The queue returns values in the order they went in, so `5` comes out first.
+
+**2.** The output is `42`. The worker sends `41 + 1`, and `joinThread` makes sure that value is
+already there before `recv`.
+
+```{.txt}
+42
+```
+
+**3.**
+
+```{.nim}
+import std/typedthreads
+
+var numbers: Channel[int]
+
+proc produce() {.thread.} =
+  for n in [1, 2, 3, 4, 5]:
+    numbers.send(n)
+  numbers.send(0)
+
+proc main() =
+  numbers.open()
+  var worker: Thread[void]
+  createThread(worker, produce)
+  worker.joinThread()
+  var total = 0
+  while true:
+    let n = numbers.recv()
+    if n == 0:
+      break
+    total = total + n
+  echo total
+  numbers.close()
+
+main()
+```
+
+```{.txt}
+15
+```
+
+`0` is used as an end marker so the loop stops without relying on the queue length.
+
+**4.** When the work is dominated by computation and keeps the CPU busy from start to finish, for
+example compressing a file or processing images. That kind of work has no wait point to weave
+`await` into, so a thread is the better fit.
+
+**5.** Change the channel to `Channel[int]` and send a number from the start:
+
+```{.nim}
+import std/typedthreads
+
+var channel: Channel[int]
+
+proc produce() {.thread.} =
+  channel.send(42)
+
+proc main() =
+  channel.open()
+  var worker: Thread[void]
+  createThread(worker, produce)
+  worker.joinThread()
+  let n: int = channel.recv()
+  echo n + 1
+  channel.close()
+
+main()
+```
+
+```{.txt}
+43
+```
+
+The `type mismatch` message appears because `Channel[string]` cannot hand out an `int`; matching the
+channel type removes the error.
 
 ## Chapter: Final project: notes from the terminal
 

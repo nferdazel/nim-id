@@ -1,4 +1,4 @@
-# Nim for Python, Go, and Rust programmers {.unnumbered}
+# Nim for Python, Go, and Rust programmers
 
 This book is written for readers who already write programs in another language but have never used
 Nim. This page collects the word equivalents and habits for the three languages most often used
@@ -44,8 +44,8 @@ have this, but Java programmers will find it familiar.
 | Nim | `type Point = object` with fields |
 
 Nim separates data from behavior. A method is an ordinary procedure whose first parameter has that
-type, called with a dot as in Python. A value object is copied whole on assignment, while a `ref
-object` is copied as a pointer. Class inheritance is limited, since Nim leans more on generics and
+type, called with a dot as in Python. A value object is copied whole on assignment, while a
+`ref object` is copied as a pointer. Class inheritance is limited, since Nim leans more on generics and
 concepts to compose types.
 
 ## Interfaces and concepts
@@ -101,9 +101,9 @@ public package index.
 | Nim | `nim c`, `nim r`, `nimble build` |
 
 Nim translates code to C or C++ and then calls the C compiler. The resulting binary therefore
-stands alone, with no language runtime to install alongside it. Another target is picked with `nim
-cpp` or `nim js`. During development, `nim r` skips naming the binary and runs the result right
-away.
+stands alone, with no language runtime to install alongside it. Another target is picked with
+`nim cpp` or `nim js`. During development, `nim r` skips naming the binary and runs the
+result right away.
 
 ## Testing
 
@@ -177,13 +177,12 @@ are replaced by a colon and indentation.
 Indentation is significant, and tabs may not be used to indent. Mixing spaces and tabs makes the
 compiler reject the file or read it wrongly. A `var` parameter lets a procedure mutate the caller
 variable with no explicit pointer. Nim identifiers ignore case and underscores except for the
-first letter, so `get_name` equals `getName`, but `GetName` differs. `var n: Node` for a `ref
-object` holds `nil`, so `new(n)` is needed before use. Copying a `ref` copies the pointer, not the
-contents, so two names can point to the same object. A `case` on an enum must be complete, and the
-compiler rejects a missing branch. There is no automatic conversion from an `int` variable to `float`; a
-literal such as `1` is still accepted. `if`
-runs while the program runs, whereas `when` is settled at compile time; swapping them changes the
-meaning. A string is not a sequence of `char`, and `s[0]` has type `char`. Finally, `echo` adds no
+first letter, so `get_name` equals `getName`, but `GetName` differs. `var n: Node` for a
+`ref object` holds `nil`, so `new(n)` is needed before use. Copying a `ref` copies the pointer,
+not the contents, so two names can point to the same object. A `case` on an enum must be complete,
+and the compiler rejects a missing branch. There is no automatic conversion from an `int` variable
+to `float`; a literal such as `1` is still accepted. `if` runs while the program runs, whereas
+`when` is settled at compile time; swapping them changes the meaning. A string is not a sequence of `char`, and `s[0]` has type `char`. Finally, `echo` adds no
 separator between arguments.
 
 If the compiler complains about the `raises` effect, do not rush to turn it off; usually there is an

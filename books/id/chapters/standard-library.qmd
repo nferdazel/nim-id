@@ -9,7 +9,7 @@ sisanya punya bab sendiri.
 ## Tujuan bab
 
 Setelah bab ini, pembaca bisa mengolah teks dengan `std/strutils`, mengubah *seq* dengan
-`std/sequtils`, menyimpan *value* berkunci di `Table`, membaca dan membangun JSON, serta memilih
+`std/sequtils`, menyimpan *value* berkunci di `Table`, read dan membangun JSON, serta memilih
 antara `Table` dan `seq` dengan alasan yang jelas.
 :::
 
@@ -44,7 +44,7 @@ a-b-c
 `strip` membuang spasi di kedua ujung. `split(',')` memecah string menjadi `seq[string]`.
 `toUpperAscii` mengubah huruf menjadi kapital, dan `startsWith` menguji awalan. `join("-")`
 menggabungkan kembali `seq[string]` menjadi satu string dengan pemisah. Semua fungsi ini
-mengembalikan *value* baru; string asalnya tidak berubah.
+return *value* baru; string asalnya tidak berubah.
 
 ## `std/sequtils`: mengubah *seq*
 
@@ -65,8 +65,8 @@ echo numbers.filterIt(it > 2).mapIt(it * 10)
 ```
 
 `filterIt` menyaring *element*, `mapIt` mengubah setiap *element*. Keduanya template: di dalam kurung,
-`it` merujuk *element* yang sedang diproses. Keduanya mengembalikan `seq` baru dan bisa dirantai,
-seperti pada baris terakhir.
+`it` merujuk *element* yang sedang diproses. Keduanya return `seq` baru dan bisa dirantai,
+seperti pada *line* terakhir.
 
 ## `std/tables`: peta kunci ke *value*
 
@@ -91,8 +91,8 @@ false
 ```
 
 `Table[string, int]` memetakan kunci `string` ke *value* `int`. `initTable` membuat peta kosong;
-menulis `ages["ada"] = 36` menambahkan pasangan baru. `hasKey` menguji ada atau tidaknya kunci, dan
-`getOrDefault` mengembalikan *default value* kalau kuncinya tidak ada. Ini jauh lebih praktis
+write `ages["ada"] = 36` menambahkan pasangan baru. `hasKey` menguji ada atau tidaknya kunci, dan
+`getOrDefault` return *default value* kalau kuncinya tidak ada. Ini jauh lebih praktis
 daripada mencari di dalam `seq` satu per satu.
 
 ## `Table` atau `seq`?
@@ -103,7 +103,7 @@ Keduanya menyimpan banyak *value*, tapi untuk keperluan berbeda.
 |---|---|
 | urutan penting, akses lewat *index* | `seq` |
 | pencarian cepat lewat kunci | `Table` |
-| data kecil, urutan yang dibaca | `seq` |
+| data kecil, urutan yang di-read | `seq` |
 
 `Table` menyimpan lewat fungsi hash, sehingga pencarian hampir langsung berapa pun isinya. `seq`
 harus diperiksa satu per satu, tapi urutannya tetap dan bisa diakses lewat *index*. Untuk data
@@ -139,7 +139,7 @@ code
 
 `parseJson` mengubah teks JSON menjadi `JsonNode`. Field diakses seperti peta: `data["name"]`.
 Untuk mengambil *value itu*, pakai `getStr`, `getInt`, `getFloat`, atau `getBool` sesuai jenisnya.
-`pretty` mencetak JSON dengan indentasi agar mudah dibaca.
+`pretty` print JSON dengan indentasi agar mudah dibaca.
 
 ## `std/json`: membangun data
 
@@ -174,7 +174,7 @@ echo parsed.name, " is ", parsed.age
 Ada is 36
 ```
 
-`%*{...}` membangun `JsonNode` langsung dari literal, tanpa menulis string JSON lalu menguraikannya.
+`%*{...}` membangun `JsonNode` langsung dari literal, tanpa write string JSON lalu menguraikannya.
 `to(Tipe)` mengubahnya menjadi *object* biasa. Keduanya menghindari penggabungan string manual yang
 mudah salah.
 
@@ -193,8 +193,8 @@ echo data["name"]
 Error: unhandled exception: key not found: name [KeyError]
 ```
 
-Pesannya menyebut kunci yang dicari dan jenis `KeyError`. Output lengkapnya juga memuat jejak
-tumpukan. Sebelum membaca, uji dengan `hasKey`, atau pakai `getOrDefault` supaya tidak berhenti
+*Message*-nya menyebut kunci yang dicari dan jenis `KeyError`. *Output* lengkapnya juga memuat jejak
+tumpukan. Sebelum read, uji dengan `hasKey`, atau pakai `getOrDefault` supaya tidak berhenti
 saat kuncinya hilang.
 
 ## *Module* lain punya babnya sendiri
@@ -208,17 +208,17 @@ rujukan berikutnya. Pola impornya sama: `import std/nama`.
 
 1. Baca kalimat, pecah dengan `split`, ubah tiap kata menjadi huruf kapital dengan `toUpperAscii`,
    lalu gabungkan kembali dengan `join("-")`.
-2. Tanpa menjalankan, prediksi outputnya:
+2. Tanpa menjalankan, prediksi *output*-nya:
    ```{.nim}
    import std/sequtils
 
    let xs = @[3, 1, 2]
    echo xs.filterIt(it > 1).mapIt(it * 2)
    ```
-3. Buat `Table[string, int]` berisi tiga *value*, cetak satu *value* yang ada, dan satu *value* lewat
+3. Buat `Table[string, int]` berisi tiga *value*, print satu *value* yang ada, dan satu *value* lewat
    `getOrDefault` untuk kunci yang tidak ada.
-4. Tulis dari nol: parse `{"city": "Bandung"}` lalu cetak isi `city`.
-5. Kode berikut gagal saat dijalankan. Perbaiki tanpa mengubah isi `t`, lalu jelaskan pesan
+4. Tulis dari nol: parse `{"city": "Bandung"}` lalu print isi `city`.
+5. Kode berikut gagal saat dijalankan. Perbaiki tanpa mengubah isi `t`, lalu jelaskan *message*
    error-nya:
    ```{.nim}
    import std/tables
@@ -236,10 +236,10 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
   `mapIt`).
 - `Table[K, V]` memetakan kunci ke *value* untuk pencarian cepat; `seq` tetap dipakai saat urutan
   penting.
-- `parseJson` dan `%*` membaca serta membangun JSON; `to`, `getInt`, dan `pretty` melengkapinya.
+- `parseJson` dan `%*` read serta membangun JSON; `to`, `getInt`, dan `pretty` melengkapinya.
 - Kunci yang tidak ada melempar `KeyError` saat berjalan, jadi uji dulu dengan `hasKey`.
 
 ## Selanjutnya
 
-Bab berikutnya membahas *file* dan sistem operasi: [*file* dan OS](files-and-os.qmd), membaca dan
-menulis *file*, menelusuri *directory*, serta membaca argumen dan *variable* lingkungan.
+Bab berikutnya membahas *file* dan sistem operasi: [*file* dan OS](files-and-os.qmd), read dan
+write *file*, menelusuri *directory*, serta read *argument* dan *variable* lingkungan.

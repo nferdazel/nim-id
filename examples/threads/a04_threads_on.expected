@@ -1,0 +1,3 @@
+threads enabled: true
+hello from the worker
+back on the main thread

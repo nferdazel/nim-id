@@ -1,0 +1,4 @@
+
+[Suite] isWeekend
+  [OK] Saturday is a weekend
+  [OK] Wednesday is not a weekend

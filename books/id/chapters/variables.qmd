@@ -5,14 +5,14 @@ kelihatan sama saja. Yang berbeda adalah janji yang ditepati compiler: mana yang
 kapan *value itu* ditentukan, dan siapa yang boleh mengubahnya.
 
 Salah memilih tidak langsung membuat program error. Yang terjadi biasanya lebih mahal: *value*
-berubah di tempat yang tidak diduga, dan bug-nya baru muncul dua ratus baris kemudian. Bab ini
+berubah di tempat yang tidak diduga, dan bug-nya baru muncul dua ratus *line* kemudian. Bab ini
 memisahkan ketiganya dengan contoh yang bisa dijalankan.
 
 ::: {.callout-note}
 ## Tujuan bab
 
 Setelah bab ini, pembaca bisa memilih `var`, `let`, atau `const` dengan alasan yang jelas,
-membaca pesan error `cannot be assigned to`, dan tahu kenapa `user_name` dan `userName` dianggap
+membaca *error message* `cannot be assigned to`, dan tahu kenapa `user_name` dan `userName` dianggap
 identifier yang sama oleh Nim.
 :::
 
@@ -37,8 +37,8 @@ Nim was released in 2008
 
 Dua hal yang perlu diperhatikan:
 
-- `echo` menerima beberapa argumen sekaligus, tapi **tidak menambahkan pemisah apa pun** di
-  antaranya. Spasi di output di atas datang dari string `"Hello, "`, bukan dari `echo`. Kalau butuh
+- `echo` menerima beberapa *argument* sekaligus, tapi **tidak menambahkan pemisah apa pun** di
+  antaranya. Spasi di *output* di atas datang dari string `"Hello, "`, bukan dari `echo`. Kalau butuh
   spasi, tulis sendiri.
 - `&"..."` adalah *string interpolation* dari `std/strformat`: teks di dalam `{...}` diganti
   dengan *value* *variable itu*. Tanpa `import std/strformat`, bentuk ini tidak dikenal compiler.
@@ -59,10 +59,10 @@ score: 15
 
 ## *Type*: ditulis eksplisit atau disimpulkan compiler
 
-Pada contoh sebelumnya, *type* *variable* tidak ditulis. Compiler menyimpulkannya dari *value* awal:
+Pada contoh sebelumnya, *type* *variable* tidak di-write. Compiler menyimpulkannya dari *value* awal:
 `"Nim"` adalah `string`, `2008` adalah `int`. Ini disebut *type inference*.
 
-Kalau *type* perlu ditegaskan (misalnya untuk menghemat memori, atau karena *value itu* akan diisi
+Kalau *type* perlu ditegaskan (misalnya untuk menghemat *memory*, atau karena *value itu* akan diisi
 belakangan), tulis setelah nama *variable* dengan tanda titik dua:
 
 ```{.nim}
@@ -78,7 +78,7 @@ echo age, " ", temperature, " ", active, " ", initial
 24 36.5 true S
 ```
 
-`int8` adalah bilangan bulat 8-bit, *range itu* −128 sampai 127. Nim menyediakan `int8`, `int16`,
+`int8` adalah *integer* 8-bit, *range itu* −128 sampai 127. Nim menyediakan `int8`, `int16`,
 `int32`, `int64`, dan `int` (ukuran mengikuti arsitektur mesin). `float` adalah nama lain dari
 `float64`.
 
@@ -99,17 +99,17 @@ Program tidak sampai berjalan. Compiler menolaknya:
 main.nim(3, 1) Error: 'pi' cannot be assigned to
 ```
 
-Pesan itu pendek, dan isinya lengkap kalau tahu cara membacanya:
+*Message* itu pendek, dan isinya lengkap kalau tahu cara membacanya:
 
 | Bagian | Arti |
 |---|---|
 | `main.nim` | *file* tempat masalahnya |
-| `(3, 1)` | baris 3, kolom 1 |
+| `(3, 1)` | *line* 3, kolom 1 |
 | `Error` | tingkat keparahan; `Warning` dan `Hint` tidak menghentikan build |
 | `'pi' cannot be assigned to` | yang salah: `pi` dideklarasikan `let`, jadi hanya boleh diisi sekali |
 
 Inilah bedanya dengan `var`. `let` adalah *variable* yang *value itu* ditetapkan saat deklarasi dan
-tidak boleh diubah setelahnya. Kalau *value itu* harus dihitung lebih dulu, hitung di baris
+tidak boleh diubah setelahnya. Kalau *value itu* harus dihitung lebih dulu, hitung di *line*
 deklarasinya:
 
 ```{.nim}
@@ -149,8 +149,8 @@ notes (max 128)
 
 Bedanya dengan `let` bukan sekadar "lebih tidak boleh diubah". `const` disubstitusi langsung oleh
 compiler, jadi *value itu* bisa dipakai untuk hal yang harus diketahui sebelum program jalan:
-ukuran array tetap, parameter generic, atau cabang `when`. Konsekuensinya, `const` tidak bisa
-diisi hasil yang baru diketahui saat runtime, misalnya isi *file* atau waktu sistem.
+ukuran array tetap, *parameter* generic, atau cabang `when`. Konsekuensinya, `const` tidak bisa
+diisi *result* yang baru diketahui saat runtime, misalnya isi *file* atau waktu sistem.
 
 Aturan praktisnya:
 
@@ -190,8 +190,8 @@ candidates (edit distance, scope distance); see '--spellSuggest':
  (1, 2): 'user_name'
 ```
 
-Perhatikan baris `candidates`: compiler tidak sekadar bilang "tidak ada"; ia menawarkan kandidat
-terdekat. Ini salah satu alasan pesan error Nim terasa membantu begitu dibiasakan.
+Perhatikan *line* `candidates`: compiler tidak sekadar bilang "tidak ada"; ia menawarkan kandidat
+terdekat. Ini salah satu alasan *error message* Nim terasa membantu begitu dibiasakan.
 
 Saran praktis: pilih satu gaya penulisan dan pakai konsisten. Gaya resmi Nim untuk *variable*
 adalah `camelCase`, untuk *type* `PascalCase`.
@@ -213,15 +213,15 @@ echo count, "|", active, "|", repr(text)
 0|false|""
 ```
 
-`repr` menampilkan bentuk yang bisa dibaca mesin; karena itu string kosong tercetak sebagai `""`,
-bukan kosong sama sekali. *Default value* ini aman (tidak ada sampah memori seperti di C), tapi
+`repr` menampilkan bentuk yang bisa dibaca mesin; karena itu string kosong di-print sebagai `""`,
+bukan kosong sama sekali. *Default value* ini aman (tidak ada sampah *memory* seperti di C), tapi
 kode lebih mudah dibaca kalau *value itu* diisi eksplisit saat deklarasi.
 
 ## Latihan
 
 1. Deklarasikan `const Tahun = 2026` dan `var pesan = ""`. Isi `pesan` dengan interpolasi
-   `&"terbit {Tahun}"`, lalu cetak.
-2. Tanpa menjalankan, prediksi outputnya:
+   `&"terbit {Tahun}"`, lalu print.
+2. Tanpa menjalankan, prediksi *output*-nya:
    ```{.nim}
    var a = 1
    let b = a
@@ -242,7 +242,7 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
 - `var` boleh diubah, `let` diisi sekali, `const` ditentukan saat *compile*.
 - `let` dan `const` tidak boleh dideklarasikan tanpa *value*.
-- `echo` tidak menambahkan pemisah antar argumen; `&"..."` butuh `import std/strformat`.
+- `echo` tidak menambahkan pemisah antar *argument*; `&"..."` butuh `import std/strformat`.
 - Identifier Nim mengabaikan besar-kecil dan `_`, kecuali huruf pertama, sehingga
   `user_name` = `userName` ≠ `UserName`.
 - `var` tanpa *value* berisi default *type* (`0`, `false`, `""`), bukan *value* acak.

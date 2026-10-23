@@ -194,9 +194,10 @@ compiler, and it has to be available for that target.
 nim c -d:mingw --os:windows --cpu:amd64 --out:app.exe app.nim
 ```
 
-Without that toolchain the build stops in the C compiler with `fatal error: 'windows.h' file not
-found`. On Linux, the MinGW packages provide `x86_64-w64-mingw32-gcc`, and Nim already ships the
-mapping for it in `config/nim.cfg` under `@if unix and mingw`.
+Without that toolchain the build stops in the C compiler with
+`fatal error: 'windows.h' file not found`. On Linux, the MinGW packages provide
+`x86_64-w64-mingw32-gcc`, and Nim already ships the mapping for it in `config/nim.cfg` under
+`@if unix and mingw`.
 
 A subtler behaviour: changing `--os` alone does not always fail. On macOS, `--os:linux --cpu:amd64`
 runs to completion and leaves a Mach-O file behind, not an ELF one. Nim believes it built a Linux
@@ -255,6 +256,6 @@ Answers are in [Appendix A](../appendix/answers.qmd).
 
 ## Next
 
-The tools are complete: measure, optimize, and ship a binary. The last chapter of Part C puts it all
-together into one small program that works. Go to
-[Final project: notes from the terminal](final-project.qmd).
+The tools are complete: measure, optimize, and ship a binary. The next three chapters close Part C
+with topics readers keep asking for: [regular expressions](regex.qmd), then time and random
+numbers, then threads and channels.

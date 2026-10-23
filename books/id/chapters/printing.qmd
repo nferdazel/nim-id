@@ -1,21 +1,21 @@
-# `echo` dan format keluaran
+# `echo` dan format *output*
 
-Program yang tidak menampilkan apa pun sulit dipercaya. Karena itu `echo` biasanya jadi baris
-pertama yang kita tulis dan baris yang paling sering dipakai untuk memeriksa *value*.
+Program yang tidak menampilkan apa pun sulit dipercaya. Karena itu `echo` biasanya jadi *line*
+pertama yang kita tulis dan *line* yang paling sering dipakai untuk memeriksa *value*.
 
 Masalahnya, `echo` punya aturan yang jarang disadari: ia tidak menambahkan pemisah di antara
-argumen, dan *value* string dicetak apa adanya sementara bentuk lain dicetak berbeda. Bab ini
+*argument*, dan *value* string di-print apa adanya sementara bentuk lain di-print berbeda. Bab ini
 membahas `echo`, `repr`, interpolasi, dan format angka.
 
 ::: {.callout-note}
 ## Tujuan bab
 
 Setelah bab ini, pembaca bisa menampilkan beberapa *value* dalam satu `echo`, menjelaskan bedanya
-`echo` dengan `repr`, menulis interpolasi `&"..."`, mengatur lebar dan presisi angka, serta tahu
-kenapa `echo` dan `stdout.write` berperilaku berbeda soal baris baru.
+`echo` dengan `repr`, write interpolasi `&"..."`, mengatur lebar dan presisi angka, serta tahu
+kenapa `echo` dan `stdout.write` berperilaku berbeda soal *newline*.
 :::
 
-## `echo` dan argumennya
+## `echo` dan *argument*-nya
 
 Simpan sebagai `hello.nim`, lalu jalankan dengan `nim r hello.nim`.
 
@@ -37,9 +37,9 @@ version 2.2
 abc
 ```
 
-`echo` menerima berapa pun argumen dan mencetaknya berurutan tanpa pemisah. Perhatikan baris
-terakhir: `"a", "b", "c"` tercetak `abc` tanpa spasi. Semua spasi pada output di atas datang dari
-string yang kita tulis sendiri. Setelah semua argumen, `echo` menambahkan tepat satu baris baru.
+`echo` menerima berapa pun *argument* dan mencetaknya berurutan tanpa pemisah. Perhatikan *line*
+terakhir: `"a", "b", "c"` di-print `abc` tanpa spasi. Semua spasi pada *output* di atas datang dari
+string yang kita tulis sendiri. Setelah semua *argument*, `echo` menambahkan tepat satu *newline*.
 
 Karena setiap *value* diubah lewat `$`, `echo` bisa menampilkan hampir semua *type*: bilangan, `char`,
 `bool`, sampai *seq*. *Seq* ditandai `@` di depannya, misalnya `@[1, 2, 3]`, dan bentuk itu
@@ -47,7 +47,7 @@ memudahkan pemeriksaan isi saat memburu bug.
 
 ## `repr` dan `$`
 
-*Value* dicetak dalam bentuk yang berbeda menurut konteks.
+*Value* di-print dalam bentuk yang berbeda menurut konteks.
 
 ```{.nim}
 let text = "Nim"
@@ -65,11 +65,11 @@ Nim
 score: 42
 ```
 
-`echo` memakai `$` untuk mengubah *value* menjadi string, jadi `"Nim"` tercetak sebagai `Nim` tanpa
+`echo` memakai `$` untuk mengubah *value* menjadi string, jadi `"Nim"` di-print sebagai `Nim` tanpa
 tanda kutip. `repr` sebaliknya menampilkan bentuk yang bisa dibaca mesin: tanda kutip muncul, dan
-*character* khusus seperti baris baru ditampilkan sebagai `\n`. Karena itu `repr` berguna saat *value*
+*character* khusus seperti *newline* ditampilkan sebagai `\n`. Karena itu `repr` berguna saat *value*
 sulit dibedakan di layar; string kosong tampil sebagai `""`, bukan ruang kosong tanpa jejak. Saat
-menggabung dengan `&`, `$` harus dipanggil manual karena `&` hanya menerima string di kedua
+menggabung dengan `&`, `$` harus di-call manual karena `&` hanya menerima string di kedua
 sisinya.
 
 ## Interpolasi dengan `&"..."`
@@ -96,11 +96,11 @@ total: 37.5
 upper: NIM
 ```
 
-Awalan `&` sebelum string membuka interpolasi: apa pun di dalam `{...}` dievaluasi dan hasilnya
+Awalan `&` sebelum string membuka interpolasi: apa pun di dalam `{...}` dievaluasi dan *result*-nya
 disisipkan. Isinya boleh *expression*, bukan hanya nama *variable*. Tanpa awalan itu, kurung kurawal
-tetap teks biasa, jadi `echo "{name}"` mencetak `{name}` apa adanya. Perhatikan
+tetap teks biasa, jadi `echo "{name}"` print `{name}` apa adanya. Perhatikan
 `float(count) * price`: Nim tidak mencampur `int` dan `float` diam-diam, jadi konversi harus
-ditulis eksplisit.
+di-write eksplisit.
 
 ## Format angka dan perataan
 
@@ -134,7 +134,7 @@ dihilangkan kalau *value itu* cukup ditampilkan apa adanya.
 
 ## `echo` versus `write`
 
-`echo` selalu menutup dengan baris baru. Kalau kita ingin mencetak tanpa pindah baris, gunakan
+`echo` selalu menutup dengan *newline*. Kalau kita ingin print tanpa pindah *line*, gunakan
 `stdout.write`.
 
 ```{.nim}
@@ -150,9 +150,9 @@ line 2 (no newline)
 line 3
 ```
 
-Baris terakhir tampak utuh karena kita sendiri yang menambahkan `"\n"` setelah `write`. Karena
-`write` tidak menambahkan apa pun, kita yang mengatur kapan baris berganti. Ini pola yang dipakai
-untuk indikator kemajuan yang menimpa dirinya sendiri, atau output yang menempel tanpa spasi.
+*Line* terakhir tampak utuh karena kita sendiri yang menambahkan `"\n"` setelah `write`. Karena
+`write` tidak menambahkan apa pun, kita yang mengatur kapan *line* berganti. Ini pola yang dipakai
+untuk indikator kemajuan yang menimpa dirinya sendiri, atau *output* yang menempel tanpa spasi.
 
 ## Kalau lupa import
 
@@ -167,36 +167,36 @@ echo fmt"{42}"
 missing_import.nim(1, 6) Error: undeclared identifier: 'fmt'
 ```
 
-Pesan menunjukkan kolom 6, tepat di huruf pertama `fmt`. Compiler tidak menemukan simbol bernama
-`fmt` di *scope* mana pun. Solusinya satu baris di atas kode: `import std/strformat`. *Error* yang
-sama bisa muncul untuk `&"..."`, hanya saja pesannya berbentuk `type mismatch` karena compiler
-mengira `&` adalah operator penggabung string biasa. Pesan `undeclared identifier` selalu berarti
+*Message* menunjukkan kolom 6, tepat di huruf pertama `fmt`. Compiler tidak menemukan simbol bernama
+`fmt` di *scope* mana pun. Solusinya satu *line* di atas kode: `import std/strformat`. *Error* yang
+sama bisa muncul untuk `&"..."`, hanya saja *message*-nya berbentuk `type mismatch` karena compiler
+mengira `&` adalah operator penggabung string biasa. *Message* `undeclared identifier` selalu berarti
 hal yang sama: nama itu belum diperkenalkan ke *file*, biasanya lewat `import` yang terlupa.
 
 ## Latihan
 
-1. Cetak `"total: "` dan sebuah bilangan bulat dalam satu `echo` tanpa interpolasi, memakai
-   beberapa argumen.
-2. Prediksi outputnya:
+1. Print `"total: "` dan sebuah *integer* dalam satu `echo` tanpa interpolasi, memakai
+   beberapa *argument*.
+2. Prediksi *output*-nya:
    ```{.nim}
    echo "a", "b"
    echo "a" & "b"
    ```
-3. Tulis interpolasi yang mencetak `3 + 4` sebagai hasil penjumlahan, bukan sebagai teks.
-4. Cetak bilangan `7` rata kanan dalam lebar 4, memakai `fmt` dan aturan `:>4`.
-5. Cetak `"loading"` tanpa baris baru, lalu cetak `"..."` di baris yang sama.
+3. Tulis interpolasi yang print `3 + 4` sebagai *result* penjumlahan, bukan sebagai teks.
+4. Print bilangan `7` rata kanan dalam lebar 4, memakai `fmt` dan aturan `:>4`.
+5. Print `"loading"` tanpa *newline*, lalu print `"..."` di *line* yang sama.
 
 Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
 ## Ringkasan
 
-- `echo` tidak menambahkan pemisah antar argumen dan menutup dengan satu baris baru.
+- `echo` tidak menambahkan pemisah antar *argument* dan menutup dengan satu *newline*.
 - `echo` memakai `$`; `repr` menampilkan bentuk yang bisa dibaca mesin, lengkap dengan tanda kutip.
 - `&"..."` dan `fmt"..."` menyisipkan *expression* ke dalam teks dan butuh `import std/strformat`.
 - Aturan format (`>6`, `04d`, `8.2f`) mengatur lebar, pengisian nol, dan presisi.
-- `stdout.write` mencetak tanpa baris baru; tambahkan `"\n"` sendiri bila perlu.
+- `stdout.write` print tanpa *newline*; tambahkan `"\n"` sendiri bila perlu.
 
 ## Selanjutnya
 
-Bab berikutnya membahas operator: aritmetika dasar dan `div`/`mod`, perbandingan, logika dengan
+Bab berikutnya membahas operator: aritmetika dasar dan `div`/`mod`, *comparison*, logika dengan
 *short-circuit*, serta operator keanggotaan `in` dan `notin`.

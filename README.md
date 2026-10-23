@@ -63,7 +63,7 @@ books/
     _quarto.yml        chapter list and formats
     index.qmd          front page
     copyright.qmd      copyright and license
-    chapters/*.qmd     16 chapters, English file names
+    chapters/*.qmd     43 chapters, English file names
     appendix/answers.qmd
 examples/
   variables/           one folder per chapter, used by both languages

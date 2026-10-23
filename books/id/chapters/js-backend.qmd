@@ -1,6 +1,6 @@
 # *Compile* ke JavaScript
 
-Biner bukan satu-satunya keluaran Nim. Dengan satu perubahan *command*, compiler mengeluarkan JavaScript
+Biner bukan satu-satunya *output* Nim. Dengan satu perubahan *command*, compiler mengeluarkan JavaScript
 yang berjalan di Node.js atau di *browser*. Bab ini memakai backend JavaScript pada program yang
 sudah biasa kita tulis, menunjukkan apa yang tetap sama dan apa yang berbeda, lalu membaca satu
 error yang khas target ini. Bab ini sekaligus menutup Bagian B.
@@ -13,7 +13,7 @@ dengan `node`, tahu bahwa sebagian *module* tidak tersedia di target ini, dan me
 module is not supported in javascript".
 :::
 
-## `nim js`: target keluaran, bukan bahasa lain
+## `nim js`: target *output*, bukan bahasa lain
 
 *Command itu* `nim js`, bukan `nim c`. Simpan kode berikut sebagai `hello.nim`.
 
@@ -33,12 +33,12 @@ hello from JavaScript
 ```
 
 `nim js` menerjemahkan kode Nim menjadi *file* `.js` di samping sumbernya. `node` yang
-menjalankannya, sama seperti *browser* nanti. Bahasa yang kita tulis tetap Nim; hanya keluarannya yang
+menjalankannya, sama seperti *browser* nanti. Bahasa yang kita tulis tetap Nim; hanya *output*-nya yang
 JavaScript. Karena itu tidak ada sintaks baru yang perlu dihafal.
 
 *Command* `--backend:js` melakukan hal yang sama; `nim js` hanya bentuk pendeknya. Untuk API khusus
-Node.js, tambahkan `-d:nodejs`; tanpa flag itu, fungsi seperti `getCurrentDir()` dari `std/os` ada di
-kode tetapi gagal saat dijalankan. `echo` di backend ini menjadi `console.log`, jadi keluarannya
+Node.js, tambahkan `-d:nodejs`; tanpa *flag* itu, fungsi seperti `getCurrentDir()` dari `std/os` ada di
+kode tetapi gagal saat dijalankan. `echo` di backend ini menjadi `console.log`, jadi *output*-nya
 muncul di konsol *browser* atau di terminal.
 
 ## Fitur Nim tetap ada
@@ -79,17 +79,17 @@ last:  gamma
 ```
 
 `seq` menjadi *array* JavaScript dengan operasi yang sama: `len`, *index* biasa, dan *index* dari
-belakang `^1`. Program yang tidak menyentuh *file*, jaringan, atau memori mentah biasanya berjalan
+belakang `^1`. Program yang tidak menyentuh *file*, jaringan, atau *memory* mentah biasanya berjalan
 tanpa perubahan sama sekali.
 
 *Module* yang murni bekerja dengan data ikut terbawa: `std/strutils`, `std/sequtils`, `std/json`, dan
 `std/tables` semuanya jalan di backend ini. Yang tersaring adalah *module* yang bersandar pada hal di
-luar bahasa, seperti *file*, *socket*, atau memori mentah.
+luar bahasa, seperti *file*, *socket*, atau *memory* mentah.
 
 ## Kode khusus *browser*
 
 Sebagian kode hanya masuk akal di *browser*. *Module* `std/dom` memberi akses ke DOM: mengambil *element*,
-mengubah teksnya, memasang pendengar peristiwa. Kode berikut ditulis dalam Nim, tetapi hanya bisa
+mengubah teksnya, memasang pendengar peristiwa. Kode berikut di-write dalam Nim, tetapi hanya bisa
 dijalankan di *browser*, bukan dengan `node`.
 
 ```nim
@@ -101,20 +101,20 @@ proc onClick(event: Event) =
 document.getElementById("btn").addEventListener("click", onClick)
 ```
 
-*File* hasil `nim js` dipanggil dari halaman HTML yang punya `<button id="btn">` dan
+*File* *result* `nim js` di-call dari halaman HTML yang punya `<button id="btn">` dan
 `<div id="out">`. Saat tombol diklik, teks di `out` berubah. Karena `document` hanya ada di
 *browser*, contoh ini sengaja tidak ikut diperiksa oleh skrip verifikasi buku ini.
 
-Menyisipkannya pun sederhana: satu baris `<script src="main.js"></script>` di halaman, dan skrip itu
+Menyisipkannya pun sederhana: satu *line* `<script src="main.js"></script>` di halaman, dan skrip itu
 berjalan setelah halaman dimuat. Tidak ada langkah pemasangan seperti pada biner.
 
 Ada dua batasan. Pertama, kode yang memakai *thread*, *pointer*, atau *file* tidak portabel ke
-JavaScript. Kedua, ukuran keluaran lebih besar dan kecepatan jalannya berbeda dari biner C. Pilih
+JavaScript. Kedua, ukuran *output* lebih besar dan kecepatan jalannya berbeda dari biner C. Pilih
 target berdasarkan tempat program akan dijalankan, bukan berdasarkan fitur bahasa yang tersedia.
 
 ## Error sengaja: *module* yang tidak tersedia
 
-Tidak semua *module* bisa masuk ke JavaScript. Yang bergantung pada memori mentah atau sistem operasi
+Tidak semua *module* bisa masuk ke JavaScript. Yang bergantung pada *memory* mentah atau sistem operasi
 ditolak di depan.
 
 ```{.nim}
@@ -127,15 +127,15 @@ echo "never reached"
 marshal.nim(52, 10) Error: marshal module is not supported in javascript.
 ```
 
-Perhatikan *file* yang disebut: `marshal.nim`, bukan *file* kita. Pesannya datang dari dalam *module*
-itu sendiri, yang menolak *di-compile* ke target ini pada baris 52. Kalimatnya menyebut syaratnya
+Perhatikan *file* yang disebut: `marshal.nim`, bukan *file* kita. *Message*-nya datang dari dalam *module*
+itu sendiri, yang menolak *di-compile* ke target ini pada *line* 52. Kalimatnya menyebut syaratnya
 langsung dan menambahkan saran memakai *package* lain untuk serialisasi.
 
-Pesan error bisa datang dari dalam **standard library**, bukan hanya dari kode kita. Membaca nama
+*Error message* bisa datang dari dalam **standard library**, bukan hanya dari kode kita. Membaca nama
 *file itu* membantu memisahkan masalah di kode sendiri dari batas target.
 
 Solusinya memilih *module* yang didukung. Untuk urusan data, `std/json` bekerja di semua backend.
-Pola pesannya sama untuk *module* lain: target JavaScript tidak punya padanannya, dan compiler
+Pola *message*-nya sama untuk *module* lain: target JavaScript tidak punya padanannya, dan compiler
 mengatakannya sebelum program dijalankan.
 
 Sebagian *module* memang tidak punya pengganti. Pekerjaan yang hanya masuk akal di biner, misalnya
@@ -145,8 +145,8 @@ tempat program berjalan, dan tidak semua tempat menyediakan hal yang sama.
 ## Latihan
 
 1. *Compile* contoh aritmetika dengan `nim js`, jalankan pakai `node`, lalu bandingkan dengan
-   hasil `nim c -r`. Apakah keluarannya sama?
-2. Tanpa menjalankan, prediksi keluarannya:
+   *result* `nim c -r`. Apakah *output*-nya sama?
+2. Tanpa menjalankan, prediksi *output*-nya:
    ```{.nim}
    let numbers = @[4, 8, 15]
 
@@ -158,7 +158,7 @@ tempat program berjalan, dan tidak semua tempat menyediakan hal yang sama.
    ```
 3. Tulis program kecil yang memakai `std/dom` untuk mengubah isi sebuah `<div>`. Jelaskan kenapa
    program itu tidak bisa dijalankan dengan `node`.
-4. Kode berikut gagal *di-compile* ke JavaScript. Perbaiki dan jelaskan pesannya:
+4. Kode berikut gagal *di-compile* ke JavaScript. Perbaiki dan jelaskan *message*-nya:
    ```{.nim}
    import std/marshal
 
@@ -173,7 +173,7 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 - *Type*, *procedure*, `seq`, dan interpolasi string tetap bekerja di target ini.
 - Sebagian *module*, misalnya `marshal`, tidak tersedia untuk JavaScript dan ditolak saat *compile*.
 - Kode yang memakai `std/dom` hanya berjalan di *browser*, bukan di `node`.
-- Pesan error bisa menyebut *file* di dalam **standard library**, bukan hanya *file* kita.
+- *Error message* bisa menyebut *file* di dalam **standard library**, bukan hanya *file* kita.
 
 ## Selanjutnya
 

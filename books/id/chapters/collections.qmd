@@ -1,18 +1,18 @@
 # `array`, `seq`, dan `openArray`
 
 Dua kumpulan data yang tampak sama bisa berperilaku berbeda. Yang satu ukurannya ditetapkan
-saat ditulis dan tidak pernah berubah; yang lain bisa bertambah saat program jalan. Salah memilih
+saat di-write dan tidak pernah berubah; yang lain bisa bertambah saat program jalan. Salah memilih
 baru terasa saat program sudah berjalan.
 
 Nim mendorong kita menentukan pilihan sejak awal. `array` berukuran tetap dan disimpan langsung di
 tempatnya; `seq` berukuran dinamis dan bisa tumbuh. Bab ini memakai keduanya, lalu menunjukkan
-`openArray`: satu parameter *procedure* yang menerima keduanya tanpa menyalin.
+`openArray`: satu *parameter* *procedure* yang menerima keduanya tanpa menyalin.
 
 ::: {.callout-note}
 ## Tujuan bab
 
-Setelah bab ini, pembaca bisa menulis `array` berukuran tetap, menumbuhkan `seq` dengan `add`,
-`insert`, dan `delete`, memakai *index* `[^1]` untuk *element* terakhir, menulis parameter `openArray`
+Setelah bab ini, pembaca bisa write `array` berukuran tetap, menumbuhkan `seq` dengan `add`,
+`insert`, dan `delete`, memakai *index* `[^1]` untuk *element* terakhir, write *parameter* `openArray`
 yang menerima `array` maupun `seq`, serta mengenali error *index* di luar batas.
 :::
 
@@ -87,9 +87,9 @@ last: cyd
 
 Awalan `@` mengubah literal `array` menjadi `seq`, jadi `@["ada", "bob"]` bertipe `seq[string]`.
 `add` menambahkan satu *element* di ujung. Panjang `seq` diketahui saat program jalan, jadi jumlah
-*element* tidak ditulis dalam *type*.
+*element* tidak di-write dalam *type*.
 
-Perhatikan baris terakhir: `echo` mencetak `@["ada", "bob", "cyd"]`, lengkap dengan `@`. Tanda itu
+Perhatikan *line* terakhir: `echo` print `@["ada", "bob", "cyd"]`, lengkap dengan `@`. Tanda itu
 menandai bahwa *value itu* `seq`, bukan `array`.
 
 ## Menyisipkan dan menghapus
@@ -134,7 +134,7 @@ len: 4
 ```
 
 `@[]` adalah `seq` kosong tanpa *element*. Karena kosong, *type itu* tidak bisa disimpulkan dari isinya,
-jadi anotasinya wajib: `seq[int]`. Setelah itu `add` dipanggil berulang kali di dalam *loop*.
+jadi anotasinya wajib: `seq[int]`. Setelah itu `add` di-call berulang kali di dalam *loop*.
 
 ## `openArray`: parameter yang menerima keduanya
 
@@ -156,9 +156,9 @@ seq: 15
 ```
 
 `openArray[int]` menerima `array` maupun `seq` bertipe *element* `int`, tanpa menyalin isinya. Ini
-jenis parameter yang dipakai `add`, `insert`, dan banyak *procedure* `std/` lainnya. Bedanya dengan
-`array` dan `seq`: `openArray` hanya berlaku sebagai parameter, bukan *type* yang bisa disimpan di
-*variable* atau dikembalikan dari *procedure*. *Procedure* yang menerima `openArray` juga tidak bisa
+jenis *parameter* yang dipakai `add`, `insert`, dan banyak *procedure* `std/` lainnya. Bedanya dengan
+`array` dan `seq`: `openArray` hanya berlaku sebagai *parameter*, bukan *type* yang bisa disimpan di
+*variable* atau di-return dari *procedure*. *Procedure* yang menerima `openArray` juga tidak bisa
 mengubah panjangnya.
 
 Satu catatan tentang penyalinan: menugaskan `array` atau `seq` ke *variable* baru menyalin isinya,
@@ -196,24 +196,24 @@ Error: unhandled exception: index 5 not in 0 .. 2 [IndexDefect]
 ```
 
 Program *di-compile*, lalu berhenti saat dijalankan. `IndexDefect` adalah *exception* yang dilempar
-saat *index* keluar batas, dan pesannya menyebut *index* yang salah beserta *range* yang sah. Perilaku
-ini lebih aman daripada C, yang pada kasus serupa membaca memori di luar *array* tanpa *warning*.
-Output di atas dipotong; keluaran lengkapnya juga memuat *stack trace*.
+saat *index* keluar batas, dan *message*-nya menyebut *index* yang salah beserta *range* yang sah. Perilaku
+ini lebih aman daripada C, yang pada kasus serupa membaca *memory* di luar *array* tanpa *warning*.
+*Output* di atas dipotong; *output* lengkapnya juga memuat *stack trace*.
 
 Pemeriksaan ini menyala sejak awal, termasuk saat program *di-compile* dengan `-d:release`. Hanya
-`-d:danger` yang mematikannya; setelah itu contoh di atas mencetak *value* acak dari luar *array*.
+`-d:danger` yang mematikannya; setelah itu contoh di atas print *value* acak dari luar *array*.
 
 ## Latihan
 
 1. Buat `seq` berisi tiga nama, lalu sisipkan satu nama baru di awal tanpa menimpa *element* pertama.
-2. Tanpa menjalankan, prediksi outputnya:
+2. Tanpa menjalankan, prediksi *output*-nya:
    ```{.nim}
    var data = @[1, 2, 3]
    data.delete(0)
    data.add(data[^1] + 1)
    echo data
    ```
-3. Tulis *procedure* `smallest(values: openArray[int]): int` yang mengembalikan *value* terkecil, lalu
+3. Tulis *procedure* `smallest(values: openArray[int]): int` yang return *value* terkecil, lalu
    panggil dengan sebuah `array` dan sebuah `seq`.
 4. `var x = @[]` gagal *di-compile*, sementara `var y: seq[int]` jalan dan panjangnya `0`. Jelaskan
    kenapa keduanya berbeda.
@@ -228,14 +228,14 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 ## Ringkasan
 
 - `array` berukuran tetap dan ukurannya bagian dari *type*; `seq` bisa tumbuh dan dibuat dengan `@[...]`.
-- `[^1]` membaca *element* terakhir; *index* yang sah hanya `0` sampai `len - 1`.
+- `[^1]` read *element* terakhir; *index* yang sah hanya `0` sampai `len - 1`.
 - `add`, `insert`, dan `delete` mengubah isi `seq`; `insert(item, index)` menyisipkan, `delete(index)`
   menghapus.
-- `openArray[T]` sebagai parameter menerima `array` dan `seq` tanpa menyalin, tapi tidak bisa disimpan
-  atau dikembalikan.
+- `openArray[T]` sebagai *parameter* menerima `array` dan `seq` tanpa menyalin, tapi tidak bisa disimpan
+  atau di-return.
 - *Index* konstan di luar batas ditolak saat *compile*; *index* saat runtime melempar `IndexDefect`.
 
 ## Selanjutnya
 
 Bab berikutnya membahas cara membungkus logika ke dalam [*procedure* dan fungsi](procedures.qmd):
-parameter, **return value**, dan perbedaan `proc` dengan `func`.
+*parameter*, **return value**, dan perbedaan `proc` dengan `func`.

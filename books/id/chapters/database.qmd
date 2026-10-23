@@ -9,12 +9,12 @@ sudah tersedia, lalu memetakannya ke SQLite.
 ::: {.callout-note}
 ## Tujuan bab
 
-Setelah bab ini, pembaca bisa menyimpan *row* ke *file*, menyaring dan mengurutkan hasilnya,
-menulis pembaruan yang tidak berhenti setengah jalan, membaca error `IOError`, dan tahu kapan
+Setelah bab ini, pembaca bisa menyimpan *row* ke *file*, menyaring dan mengurutkan *result*-nya,
+write pembaruan yang tidak berhenti setengah jalan, membaca error `IOError`, dan tahu kapan
 SQLite lebih tepat daripada *file* JSON.
 :::
 
-## Baris di memori
+## *Row* di *memory*
 
 Kita mulai dari bentuk yang paling sederhana: data yang hidup selama program berjalan.
 
@@ -54,14 +54,14 @@ Dune is at row 1
 `seq[Book]` menyimpan *row* dalam urutan penulisan. `Table[string, int]` menyimpan *index*: dari
 judul buku ke posisinya. Keduanya berperan seperti tabel dan *index*.
 
-Perhatikan baris `shelf.sort`. Data ditulis dalam urutan 1984, 1965, 1815, lalu dicetak menaik
+Perhatikan *line* `shelf.sort`. Data di-write dalam urutan 1984, 1965, 1815, lalu di-print menaik
 menurut tahun. Di SQL, pekerjaan itu dilakukan `ORDER BY year`; di Nim, `sort`. Tanpa langkah ini,
-*row* tetap mengikuti urutan penulisan, bukan urutan yang dicari. Untuk hasil SQL, urutannya bahkan
-tidak dijamin tanpa `ORDER BY`, dan keluaran yang berubah setiap kali dijalankan tidak bisa diuji.
+*row* tetap mengikuti urutan penulisan, bukan urutan yang dicari. Untuk *result* SQL, urutannya bahkan
+tidak dijamin tanpa `ORDER BY`, dan *output* yang berubah setiap kali dijalankan tidak bisa diuji.
 
 ## Menyimpan ke *file*
 
-Agar data bertahan setelah program berhenti, *row* itu harus meninggalkan memori.
+Agar data bertahan setelah program berhenti, *row* itu harus meninggalkan *memory*.
 
 ```{.nim}
 import std/[json, os]
@@ -95,8 +95,8 @@ first title: Neuromancer
 ```
 
 `%*{...}` mengubah *object* menjadi `JsonNode`, dan `newJArray` menyusunnya menjadi *array*. `pretty`
-mencetak JSON dengan indentasi; untuk *file*, `toUgly` lebih hemat karena tidak menyisipkan spasi.
-`writeFile` menulis semuanya sekaligus, `readFile` membacanya kembali, dan `parseJson` mengubah teks
+print JSON dengan indentasi; untuk *file*, `toUgly` lebih hemat karena tidak menyisipkan spasi.
+`writeFile` write semuanya sekaligus, `readFile` membacanya kembali, dan `parseJson` mengubah teks
 menjadi struktur yang bisa ditelusuri.
 
 Tiga langkah itu, buka, tulis, tutup, sama bentuknya dengan alur `db_sqlite`: `open` untuk
@@ -139,7 +139,7 @@ for item in result:
 seperti klausa `WHERE`: hanya *row* yang lolos syarat ikut dikumpulkan. `sort` berperan seperti
 `ORDER BY`.
 
-Kebiasaan yang menyelamatkan: urutkan selalu di tempat yang memutuskan keluaran, bukan bergantung
+Kebiasaan yang menyelamatkan: urutkan selalu di tempat yang memutuskan *output*, bukan bergantung
 pada urutan *file*. Sama seperti di SQL, `ORDER BY` bukan hiasan, melainkan bagian dari jawaban.
 
 ## *Transaction*: semua atau tidak sama sekali
@@ -180,7 +180,7 @@ update rejected
 2 rows after rollback
 ```
 
-Triknya ada di `save`: seluruh data baru ditulis ke *file* sementara, baru dipindahkan menimpa
+Triknya ada di `save`: seluruh data baru di-write ke *file* sementara, baru dipindahkan menimpa
 *file* lama dengan `moveFile`. Pemindahan itu satu langkah, jadi pembaca tidak pernah melihat *file*
 setengah jadi. Kalau validasi gagal sebelum `writeFile`, *file* lama tidak tersentuh sama sekali.
 Itulah arti *commit* dan *rollback* di sini.
@@ -192,7 +192,7 @@ dan pembatalan tidak mungkin.
 
 ## Bila *file itu* belum ada
 
-Berbeda dengan C yang mengembalikan kode error, Nim melempar *exception*. Program yang mengabaikannya
+Berbeda dengan C yang return kode error, Nim melempar *exception*. Program yang mengabaikannya
 akan berhenti.
 
 ```{.nim}
@@ -218,7 +218,7 @@ diabaikan muncul sebagai *exception*, bukan sebagai **return value**.
 
 ## Error sengaja: *module* yang sudah pindah
 
-Kode yang mengimpor *module* basis data langsung dari **standard library** kini gagal di baris pertama.
+Kode yang mengimpor *module* basis data langsung dari **standard library** kini gagal di *line* pertama.
 
 ```{.nim}
 import std/db_sqlite
@@ -228,16 +228,16 @@ import std/db_sqlite
 main.nim(1, 11) Error: cannot open file: std/db_sqlite
 ```
 
-Bacanya dari kiri: `main.nim` adalah *file itu*, `(1, 11)` berarti baris 1 kolom 11, dan `Error`
+Bacanya dari kiri: `main.nim` adalah *file itu*, `(1, 11)` berarti *line* 1 kolom 11, dan `Error`
 berarti *compile* berhenti. Kolom 11 menunjuk garis miring setelah `std`; nama *module itu* sendiri
 mulai di kolom 8. `cannot open file` bukan
 berarti *file itu* rusak, tetapi *module itu* memang tidak ada di *search path*.
 
 ## Kapan SQLite tepat
 
-*File* JSON cukup untuk data kecil yang dibaca dan ditulis utuh. Ia mulai menyusahkan ketika tiga
+*File* JSON cukup untuk data kecil yang di-read dan di-write utuh. Ia mulai menyusahkan ketika tiga
 hal muncul bersamaan: datanya besar, *query* harus cepat pada sebagian kecil *row*, dan beberapa
-program menulis ke *file* yang sama. Di titik itu pergantian ke SQLite masuk akal.
+program write ke *file* yang sama. Di titik itu pergantian ke SQLite masuk akal.
 
 Untuk memakainya, pasang `db_connector`, lalu impor `db_connector/db_sqlite`. *Module* itu memerlukan
 `libsqlite3` pada sistem. Bentuk pemakaiannya sama, hanya lebih banyak:
@@ -248,24 +248,24 @@ Untuk memakainya, pasang `db_connector`, lalu impor `db_connector/db_sqlite`. *M
 | menutup | *file* ditutup otomatis | `db.close()` |
 | menjalankan *command* | `writeFile` | `db.exec(sql"CREATE TABLE ...")` |
 | jumlah *row* terpengaruh | tidak ada | `db.execAffectedRows` |
-| semua hasil | `parseJson` lalu `for` | `db.getAllRows(sql"SELECT ...")` |
+| semua *result* | `parseJson` lalu `for` | `db.getAllRows(sql"SELECT ...")` |
 | satu *row* | `rows[0]` | `db.getRow(sql"SELECT ...")` |
 | menyisipkan *value* | `%*{...}` | `db.exec(sql"INSERT ... VALUES (?)", value)` |
 | *transaction* | *file* sementara lalu `moveFile` | `BEGIN`, `COMMIT`, `ROLLBACK` |
 
-*Command itu* ditulis sebagai `sql"SELECT ..."`, yang menghasilkan *value* `SqlQuery`. Parameter `?` di
+*Command itu* di-write sebagai `sql"SELECT ..."`, yang menghasilkan *value* `SqlQuery`. *Parameter* `?` di
 dalamnya itu penting: jangan menyambung *value* ke dalam string SQL. Lewat `?`, `db_sqlite` meng-quote
 dan meng-escape *value* sebelum menyisipkannya, sehingga tanda kutip di dalamnya tidak merusak
-*command*. Ini bukan parameter binding terpisah seperti di driver SQL lain, jadi aturan menyambung
+*command*. Ini bukan *parameter* binding terpisah seperti di driver SQL lain, jadi aturan menyambung
 string sendiri tetap berlaku. Untuk pengujian, SQLite
-menerima nama basis data `:memory:` sehingga seluruh data hidup di memori dan tidak meninggalkan
-*file*. Selalu tulis `ORDER BY` pada *query* yang hasilnya dicetak, dengan alasan yang sama seperti
+menerima nama basis data `:memory:` sehingga seluruh data hidup di *memory* dan tidak meninggalkan
+*file*. Selalu tulis `ORDER BY` pada *query* yang *result*-nya di-print, dengan alasan yang sama seperti
 `sort` di bab ini.
 
 ## Latihan
 
-1. Tambahkan satu buku lagi ke contoh pertama, lalu pastikan keluarannya tetap menaik menurut tahun.
-2. Tanpa menjalankan, prediksi keluarannya:
+1. Tambahkan satu buku lagi ke contoh pertama, lalu pastikan *output*-nya tetap menaik menurut tahun.
+2. Tanpa menjalankan, prediksi *output*-nya:
    ```{.nim}
    import std/json
 
@@ -276,7 +276,7 @@ menerima nama basis data `:memory:` sehingga seluruh data hidup di memori dan ti
        years.add row["year"].getInt
    echo years
    ```
-3. Simpan tiga *row* ke sebuah *file* JSON di `getTempDir()`, baca kembali, cetak jumlah *row*-nya,
+3. Simpan tiga *row* ke sebuah *file* JSON di `getTempDir()`, baca kembali, print jumlah *row*-nya,
    lalu hapus *file itu*.
 4. Kode berikut berhenti saat dijalankan. Perbaiki, lalu jelaskan *exception* yang muncul:
    ```{.nim}
@@ -292,8 +292,8 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 ## Ringkasan
 
 - `seq` dan `Table` menyimpan *row* selama program berjalan; keduanya hilang saat proses ditutup.
-- `%*` dan `pretty` membangun JSON, `parseJson` membacanya kembali; urutkan sendiri sebelum mencetak.
-- Pembaruan yang aman menulis ke *file* sementara lalu memindahkannya, pola yang sama dengan
+- `%*` dan `pretty` membangun JSON, `parseJson` membacanya kembali; urutkan sendiri sebelum print.
+- Pembaruan yang aman write ke *file* sementara lalu memindahkannya, pola yang sama dengan
   `COMMIT`.
 - `readFile` melempar `IOError` dan `parseJson` melempar `JsonParsingError`, seperti `DbError` di
   `db_sqlite`.

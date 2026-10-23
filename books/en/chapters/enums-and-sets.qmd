@@ -196,8 +196,9 @@ We read a text character by character and the set records which ones have appear
 because `hello` contains only four distinct letters.
 
 A set's base must be an ordinal type with at most 2^16 values. `set[int]` goes past that limit, and
-the compiler rejects it: `set is too large; use std/sets for ordinal types with more than 2^16
-elements`. For larger collections, use `std/sets`.
+the compiler rejects it:
+`set is too large; use std/sets for ordinal types with more than 2^16 elements`. For larger
+collections, use `std/sets`.
 
 ## Reading the error: an integer is not an enum
 

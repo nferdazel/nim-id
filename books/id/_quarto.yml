@@ -59,6 +59,9 @@ book:
         - chapters/nimble-packages.qmd
         - chapters/benchmarking.qmd
         - chapters/cross-compile.qmd
+        - chapters/regex.qmd
+        - chapters/times-and-random.qmd
+        - chapters/threads.qmd
         - chapters/final-project.qmd
   appendices:
     - appendix/answers.qmd

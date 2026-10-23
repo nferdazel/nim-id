@@ -1,6 +1,6 @@
 # *File*, *directory*, dan OS
 
-Hampir setiap program akhirnya menyentuh *file*: membaca konfigurasi, menulis log, atau melihat isi
+Hampir setiap program akhirnya menyentuh *file*: read konfigurasi, write log, atau melihat isi
 *directory*. Di banyak bahasa, urusan ini tersebar di beberapa *library*. Nim mengumpulkannya di satu
 *module*: `std/os`. Bab ini memakai *module* itu untuk hal yang paling sering dibutuhkan, sekaligus
 menunjukkan kenapa `import std/os` tidak boleh terlupa.
@@ -8,14 +8,14 @@ menunjukkan kenapa `import std/os` tidak boleh terlupa.
 ::: {.callout-note}
 ## Tujuan bab
 
-Setelah bab ini, pembaca bisa membongkar dan menyusun *path* *file*, menulis lalu membaca *file*,
-menelusuri *directory* dengan keluaran yang stabil, membaca argumen dan *variable* lingkungan, serta
-membaca pesan `undeclared identifier` saat sebuah *module* lupa diimpor.
+Setelah bab ini, pembaca bisa membongkar dan menyusun *path* *file*, write lalu read *file*,
+menelusuri *directory* dengan *output* yang stabil, read *argument* dan *variable* lingkungan, serta
+membaca *message* `undeclared identifier` saat sebuah *module* lupa diimpor.
 :::
 
 ## Satu pintu: *module* `std/os`
 
-`std/os` memuat nama *file*, *directory*, argumen, dan *variable* lingkungan. Kita mulai dari operasi
+`std/os` memuat nama *file*, *directory*, *argument*, dan *variable* lingkungan. Kita mulai dari operasi
 *path* yang tidak menyentuh *file* sama sekali. Simpan kode berikut sebagai `main.nim`, lalu jalankan
 `nim c -r main.nim`.
 
@@ -74,16 +74,16 @@ exists after remove: false
 ```
 
 `writeFile` menerima *path* dan satu string, lalu menimpanya kalau *file* sudah ada. `readFile`
-mengembalikan seluruh isi sebagai satu string; barisnya dipecah dengan `splitLines` dari
+return seluruh isi sebagai satu string; *line*-nya dipecah dengan `splitLines` dari
 `std/strutils`.
 
-Contoh ini menulis ke `getTempDir()`, bukan ke *directory* kerja. Alasannya praktis: contoh harus
+Contoh ini write ke `getTempDir()`, bukan ke *directory* kerja. Alasannya praktis: contoh harus
 berjalan di mesin siapa pun tanpa meninggalkan *file* di tempat yang tidak terduga. Setelah selesai,
 `removeFile` menghapusnya dan `fileExists` membuktikan *file itu* sudah tidak ada. Untuk membuat
 *directory*, pakai `createDir`; untuk memeriksa keberadaannya, `dirExists`.
 
-Kalau *file itu* tidak ada, `readFile` tidak mengembalikan penanda error seperti di C. Ia melempar
-`IOError`, dan pesannya memuat *path* yang dicari. Pola Nim konsisten di sini: *error* yang tidak
+Kalau *file itu* tidak ada, `readFile` tidak return penanda error seperti di C. Ia melempar
+`IOError`, dan *message*-nya memuat *path* yang dicari. Pola Nim konsisten di sini: *error* yang tidak
 bisa diabaikan menjadi *exception*, lalu ditangani dengan `try` dan `except` di tempat yang tahu
 cara menanganinya.
 
@@ -116,8 +116,8 @@ b.txt
 ```
 
 Urutan `walkDir` mengikuti urutan sistem *file* dan tidak dijamin. Karena itu nama dikumpulkan dulu,
-baru diurutkan dengan `sort` dari `std/algorithm`. Tanpa langkah ini, keluaran bisa berbeda setiap
-kali program dijalankan, dan contoh yang keluarannya berubah tidak bisa dipakai untuk menguji.
+baru diurutkan dengan `sort` dari `std/algorithm`. Tanpa langkah ini, *output* bisa berbeda setiap
+kali program dijalankan, dan contoh yang *output*-nya berubah tidak bisa dipakai untuk menguji.
 
 `kind` bertipe `PathComponent`. *Value itu* antara lain `pcFile`, `pcDir`, dan dua varian tautan
 simbolik. Contoh di atas mengabaikan `kind`, tetapi `case` atas *value itu* adalah cara lazim
@@ -127,9 +127,9 @@ memisahkan *file* dari subdirektori.
 *directory*, ada `walkDirRec`, yang mengeluarkan setiap *file* di bawah *directory* awal beserta
 *path itu*.
 
-## Argumen dan *variable* lingkungan
+## *Argument* dan *variable* lingkungan
 
-Banyak *tool* kecil mengambil konfigurasi dari argumen dan *variable* lingkungan. Keduanya ada di
+Banyak *tool* kecil mengambil konfigurasi dari *argument* dan *variable* lingkungan. Keduanya ada di
 `std/os`.
 
 ```{.nim}
@@ -145,9 +145,9 @@ for i in 0 ..< paramCount():
 arguments: 0
 ```
 
-`paramCount()` menghitung argumen setelah nama program, dan `paramStr(i)` mengambil argumen ke-`i`
-mulai dari nol. Saat contoh di atas dijalankan tanpa argumen, hasilnya nol. Jalankan biner hasilnya
-dengan dua argumen tambahan, dan *loop* itu akan mencetak keduanya.
+`paramCount()` menghitung *argument* setelah nama program, dan `paramStr(i)` mengambil *argument* ke-`i`
+mulai dari nol. Saat contoh di atas dijalankan tanpa *argument*, *result*-nya nol. Jalankan biner *result*-nya
+dengan dua *argument* tambahan, dan *loop* itu akan print keduanya.
 
 ```{.nim}
 import std/os
@@ -161,13 +161,13 @@ no greeting set
 
 `getEnv` menerima nama *variable* dan *value* cadangan. Kalau `NIM_ID_GREETING` belum diatur, yang
 dipakai adalah `"no greeting set"`. *Value* cadangan mencegah program gagal hanya karena sebuah
-*variable* lingkungan belum disetel. Kalau seluruh argumen dibutuhkan sebagai satu *seq*, ada
+*variable* lingkungan belum disetel. Kalau seluruh *argument* dibutuhkan sebagai satu *seq*, ada
 `commandLineParams()` yang mengembalikannya sebagai `seq[string]`.
 
 ## Error sengaja: lupa mengimpor `std/os`
 
 Nama-nama di atas tidak tersedia begitu saja. Lupakan `import std/os`, dan compiler berhenti di
-baris pertama.
+*line* pertama.
 
 ```{.nim}
 echo getCurrentDir()
@@ -177,25 +177,25 @@ echo getCurrentDir()
 main.nim(1, 6) Error: undeclared identifier: 'getCurrentDir'
 ```
 
-Baca dari kiri. `main.nim` adalah *file itu*. `(1, 6)` berarti baris 1, kolom 6: posisi awal nama
+Baca dari kiri. `main.nim` adalah *file itu*. `(1, 6)` berarti *line* 1, kolom 6: posisi awal nama
 yang tidak dikenal, tepat setelah `echo `. `undeclared identifier` berarti nama itu dipakai tanpa
-pernah dideklarasikan atau diimpor. Baris `candidates` tepat di bawahnya menawarkan nama terdekat
+pernah dideklarasikan atau diimpor. *Line* `candidates` tepat di bawahnya menawarkan nama terdekat
 yang mungkin dimaksud.
 
-Perbaikan terpendek: tambahkan `import std/os` di baris pertama. Kebiasaan yang berguna, kalau
+Perbaikan terpendek: tambahkan `import std/os` di *line* pertama. Kebiasaan yang berguna, kalau
 compiler menyebut nama yang menurut kita seharusnya ada, periksa daftar `import` lebih dulu.
 
 ## Latihan
 
-1. Cetak nama *file* dan ekstensinya dari *path* `/etc/nim/nim.cfg` memakai `splitFile`.
-2. Tanpa menjalankan, prediksi keluarannya:
+1. Print nama *file* dan ekstensinya dari *path* `/etc/nim/nim.cfg` memakai `splitFile`.
+2. Tanpa menjalankan, prediksi *output*-nya:
    ```{.nim}
    import std/os
 
    echo splitFile("notes.txt").name
    ```
-3. Tulis program yang menulis dua baris ke sebuah *file* di `getTempDir()`, membacanya kembali,
-   lalu mencetak jumlah barisnya. Bersihkan *file* di akhir.
+3. Tulis program yang write dua *line* ke sebuah *file* di `getTempDir()`, membacanya kembali,
+   lalu print jumlah *line*-nya. Bersihkan *file* di akhir.
 4. Kode berikut gagal. Perbaiki, lalu jelaskan kenapa:
    ```{.nim}
    import std/os
@@ -208,14 +208,14 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
 ## Ringkasan
 
-- `std/os` menangani *path*, *file*, *directory*, argumen, dan *variable* lingkungan.
+- `std/os` menangani *path*, *file*, *directory*, *argument*, dan *variable* lingkungan.
 - Susun *path* dengan `joinPath` atau `/`, bukan dengan `&`, supaya pemisahnya benar di setiap sistem.
 - `readFile` dan `writeFile` cukup untuk *file* biasa; bersihkan *file* sementara setelah dipakai.
-- Urutan `walkDir` tidak dijamin; urutkan sendiri kalau keluaran harus stabil.
+- Urutan `walkDir` tidak dijamin; urutkan sendiri kalau *output* harus stabil.
 - Lupa `import std/os` menghasilkan `undeclared identifier` di *compile*, bukan crash saat runtime.
 
 ## Selanjutnya
 
-Bab berikutnya membahas `unittest`: menulis *test* yang duduk di samping kode, membaca keluarannya, dan
+Bab berikutnya membahas `unittest`: write *test* yang duduk di samping kode, read *output*-nya, dan
 menjadikan *test* sebagai kebiasaan, bukan tambahan di akhir proyek. Lanjut ke
 [`unittest` dan disiplin *test*](unit-testing.qmd).

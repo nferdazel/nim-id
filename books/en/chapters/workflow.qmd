@@ -171,6 +171,8 @@ terminal can stand in.
 4. Run `nim check square.nim` and `nim c square.nim`. Compare their output and their exit codes.
 5. Create a new project with `nimble init`, then name the commands to build and run it.
 
+Answers are in [Appendix A](../appendix/answers.qmd).
+
 ## Summary
 
 - `nim r` compiles and runs right away; it leaves no binary next to the source.

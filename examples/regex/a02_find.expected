@@ -1,0 +1,5 @@
+match from start: true
+match in the middle: false
+find in the middle: 4
+name: Lovelace
+age: 36

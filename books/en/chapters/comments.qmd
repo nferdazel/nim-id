@@ -155,6 +155,8 @@ With the three forms in hand, the question is when to comment. Three guidelines 
 5. Write an exported procedure with a doc comment and one `runnableExamples` block, then prove that
    `nim doc` fails when the block's contents are wrong.
 
+Answers are in [Appendix A](../appendix/answers.qmd).
+
 ## Summary
 
 - `#` ignores the rest of the line; `#[ ... ]#` ignores a range and may nest.

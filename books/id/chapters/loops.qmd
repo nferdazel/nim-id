@@ -13,7 +13,7 @@ memakai *iterator*: *range*, *array*, `seq`, atau iterator buatan sendiri. Bentu
 
 Setelah bab ini, pembaca bisa membedakan *range* inklusif `..` dan eksklusif `..<`, memakai
 `countdown` dan `countup`, mengiterasi *element* dengan `items` dan pasangan *index*-*element* dengan
-`pairs`, menulis `while` yang berhenti, serta memakai `break` dan `continue`.
+`pairs`, write `while` yang berhenti, serta memakai `break` dan `continue`.
 :::
 
 ## `for` dengan *range*: `..` dan `..<`
@@ -41,13 +41,13 @@ i = 2
 i = 3
 ```
 
-`0 ..< 3` membaca "nol sampai kurang dari tiga": angkanya `0`, `1`, `2`. `0 .. 3` inklusif di kedua
+`0 ..< 3` read "nol sampai kurang dari tiga": angkanya `0`, `1`, `2`. `0 .. 3` inklusif di kedua
 ujung, jadi `3` ikut. Kesalahpahaman yang paling sering adalah memakai `..` untuk *index* `array`,
 padahal *index* terakhir selalu `len - 1`. Karena itu gaya yang aman untuk mengulang sebanyak `n`
 kali adalah `for i in 0 ..< n:`.
 
-*Variable* `i` hanya berlaku di dalam badan *loop* dan tidak bisa diubah. Menulis `i = 5` di
-dalamnya ditolak dengan pesan `'i' cannot be assigned to`. Ini disengaja, supaya *value* hitungan tidak
+*Variable* `i` hanya berlaku di dalam badan *loop* dan tidak bisa diubah. Write `i = 5` di
+dalamnya ditolak dengan *message* `'i' cannot be assigned to`. Ini disengaja, supaya *value* hitungan tidak
 dirusak dari dalam.
 
 *Range* juga boleh kosong. `for i in 5 .. 3:` tidak menjalankan badannya sama sekali, dan itu bukan
@@ -75,7 +75,7 @@ for i in countup(1, 3, 2):
 ```
 
 `countdown(3, 1)` berjalan dari `3` turun ke `1`. `countup(1, 3, 2)` berjalan naik dengan langkah
-dua, jadi hanya `1` dan `3` yang tercetak. Keduanya adalah iterator, bukan kata kunci; tanpa argumen
+dua, jadi hanya `1` dan `3` yang di-print. Keduanya adalah iterator, bukan kata kunci; tanpa *argument*
 langkah, `countup(a, b)` sama dengan `a .. b`. Keduanya menghasilkan satu *value* tiap putaran,
 sehingga bisa dipakai langsung sebagai sumber `for`.
 
@@ -103,7 +103,7 @@ cyd
 2: cyd
 ```
 
-`for name in names` memanggil iterator `items` secara implisit: setiap putaran mengambil *element itu*.
+`for name in names` call iterator `items` secara implisit: setiap putaran mengambil *element itu*.
 Kalau *index itu* dibutuhkan, tulis dua nama *variable*. Bentuk itu memakai `pairs`, yang menghasilkan
 *index* dan *element* sekaligus. Untuk `array` dan `seq`, *index* `pairs` bertipe `int` mulai dari nol.
 Untuk `Table` dan *type* lain, `pairs` menghasilkan pasangan yang sesuai *type* tersebut.
@@ -154,13 +154,13 @@ for i in 1 .. 10:
 ```
 
 Bacanya berurutan tiap putaran: bilangan genap dilewati `continue`, dan begitu `i` melebihi `7`,
-`break` menghentikan *loop*. Hasilnya bilangan ganjil sampai `7`.
+`break` menghentikan *loop*. *Result*-nya bilangan ganjil sampai `7`.
 
 Pada *loop* bersarang, keduanya hanya berlaku untuk *loop* terdalam. `break` di dalam
 `for j` tidak menghentikan `for i` di luarnya. Untuk keluar dari dua *loop* sekaligus, pindahkan
 bagian itu ke *procedure* tersendiri, atau simpan penanda `bool` yang diperiksa di *loop* luar.
 
-## Membaca pesan error: `break` di luar *loop*
+## Membaca *error message*: `break` di luar *loop*
 
 ```{.nim}
 echo "before"
@@ -172,15 +172,15 @@ echo "after"
 main.nim(2, 1) Error: invalid control flow: break
 ```
 
-Compiler menunjuk langsung baris dan kolom `break`. Pesannya menyebut alurnya tidak sah karena
+Compiler menunjuk langsung *line* dan kolom `break`. *Message*-nya menyebut alurnya tidak sah karena
 `break` hanya punya arti di dalam `for` atau `while`. Ini termasuk pemeriksaan yang dilakukan
-sebelum program jalan, jadi tidak perlu ada uji coba untuk menemukannya. `continue` memberi pesan
+sebelum program jalan, jadi tidak perlu ada uji coba untuk menemukannya. `continue` memberi *message*
 yang sama di posisi serupa.
 
 ## Latihan
 
-1. Cetak bilangan genap dari `2` sampai `10` dengan `for` dan *range* yang tepat.
-2. Tanpa menjalankan, prediksi outputnya:
+1. Print bilangan genap dari `2` sampai `10` dengan `for` dan *range* yang tepat.
+2. Tanpa menjalankan, prediksi *output*-nya:
    ```{.nim}
    var total = 0
 
@@ -189,7 +189,7 @@ yang sama di posisi serupa.
 
    echo total
    ```
-3. Tulis *loop* yang menjumlahkan *element* sebuah `seq[int]` memakai `pairs`, lalu cetak total dan
+3. Tulis *loop* yang menjumlahkan *element* sebuah `seq[int]` memakai `pairs`, lalu print total dan
    *index* *element* terbesar.
 4. Kode berikut tidak pernah berhenti. Perbaiki tanpa mengubah maksudnya:
    ```{.nim}
@@ -213,4 +213,4 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 ## Selanjutnya
 
 Bab berikutnya membahas [kumpulan data](collections.qmd): `array` berukuran tetap, `seq` yang bisa
-tumbuh, dan `openArray` yang menerima keduanya sebagai parameter *procedure*.
+tumbuh, dan `openArray` yang menerima keduanya sebagai *parameter* *procedure*.

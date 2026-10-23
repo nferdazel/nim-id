@@ -1,17 +1,17 @@
 # *Data type* primitif dan literal
 
-Di bahasa lain, satu *type* `int` cukup untuk semua bilangan. Di Nim, bilangan bulat dipecah menurut
-lebar bit, dan pilihan itu menentukan *range* *value* sekaligus jumlah memori yang dipakai.
+Di bahasa lain, satu *type* `int` cukup untuk semua bilangan. Di Nim, *integer* dipecah menurut
+lebar bit, dan pilihan itu menentukan *range* *value* sekaligus jumlah *memory* yang dipakai.
 
 Pilih terlalu sempit, program berhenti dengan `OverflowDefect` di tengah jalan. Pilih terlalu
-lebar, memori terbuang percuma. Bab ini memetakan *type* primitif Nim, literal yang membentuknya,
+lebar, *memory* terbuang percuma. Bab ini memetakan *type* primitif Nim, literal yang membentuknya,
 dan cara berpindah antar *type* tanpa kehilangan data.
 
 ::: {.callout-note}
 ## Tujuan bab
 
 Setelah bab ini, pembaca bisa memilih *type* integer sesuai *range* yang dibutuhkan, membaca error
-overflow, menulis literal heksadesimal dan biner, serta mengonversi *value* antar *type* dengan sadar
+overflow, write literal heksadesimal dan biner, serta mengonversi *value* antar *type* dengan sadar
 apa yang terjadi pada *value itu*.
 :::
 
@@ -49,13 +49,13 @@ Polanya konsisten: setiap tambahan satu bit menggandakan *range itu*.
 | `uint8` | 0 sampai 255 | 1 byte |
 | `int` | mengikuti mesin (64-bit di sini) | 8 byte |
 
-*Type* `int` adalah pilihan bawaan untuk bilangan bulat: lebarnya mengikuti mesin tempat program
-dijalankan. Pakai *type* berlebar tetap hanya kalau ukurannya memang penting, misalnya saat membaca
-format biner atau menghemat memori di dalam struktur besar.
+*Type* `int` adalah pilihan bawaan untuk *integer*: lebarnya mengikuti mesin tempat program
+dijalankan. Pakai *type* berlebar tetap hanya kalau ukurannya memang penting, misalnya saat read
+format biner atau menghemat *memory* di dalam struktur besar.
 
 ## Literal numerik
 
-*Value* yang sama bisa ditulis dengan beberapa cara. Semuanya menghasilkan bilangan, bukan teks.
+*Value* yang sama bisa di-write dengan beberapa cara. Semuanya menghasilkan bilangan, bukan teks.
 
 ```{.nim}
 echo 255          # decimal
@@ -76,12 +76,12 @@ echo 2e3          # scientific notation is a float
 ```
 
 Awalan `0x` menandai heksadesimal, `0b` biner, dan `0o` oktal. Garis bawah di dalam angka hanya
-*tool* mata; compiler mengabaikannya. Baris terakhir terlihat seperti bilangan bulat, tapi
-`2e3` adalah `float`; karena itu hasilnya `2000.0`, bukan `2000`.
+*tool* mata; compiler mengabaikannya. *Line* terakhir terlihat seperti *integer*, tapi
+`2e3` adalah `float`; karena itu *result*-nya `2000.0`, bukan `2000`.
 
 ## Ketika *value* melewati batas
 
-`int8` berhenti di 127. Tambahkan satu, dan hasilnya tidak muat lagi. Simpan sebagai `overflow.nim`:
+`int8` berhenti di 127. Tambahkan satu, dan *result*-nya tidak muat lagi. Simpan sebagai `overflow.nim`:
 
 ```{.nim}
 var score: int8 = 127
@@ -94,13 +94,13 @@ overflow.nim(2) overflow
 Error: unhandled exception: over- or underflow [OverflowDefect]
 ```
 
-Pesan pertama menyebut *file* dan baris. Pesan kedua menyebut jenis masalahnya: `OverflowDefect`.
+*Message* pertama menyebut *file* dan *line*. *Message* kedua menyebut jenis masalahnya: `OverflowDefect`.
 Secara bawaan Nim memeriksa overflow dan menghentikan program, bukan diam-diam membungkus *value itu*
 menjadi −128. Pemeriksaan itu bisa dimatikan dengan `--overflowChecks:off` (atau `-d:danger`),
-dan saat itu baris di atas benar-benar menghasilkan −128. Jangan lakukan itu untuk menghilangkan
-error; hasil yang membungkus hampir selalu bug yang lebih sulit dilacak.
+dan saat itu *line* di atas benar-benar menghasilkan −128. Jangan lakukan itu untuk menghilangkan
+error; *result* yang membungkus hampir selalu bug yang lebih sulit dilacak.
 
-Kalau *value itu* sudah diketahui saat menulis kode, compiler menangkapnya lebih awal:
+Kalau *value itu* sudah diketahui saat write kode, compiler menangkapnya lebih awal:
 
 ```{.nim}
 const TooBig: int8 = 127 + 1
@@ -111,12 +111,12 @@ echo TooBig
 Error: type mismatch: got 'int literal(128)' for '128' but expected 'int8'
 ```
 
-Di sini tidak ada program yang dijalankan; compiler mengevaluasi `127 + 1` dan melihat hasilnya
+Di sini tidak ada program yang dijalankan; compiler mengevaluasi `127 + 1` dan melihat *result*-nya
 tidak cocok dengan `int8`.
 
-## Bilangan pecahan: `float32` dan `float64`
+## *Float*: `float32` dan `float64`
 
-Nim punya dua *type* pecahan utama. `float64` adalah bawaannya, dan `float` hanyalah nama lain
+Nim punya dua *float* utama. `float64` adalah bawaannya, dan `float` hanyalah nama lain
 untuknya.
 
 ```{.nim}
@@ -140,13 +140,13 @@ false
 
 `float32` menyimpan sekitar tujuh angka penting, `float64` sekitar lima belas. Konsekuensinya,
 `1.0 / 3.0` berbeda presisi saat dihitung sebagai `float32`. Akhiran `'f32` memaksa sebuah literal
-menjadi `float32`. Baris terakhir memperlihatkan hal yang sering mengejutkan: `0.1 + 0.2` dan `0.3`
+menjadi `float32`. *Line* terakhir memperlihatkan hal yang sering mengejutkan: `0.1 + 0.2` dan `0.3`
 bukan *value* yang sama persis, karena keduanya tidak bisa disimpan dengan tepat dalam biner. Karena
-itu jangan membandingkan pecahan dengan `==`; bandingkan selisihnya dengan toleransi.
+itu jangan membandingkan *float* dengan `==`; bandingkan selisihnya dengan toleransi.
 
 ## Konversi antar *type*
 
-Nim tidak mengubah *type* diam-diam. Perpindahan harus ditulis eksplisit.
+Nim tidak mengubah *type* diam-diam. Perpindahan harus di-write eksplisit.
 
 ```{.nim}
 import std/strutils
@@ -170,7 +170,7 @@ echo $ratio
 2.75
 ```
 
-`int(ratio)` membuang bagian pecahan; hasilnya 2, bukan 3, karena pemotongan terjadi ke arah nol.
+`int(ratio)` membuang bagian pecahan; *result*-nya 2, bukan 3, karena pemotongan terjadi ke arah nol.
 Sebaliknya `$` mengubah *value* menjadi string, dan `parseInt` melakukan arah kebalikannya. Perhatikan
 bahwa `int("128")` tidak bekerja; teks harus melewati `parseInt` lebih dulu.
 
@@ -201,23 +201,23 @@ true
 true
 ```
 
-`char` ditulis dengan kutip tunggal dan menyimpan satu byte. `.ord` memberinya kode numerik,
+`char` di-write dengan kutip tunggal dan menyimpan satu byte. `.ord` memberinya kode numerik,
 `char(...)` dan `chr(...)` melakukan arah sebaliknya. *Expression* `'\n' == char(10)` benar karena
 `\n` memang *character* dengan kode 10. `bool` hanya berisi `true` atau `false` dan menjadi bahan
 operator logika di bab operator.
 
 ## Latihan
 
-1. Tulis tiga literal, yaitu `0xFF`, `0b1010`, dan `1_000`. Prediksi output `echo` untuk masing-masing
+1. Tulis tiga literal, yaitu `0xFF`, `0b1010`, dan `1_000`. Prediksi *output* `echo` untuk masing-masing
    sebelum menjalankannya.
-2. Apa yang terjadi pada kode ini, dan mengapa pesannya muncul saat runtime, bukan saat *compile*?
+2. Apa yang terjadi pada kode ini, dan mengapa *message*-nya muncul saat runtime, bukan saat *compile*?
    ```{.nim}
    var n: int8 = 127
    n = n + 1
    echo n
    ```
 3. Kenapa `float32(0.1) == 0.1` bernilai `false`, padahal `0.1` dan `float32(0.1)` tampak sama?
-4. Konversi `2.99` menjadi `int`. Hasilnya 2 atau 3? Jelaskan mengapa.
+4. Konversi `2.99` menjadi `int`. *Result*-nya 2 atau 3? Jelaskan mengapa.
 5. Kode `const Big: int8 = 200` gagal *di-compile*. Perbaiki tanpa menambah *value* lain, lalu
    jelaskan mengapa *type* sebelumnya salah.
 
@@ -226,13 +226,13 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 ## Ringkasan
 
 - `int8` sampai `int64` punya lebar tetap; `int` mengikuti ukuran mesin.
-- Awalan `0x`, `0b`, dan `0o` menulis literal dalam basis lain; `_` diabaikan.
-- Overflow pada bilangan bulat menghentikan program dengan `OverflowDefect`, bukan membungkus
+- Awalan `0x`, `0b`, dan `0o` write literal dalam basis lain; `_` diabaikan.
+- Overflow pada *integer* menghentikan program dengan `OverflowDefect`, bukan membungkus
   diam-diam.
-- `float` sama dengan `float64`; jangan bandingkan pecahan dengan `==`.
+- `float` sama dengan `float64`; jangan bandingkan *float* dengan `==`.
 - Konversi selalu eksplisit: `int(...)`, `float(...)`, `$`, dan `parseInt`.
 
 ## Selanjutnya
 
-Bab berikutnya membahas `string`: escape sequence, raw string, string multi-baris, serta cara
+Bab berikutnya membahas `string`: escape sequence, raw string, *multiline string*, serta cara
 mengambil sebagian teks dengan *index* dan slicing.

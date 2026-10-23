@@ -1,0 +1,264 @@
+# Time and random numbers
+
+Two things make a program feel alive: the clock and luck. Both hide the same trap for tests. The
+clock returns something different every time it is called, and so do random numbers without a seed.
+Nim puts both modules in its standard library: `std/times` and `std/random`.
+
+::: {.callout-note}
+## What you will be able to do
+
+After this chapter you can build a `DateTime` with `dateTime`, format it with `format`, parse text
+with `parse`, measure a time difference, use `initRand` with a fixed seed, and explain why `now()`
+is dangerous inside a test.
+:::
+
+## Building and formatting a `DateTime`
+
+A `DateTime` stores a date and a time together with its timezone. You build one with the `dateTime`
+procedure, which takes a year, a month, a day, an hour, a minute, a second, a nanosecond, and a
+timezone. The month is written as an enum value such as `mMar`, not a number, so the argument order
+is hard to mix up.
+
+```{.nim}
+import std/times
+
+let launch = dateTime(2024, mMar, 1, 9, 30, 0, 0, utc())
+
+echo launch.format("yyyy-MM-dd HH:mm:ss")
+echo launch.format("ddd d MMM yyyy")
+echo launch
+echo launch.hour, ":", launch.minute
+```
+
+```{.txt}
+2024-03-01 09:30:00
+Fri 1 Mar 2024
+2024-03-01T09:30:00Z
+9:30
+```
+
+Save it as `main.nim`, then run `nim c -r main.nim`. Every example in this chapter passes `utc()` as
+the timezone, so the output is the same on any machine. The default timezone of `dateTime` is
+`local()`, which follows the wall clock of the computer.
+
+The common `format` specifiers: `yyyy` for a four-digit year, `MM` for a two-digit month, `dd` for
+the day, and `HH:mm:ss` for hour, minute, and second. `MMM` produces the short month name, `MMMM` the
+long one, and `ddd` the weekday name. Fields such as `launch.hour` and `launch.minute` take a piece
+of the `DateTime` without reformatting it.
+
+In Nim 2.2.12 the old name of this procedure is `initDateTime`, and that name is marked
+`deprecated`. Use `dateTime`.
+
+## Parsing text into time
+
+`parse` is the inverse of `format`. It takes text, a pattern, and a timezone, then returns a
+`DateTime` value, which you can break into fields such as `year`, `month`, or `monthday`.
+
+```{.nim}
+import std/times
+
+let created = parse("2024-03-01 09:30:00", "yyyy-MM-dd HH:mm:ss", utc())
+
+echo created
+echo created.format("d MMM yyyy")
+echo created.monthday, " ", created.month, " ", created.year
+
+# The same format turns a date-only string into a midnight DateTime.
+let dateOnly = parse("2024-03-01", "yyyy-MM-dd", utc())
+echo dateOnly.hour, ":", dateOnly.minute
+```
+
+```{.txt}
+2024-03-01T09:30:00Z
+1 Mar 2024
+1 March 2024
+0:0
+```
+
+As long as the text matches the pattern, the result is certain. Text without a time, such as
+`"2024-03-01"`, becomes midnight, that is hour `0` and minute `0`. When the text does not match,
+`parse` raises an exception instead of returning an empty value. That case is covered in the error
+section.
+
+## Time differences and timestamps
+
+A `DateTime` can be added to a `Duration`, subtracted by a `Duration`, or subtracted by another
+`DateTime`, which yields a `Duration`. A `Duration` has procedures such as `inSeconds`, `inMinutes`,
+and `inHours` to turn it into a number.
+
+```{.nim}
+import std/times
+
+let start = dateTime(2024, mMar, 1, 23, 30, 0, 0, utc())
+let deadline = start + initDuration(hours = 2)
+
+echo deadline
+echo deadline - start
+echo (deadline - start).inMinutes
+echo start.toTime.toUnix
+```
+
+```{.txt}
+2024-03-02T01:30:00Z
+2 hours
+120
+1709335800
+```
+
+The example crosses a month boundary: 1 March at 23:30 plus two hours becomes 2 March at 01:30. Nim
+handles the date rollover itself. The `2 hours` line comes from `$` on a `Duration`.
+
+To talk to other systems, a time often has to become a number. `toTime` turns a `DateTime` into a
+`Time`, and `toUnix` returns the seconds since 1 January 1970 UTC. That number is what usually gets
+stored in a database or sent over JSON.
+
+## Random numbers you can repeat
+
+Random generation in Nim has a generator with a state. `randomize(seed)` sets the global generator,
+while `initRand(seed)` returns its own generator that you can keep in a variable. A fixed seed makes
+the sequence the same every time the program runs.
+
+```{.nim}
+import std/random
+
+randomize(1234)
+echo rand(100)
+echo rand(100)
+echo rand(1.0 .. 10.0)
+
+# A fresh generator with the same seed repeats the sequence from the start.
+var r = initRand(1234)
+echo r.rand(100)
+echo r.rand(100)
+```
+
+```{.txt}
+1
+10
+1.8034521390576308
+1
+10
+```
+
+The lines `1` and `10` appear twice because a new generator with seed `1234` repeats the sequence
+from the start. That property is what makes a test useful. Without a fixed seed, `randomize()` takes
+entropy from the system, and a test that depends on it fails now and then with no pattern.
+
+A number from `rand(100)` sits in the range `0` to `99`; the upper bound is exclusive. For a
+fractional range, pass an `HSlice` such as `1.0 .. 10.0`.
+
+## Sampling and shuffling
+
+Two procedures save a pile of code: `sample` picks one element, `shuffle` reorders in place. Both
+take a generator as their first argument, so the result can be repeated.
+
+```{.nim}
+import std/random
+
+var r = initRand(1234)
+
+let names = @["ada", "grace", "linus", "margaret"]
+echo r.sample(names)
+echo r.sample(names)
+
+var deck = @[1, 2, 3, 4, 5]
+r.shuffle(deck)
+echo deck
+```
+
+```{.txt}
+linus
+ada
+@[5, 3, 1, 4, 2]
+```
+
+`sample` leaves the original sequence untouched. `shuffle` changes it in place, so the sequence has
+to live in a `var`. Shuffling a temporary copy and throwing it away is a common mistake.
+
+## The danger of `now()` inside a test
+
+`now()` returns the time at which the call is made. Inside a test, that means the result depends on
+when the test runs, and failures show up now and then with no way to repeat them.
+
+The way out is simple: do not call `now()` inside the procedure under test. Take a `DateTime` as a
+parameter and pass a fixed value in the test.
+
+```{.nim}
+import std/[times, unittest]
+
+proc isWeekend(dt: DateTime): bool =
+  dt.weekday in {dSat, dSun}
+
+suite "isWeekend":
+  test "Saturday is a weekend":
+    check isWeekend(dateTime(2024, mApr, 6, 12, 0, 0, 0, utc()))
+
+  test "Wednesday is not a weekend":
+    check not isWeekend(dateTime(2024, mApr, 3, 12, 0, 0, 0, utc()))
+```
+
+```{.txt}
+
+[Suite] isWeekend
+  [OK] Saturday is a weekend
+  [OK] Wednesday is not a weekend
+```
+
+That procedure is pure: its output depends only on its argument. In a real program, the top-level
+caller gets `now()` once and passes the value down.
+
+## Intentional error: a format that does not match
+
+`parse` checks every piece of the text against the pattern. One number outside the range is enough
+to stop the program.
+
+```{.nim}
+import std/times
+
+let bad = parse("2024-13-01", "yyyy-MM-dd", utc())
+echo bad
+```
+
+```{.txt}
+Error: unhandled exception: Failed to parse '2024-13-01' with format 'yyyy-MM-dd'. Failed on pattern 'MM' [TimeParseError]
+```
+
+The message names the original text, the pattern, and the part that failed, here `MM`. The full
+output also carries a stack trace. The fix is to check the text first, or to wrap `parse` in `try`
+and `except TimeParseError`.
+
+## Exercises
+
+1. Change the first example so it prints only the weekday name, such as `Friday`.
+2. Without running it, predict the output:
+   ```{.nim}
+   import std/times
+
+   let lastDay = dateTime(2024, mDec, 31, 23, 59, 0, 0, utc())
+   echo lastDay + initDuration(minutes = 2)
+   ```
+3. Write from scratch: a procedure that rolls a die with a value from 1 to 6, using a seeded
+   generator so the first roll is always the same.
+4. The code below fails to compile. Fix it, then explain its message:
+   ```{.nim}
+   import std/times
+
+   let created: Date = dateTime(2024, mMar, 1, 0, 0, 0, 0, utc())
+   echo created
+   ```
+5. Why is a procedure that calls `now()` directly hard to test? Name one way to avoid it.
+
+Answers are in [Appendix A](../appendix/answers.qmd).
+
+## Summary
+
+- `dateTime` builds a `DateTime`; `format` writes it out, `parse` reads it back.
+- Always pass `utc()` so the example output does not depend on the machine timezone.
+- `DateTime` and `Duration` can be added; `toUnix` turns a time into seconds since 1970.
+- `initRand` with a fixed seed makes random numbers repeatable inside a test.
+- Hide `now()` in the top-level caller; the procedure under test takes a `DateTime` parameter.
+
+## Next
+
+The next chapter adds power: [threads and channels](threads.qmd), running work on several paths of
+execution at once and sending the results back safely.

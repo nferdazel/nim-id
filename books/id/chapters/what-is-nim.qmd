@@ -2,7 +2,7 @@
 
 Nim sering dipromosikan dengan satu kalimat: sintaksnya rapi seperti Python, cepatnya seperti C.
 Kalimat itu benar, tapi belum menjelaskan apa pun. Yang lebih berguna: Nim adalah bahasa yang
-*di-compile* dan bertipe statis, dan hasilnya satu *file* biner yang berjalan tanpa mesin virtual.
+*di-compile* dan bertipe statis, dan *result*-nya satu *file* biner yang berjalan tanpa mesin virtual.
 
 Bab ini menunjukkan arti kedua sifat itu dalam praktik. Kita mulai dari program terkecil, melihat
 apa yang terjadi waktu kode salah, lalu menimbang kapan Nim layak dipilih.
@@ -11,20 +11,20 @@ apa yang terjadi waktu kode salah, lalu menimbang kapan Nim layak dipilih.
 ## Tujuan bab
 
 Setelah bab ini, pembaca bisa menjelaskan arti "*di-compile*" dan "bertipe statis", menjalankan
-program Nim pertama, dan membaca pesan error *type* yang dikeluarkan compiler.
+program Nim pertama, dan membaca *error message* *type* yang dikeluarkan compiler.
 :::
 
 ## *Di-compile*, bukan diinterpretasi
 
-Program Python dibaca dan dijalankan baris demi baris oleh interpreter. Program Nim diterjemahkan
-lebih dulu. Compiler membaca *file* `.nim`, menghasilkan kode C, lalu memanggil compiler C untuk
+Program Python di-read dan dijalankan *line* demi *line* oleh interpreter. Program Nim diterjemahkan
+lebih dulu. Compiler read *file* `.nim`, menghasilkan kode C, lalu call compiler C untuk
 membuat biner. Biner itulah yang dijalankan.
 
 Konsekuensinya tiga:
 
-- *Error* ditemukan sebelum program berjalan, bukan saat baris yang salah akhirnya dieksekusi.
+- *Error* ditemukan sebelum program berjalan, bukan saat *line* yang salah akhirnya dieksekusi.
 - Program berjalan secepat kode C, karena memang menjadi kode C.
-- Hasil akhirnya satu *file* yang bisa disalin ke mesin lain, tanpa memasang Nim di sana.
+- *Result* akhirnya satu *file* yang bisa disalin ke mesin lain, tanpa memasang Nim di sana.
 
 Harganya: setiap perubahan perlu *di-compile* ulang. Untuk program kecil, itu hitungan detik. Kalau
 programnya tumbuh, perbedaan ini terasa makin mahal: bug yang hanya muncul di produksi jauh lebih
@@ -42,7 +42,7 @@ echo "Hello, Nim"
 Hello, Nim
 ```
 
-`echo` menulis argumennya ke stdout dan menutup dengan baris baru. Tidak ada `main`, tidak ada titik
+`echo` write *argument*-nya ke stdout dan menutup dengan *newline*. Tidak ada `main`, tidak ada titik
 koma, dan indentasi yang menentukan blok. Satu *file* boleh berisi *statement* di tingkat atas
 seperti ini.
 
@@ -67,17 +67,17 @@ Bacalah dari kiri ke kanan:
 | Bagian | Arti |
 |---|---|
 | `main.nim` | *file* yang bermasalah |
-| `(1, 16)` | baris 1, kolom 16 |
+| `(1, 16)` | *line* 1, kolom 16 |
 | `Error` | tingkat keparahan; build berhenti di sini |
 | `got 'string' ... but expected 'int'` | yang diberikan bertipe `string`, yang dibutuhkan `int` |
 
-Tidak ada output, karena tidak ada program yang berjalan. Bagi pemula ini terasa seperti halangan.
-Lama-lama ini jadi keuntungan: *error* yang sama di Python baru muncul ketika baris itu
+Tidak ada *output*, karena tidak ada program yang berjalan. Bagi pemula ini terasa seperti halangan.
+Lama-lama ini jadi keuntungan: *error* yang sama di Python baru muncul ketika *line* itu
 dieksekusi, mungkin setelah data pengguna masuk.
 
 ## *Procedure* dan *loop*
 
-Nim tetap ringkas untuk program yang lebih besar. *Procedure* ditulis dengan `proc`, dan *expression*
+Nim tetap ringkas untuk program yang lebih besar. *Procedure* di-write dengan `proc`, dan *expression*
 terakhir di badannya menjadi **return value**.
 
 ```{.nim}
@@ -91,8 +91,8 @@ echo greet("Nim")
 Hello, Nim
 ```
 
-`&` menggabungkan dua string. Baris `"Hello, " & name` adalah *expression* terakhir, jadi itulah yang
-dikembalikan. Tidak perlu `return` selama tidak ada percabangan.
+`&` menggabungkan dua string. *Line* `"Hello, " & name` adalah *expression* terakhir, jadi itulah yang
+di-return. Tidak perlu `return` selama tidak ada *branching*.
 
 *Loop* memakai indentasi yang sama:
 
@@ -117,10 +117,10 @@ Backend bawaan Nim adalah C. Tersedia juga backend C++, Objective-C, dan JavaScr
 `nim c --backend:js hello.nim` menghasilkan *file* JavaScript dari kode yang sama. Untuk sebagian
 besar program, kita jarang perlu memilih backend secara manual.
 
-Nim 2.x memakai ORC sebagai pengelola memori bawaan. ORC menghitung referensi dan mengumpulkan
-siklus, dan *destructor* berjalan saat *value* keluar dari ruang lingkupnya. Tidak ada garbage
-collector yang menghentikan seluruh program untuk menyapu memori. Untuk kode sehari-hari yang
-penting: kita tidak memanggil `free`, dan lupa tidak membebaskan memori bukan *error* fatal.
+Nim 2.x memakai ORC sebagai pengelola *memory* bawaan. ORC menghitung referensi dan mengumpulkan
+siklus, dan *destructor* berjalan saat *value* keluar dari *scope*-nya. Tidak ada garbage
+collector yang menghentikan seluruh program untuk menyapu *memory*. Untuk kode sehari-hari yang
+penting: kita tidak call `free`, dan lupa tidak membebaskan *memory* bukan *error* fatal.
 
 Nim juga punya *template* dan *macro*: kode yang dijalankan saat *compile* untuk menghasilkan kode
 lain. Karena itu Nim bisa punya sintaks khusus bidang (*domain-specific language*) dan *boilerplate*
@@ -129,7 +129,7 @@ pemahaman *type* yang lebih dulu.
 
 ## Kapan Nim cocok, dan kapan tidak
 
-Nim cocok ketika kita butuh biner native, pemakaian memori yang bisa diprediksi, dan kode yang
+Nim cocok ketika kita butuh biner native, pemakaian *memory* yang bisa diprediksi, dan kode yang
 enak dibaca. *Tool* *command line*, layanan jaringan, pengolah data, dan program yang dibagikan
 sebagai satu *file* semuanya masuk hitungan.
 
@@ -139,19 +139,21 @@ aman. Jujur soal ini lebih berguna daripada menjual satu bahasa sebagai jawaban 
 
 ## Latihan
 
-1. Ubah program `hello` di atas supaya mencetak nama pembaca, bukan `Nim`.
-2. Pada contoh penjumlahan, ganti `1..5` menjadi `1..10`. Prediksi outputnya sebelum menjalankan.
-3. Tulis program yang mencetak `7 * 6` beserta hasilnya. Simpan sebagai `kali.nim`.
+1. Ubah program `hello` di atas supaya print nama pembaca, bukan `Nim`.
+2. Pada contoh penjumlahan, ganti `1..5` menjadi `1..10`. Prediksi *output*-nya sebelum menjalankan.
+3. Tulis program yang print `7 * 6` beserta *result*-nya. Simpan sebagai `kali.nim`.
 4. Kode `var age: int = "twenty"` gagal *di-compile*. Jelaskan mengapa compiler menunjuk kolom 16, dan
    bukan kolom 5 tempat nama `age` berada.
 5. Tanpa menjalankan, tentukan apakah `echo greet(42)` pada contoh `greet` valid. Jelaskan alasanmu.
 
+Jawaban ada di [Lampiran A](../appendix/answers.qmd).
+
 ## Ringkasan
 
 - Nim *di-compile* ke C lalu ke biner; tidak ada mesin virtual saat program berjalan.
-- *Type* diperiksa saat *compile*, jadi *error* *type* menghentikan build sebelum ada output.
-- `echo` mencetak ke stdout; *procedure* memakai `proc` dengan *expression* terakhir sebagai **return value**.
-- Backend bisa diganti (C, C++, Objective-C, JavaScript); pengelola memori bawaan adalah ORC.
+- *Type* diperiksa saat *compile*, jadi *error* *type* menghentikan build sebelum ada *output*.
+- `echo` print ke stdout; *procedure* memakai `proc` dengan *expression* terakhir sebagai **return value**.
+- Backend bisa diganti (C, C++, Objective-C, JavaScript); pengelola *memory* bawaan adalah ORC.
 - Ekosistem Nim lebih kecil daripada Python atau JavaScript; pilih Nim karena kebutuhan, bukan tren.
 
 ## Selanjutnya

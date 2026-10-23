@@ -9,7 +9,7 @@ tersedia, dan versinya sesuai.
 ## Tujuan bab
 
 Setelah bab ini, pembaca bisa memasang Nim 2.2.12 di Linux, macOS, Windows, atau Termux, memeriksa
-versinya, dan memperbaiki pesan `command not found`.
+versinya, dan memperbaiki *message* `command not found`.
 :::
 
 ## Tiga hal yang harus benar
@@ -40,7 +40,7 @@ choosenim 2.2.12
 ```
 
 `choosenim stable` memasang versi stabil terbaru, dan `choosenim devel` memasang cabang
-pengembangan. Untuk buku ini, tahan di 2.2.12 supaya keluaran contoh cocok.
+pengembangan. Untuk buku ini, tahan di 2.2.12 supaya *output* contoh cocok.
 
 Satu keunggulan `choosenim`: semuanya dipasang di *directory* home, jadi tidak perlu hak
 administrator, dan beberapa versi bisa hidup berdampingan. Berpindah versi tidak menghapus versi
@@ -82,11 +82,11 @@ bash: nim: command not found
 ```
 
 Bacalah dari kiri ke kanan. `bash` adalah nama shell yang melaporkan (di zsh tulisannya
-`zsh: command not found: nim`). `nim` adalah *command* yang dicari. Sisanya menjelaskan hasilnya:
+`zsh: command not found: nim`). `nim` adalah *command* yang dicari. Sisanya menjelaskan *result*-nya:
 shell menelusuri setiap *directory* di PATH, tidak menemukannya, lalu menyerah.
 
 Perbaikannya: tambahkan dua *directory* ini ke PATH. *Directory* `bin` tempat Nim dipasang, dan
-`~/.nimble/bin` tempat `choosenim` dan `nimble` menaruh biner. Untuk `choosenim`, tambahkan baris
+`~/.nimble/bin` tempat `choosenim` dan `nimble` menaruh biner. Untuk `choosenim`, tambahkan *line*
 berikut ke *file* profil shell (`.zshrc` atau `.bashrc`):
 
 ```{.bash}
@@ -110,7 +110,7 @@ penting nomor versinya. Nimble, pengelola *package* yang menyertai Nim, juga har
 nimble --version
 ```
 
-Baris pertamanya menyerupai `nimble v0.24.1`. Terakhir, pastikan compiler C siap. Di macOS:
+*Line* pertamanya menyerupai `nimble v0.24.1`. Terakhir, pastikan compiler C siap. Di macOS:
 
 ```{.bash}
 xcode-select --install
@@ -122,22 +122,22 @@ nomor versi, bukan `command not found`.
 
 ## Memeriksa tiga syarat sekaligus
 
-Ketiga syarat bisa diuji dalam satu baris. Operator `&&` menjalankan *command* berikutnya hanya kalau
+Ketiga syarat bisa diuji dalam satu *line*. Operator `&&` menjalankan *command* berikutnya hanya kalau
 *command* sebelumnya berhasil, jadi rantai ini berhenti tepat di syarat yang gagal:
 
 ```{.bash}
 nim --version && nimble --version && gcc --version
 ```
 
-Kalau keluaran berhenti setelah `Nim Compiler Version`, berarti `nimble` yang belum ada; kalau
-berhenti setelah baris `nimble`, berarti compiler C yang hilang. Cara ini lebih cepat daripada
+Kalau *output* berhenti setelah `Nim Compiler Version`, berarti `nimble` yang belum ada; kalau
+berhenti setelah *line* `nimble`, berarti compiler C yang hilang. Cara ini lebih cepat daripada
 memeriksa satu per satu.
 
 ## Kalau versi berbeda
 
 Kalau versi yang terpasang bukan 2.2.12, contoh di buku ini kemungkinan besar tetap jalan. Yang
-paling sering berubah antar versi adalah isi pesan error dan detail kecil di **standard library**. Kalau
-output contoh di mesin pembaca berbeda dari buku, langkah pertama adalah mencocokkan versi:
+paling sering berubah antar versi adalah isi *error message* dan detail kecil di **standard library**. Kalau
+*output* contoh di mesin pembaca berbeda dari buku, langkah pertama adalah mencocokkan versi:
 
 ```{.bash}
 choosenim 2.2.12
@@ -147,15 +147,17 @@ Setelah berpindah, jalankan `nim --version` lagi untuk memastikan versinya benar
 
 ## Latihan
 
-1. Pasang Nim, lalu salin keluaran `nim --version` di mesin pembaca.
-2. Jalankan `nim` di terminal yang PATH-nya belum diatur. Tulis pesan yang muncul, dan jelaskan
+1. Pasang Nim, lalu salin *output* `nim --version` di mesin pembaca.
+2. Jalankan `nim` di terminal yang PATH-nya belum diatur. Tulis *message* yang muncul, dan jelaskan
    arti setiap bagiannya.
 3. Periksa compiler C yang terpasang. *Command* apa yang dipakai untuk memastikan, dan apa
-   keluarannya?
+   *output*-nya?
 4. Nim sudah terpasang, tetapi compiler C belum. Apa yang terjadi waktu `nim c hello.nim`
    dijalankan? Jelaskan.
 5. Dengan `choosenim`, tulis urutan *command* untuk berpindah dari versi stabil terbaru ke 2.2.12,
    lalu kembali lagi.
+
+Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
 ## Ringkasan
 
@@ -163,7 +165,7 @@ Setelah berpindah, jalankan `nim --version` lagi untuk memastikan versinya benar
 - `choosenim` memudahkan berpindah versi; pengelola *package* distro lebih cepat tapi sering tertinggal.
 - PATH perlu memuat *directory* `bin` Nim dan `~/.nimble/bin`.
 - `command not found` berarti shell tidak menemukan *command* di PATH, bukan Nim yang rusak.
-- Buku ini diuji di Nim 2.2.12; cocokkan versi kalau output berbeda.
+- Buku ini diuji di Nim 2.2.12; cocokkan versi kalau *output* berbeda.
 
 ## Selanjutnya
 

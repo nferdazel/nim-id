@@ -1,6 +1,6 @@
-# Cheat sheet {.unnumbered}
+# Cheat sheet
 
-Halaman ini merangkum sintaks yang paling sering dipakai. Setiap potongan kode ditulis dalam bahasa Inggris, sama seperti seluruh kode di buku ini, dan
+Halaman ini merangkum sintaks yang paling sering dipakai. Setiap potongan kode di-write dalam bahasa Inggris, sama seperti seluruh kode di buku ini, dan
 diuji di Nim 2.2.12.
 
 ## Deklarasi
@@ -10,20 +10,20 @@ diuji di Nim 2.2.12.
 | *value* yang boleh berubah | `var count = 0` |
 | diisi sekali | `let name = "Nim"` |
 | diketahui saat *compile* | `const MaxItems = 128` |
-| *type* ditulis eksplisit | `var age: int8 = 24` |
+| *type* di-write eksplisit | `var age: int8 = 24` |
 | tanpa *value* awal, berisi default *type* | `var flag: bool` |
 
 ## *Type* dasar dan literal
 
 | Konsep | Kode |
 |---|---|
-| bilangan bulat | `let n = 42` |
-| bilangan pecahan | `let f = 3.14` |
+| *integer* | `let n = 42` |
+| *float* | `let f = 3.14` |
 | boolean | `let b = true` |
 | *character* | `let c = 'x'` |
 | teks | `let s = "text"` |
 | *type* bulat berlebar | `int8`, `int16`, `int32`, `int64`, `int` |
-| *type* pecahan | `float32`, `float64`, `float` |
+| *float* | `float32`, `float64`, `float` |
 | alias *type* | `type UserId = int` |
 | heksadesimal, oktal, biner | `0xFF`, `0o17`, `0b1010` |
 | pemisah digit | `1_000_000` |
@@ -41,7 +41,7 @@ diuji di Nim 2.2.12.
 | satu *character* bertipe `char` | `s[0]` |
 | panjang | `s.len` |
 
-*Raw string* dan *string* multi-baris ditulis tanpa escape:
+*Raw string* dan *multiline string* di-write tanpa escape:
 
 ```nim
 let raw = r"C:\temp"
@@ -107,7 +107,7 @@ else:
 | sisip | `s.insert(1, 0)` |
 | panjang | `s.len` |
 | potong | `s[0 .. ^2]` |
-| parameter fleksibel | `proc total(xs: openArray[int]): int` |
+| *parameter* fleksibel | `proc total(xs: openArray[int]): int` |
 
 ## Tuple dan destructuring
 
@@ -162,10 +162,10 @@ echo green in flags
 |---|---|
 | **return value** | `proc add(a, b: int): int = a + b` |
 | tanpa *side effect* | `func square(x: int): int = x * x` |
-| parameter default | `proc greet(name: string, punctuation = "!")` |
-| argumen bernama | `greet(punctuation = "?")` |
+| *parameter* default | `proc greet(name: string, punctuation = "!")` |
+| *named argument* | `greet(punctuation = "?")` |
 | overloading | `proc show(x: int)` dan `proc show(x: string)` |
-| parameter `var` | `proc double(x: var int) = x = x * 2` |
+| *parameter* `var` | `proc double(x: var int) = x = x * 2` |
 
 ## Generic
 
@@ -276,7 +276,7 @@ echo doc["city"].getStr
 | Konsep | Kode |
 |---|---|
 | *variable* lingkungan | `getEnv("HOME", "/")`, `existsEnv("HOME")` |
-| argumen program | `paramCount()`, `paramStr(1)`, `commandLineParams()` |
+| *argument* program | `paramCount()`, `paramStr(1)`, `commandLineParams()` |
 | *directory* | `getCurrentDir()`, `setCurrentDir(dir)` |
 | uji *file* | `fileExists(p)`, `dirExists(p)` |
 | gabung *path* | `"dir" / "file.txt"` |
@@ -339,7 +339,7 @@ int twice(int x) { return x * 2; }
 | `nim check file.nim` | periksa *type* saja |
 | `nim c -d:release file.nim` | build teroptimasi |
 | `nim c -o:app file.nim` | tentukan nama biner |
-| `nim c --mm:orc file.nim` | pilih mode memori |
+| `nim c --mm:orc file.nim` | pilih mode *memory* |
 | `nim js file.nim` | *compile* ke JavaScript |
 | `nim doc file.nim` | buat dokumentasi |
 | `nim c --hints:off file.nim` | senyapkan hint |

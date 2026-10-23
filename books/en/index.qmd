@@ -1,7 +1,7 @@
 # Learning Nim {.unnumbered}
 
 ::: {.book-lead}
-Fredianto · v{{< var version >}} · 23 October 2026 · PDF 2.4 MB
+Fredianto · v{{< var version >}} · 23 October 2026
 
 [Download PDF](https://nim.qouver.com/en/Learning-Nim.pdf){.book-lead-pdf}
 :::
@@ -29,7 +29,7 @@ systems programming jargon, start with the
 | Tool | Version |
 |---|---|
 | Nim | 2.2.12 |
-| Book | {{< var version >}} (draft, 33 chapters) |
+| Book | {{< var version >}} (draft, 43 chapters) |
 
 ## How to read
 

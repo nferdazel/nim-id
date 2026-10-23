@@ -1,14 +1,14 @@
 # Benchmark dan profiling
 
-Program yang lambat jarang lambat di baris yang dituduh. Intuisi menunjuk *loop* panjang; hasil
-pengukuran sering menunjuk *procedure* kecil yang dipanggil jauh lebih sering. Urutan yang masuk akal:
+Program yang lambat jarang lambat di *line* yang dituduh. Intuisi menunjuk *loop* panjang; *result*
+pengukuran sering menunjuk *procedure* kecil yang di-call jauh lebih sering. Urutan yang masuk akal:
 ukur dulu, baru menebak. Masalahnya, mengukur juga punya jebakan yang tidak terlihat dari kodenya.
 
 ::: {.callout-note}
 ## Tujuan bab
 
-Setelah bab ini, pembaca bisa mengukur satu blok dengan `getMonoTime`, membaca `Duration` dan
-`inMilliseconds`, menulis contoh yang keluarannya stabil, membedakan waktu CPU dari waktu dinding,
+Setelah bab ini, pembaca bisa mengukur satu blok dengan `getMonoTime`, read `Duration` dan
+`inMilliseconds`, write contoh yang *output*-nya stabil, membedakan waktu CPU dari waktu dinding,
 serta menjalankan profiler bawaan Nim 2.2.12.
 :::
 
@@ -43,17 +43,17 @@ checksum: 19999900000
 elapsed is not negative: true
 ```
 
-Pengurangan dua `MonoTime` menghasilkan `Duration`. Angka itu dibaca dalam satuan lain lewat
+Pengurangan dua `MonoTime` menghasilkan `Duration`. Angka itu di-read dalam satuan lain lewat
 `inMilliseconds`, `inMicroseconds`, atau `inSeconds`, dan fungsi-fungsi itu tinggal di `std/times`,
 bukan `std/monotimes`. Karena itu kedua *module* diimpor bersama: satu menyediakan jamnya, satu cara
 membacanya.
 
-Durasinya sendiri tidak pernah muncul di keluaran, dan itu disengaja. Angka waktu berubah di setiap
-mesin dan setiap kali dijalankan, sehingga blok keluaran yang memuatnya tidak mungkin cocok saat
-diperiksa otomatis. Contoh di buku ini dijaga supaya keluarannya sama di mesin 64-bit mana pun; waktu
-dipakai untuk membandingkan, hasil perbandingannya yang dicetak.
+Durasinya sendiri tidak pernah muncul di *output*, dan itu disengaja. Angka waktu berubah di setiap
+mesin dan setiap kali dijalankan, sehingga blok *output* yang memuatnya tidak mungkin cocok saat
+diperiksa otomatis. Contoh di buku ini dijaga supaya *output*-nya sama di mesin 64-bit mana pun; waktu
+dipakai untuk membandingkan, *result* *comparison*-nya yang di-print.
 
-Baris `discard sumUp(10_000)` adalah *warm-up*. Pada pemanggilan pertama, halaman memori belum
+*Line* `discard sumUp(10_000)` adalah *warm-up*. Pada *calling* pertama, halaman *memory* belum
 disentuh dan cache prosesor masih dingin, jadi ukurannya lebih lambat dari kemampuan sebenarnya.
 
 ## Satu kali ukur tidak cukup
@@ -94,7 +94,7 @@ best is not negative: true
 
 Mengulang blok yang sama lalu menyimpan yang tercepat memberi taksiran yang lebih dekat ke biaya
 sebenarnya. `best` mulai dari `high(int64)`, jadi putaran pertama selalu menggantinya. Contoh ini
-menjalankan bloknya lima kali dan hanya melaporkan bahwa hasilnya tidak negatif, supaya keluarannya
+menjalankan bloknya lima kali dan hanya melaporkan bahwa *result*-nya tidak negatif, supaya *output*-nya
 tetap sama di mesin lambat maupun cepat.
 
 Jumlah ulangan ada komprominya: terlalu sedikit dan derau masih menang, terlalu banyak dan waktu
@@ -104,7 +104,7 @@ hitungan milidetik.
 ## Membandingkan dua versi
 
 Pertanyaan yang lebih sering muncul bukan "berapa cepat", melainkan "mana yang lebih cepat". Untuk
-itu, dua versi diukur dalam satu proses yang sama, lalu hasilnya dibandingkan.
+itu, dua versi diukur dalam satu proses yang sama, lalu *result*-nya dibandingkan.
 
 ```{.nim}
 import std/[monotimes, times]
@@ -145,7 +145,7 @@ string lama ke string baru setiap kali, sehingga total penyalinan tumbuh kuadrat
 menambah *character* ke penyangga yang sudah ada, sehingga biayanya rata-rata tetap. Pada 20.000
 putaran keduanya menghasilkan teks yang sama, tetapi yang kedua jauh lebih murah.
 
-Keluaran yang dicetak hanya dua boolean: hasilnya sama, dan versi cepat tidak lebih lambat. Boolean
+*Output* yang di-print hanya dua boolean: *result*-nya sama, dan versi cepat tidak lebih lambat. Boolean
 itu tetap benar di mesin mana pun, sedangkan angka milidetiknya bisa bergeser dari 10 ke 15 tanpa
 mengubah kesimpulan.
 
@@ -179,11 +179,11 @@ wall clock looks plausible: true
 
 Bedanya terasa saat program menunggu: mengunduh *file* menghabiskan sedikit waktu CPU dan banyak
 waktu dinding. Untuk mengukur pekerjaan hitung, jam monotonik lebih tepat. `epochTime` jangan dipakai
-untuk selang, karena jam sistem bisa disesuaikan dan hasil pengurangannya bisa negatif.
+untuk selang, karena jam sistem bisa disesuaikan dan *result* pengurangannya bisa negatif.
 
 ## Error sengaja: `inMilliseconds` menerima `Duration`
 
-Nama `inMilliseconds` mudah diingat sampai pemanggilannya salah. Kode berikut mengirim cap waktu,
+Nama `inMilliseconds` mudah diingat sampai *calling*-nya salah. Kode berikut mengirim cap waktu,
 bukan selang.
 
 ```{.nim}
@@ -205,29 +205,29 @@ Expected one of (first mismatch at [position]):
 [1] proc inMilliseconds(dur: Duration): int64
 ```
 
-Pesan ini memuat tiga bagian yang berguna. `Expression:` menunjukkan pemanggilan yang diperiksa.
-Baris `[1] epochTime(): float` menunjukkan *type* yang diberikan: `float`. Blok `Expected one of`
+*Message* ini memuat tiga bagian yang berguna. `Expression:` menunjukkan *calling* yang diperiksa.
+*Line* `[1] epochTime(): float` menunjukkan *type* yang diberikan: `float`. Blok `Expected one of`
 menunjukkan yang diterima: `inMilliseconds(dur: Duration): int64`. Salah satu dari keduanya harus
 berubah. Karena yang diinginkan selang, kurangi dua `MonoTime` lebih dulu, lalu panggil
-`inMilliseconds` pada hasilnya seperti pada contoh pertama.
+`inMilliseconds` pada *result*-nya seperti pada contoh pertama.
 
 ## Profiler bawaan Nim
 
 Selain mengukur sendiri, compiler Nim menyertakan profiler sampling. Tambahkan `import std/nimprof`
-dan *compile* dengan dua saklar:
+dan *compile* dengan dua *flag*:
 
 ```bash
 nim c -r --profiler:on --stackTrace:on app.nim
 ```
 
-Saat selesai, program mencetak `writing profile_results.txt...`, dan *file* `profile_results.txt`
+Saat selesai, program print `writing profile_results.txt...`, dan *file* `profile_results.txt`
 muncul di *directory* kerja. Isinya daftar *stack trace* yang diurutkan dari yang paling banyak
-memakai waktu, lengkap dengan persentase per baris. Yang dibaca adalah entri teratas: di situlah
+memakai waktu, lengkap dengan persentase per *line*. Yang di-read adalah entri teratas: di situlah
 waktu paling banyak habis.
 
 Profiler ini mengambil sampel, jadi kegunaannya sebanding dengan lamanya program berjalan. Program
-yang selesai dalam sekejap menghasilkan *file* hampir kosong; perbesar bebannya dulu. Dua saklar
-lain: `--stackTraceMsgs:on` menampilkan pesan yang dipasang lewat `setFrameMsg`, dan `--profileVM:on`
+yang selesai dalam sekejap menghasilkan *file* hampir kosong; perbesar bebannya dulu. Dua *flag*
+lain: `--stackTraceMsgs:on` menampilkan *message* yang dipasang lewat `setFrameMsg`, dan `--profileVM:on`
 memprofilkan kode yang berjalan saat *compile*.
 
 ## *Tool* sistem: `perf` dan Instruments
@@ -240,11 +240,11 @@ perf record --call-graph dwarf ./app
 perf report
 ```
 
-`--call-graph dwarf` meminta jejak pemanggilan lengkap, sehingga hasilnya bisa dibaca sebagai pohon.
+`--call-graph dwarf` meminta jejak *calling* lengkap, sehingga *result*-nya bisa dibaca sebagai pohon.
 Di macOS, peran itu dipegang Instruments dari Xcode. Keduanya bekerja dari luar kode dan menunjukkan
 panasnya seluruh program, bukan satu blok yang kita pilih.
 
-## Membaca hasil dan kapan berhenti
+## Membaca *result* dan kapan berhenti
 
 Beberapa kebiasaan membuat angka tidak menyesatkan:
 
@@ -255,21 +255,21 @@ Beberapa kebiasaan membuat angka tidak menyesatkan:
   jaringan jauh lebih mahal.
 
 Optimasi tidak selalu perlu. Kalau program sudah selesai dalam waktu yang bisa ditunggu, mengejar
-beberapa milidetik hanya menambah kode yang sulit dibaca. Kalau waktu habis di input/output atau
+beberapa milidetik hanya menambah kode yang sulit dibaca. Kalau waktu habis di *input*/*output* atau
 menunggu jaringan, mempercepat perhitungan tidak mengubah apa pun. Ukur dulu, temukan titik panasnya
 dengan profiler, baru ubah algoritmanya: mengganti algoritma yang salah hampir selalu lebih besar
-hasilnya daripada menambal detail kecil.
+*result*-nya daripada menambal detail kecil.
 
 ## Latihan
 
 1. Ubah `Iterations` pada contoh pertama menjadi 100.000, lalu prediksi `checksum` sebelum
    menjalankannya.
-2. Kenapa durasi tidak pernah dicetak oleh contoh di bab ini? Jawab dengan kata "keluaran yang
+2. Kenapa durasi tidak pernah di-print oleh contoh di bab ini? Jawab dengan kata "*output* yang
    stabil".
-3. Tulis program yang membandingkan `add` di ujung `seq` dengan `insert` di awalnya, lalu cetak satu
+3. Tulis program yang membandingkan `add` di ujung `seq` dengan `insert` di awalnya, lalu print satu
    boolean seperti contoh kedua.
 4. Hapus `import std/times` dari contoh pertama, lalu perbaiki error yang muncul dan jelaskan
-   pesannya.
+   *message*-nya.
 5. Sebutkan dua keadaan di mana mengoptimasi kode pada bab ini tidak sepadan, beserta alasannya.
 
 Jawaban ada di [Lampiran A](../appendix/answers.qmd).
@@ -279,7 +279,7 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 - `getMonoTime` dari `std/monotimes` mengambil selang; `inMilliseconds` dan kawan-kawannya ada di
   `std/times`.
 - Satu kali ukur selalu melebih-lebihkan; lakukan *warm-up*, ulangi, lalu ambil putaran tercepat.
-- Contoh di buku ini tidak mencetak waktu, hanya jumlah iterasi, checksum, dan perbandingan boolean.
+- Contoh di buku ini tidak print waktu, hanya jumlah iterasi, checksum, dan *comparison* boolean.
 - `cpuTime` menghitung waktu prosesor, `epochTime` menghitung waktu dinding; jam monotonik dipakai
   untuk selang.
 - Ukur dulu, profil untuk menemukan titik panas, dan berhenti kalau kecepatannya sudah cukup.
@@ -287,5 +287,5 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 ## Selanjutnya
 
 Angka sudah ada, dan titik panas sudah ketemu. Yang belum: biner yang bisa dijalankan di mesin
-selain mesin pengembang. Bab berikutnya membahas pilihan target, saklar compiler, dan biner statis.
+selain mesin pengembang. Bab berikutnya membahas pilihan target, *flag* compiler, dan biner statis.
 Lanjut ke [Cross-compile dan deploy biner](cross-compile.qmd).

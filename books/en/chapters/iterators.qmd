@@ -215,5 +215,5 @@ Answers are in [Appendix A](../appendix/answers.qmd).
 
 ## Next
 
-The next chapter covers [tuples](tuples.qmd): bundling several values into one, and unpacking them
-again on a single line.
+The next chapter covers [closures](closures.qmd): procedures that remember the variables around
+them, and when that property beats a plain procedure.

@@ -11,7 +11,7 @@ sebagai bit, dan pertanyaan "apakah ini termasuk?" dijawab satu operasi.
 ::: {.callout-note}
 ## Tujuan bab
 
-Setelah bab ini, pembaca bisa mendefinisikan enum, membaca *value* ordinalnya, mengubah integer
+Setelah bab ini, pembaca bisa mendefinisikan enum, read *value* ordinalnya, mengubah integer
 menjadi enum, dan memakai `set` beserta `incl`, `excl`, serta `in`.
 :::
 
@@ -30,7 +30,7 @@ red
 blue
 ```
 
-`echo` mencetak namanya, bukan angkanya. Setiap anggota punya posisi berurutan sesuai urutan
+`echo` print namanya, bukan angkanya. Setiap anggota punya posisi berurutan sesuai urutan
 penulisannya.
 
 ## *Value* ordinal dengan `ord`
@@ -53,7 +53,7 @@ anggota enum juga bisa dibandingkan: `red < blue` bernilai `true`.
 
 ## Mengubah integer menjadi enum
 
-*Value* ordinal bisa dikembalikan menjadi anggota. Bentuk `Color(1)` disebut konversi *type*.
+*Value* ordinal bisa di-return menjadi anggota. Bentuk `Color(1)` disebut konversi *type*.
 
 ```{.nim}
 type Color = enum
@@ -69,7 +69,7 @@ green
 green
 ```
 
-Dua baris terakhir mencetak hal yang sama, karena `echo` memakai `$` yang sama. Kalau *value itu*
+Dua *line* terakhir print hal yang sama, karena `echo` memakai `$` yang sama. Kalau *value itu*
 literal, *range itu* diperiksa saat *compile*: `Color(9)` ditolak dengan
 `9 can't be converted to Color`.
 
@@ -89,7 +89,7 @@ echo palette
 {red, blue}
 ```
 
-*Set* kosong ditulis `{}`, dan *type* dasarnya harus ditulis di anotasi. Tanpa itu compiler
+*Set* kosong di-write `{}`, dan *type* dasarnya harus di-write di anotasi. Tanpa itu compiler
 menolak dengan `cannot infer the type of the set`, karena `{}` bisa berarti set *type* apa pun.
 
 ## `incl` dan `excl`: menambah dan membuang
@@ -130,7 +130,7 @@ false
 true
 ```
 
-`in` mengembalikan `bool`, jadi hasilnya bisa langsung dipakai sebagai kondisi `if`. Pencariannya
+`in` return `bool`, jadi *result*-nya bisa langsung dipakai sebagai kondisi `if`. Pencariannya
 satu operasi bit, tidak bergantung pada banyaknya anggota.
 
 ## Iterasi set
@@ -195,7 +195,7 @@ false
 4
 ```
 
-Kita membaca teks *character* demi *character*, dan set menyimpan mana yang sudah muncul. `card` bernilai
+Kita read teks *character* demi *character*, dan set menyimpan mana yang sudah muncul. `card` bernilai
 4 karena `hello` hanya memuat empat huruf berbeda.
 
 Dasar set harus ordinal dengan paling banyak 2^16 *value*. `set[int]` melewati batas itu, dan
@@ -217,14 +217,14 @@ echo c
 main.nim(4, 16) Error: type mismatch: got 'int literal(1)' for '1' but expected 'Color = enum'
 ```
 
-Pesannya menyebut dua *type* yang bertabrakan: *value* `1` bertipe integer, sedangkan tempatnya
-menunggu `Color`. Nim tidak mengubah integer menjadi enum diam-diam. Konversinya harus ditulis
+*Message*-nya menyebut dua *type* yang bertabrakan: *value* `1` bertipe integer, sedangkan tempatnya
+menunggu `Color`. Nim tidak mengubah integer menjadi enum diam-diam. Konversinya harus di-write
 eksplisit lewat `Color(1)`, dan penulisan itulah tempat pembaca melihat niatnya.
 
 ## Latihan
 
-1. Tambahkan anggota `yellow` pada `Color`, lalu cetak `ord(yellow)`.
-2. Tanpa menjalankan, prediksi outputnya:
+1. Tambahkan anggota `yellow` pada `Color`, lalu print `ord(yellow)`.
+2. Tanpa menjalankan, prediksi *output*-nya:
    ```{.nim}
    type Color = enum
      red, green, blue
@@ -235,7 +235,7 @@ eksplisit lewat `Color(1)`, dan penulisan itulah tempat pembaca melihat niatnya.
    ```
 3. Tulis enum `Permission` dengan `read`, `write`, dan `execute`, bangun set izin, lalu uji dua
    keanggotaan.
-4. Kode berikut gagal. Perbaiki, lalu jelaskan pesannya:
+4. Kode berikut gagal. Perbaiki, lalu jelaskan *message*-nya:
    ```{.nim}
    type Color = enum
      red, green, blue
@@ -250,7 +250,7 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
 - `enum` memberi nama pada *value* berurutan; `ord` mengambil posisinya, dimulai dari 0.
 - `Color(...)` mengubah integer menjadi enum secara eksplisit; literal di luar *range* ditolak.
-- `set[Color]` menyimpan *set* anggota, ditulis `{red, blue}`; *set* kosong `{}` butuh
+- `set[Color]` menyimpan *set* anggota, di-write `{red, blue}`; *set* kosong `{}` butuh
   anotasi *type*.
 - `incl`, `excl`, `in`, `+`, `*`, `-`, dan `card` mengolah set; iterasi mengikuti urutan ordinal.
 - Set juga bekerja untuk *type* ordinal lain seperti `char`, sampai 2^16 *value*.

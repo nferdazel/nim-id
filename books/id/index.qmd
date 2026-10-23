@@ -1,7 +1,7 @@
 # Dasar Pemrograman Nim {.unnumbered}
 
 ::: {.book-lead}
-Fredianto · v{{< var version >}} · 23 Oktober 2026 · PDF 2,4 MB
+Fredianto · v{{< var version >}} · 23 Oktober 2026
 
 [Unduh PDF](https://nim.qouver.com/Dasar-Pemrograman-Nim.pdf){.book-lead-pdf}
 :::
@@ -17,11 +17,11 @@ lebih cepat.
 
 ## Yang membuat buku ini berbeda
 
-- **Setiap contoh dijalankan.** Semua *file* di `examples/` *di-compile* dan keluarannya
+- **Setiap contoh dijalankan.** Semua *file* di `examples/` *di-compile* dan *output*-nya
   dibandingkan otomatis di CI. Kalau snippet di buku tidak jalan, build-nya gagal.
 - **Kode yang sengaja salah.** Beberapa contoh memang gagal *di-compile*, dan itu disengaja:
-  pembaca dilatih membaca pesan compiler, bukan menghindarinya.
-- **Output ditulis, bukan difoto.** Semua keluaran program berupa teks yang bisa dicari dan
+  pembaca dilatih membaca *compiler message*, bukan menghindarinya.
+- **Output di-write, bukan difoto.** Semua *output* program berupa teks yang bisa dicari dan
   disalin, dan tetap terbaca oleh pembaca layar.
 
 ## Versi
@@ -29,7 +29,7 @@ lebih cepat.
 | Perangkat | Versi |
 |---|---|
 | Nim | 2.2.12 |
-| Buku | {{< var version >}} (draf, 33 bab) |
+| Buku | {{< var version >}} (draf, 43 bab) |
 
 ## Cara membaca
 

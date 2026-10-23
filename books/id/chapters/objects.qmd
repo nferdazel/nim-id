@@ -11,7 +11,7 @@ berperilaku berbeda saat disalin. Mengabaikannya sering berujung bug.
 ## Tujuan bab
 
 Setelah bab ini, pembaca bisa mendefinisikan `object` dan mengisinya lewat *constructor*, memakai
-*default value*, membedakan *object* *value* dari `ref object`, menimpa `$`, dan membaca pesan error
+*default value*, membedakan *object* *value* dari `ref object`, menimpa `$`, dan membaca *error message*
 `undeclared field`.
 :::
 
@@ -33,7 +33,7 @@ Ada is 36
 ```
 
 `Person(name: "Ada", age: 36)` adalah *constructor* literal. Nim membuatnya otomatis untuk setiap
-*type* *object*, jadi tidak ada fungsi yang perlu ditulis sendiri. Field yang tidak disebut akan
+*type* *object*, jadi tidak ada fungsi yang perlu di-write sendiri. Field yang tidak disebut akan
 memakai *default value*.
 
 ## Field yang bisa diubah
@@ -72,7 +72,7 @@ echo c.hits, "|", repr(c.label)
 0|""
 ```
 
-Sama seperti `var` tanpa *value* awal pada *type* dasar: tidak ada sampah memori yang perlu
+Sama seperti `var` tanpa *value* awal pada *type* dasar: tidak ada sampah *memory* yang perlu
 dikhawatirkan.
 
 ## *Object* sudah punya `$` bawaan
@@ -90,12 +90,12 @@ echo Person(name: "Ada")
 (name: "Ada")
 ```
 
-Keluarannya menyerupai literal asalnya: nama field beserta *value itu*. Cocok untuk inspeksi
+*Output*-nya menyerupai literal asalnya: nama field beserta *value itu*. Cocok untuk inspeksi
 cepat, tapi biasanya belum enak dibaca manusia.
 
 ## Menimpa `$` sendiri
 
-Untuk mengubah cara *object* dicetak, definisikan `$` untuk *type* itu.
+Untuk mengubah cara *object* di-print, definisikan `$` untuk *type* itu.
 
 ```{.nim}
 type Person = object
@@ -113,7 +113,7 @@ Ada (36)
 ```
 
 Setelah `$` didefinisikan, `echo` memakainya otomatis. Aturan yang sama berlaku untuk `&`,
-interpolasi string, dan pemanggilan `$` eksplisit. Inilah cara idiomatis menambah representasi teks
+interpolasi string, dan *calling* `$` eksplisit. Inilah cara idiomatis menambah representasi teks
 pada *type* sendiri.
 
 ## `ref object`: disimpan di heap
@@ -181,7 +181,7 @@ Expected one of (first mismatch at [position]):
 [1] proc echo(x: varargs[typed, `$`])
 ```
 
-Pesannya tidak menyebut `$` secara gamblang, tapi baris terakhir memberi petunjuk: `echo` butuh
+*Message*-nya tidak menyebut `$` secara gamblang, tapi *line* terakhir memberi petunjuk: `echo` butuh
 *type* yang punya `$`. Ada dua perbaikan. Pertama, definisikan `$` untuk `Person`. Kedua, lepas
 referensinya dengan `echo p[]`, supaya `$` bawaan *object* yang dipakai.
 
@@ -235,9 +235,9 @@ echo ada.email
 main.nim(5, 9) Error: undeclared field: 'email'
 ```
 
-Pesannya menyebut field yang dicari. Awali pemeriksaan dari deklarasi *type*: `Person` hanya punya
+*Message*-nya menyebut field yang dicari. Awali pemeriksaan dari deklarasi *type*: `Person` hanya punya
 `name`, jadi `email` memang tidak ada. Ini jenis error yang paling mudah diperbaiki, karena
-jawabannya ada di definisi *type*, bukan di baris pemakaiannya.
+jawabannya ada di definisi *type*, bukan di *line* pemakaiannya.
 
 ## Warisan dasar
 
@@ -268,8 +268,8 @@ dibahas di bagian menengah.
 
 ## Latihan
 
-1. Tambahkan field `email: string` pada `Person`, isi lewat *constructor*, lalu cetak.
-2. Tanpa menjalankan, prediksi outputnya:
+1. Tambahkan field `email: string` pada `Person`, isi lewat *constructor*, lalu print.
+2. Tanpa menjalankan, prediksi *output*-nya:
    ```{.nim}
    type Task = object
      title: string
@@ -279,7 +279,7 @@ dibahas di bagian menengah.
    echo t.done, " ", t.title
    ```
 3. Tulis `type Book = ref object of RootObj` dengan field `title` dan `pages`, buat satu instance,
-   lalu cetak lewat *procedure* yang menerima `Book`.
+   lalu print lewat *procedure* yang menerima `Book`.
 4. Kode berikut gagal. Perbaiki tanpa mengubah `let`:
    ```{.nim}
    type Point = object

@@ -1,0 +1,264 @@
+# *Thread* dan `Channel`
+
+Sebagian pekerjaan tidak bisa dibuat async. Menghitung angka, mengompresi data, atau mengolah gambar
+menyita CPU dari awal sampai akhir, jadi menunggu di *event loop* tidak menolong. Yang dibutuhkan
+*thread* kedua yang benar-benar berjalan bersamaan. Nim menyediakannya lewat `Thread[T]`,
+`createThread`, dan `joinThread`, serta `Channel[T]` untuk mengirim *result*-nya kembali.
+
+::: {.callout-note}
+## Tujuan bab
+
+Setelah bab ini, pembaca bisa membuat *thread* dengan `createThread`, menunggunya dengan
+`joinThread`, mengirim *result* lewat `Channel[T]`, memeriksa `compileOption("threads")`, dan memilih
+antara *thread* dan `async`.
+:::
+
+## Membuat *thread* pertama
+
+*Procedure* yang berjalan di *thread* sendiri ditandai pragma `{.thread.}`. *Argument*-nya satu *value*
+saja, yang diberikan saat pembuatan. Hasilnya tidak kembali lewat `return value`, melainkan dikirim
+lewat `Channel`.
+
+```{.nim}
+import std/typedthreads
+
+var results: Channel[int]
+
+proc square(n: int) {.thread.} =
+  results.send(n * n)
+
+proc main() =
+  results.open()
+  var worker: Thread[int]
+  createThread(worker, square, 5)
+  worker.joinThread()
+  echo results.recv()
+  results.close()
+
+main()
+```
+
+```{.txt}
+25
+```
+
+Simpan sebagai `main.nim`, lalu jalankan `nim c -r main.nim`. *Module*-nya bernama
+`std/typedthreads`; nama `std/threads` tidak ada di Nim 2.2.12. `Thread[int]` berarti *procedure* di
+dalamnya menerima satu `int`. `createThread(worker, square, 5)` menjalankan `square(5)` di *thread*
+baru, dan `joinThread` menunggu sampai pekerjaan itu selesai.
+
+`Channel[int]` adalah antrean aman antar *thread*. `send` menaruh satu *value*, `recv` mengambil
+*value* yang paling lama menunggu. Karena `joinThread` dipanggil lebih dulu, `recv` pasti menemukan
+*value* yang sudah dikirim. `close` membebaskan *channel* setelah selesai dipakai.
+
+Sebuah *procedure* *thread* menerima satu *argument* saja. Kalau ada beberapa *value* yang perlu
+dikirim, bungkus semuanya dalam `tuple`. *Procedure* tanpa *argument* memakai `Thread[void]`, seperti
+pada contoh berikutnya.
+
+## `Channel` untuk urutan yang pasti
+
+*Thread* kedua berjalan kapan saja, jadi mencetak langsung dari dalamnya membuat *output*
+bergantung pada penjadwalan. `Channel` memperbaiki itu: pekerja hanya mengirim *message*, dan *thread* utama yang
+mencetak sesuai urutan antrean.
+
+```{.nim}
+import std/typedthreads
+
+var messages: Channel[string]
+
+proc produce() {.thread.} =
+  for word in ["alpha", "beta", "gamma"]:
+    messages.send(word)
+  messages.send("done")
+
+proc main() =
+  messages.open()
+  var worker: Thread[void]
+  createThread(worker, produce)
+  worker.joinThread()
+  while true:
+    let message = messages.recv()
+    if message == "done":
+      break
+    echo "got: ", message
+  messages.close()
+
+main()
+```
+
+```{.txt}
+got: alpha
+got: beta
+got: gamma
+```
+
+*Message* `"done"` adalah penanda akhir. Karena antrean mengembalikan *message* sesuai urutan masuk, *output*
+selalu `alpha`, `beta`, lalu `gamma`. Inilah cara menjaga contoh tetap deterministik meski ada lebih
+dari satu *thread*: jangan bergantung pada waktu, bergantunglah pada urutan antrean.
+
+## `Channel` bertipe
+
+*Type* `Channel` ditetapkan saat dideklarasikan, dan setiap *message* harus sesuai *type* itu. Kalau
+data yang dikirim punya beberapa bagian, bungkus semuanya dalam `tuple`.
+
+```{.nim}
+import std/typedthreads
+
+type Count = tuple[text: string, characters: int]
+
+var results: Channel[Count]
+
+proc count(text: string) {.thread.} =
+  results.send((text, text.len))
+
+proc main() =
+  results.open()
+  var worker: Thread[string]
+  createThread(worker, count, "Nim")
+  worker.joinThread()
+  let (text, characters) = results.recv()
+  echo text, " has ", characters, " characters"
+  results.close()
+
+main()
+```
+
+```{.txt}
+Nim has 3 characters
+```
+
+`Channel[Count]` hanya menerima `tuple[string, int]`. *Thread* punya *heap* sendiri, jadi *object*
+`ref` dari satu *thread* tidak boleh dipakai di *thread* lain. Membungkus *result* ke dalam satu
+*value* lalu mengirimnya lewat `Channel` adalah pola yang aman. Cara lain adalah *variable* global,
+seperti pada contoh pertama.
+
+## `--threads:on` tidak lagi perlu
+
+Di Nim 2.x, dukungan *thread* menyala secara bawaan bersama mode *memory* `--mm:orc`. Pragma tambahan
+`--threads:on` tidak diperlukan lagi. Untuk membuktikannya, `system` menyediakan
+`compileOption("threads")`.
+
+```{.nim}
+import std/typedthreads
+
+echo "threads enabled: ", compileOption("threads")
+
+proc hello() {.thread.} =
+  echo "hello from the worker"
+
+proc main() =
+  var worker: Thread[void]
+  createThread(worker, hello)
+  worker.joinThread()
+  echo "back on the main thread"
+
+main()
+```
+
+```{.txt}
+threads enabled: true
+hello from the worker
+back on the main thread
+```
+
+Kalau *thread* memang ingin dimatikan, gunakan `--threads:off`; maka `compileOption("threads")`
+bernilai `false`. Untuk keperluan bab ini, bawaannya sudah benar.
+
+## *Thread* atau `async`?
+
+Keduanya menjalankan pekerjaan bersamaan, tetapi untuk beban yang berbeda.
+
+| Beban | Pilihan |
+|---|---|
+| menunggu *socket*, *file*, atau jaringan | `async` |
+| menghitung di CPU tanpa jeda | *thread* |
+| banyak koneksi yang menganggur | `async` |
+
+Model `async` memakai satu *thread* dan menggilir tugas yang sedang menunggu, jadi cocok saat
+pekerjaan didominasi menunggu. *Thread* memakai inti CPU lain, jadi cocok saat pekerjaan didominasi
+hitungan. *Thread* lebih mahal dibuat, dan *memory* tidak dibagi begitu saja, sehingga tidak layak
+dibuat satu per tugas kecil.
+
+*Thread* juga punya *heap* sendiri, jadi *object* `ref` tidak otomatis bisa dipakai lintas *thread*.
+Kalau data harus melewati batas *thread*, kirim lewat `Channel` atau simpan di *variable* global yang
+sederhana.
+
+Satu catatan lama: `std/threadpool` dengan `spawn`, `^`, dan `sync` masih ada, tetapi ditandai
+`deprecated` di Nim 2.2.12. Compiler menyarankan *package* nimble seperti `malebolgia`, `taskpools`,
+atau `weave`. Bab ini hanya memakai **standard library**, jadi `Thread` dan `Channel` yang dipakai.
+
+## Error sengaja: *type* `Channel` yang salah
+
+`Channel` memeriksa *message type*-nya saat *compile*. Mengambil *message* sebagai *type* lain ditolak
+sebelum program berjalan.
+
+```{.nim}
+import std/typedthreads
+
+var channel: Channel[string]
+
+proc produce() {.thread.} =
+  channel.send("42")
+
+proc main() =
+  channel.open()
+  var worker: Thread[void]
+  createThread(worker, produce)
+  worker.joinThread()
+  let n: int = channel.recv()
+  echo n + 1
+  channel.close()
+
+main()
+```
+
+```{.txt}
+main.nim(13, 23) Error: type mismatch: got 'string' for 'recv(channel)' but expected 'int'
+```
+
+*Message* `type mismatch` menyebut *type* yang ditemukan dan yang diharapkan. `Channel[string]` hanya
+bisa mengeluarkan `string`. Ada dua perbaikan: ubah *type* *variable* tujuan menjadi `string`, atau
+ubah *type* *channel* menjadi `Channel[int]` dan kirim angka sejak awal.
+
+## Latihan
+
+1. Ubah contoh pertama supaya pekerja mengirim dua *result*, lalu baca keduanya dengan `recv`.
+2. Tanpa menjalankan, prediksi *output*-nya:
+   ```{.nim}
+   import std/typedthreads
+
+   var channel: Channel[int]
+
+   proc addOne(a: int) {.thread.} =
+     channel.send(a + 1)
+
+   proc main() =
+     channel.open()
+     var worker: Thread[int]
+     createThread(worker, addOne, 41)
+     worker.joinThread()
+     echo channel.recv()
+     channel.close()
+
+   main()
+   ```
+3. Tulis dari nol: satu *thread* mengirim lima angka lewat `Channel[int]`, *thread* utama
+   menjumlahkannya selama antrean masih berisi *message*.
+4. Kapan *thread* lebih tepat daripada `async`? Sebutkan satu beban kerja.
+5. Kode pada bagian *error* gagal *di-compile*. Perbaiki dengan mengubah *type* *channel*, lalu
+   jelaskan *message*-nya.
+
+Jawaban ada di [Lampiran A](../appendix/answers.qmd).
+
+## Ringkasan
+
+- Pragma `{.thread.}` menandai *procedure* yang berjalan di *thread* sendiri.
+- `createThread` membuat *thread*, `joinThread` menunggu sampai selesai.
+- `Channel[T]` mengirim satu *type* *value* antar *thread* dengan urutan antrean yang pasti.
+- Di Nim 2.x *thread* menyala secara bawaan; `compileOption("threads")` bernilai `true`.
+- Pakai `async` untuk pekerjaan yang menunggu, *thread* untuk pekerjaan yang menghitung.
+
+## Selanjutnya
+
+Bagian C tinggal satu langkah: menyatukan *module*, *file* data, *subcommand*, dan *test* menjadi
+satu program utuh di [Proyek akhir: catatan dari terminal](final-project.qmd).

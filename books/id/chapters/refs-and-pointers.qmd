@@ -8,7 +8,7 @@ sana. Pada `object` biasa, data menempel langsung di *variable itu*. Bab ini mem
 ::: {.callout-note}
 ## Tujuan bab
 
-Setelah bab ini, pembaca bisa mengalokasikan `ref` dengan `new`, membaca field lewat dereferensi
+Setelah bab ini, pembaca bisa mengalokasikan `ref` dengan `new`, read field lewat dereferensi
 otomatis, memakai `ptr` bersama `addr`, menguji `nil` dengan `isNil`, dan tahu kapan `ptr` perlu
 beserta risikonya.
 :::
@@ -33,7 +33,7 @@ echo p.name, " is ", p.age
 Ada is 36
 ```
 
-`var p: Person` belum menunjuk ke *object* apa pun; *value itu* `nil`. `new(p)` meminta memori di heap,
+`var p: Person` belum menunjuk ke *object* apa pun; *value itu* `nil`. `new(p)` meminta *memory* di heap,
 membentuk *object* dengan default setiap field, lalu menyimpan alamatnya di `p`. Setelah itu field
 bisa diisi seperti *object* biasa.
 
@@ -59,9 +59,9 @@ Ada
 Ada
 ```
 
-Kedua baris menghasilkan hal yang sama. Compiler menyisipkan dereferensi saat pembaca menulis
+Kedua *line* menghasilkan hal yang sama. Compiler menyisipkan dereferensi saat pembaca write
 `p.name` pada sebuah `ref`. `p[]` adalah bentuk eksplisitnya, dan berlaku umum: `p.age`, `p.name`,
-dan seterusnya, tanpa menulis `[]` setiap kali.
+dan seterusnya, tanpa write `[]` setiap kali.
 
 ## `nil` dan `isNil`
 
@@ -86,7 +86,7 @@ false
 7
 ```
 
-`isNil` mengembalikan `true` selama referensinya kosong. Setelah diisi, hasilnya `false`. Uji
+`isNil` return `true` selama referensinya kosong. Setelah diisi, *result*-nya `false`. Uji
 `isNil` sebelum memakai referensi yang mungkin belum diisi. Mendereferensi `nil` menghentikan
 program saat berjalan, bukan saat *compile*: di macOS dan Linux prosesnya mati dengan `SIGSEGV`,
 bukan exception Nim yang bisa ditangkap `try`.
@@ -110,10 +110,10 @@ echo x
 100
 ```
 
-`p` menunjuk ke `x`. Membaca `p[]` memberi *value* `x`, dan menulis `p[] = 100` mengubah `x`.
+`p` menunjuk ke `x`. Read `p[]` memberi *value* `x`, dan write `p[] = 100` mengubah `x`.
 Keduanya berbagi lokasi yang sama, jadi perubahan lewat `p` langsung terlihat di `x`.
 
-`ptr` tidak memiliki memori. Ia hanya mencatat alamat. Nim tidak membebaskan memori yang ditunjuk
+`ptr` tidak memiliki *memory*. Ia hanya mencatat alamat. Nim tidak membebaskan *memory* yang ditunjuk
 sebuah `ptr`, karena kepemilikannya ada di tempat lain.
 
 `ptr` bekerja juga pada *object*:
@@ -139,7 +139,7 @@ berubah.
 ## `addr` dan `unsafeAddr`
 
 `addr` hanya bekerja pada lokasi yang bisa dialamati. *Variable* `var` jelas punya alamat; untuk
-`let` dan parameter, Nim tetap mengizinkannya demi interop dengan C.
+`let` dan *parameter*, Nim tetap mengizinkannya demi interop dengan C.
 
 ```{.nim}
 let year = 2008
@@ -170,7 +170,7 @@ echo cast[uint8]('A')
 
 `'A'` disimpan sebagai byte `65`, dan `cast[uint8]` membacanya sebagai bilangan. `cast` tidak
 mengubah *value*; ia menafsirkan ulang bit yang sama. Bandingkan `cast[int32](3.5'f32)`, yang
-menghasilkan `1080033280`: bit float itu dibaca sebagai `int32`. Untuk mengubah *type* mengikuti
+menghasilkan `1080033280`: bit float itu di-read sebagai `int32`. Untuk mengubah *type* mengikuti
 aturan bahasa, pakai `int(x)`, `float(x)`, atau `$x`; `cast` hanya untuk kode tingkat rendah.
 
 ## Membaca error: *expression* tanpa alamat
@@ -186,7 +186,7 @@ echo p[]
 main.nim(1, 14) Error: expression has no address
 ```
 
-Posisi `(1, 14)` menunjuk literal `42` di `addr 42`, bukan token `addr` itu sendiri; pesannya lalu
+Posisi `(1, 14)` menunjuk literal `42` di `addr 42`, bukan token `addr` itu sendiri; *message*-nya lalu
 menyebut masalahnya: *expression* itu tidak punya alamat. Perbaikannya, simpan dulu *value itu* ke sebuah
 *variable*, lalu ambil alamat *variable* itu.
 
@@ -207,8 +207,8 @@ di bab *object*.
 
 ## Kapan `ptr` perlu, dan risikonya
 
-`ptr` diperlukan untuk berbicara dengan C, menulis *procedure* tingkat rendah, atau menunjuk ke dalam
-buffer. Di luar itu, `ref` hampir selalu lebih baik karena memorinya dikelola otomatis.
+`ptr` diperlukan untuk berbicara dengan C, write *procedure* tingkat rendah, atau menunjuk ke dalam
+buffer. Di luar itu, `ref` hampir selalu lebih baik karena *memory*-nya dikelola otomatis.
 
 Risikonya nyata:
 
@@ -223,9 +223,9 @@ Aturannya sederhana: pakai `ref` kalau bisa, pakai `ptr` hanya saat tidak ada pi
 
 ## Latihan
 
-1. Alokasikan `ref object` `Book` berisi field `title`, buat dua instance dengan `new`, lalu cetak
+1. Alokasikan `ref object` `Book` berisi field `title`, buat dua instance dengan `new`, lalu print
    kedua judulnya.
-2. Tanpa menjalankan, prediksi outputnya:
+2. Tanpa menjalankan, prediksi *output*-nya:
    ```{.nim}
    type Point = ref object
      x, y: int
@@ -237,7 +237,7 @@ Aturannya sederhana: pakai `ref` kalau bisa, pakai `ptr` hanya saat tidak ada pi
    ```
 3. Tulis *procedure* `incr(p: ptr int)` yang menaikkan *value* yang ditunjuk `p` sebesar satu.
 4. Kenapa `var p: Person` harus melewati `new(p)` dulu sebelum `p.name` diisi?
-5. Kode berikut gagal *di-compile*. Perbaiki, lalu jelaskan pesan error-nya:
+5. Kode berikut gagal *di-compile*. Perbaiki, lalu jelaskan *error message*-nya:
    ```{.nim}
    var x = 5
    var p: ptr int = x
@@ -250,12 +250,12 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
 - `ref object` menyimpan data di heap; `p.name` sudah melakukan dereferensi otomatis.
 - `new(p)` mengalokasikan `ref` yang masih `nil`; `isNil` menguji apakah referensinya kosong.
-- `ptr T` menyimpan alamat, diambil dengan `addr` dan dibaca dengan `p[]`; `unsafeAddr` alias
+- `ptr T` menyimpan alamat, diambil dengan `addr` dan di-read dengan `p[]`; `unsafeAddr` alias
   usangnya.
 - `cast` menafsirkan ulang bit, bukan mengonversi *value*; pakai hanya di kode tingkat rendah.
-- `ptr` tidak memiliki memori dan tidak diperiksa, jadi pilih `ref` selama mungkin.
+- `ptr` tidak memiliki *memory* dan tidak diperiksa, jadi pilih `ref` selama mungkin.
 
 ## Selanjutnya
 
-Bab berikutnya membahas apa yang terjadi pada memori setelah sebuah *value* dibuang:
-[manajemen memori](memory-management.qmd), ARC, ORC, dan *destructor* `=destroy`.
+Bab berikutnya membahas apa yang terjadi pada *memory* setelah sebuah *value* dibuang:
+[manajemen *memory*](memory-management.qmd), ARC, ORC, dan *destructor* `=destroy`.

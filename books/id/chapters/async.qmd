@@ -3,7 +3,7 @@
 Program yang menunggu *file* atau jaringan menghabiskan sebagian besar waktunya untuk diam. Model
 `async`/`await` membuat program bisa mengerjakan hal lain selama menunggu, tanpa membuat *thread* baru.
 Nim menyediakan `std/asyncdispatch`. Bab ini memakai `Future`, `await`, dan `waitFor` untuk urutan
-yang keluarannya selalu sama.
+yang *output*-nya selalu sama.
 
 ::: {.callout-note}
 ## Tujuan bab
@@ -15,8 +15,8 @@ marked as 'async'" saat salah menempatkan `await`.
 
 ## *Procedure* async dan `Future`
 
-*Procedure* async tidak mengembalikan *value* secara langsung. Ia mengembalikan `Future`, wadah yang
-nanti berisi hasilnya. Simpan kode berikut sebagai `main.nim`, lalu jalankan `nim c -r main.nim`.
+*Procedure* async tidak return *value* secara langsung. Ia return `Future`, wadah yang
+nanti berisi *result*-nya. Simpan kode berikut sebagai `main.nim`, lalu jalankan `nim c -r main.nim`.
 
 ```{.nim}
 import std/asyncdispatch
@@ -36,24 +36,24 @@ hello, Nim
 ```
 
 Perhatikan tiga hal. Pragma `{.async.}` mengubah *procedure* sehingga `return` di dalamnya mengisi
-`Future`. Di dalam `main`, `await greeting("Nim")` menunggu sampai hasilnya siap lalu membuka
+`Future`. Di dalam `main`, `await greeting("Nim")` menunggu sampai *result*-nya siap lalu membuka
 *value itu*. Di luar *procedure* async, `waitFor` yang menjalankan mesin async sampai tugasnya selesai.
 
 `waitFor` memulai *event loop*, yaitu mekanisme yang menggilir tugas-tugas yang sedang
 menunggu. Biasanya cukup satu `waitFor` di tingkat teratas program; memanggilnya dua kali tetap
 berjalan, tetapi jarang diperlukan.
 
-`Future` adalah *type* generik. `Future[string]` berisi string, `Future[int]` berisi bilangan bulat.
-`waitFor` mengembalikan *value* yang sama dengan isi `Future` itu, jadi `let total = waitFor sum()`
+`Future` adalah *type* generik. `Future[string]` berisi string, `Future[int]` berisi *integer*.
+`waitFor` return *value* yang sama dengan isi `Future` itu, jadi `let total = waitFor sum()`
 memberi `int` biasa, bukan wadah lagi.
 
-Kenapa tidak memakai *thread* saja? *Thread* mahal dan berbagi memori, sehingga butuh penguncian dan
+Kenapa tidak memakai *thread* saja? *Thread* mahal dan berbagi *memory*, sehingga butuh penguncian dan
 rawan balapan. Model async memakai satu *thread* dan menggilir tugas yang sedang menunggu. Seribu
 koneksi yang menunggu balasan tidak berarti seribu *thread*; yang ada hanya seribu `Future` kecil.
 
 ## Menunggu berurutan
 
-Setiap `await` menunggu tugas itu selesai sebelum baris berikutnya berjalan.
+Setiap `await` menunggu tugas itu selesai sebelum *line* berikutnya berjalan.
 
 ```{.nim}
 import std/asyncdispatch
@@ -107,8 +107,8 @@ alpha ready
 beta ready
 ```
 
-`all` menerima beberapa `Future` dan mengembalikan satu `Future` berisi *seq* hasil. Urutan
-hasilnya mengikuti urutan argumen, bukan urutan selesainya. Karena itu keluarannya tetap `alpha`
+`all` menerima beberapa `Future` dan return satu `Future` berisi *seq* *result*. Urutan
+*result*-nya mengikuti urutan *argument*, bukan urutan selesainya. Karena itu *output*-nya tetap `alpha`
 lalu `beta`, meskipun `beta` selesai lebih dulu.
 
 Bedanya ada di waktu. Dua tugas berjeda 30 dan 10 milidetik selesai dalam sekitar 30 milidetik,
@@ -118,7 +118,7 @@ Selama tugas-tugas itu tidak saling bergantung, menggabungkannya hampir selalu l
 menunggu satu per satu.
 
 Satu hal yang mudah salah: `sleep` biasa (dari `std/os`) memblokir seluruh *event loop*,
-sedangkan `sleepAsync` mengembalikan kendali ke mesin async. Di dalam *procedure* `{.async.}`, pakai versi async dari setiap
+sedangkan `sleepAsync` return kendali ke mesin async. Di dalam *procedure* `{.async.}`, pakai versi async dari setiap
 operasi yang menunggu. Kalau tidak, tugas-tugas itu berjalan berurutan lagi tanpa disadari.
 
 *Error* di dalam *procedure* async muncul saat `Future`-nya di-`await`. Artinya `try` dan `except`
@@ -146,8 +146,8 @@ echo main()
 main.nim(7, 25) Error: Can only 'await' inside a proc marked as 'async'. Use 'waitFor' when calling an 'async' proc in a non-async scope instead
 ```
 
-Pesan itu punya dua bagian. Bagian pertama menyebut aturannya. Bagian kedua langsung memberi jalan
-keluar: pakai `waitFor` kalau pemanggilnya bukan *procedure* async. `(7, 25)` menunjuk panggilan
+*Message* itu punya dua bagian. Bagian pertama menyebut aturannya. Bagian kedua langsung memberi jalan
+keluar: pakai `waitFor` kalau *caller*-nya bukan *procedure* async. `(7, 25)` menunjuk panggilan
 `work()` yang di-`await`, bukan token `await` itu sendiri.
 
 Ada dua perbaikan yang wajar. Ubah `main` menjadi *procedure* async lalu panggil dengan `waitFor`,
@@ -156,13 +156,13 @@ atau biarkan `main` sinkron dan panggil `waitFor work()` di dalamnya.
 Ada juga `asyncCheck`, yang memasang pemeriksa pada `Future` supaya *error* yang tidak ditunggu
 tetap dilaporkan. Hati-hati memakainya: kalau tugas itu gagal, *error itu* di-raise di putaran
 peristiwa dan program bisa berhenti dengan unhandled exception. Kalau *error* memang ingin
-diabaikan, `discard` pada `Future` itulah yang menelannya. Pakai `await` selama hasil atau
+diabaikan, `discard` pada `Future` itulah yang menelannya. Pakai `await` selama *result* atau
 *error itu* penting.
 
 ## Latihan
 
 1. Ubah contoh berurutan supaya dua tugas berjalan bersamaan. Jelaskan perbedaan waktunya.
-2. Tanpa menjalankan, prediksi keluarannya:
+2. Tanpa menjalankan, prediksi *output*-nya:
    ```{.nim}
    import std/asyncdispatch
 
@@ -175,7 +175,7 @@ diabaikan, `discard` pada `Future` itulah yang menelannya. Pakai `await` selama 
 
    waitFor main()
    ```
-3. Tulis *procedure* async yang menerima dua `Future[int]`, menjumlahkan hasilnya, lalu panggil dengan
+3. Tulis *procedure* async yang menerima dua `Future[int]`, menjumlahkan *result*-nya, lalu panggil dengan
    `waitFor`.
 4. Perbaiki kode yang memakai `await` di dalam *procedure* biasa, tanpa mengubah maksudnya.
 
@@ -183,10 +183,10 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
 ## Ringkasan
 
-- *Procedure* `{.async.}` mengembalikan `Future`; `await` membuka hasilnya.
+- *Procedure* `{.async.}` return `Future`; `await` membuka *result*-nya.
 - `waitFor` menjalankan mesin async dari kode sinkron; biasanya cukup sekali di tingkat teratas.
-- `await` berurutan menjumlahkan jeda; `all` menumpuknya sambil menjaga urutan argumen.
-- Keluaran contoh dijaga pasti dengan mengandalkan urutan `await`, bukan waktu.
+- `await` berurutan menjumlahkan jeda; `all` menumpuknya sambil menjaga urutan *argument*.
+- *Output* contoh dijaga pasti dengan mengandalkan urutan `await`, bukan waktu.
 - `await` di luar *procedure* async ditolak saat *compile*.
 
 ## Selanjutnya

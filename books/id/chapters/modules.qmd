@@ -1,6 +1,6 @@
 # *Module*, `import`, dan `export`
 
-Program sepanjang seratus baris masih nyaman di satu *file*. Begitu melewati beberapa ratus baris,
+Program sepanjang seratus *line* masih nyaman di satu *file*. Begitu melewati beberapa ratus *line*,
 satu *file* menjadi sulit dibaca, dan setiap perubahan menyeret separuh program. Nim membagi program
 menjadi *module*: satu *file*, satu ruang nama, satu unit yang bisa diimpor. Aturannya sebenarnya
 sederhana. Yang menyimpan kejutan adalah `import`: nama apa yang masuk, milik siapa, dan siapa yang
@@ -10,7 +10,7 @@ boleh memakainya.
 ## Tujuan bab
 
 Setelah bab ini, pembaca bisa memecah kode menjadi beberapa *module*, memakai `import`,
-`from ... import`, dan `export`, menaruh *module* di dalam *directory*, serta membaca pesan error
+`from ... import`, dan `export`, menaruh *module* di dalam *directory*, serta membaca *error message*
 `cannot open file` dan `invalid module name`.
 :::
 
@@ -59,7 +59,7 @@ Hello, Ada
 ```
 
 Setelah `import`, simbol yang diekspor dipakai langsung dengan namanya. `greet` dan `version` berasal
-dari `a01_greeting`, tetapi tidak perlu ditulis dengan awalan apa pun.
+dari `a01_greeting`, tetapi tidak perlu di-write dengan awalan apa pun.
 
 ## `from ... import`: mengambil sebagian nama
 
@@ -77,14 +77,14 @@ Hello, Grace
 ```
 
 Bedanya praktis: `import` membuka semua nama, `from ... import` membuka yang disebut saja. Pada
-*module* besar, bentuk kedua membuat daftar ketergantungan terbaca dari satu baris.
+*module* besar, bentuk kedua membuat daftar ketergantungan terbaca dari satu *line*.
 
 Nama *module itu* sendiri tetap terikat. Setelah `from a01_greeting import greet`, `a01_greeting.version`
-masih bisa ditulis. Kalau justru ingin memaksa kualifikasi, pakai `from a01_greeting import nil`.
+masih bisa di-write. Kalau justru ingin memaksa kualifikasi, pakai `from a01_greeting import nil`.
 
 ## `export`: meneruskan simbol ke *module* lain
 
-Sebuah *module* boleh meneruskan simbol dari *module* lain, sehingga pemanggil tidak perlu tahu *module*
+Sebuah *module* boleh meneruskan simbol dari *module* lain, sehingga *caller* tidak perlu tahu *module*
 asalnya. Pola ini dipakai untuk membuat *module* fasad.
 
 ```{.nim}
@@ -117,7 +117,7 @@ susunan internal sebuah *package* dan menyediakan satu *entry point*.
 ## Nama *module* harus identifier yang sah
 
 Nama *module* harus identifier Nim yang sah. Nama tidak boleh diawali angka dan tidak boleh memuat
-tanda hubung. Compiler menolaknya sebelum sempat membaca isi *file*.
+tanda hubung. Compiler menolaknya sebelum sempat read isi *file*.
 
 ```{.nim}
 echo "this file is fine; its name is not"
@@ -127,7 +127,7 @@ echo "this file is fine; its name is not"
 Error: invalid module name: '3d_helpers'; a module name must be a valid Nim identifier.
 ```
 
-Pesan itu tidak menyebut baris, karena masalahnya ada di nama *file*, bukan di kode. *File* di atas
+*Message* itu tidak menyebut *line*, karena masalahnya ada di nama *file*, bukan di kode. *File* di atas
 dinamai `3d_helpers.nim`, dan itulah yang ditolak.
 
 ## *Module* di dalam *directory*
@@ -141,7 +141,7 @@ proc upper*(s: string): string =
   s.toUpperAscii()
 ```
 
-Pemanggil menulis garis miring untuk menunjuk letak *file*.
+*Caller* write garis miring untuk menunjuk letak *file*.
 
 ```{.nim}
 import textutils/format
@@ -159,7 +159,7 @@ akses lengkapnya `format.upper`, bukan `textutils/format.upper`. Aturan yang sam
 
 ## `include`: menyisipkan *file*, bukan mengimpor
 
-`include` tidak membuat *module* baru. Ia menyalin isi *file* ke posisi *command itu*, seakan ditulis di
+`include` tidak membuat *module* baru. Ia menyalin isi *file* ke posisi *command itu*, seakan di-write di
 sana. Karena itu `include` berguna untuk memecah satu *module* yang sangat panjang, bukan untuk
 memisahkan tanggung jawab.
 
@@ -196,8 +196,8 @@ echo "never reached"
 main.nim(1, 8) Error: cannot open file: not_a_real_module
 ```
 
-Posisi `(1, 8)` menunjuk nama *module* di baris `import`. Compiler tidak tahu *file* itu memang tidak
-ada atau hanya salah ketik, jadi pesannya literal: *file* tidak bisa dibuka. Periksa kembali nama
+Posisi `(1, 8)` menunjuk nama *module* di *line* `import`. Compiler tidak tahu *file* itu memang tidak
+ada atau hanya salah ketik, jadi *message*-nya literal: *file* tidak bisa dibuka. Periksa kembali nama
 *file* dan letaknya. Untuk **standard library**, awalan `std/` adalah konvensi yang membuat asal *module*
 jelas: `import std/strutils`. Bentuk tanpa awalan masih dikenali compiler, tetapi tidak menunjukkan
 bahwa *module* itu bagian dari **standard library**.
@@ -206,8 +206,8 @@ bahwa *module* itu bagian dari **standard library**.
 
 1. Buat `shout.nim` berisi `proc shout*(text: string): string` bertanda bintang, lalu panggil dari
    `main.nim`.
-2. *File* `mathx.nim` mengekspor `double*`. *File* kedua menulis `from mathx import double` lalu
-   `echo double(21)`. Berapa outputnya, dan bolehkah *file* kedua memanggil `mathx.double(21)`?
+2. *File* `mathx.nim` mengekspor `double*`. *File* kedua write `from mathx import double` lalu
+   `echo double(21)`. Berapa *output*-nya, dan bolehkah *file* kedua call `mathx.double(21)`?
 3. Kode berikut gagal. Jelaskan kenapa, lalu perbaiki:
    ```{.nim}
    import textutils/format

@@ -2,7 +2,7 @@
 
 Hampir setiap program menyentuh teks. Di Nim, `string` adalah *seq* byte yang boleh diubah di
 tempat, berbeda dari bahasa yang memperlakukan string sebagai *value* beku. Perbedaan itu muncul di
-*index*, penggabungan, dan pesan error yang kadang tidak terduga.
+*index*, penggabungan, dan *error message* yang kadang tidak terduga.
 
 Bab ini mulai dari menulis teks harfiah, lalu bergerak ke cara mengambil sebagian isinya dan
 mengubahnya dengan aman.
@@ -10,7 +10,7 @@ mengubahnya dengan aman.
 ::: {.callout-note}
 ## Tujuan bab
 
-Setelah bab ini, pembaca bisa menulis escape sequence dan raw string, mengambil *character* dan
+Setelah bab ini, pembaca bisa write escape sequence dan raw string, mengambil *character* dan
 potongan teks dengan *index* dan slicing, membedakan `&` dari `add`, serta menjelaskan kenapa
 `s[0] = 'N'` ditolak saat `s` dideklarasikan `let`.
 :::
@@ -34,8 +34,8 @@ backslash: \
 brace: { }
 ```
 
-Garis miring terbalik di dalam string membuka *escape sequence*. `\n` menjadi baris baru, `\"`
-menjadi tanda kutip yang tidak menutup string, dan `\\` menjadi satu garis miring. Perhatikan baris
+Garis miring terbalik di dalam string membuka *escape sequence*. `\n` menjadi *newline*, `\"`
+menjadi tanda kutip yang tidak menutup string, dan `\\` menjadi satu garis miring. Perhatikan *line*
 terakhir: kurung kurawal `{` biasa-biasa saja di string biasa. *Character* itu hanya punya arti
 khusus di dalam *interpolasi* `&"..."` yang dibahas di bab berikutnya.
 
@@ -60,9 +60,9 @@ C:\Users\nim\bin
 Tanpa `r`, `\U` dan `\d` bukan escape yang dikenal dan bisa memicu *warning*. Raw string juga
 tidak memperlakukan `"` sebagai penutup, jadi teks di atas terbaca persis seperti tertulis.
 
-## String multi-baris
+## *Multiline string*
 
-Untuk teks yang menempati beberapa baris, gunakan tiga tanda kutip:
+Untuk teks yang menempati beberapa *line*, gunakan tiga tanda kutip:
 
 ```{.nim}
 let banner = """
@@ -84,12 +84,12 @@ END
 ```
 
 Perhatikan `len` bernilai 18. Isi string adalah `line one\nline two\n`: 8 + 1 + 8 + 1 *character*.
-Baris baru setelah `"""` pembuka ikut terhitung, dan itu sering menjadi sumber *error* hitung
+*Newline* setelah `"""` pembuka ikut terhitung, dan itu sering menjadi sumber *error* hitung
 saat pembaca baru memakainya. Raw string tiga kutip juga tidak memproses escape.
 
 ## Panjang dan *index*
 
-`len` memberi jumlah byte, dan *index* dimulai dari nol. Memanggil `len` murah: panjang string
+`len` memberi jumlah byte, dan *index* dimulai dari nol. Call `len` murah: panjang string
 disimpan bersama datanya, bukan dihitung ulang setiap kali.
 
 ```{.nim}
@@ -110,7 +110,7 @@ Nim
 
 `s[^1]` menunjuk *element* terakhir; `^n` adalah gula untuk `s.len - n`. Karena `s[0]` menghasilkan
 `char`, bukan string satu huruf, operator pada `char` (seperti `.ord`) berlaku langsung. Mengambil
-*index* di luar *range* tidak dikembalikan sebagai `nil`; Nim menghentikan program dengan
+*index* di luar *range* tidak di-return sebagai `nil`; Nim menghentikan program dengan
 `IndexDefect` saat runtime.
 
 ## Slicing
@@ -139,7 +139,7 @@ aslinya tidak berubah.
 
 ## `&` versus `add`
 
-Ada dua cara menggabungkan teks, dan bedanya soal waktu dan memori.
+Ada dua cara menggabungkan teks, dan bedanya soal waktu dan *memory*.
 
 ```{.nim}
 var greeting = "Hello"
@@ -179,13 +179,13 @@ echo s
 mutation.nim(2, 2) Error: 's[0]' cannot be assigned to
 ```
 
-Pesan menunjuk baris 2, kolom 2, tepat di `[0]`. Yang ditolak adalah penugasan ke *element*, bukan
+*Message* menunjuk *line* 2, kolom 2, tepat di `[0]`. Yang ditolak adalah *assignment* ke *element*, bukan
 penulisan string itu sendiri: `s` dibuat dengan `let`, jadi tidak ada bagiannya yang boleh
-diubah. Ganti `let` menjadi `var` dan program berjalan, mencetak `Nim`.
+diubah. Ganti `let` menjadi `var` dan program berjalan, print `Nim`.
 
 ## Memotong dan memecah teks
 
-Tugas sehari-hari seperti membersihkan spasi dan memecah baris CSV ada di `std/strutils`.
+Tugas sehari-hari seperti membersihkan spasi dan memecah *line* CSV ada di `std/strutils`.
 
 ```{.nim}
 import std/strutils
@@ -206,34 +206,34 @@ echo "[" & "  padded  ".strip & "]"
 [padded]
 ```
 
-`split` memecah string menjadi `seq[string]` pada setiap pemisah. Perhatikan hasil `split` masih
-menyimpan spasi setelah koma; `strip` menghapus spasi di kedua ujung. Baris output yang diapit
+`split` memecah string menjadi `seq[string]` pada setiap pemisah. Perhatikan *result* `split` masih
+menyimpan spasi setelah koma; `strip` menghapus spasi di kedua ujung. *Line* *output* yang diapit
 kurung siku dibuat agar spasi tidak terlihat sekilas hilang.
 
 ## Latihan
 
-1. Cetak satu string yang berisi tanda kutip ganda dan satu garis miring terbalik dengan escape
+1. Print satu string yang berisi tanda kutip ganda dan satu garis miring terbalik dengan escape
    yang benar.
-2. Tanpa menjalankan, prediksi output:
+2. Tanpa menjalankan, prediksi *output*:
    ```{.nim}
    echo "a" & "b" & "c"
    echo "abc".len
    ```
-3. Tulis path `C:\temp\new` memakai raw string, lalu cetak.
+3. Tulis path `C:\temp\new` memakai raw string, lalu print.
 4. Kode berikut gagal. Perbaiki, lalu jelaskan kenapa gagal:
    ```{.nim}
    let s = "abc"
    s.add("d")
    echo s
    ```
-5. Ambil tiga *character* terakhir dari `"programming"` dengan slicing, lalu cetak hasilnya.
+5. Ambil tiga *character* terakhir dari `"programming"` dengan slicing, lalu print *result*-nya.
 
 Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
 ## Ringkasan
 
 - `\n`, `\"`, dan `\\` adalah escape di string biasa; `r"..."` mematikannya.
-- Tiga kutip membentuk string multi-baris, dan baris baru setelah pembuka ikut terhitung.
+- Tiga kutip membentuk *multiline string*, dan *newline* setelah pembuka ikut terhitung.
 - `len` memberi jumlah byte, *index* mulai dari nol, dan `^n` dihitung dari belakang.
 - `add` mengubah string di tempat (butuh `var`); `&` membuat string baru.
 - `split` dan `strip` dari `std/strutils` memecah dan membersihkan teks.

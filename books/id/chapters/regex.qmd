@@ -1,0 +1,258 @@
+# *Regex* dengan `std/re`
+
+Membandingkan string dengan `==` hanya bekerja kalau isinya persis sama. Begitu aturannya mengabur,
+misalnya "ambil nama dan umur dari satu *line*", rantai `split` dan `strip` mulai bertumpuk dan
+susah dibaca. *Regex* menulis aturan itu sekali sebagai satu pola. Nim mengirim pemroses pola di
+**standard library**, di *module* `std/re`.
+
+::: {.callout-note}
+## Tujuan bab
+
+Setelah bab ini, pembaca bisa menulis pola dengan `re"..."`, memakai `match`, `find`, dan
+`findAll`, mengganti serta memecah teks dengan `replace`, `replacef`, dan `split`, membaca grup
+tangkapan, menyalakan `(?i)`, dan tahu kapan *regex* berlebihan sehingga `strutils` sudah cukup.
+:::
+
+## Satu pola, dua grup
+
+`re"..."` mengubah teks pola menjadi *value* `Regex`. Bentuk paling ringkas memakai template `=~`,
+yang mengisi *array* `matches` dengan grup tangkapan. Simpan sebagai `main.nim`, lalu jalankan
+`nim c -r main.nim`.
+
+```{.nim}
+import std/re
+
+let line = "Ada, 36"
+
+# =~ declares a `matches` array that holds the capture groups.
+if line =~ re"(\w+),\s*(\d+)":
+  echo "name: ", matches[0]
+  echo "age: ", matches[1]
+else:
+  echo "no match"
+```
+
+```{.txt}
+name: Ada
+age: 36
+```
+
+`matches[0]` bukan kecocokan utuh, melainkan grup pertama, isi tanda kurung pertama. Grup kedua
+mendarat di `matches[1]`. Nim tidak menyediakan slot khusus untuk kecocokan utuh pada *array* ini;
+kalau *value* itu dibutuhkan, bungkus seluruh pola dengan tanda kurung.
+
+Simbol pola yang paling sering dipakai: `\w` cocok dengan satu huruf atau angka, `\d` dengan satu
+digit, dan `\s` dengan satu spasi. Tambahan `+` berarti "satu kali atau lebih", jadi `\w+` menelan
+satu kata penuh.
+
+## `match` berlabuh, `find` menyisir
+
+Dua *procedure* ini mudah tertukar. `match` menguji pola dari awal string, seolah dipaku di posisi
+nol. `find` menyisir seluruh string dan mengembalikan *index* kecocokan pertama, atau `-1` kalau
+tidak ada.
+
+```{.nim}
+import std/re
+
+let text = "Ada Lovelace, 36"
+
+# match is anchored at the start of the string; find scans the whole string.
+echo "match from start: ", text.match(re"Ada")
+echo "match in the middle: ", text.match(re"Lovelace")
+echo "find in the middle: ", text.find(re"Lovelace")
+
+# The openArray overload fills the capture groups and returns the start index.
+var captures: array[2, string]
+if text.find(re"(\w+),\s*(\d+)", captures) >= 0:
+  echo "name: ", captures[0]
+  echo "age: ", captures[1]
+```
+
+```{.txt}
+match from start: true
+match in the middle: false
+find in the middle: 4
+name: Lovelace
+age: 36
+```
+
+Untuk ikut mengambil grup tangkapan, siapkan *array* lebih dulu, lalu serahkan ke varian `find`
+yang menerima `openArray[string]`. Versi itu mengembalikan *index* dan mengisi *array*; `-1`
+berarti tidak ada kecocokan, jadi hasilnya diuji dengan `>= 0`.
+
+## Semua kecocokan dengan `findAll`
+
+`findAll` mengumpulkan setiap potongan yang cocok. Ada dua bentuk: iterator yang menghasilkan satu
+kecocokan per putaran, dan *procedure* yang mengembalikan `seq[string]`. Memakainya langsung di
+dalam `echo` memilih bentuk kedua.
+
+```{.nim}
+import std/re
+
+let log = "2024-03-01 INFO ok 2024-03-02 WARN slow"
+
+echo "dates: ", log.findAll(re"\d{4}-\d{2}-\d{2}")
+echo "levels: ", log.findAll(re"\b[A-Z]{4}\b")
+
+for word in log.findAll(re"[a-z]+"):
+  echo "word: ", word
+```
+
+```{.txt}
+dates: @["2024-03-01", "2024-03-02"]
+levels: @["INFO", "WARN"]
+word: ok
+word: slow
+```
+
+Tanda `\b` menandai batas kata, sehingga `\b[A-Z]{4}\b` hanya cocok dengan kata empat huruf kapital
+yang berdiri sendiri. Angka dalam kurung kurawal menetapkan jumlah pengulangan persis.
+
+Satu perangkap: pola hampa seperti `re"a*"` cocok dengan string kosong di mana saja. Iterator
+`findAll` sengaja berhenti pada kecocokan hampa supaya *loop* tidak berjalan tanpa akhir.
+
+## Mengganti dan memecah
+
+`replace` menukar setiap kecocokan dengan teks baru. Untuk menyisipkan ulang grup tangkapan, pakai
+`replacef` dengan `$1`, `$2`, dan seterusnya. `split` memotong string pada setiap kecocokan dan
+mengembalikan *seq* bagiannya.
+
+```{.nim}
+import std/re
+
+let raw = "  Ada   Lovelace  "
+
+echo "[", raw.replace(re"\s+", " "), "]"
+echo "[", raw.replace(re"^\s+|\s+$", ""), "]"
+
+let phone = "0812-3456-7890"
+echo phone.replace(re"\D", "")
+
+# replacef understands $1, $2, ... for the capture groups.
+let name = "Ada Lovelace"
+echo name.replacef(re"(\w+)\s+(\w+)", "$2, $1")
+
+# split cuts the string on every match of the pattern.
+let record = "ada, 36,london"
+echo record.split(re",\s*")
+```
+
+```{.txt}
+[ Ada Lovelace ]
+[Ada   Lovelace]
+081234567890
+Lovelace, Ada
+@["ada", "36", "london"]
+```
+
+Pola `^\s+|\s+$` berisi dua aturan yang dipisah `|`: satu menempel di awal, satu menempel di akhir.
+Karena `replace` mengganti semua kecocokan, keduanya terpotong dalam satu panggilan, sementara
+spasi di tengah kalimat tetap utuh. Tanda `\D` adalah kebalikan `\d`, yaitu apa pun selain digit.
+
+## Flag dan *character* escape
+
+Flag kecil seperti `(?i)` disisipkan di awal pola dan berlaku sampai akhir. Supaya satu
+*character* dianggap huruf biasa, beri `\` di depannya.
+
+```{.nim}
+import std/re
+import std/strutils
+
+# (?i) makes the rest of the pattern case-insensitive.
+echo "NIM".match(re"(?i)nim")
+echo "NIM".match(re"nim")
+
+# re"..." is a raw string: write one backslash, not two.
+echo "a.b".match(re"a\.b")
+echo "axb".match(re"a\.b")
+
+# For a fixed prefix or suffix, strutils is shorter than a regex.
+echo "report.txt".endsWith(".txt")
+```
+
+```{.txt}
+true
+false
+true
+false
+true
+```
+
+`re"..."` adalah *raw string*, jadi backslash ditulis sekali. String biasa perlu dua kali, `"\\d"`,
+untuk menghasilkan backslash yang sama. Tanpa `\`, character titik berarti "huruf apa saja",
+sehingga `a.b` juga cocok dengan `axb`.
+
+## Error sengaja: lupa mengimpor `std/re`
+
+Nama dari `std/re` tidak muncul begitu saja. Lupakan `import`, dan compiler berhenti di token
+pertama.
+
+```{.nim}
+let pattern = re"(\d+)"
+echo "abc 12".findAll(pattern)
+```
+
+```{.txt}
+main.nim(1, 15) Error: undeclared identifier: 're'
+```
+
+Baca dari kiri: *file*, posisi `(baris, kolom)`, tingkat, lalu *message*-nya. Posisi `(1, 15)` adalah
+awal `re` pada `re"(\d+)"`. *Message* `undeclared identifier` berarti nama itu dipakai tanpa pernah
+diimpor. Perbaikan terpendek: tambahkan `import std/re` di *line* pertama.
+
+Satu hal yang perlu diketahui: `re` memproses pola saat *runtime*. Pola yang salah tulis, misalnya
+tanda kurung yang tidak ditutup, baru melempar `exception` ketika program berjalan, bukan saat
+*compile*.
+
+## Kapan *regex* berlebihan
+
+*Regex* cepat berubah menjadi teks yang tidak bisa dibaca orang lain. Untuk awalan dan akhiran
+tetap, `strutils` lebih singkat. Contoh di atas memakai `endsWith(".txt")`, bukan pola.
+
+- Pakai `strutils` kalau yang dicari satu potongan harfiah: `startsWith`, `endsWith`, `contains`.
+- Pakai *regex* kalau bentuknya berulang, bercabang, atau butuh grup tangkapan.
+- Pecah pola panjang menjadi potongan bernama, jangan biarkan satu *line* menampung semuanya.
+
+*Regex* juga bukan parser. Untuk struktur bersarang seperti JSON atau HTML, pakai *module* yang
+memang memahaminya, seperti `std/json`.
+
+## Latihan
+
+1. Ubah contoh pertama supaya pola juga menangkap kota pada `Ada, 36, London`, lalu cetak kota
+   itu.
+2. Tanpa menjalankan, prediksi *output*-nya:
+   ```{.nim}
+   import std/re
+
+   for m in "one1two22three333".findAll(re"\d+"):
+     echo m
+   ```
+3. Tulis dari nol: *procedure* yang menerima `seq[string]` alamat email dan mengembalikan
+   `seq[string]` nama domain, yaitu bagian setelah `@`.
+4. Kode berikut gagal *di-compile*. Perbaiki, lalu jelaskan *message*-nya:
+   ```{.nim}
+   import std/re
+
+   if "Ada, 36" =~ re"(\w+), (\d+)":
+     echo matches[0]
+
+   echo matches[1]
+   ```
+5. Sebutkan satu tugas teks yang lebih baik dikerjakan `strutils` daripada *regex*.
+
+Jawaban ada di [Lampiran A](../appendix/answers.qmd).
+
+## Ringkasan
+
+- `re"..."` mengubah teks menjadi `Regex`; template `=~` mengisi *array* `matches` dengan grup
+  tangkapan.
+- `match` berlabuh di awal string, `find` menyisir seluruh string dan mengembalikan *index*.
+- `findAll` mengumpulkan semua kecocokan; `replace`, `replacef`, dan `split` mengubah serta memecah
+  teks.
+- `(?i)` menyalakan pencocokan tanpa beda huruf besar-kecil; `re"..."` adalah *raw string*.
+- Pola diproses saat *runtime*, jadi pola salah baru ketahuan ketika program berjalan.
+
+## Selanjutnya
+
+Bab berikutnya meninggalkan teks dan masuk ke waktu: [*Time* dan *random*](times-and-random.qmd),
+membaca jam, mengubah format tanggal, dan menghasilkan angka acak yang bisa diulang.
