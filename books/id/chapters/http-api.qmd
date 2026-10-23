@@ -1,0 +1,280 @@
+# HTTP API dengan `asynchttpserver`
+
+Membuat server HTTP terdengar seperti proyek besar. Padahal dengan `std/asynchttpserver`, satu
+server sederhana cukup belasan baris, dan semua bagiannya ada di pustaka standar. Yang membuat kode
+server sulit diuji bukan soketnya, melainkan pengendali yang bercampur dengan soket itu.
+
+::: {.callout-note}
+## Tujuan bab
+
+Setelah bab ini, pembaca bisa membedakan `HttpCode` dan `HttpMethod`, menulis rute sederhana,
+membaca body JSON lalu mengembalikan JSON, membaca *query string* dengan `std/uri`, menyalakan
+server dengan `newAsyncHttpServer` dan `serve`, serta membaca pesan `has to be used (or discarded)`
+saat lupa `await` pada `respond`.
+:::
+
+## Status, metode, dan header
+
+Sebelum menyentuh soket, kenali dulu tipe yang dipakai bersama: `HttpCode`, `HttpMethod`, dan
+`HttpHeaders`. Ketiganya berasal dari `std/httpcore`, modul yang dipakai baik oleh sisi klien
+maupun sisi server. Simpan sebagai `main.nim`, lalu jalankan `nim c -r main.nim`.
+
+```{.nim}
+import std/httpcore
+
+var headers = newHttpHeaders()
+headers["Content-Type"] = "application/json"
+
+echo Http200
+echo Http404
+echo HttpGet
+echo headers["Content-Type"]
+```
+
+```{.txt}
+200 OK
+404 Not Found
+GET
+application/json
+```
+
+`Http200` adalah nilai `HttpCode`, tipe `distinct` yang nilainya dibatasi 0 sampai 599. `httpcore`
+memberi `$` untuk tipe ini, sehingga `echo Http200` mencetak `"200 OK"`, bukan angka telanjang.
+Konversi `.int` mengembalikan angkanya saja, dan dipakai nanti untuk menyusun keluaran yang ringkas.
+`HttpMethod` adalah `enum`: `HttpGet` bernilai teks `GET`, `HttpPost` bernilai `POST`, begitu
+seterusnya.
+
+`HttpHeaders` adalah peta yang kuncinya tidak membedakan besar-kecil huruf. Menulis
+`headers["Content-Type"] = "application/json"` menambah satu entri; membacanya dengan kunci yang
+ditulis berbeda tetap menemukan entri itu.
+
+## Rute sederhana dan pengendali murni
+
+Satu pengendali menerima metode, jalur, dan body, lalu memutuskan kode dan isi balasan. Kalau
+keputusan itu dipisahkan dari soket, hasilnya bisa diuji sebagai fungsi biasa. Simpan potongan
+berikut, lalu jalankan seperti sebelumnya.
+
+```{.nim}
+import std/[httpcore, json]
+
+type Reply = tuple[code: HttpCode, body: string]
+
+proc dispatch(httpMethod: HttpMethod, path: string, body: string): Reply =
+  case path
+  of "/health":
+    (Http200, """{"status":"ok"}""")
+  of "/items":
+    if httpMethod != HttpPost:
+      (Http400, """{"error":"POST required"}""")
+    else:
+      let payload = parseJson(body)
+      (Http200, $(%*{"name": payload["name"].getStr}))
+  else:
+    (Http404, """{"error":"not found"}""")
+
+let requests = [
+  (HttpGet, "/health", ""),
+  (HttpPost, "/items", """{"name":"book"}"""),
+  (HttpGet, "/items", ""),
+  (HttpGet, "/missing", ""),
+]
+
+for (httpMethod, path, body) in requests:
+  let reply = dispatch(httpMethod, path, body)
+  echo reply.code.int, " ", reply.body
+```
+
+```{.txt}
+200 {"status":"ok"}
+200 {"name":"book"}
+400 {"error":"POST required"}
+404 {"error":"not found"}
+```
+
+Rute dicocokkan dengan `case path`. Jalur `/items` menerima `HttpPost` saja; metode lain dijawab
+`Http400`, yang berarti permintaan klien tidak sesuai. Jalur yang tidak dikenal dijawab `Http404`.
+Pemisahan ini penting: `Http400` menyalahkan permintaan, `Http404` mengatakan rutenya tidak ada.
+
+Body JSON dibaca dengan `parseJson` dari `std/json`. Field diambil memakai `payload["name"]`, lalu
+`getStr` mengubahnya menjadi `string`. Untuk membalas, `%*{...}` membangun JSON langsung dan `$`
+mengubahnya menjadi teks: `$(%*{"name": ...})`. Karena `dispatch` memanggil `parseJson`, ia
+dideklarasikan sebagai `proc`, bukan `func`. `parseJson` punya efek samping menurut compiler, dan
+sebuah `func` menolak memanggilnya.
+
+Parameter bernama `httpMethod`, bukan `method`, karena `method` adalah kata kunci Nim.
+
+## Query string
+
+Data yang tidak wajib dikirim lewat body biasanya menempel di URL. `std/uri` memisahkannya.
+
+```{.nim}
+import std/uri
+
+let target = parseUri("/search?q=nim+lang&page=2")
+
+echo "path: ", target.path
+echo "query: ", target.query
+for key, value in decodeQuery(target.query):
+  echo key, " = ", value
+```
+
+```{.txt}
+path: /search
+query: q=nim+lang&page=2
+q = nim lang
+page = 2
+```
+
+`parseUri` membongkar URL menjadi bagian-bagiannya: `.path`, `.query`, `.hostname`, dan lainnya.
+Bagian `query` masih teks mentah. Iterator `decodeQuery` membagi atas `&`, lalu mengurai tiap
+pasangan `kunci=nilai`. Perhatikan `q`: tanda plus menjadi spasi, karena pada *query string* `+`
+memang mewakili spasi. Nilai yang dicetak sudah terurai, siap dipakai.
+
+## Dari `Request` ke pengendali
+
+Saat server memanggil pengendali, ia menyerahkan sebuah `Request`: object yang membawa metode, URL,
+header, dan body. Contoh menyusun satu `Request` secara manual untuk melihat field-nya tanpa
+menyentuh jaringan.
+
+```{.nim}
+import std/[asynchttpserver, httpcore, uri]
+
+let request = Request(reqMethod: HttpGet, url: parseUri("/items/7"))
+
+func describe(req: Request): string =
+  $req.reqMethod & " " & req.url.path
+
+echo describe(request)
+```
+
+```{.txt}
+GET /items/7
+```
+
+`reqMethod` adalah `HttpMethod`, dan `url` adalah `Uri` yang sama seperti hasil `parseUri`. Karena
+`Request` adalah object biasa, ia bisa dibentuk di dalam tes: cukup isi field yang dibutuhkan.
+Inilah alasan pengendali murni mudah diuji, sementara soketnya tidak perlu ikut berjalan.
+
+## Menyalakan server
+
+Sekarang sambungkan pengendali murni ke server sungguhan. `newAsyncHttpServer` membuat server,
+`serve` mengikatnya ke sebuah port dan memanggil `handle` untuk setiap permintaan. `respond`
+mengirim balasan.
+
+```{.nim}
+import std/[asynchttpserver, asyncdispatch, httpcore, uri]
+
+func dispatch(httpMethod: HttpMethod, path: string,
+              body: string): tuple[code: HttpCode, body: string] =
+  case path
+  of "/health":
+    (Http200, """{"status":"ok"}""")
+  else:
+    (Http404, """{"error":"not found"}""")
+
+proc handle(req: Request): Future[void] {.async.} =
+  let (code, body) = dispatch(req.reqMethod, req.url.path, req.body)
+  let headers = newHttpHeaders({"Content-Type": "application/json"})
+  await req.respond(code, body, headers)
+
+proc main() {.async.} =
+  let server = newAsyncHttpServer()
+  await server.serve(Port(8080), handle)
+
+# The real program ends by starting the event loop: waitFor main()
+for (httpMethod, path) in [(HttpGet, "/health"), (HttpGet, "/nope")]:
+  let reply = dispatch(httpMethod, path, "")
+  echo reply.code.int, " ", reply.body
+```
+
+```{.txt}
+200 {"status":"ok"}
+404 {"error":"not found"}
+```
+
+`handle` bertanda `{.async.}` karena `respond` mengembalikan `Future[void]`, dan hasilnya harus
+ditulis dengan `await`. Prosedur `main` membangun server, lalu memanggil `serve`. Server asli tidak
+dinyalakan di sini: contoh hanya memanggil `dispatch` langsung supaya keluarannya tetap. Di program
+sungguhan, baris terakhir adalah `waitFor main()`, yang menjalankan putaran peristiwa.
+
+Setelah server berjalan, uji dengan alat baris perintah biasa:
+
+```bash
+$ curl -s http://localhost:8080/health
+{"status":"ok"}
+$ curl -s http://localhost:8080/nope
+{"error":"not found"}
+```
+
+## Error sengaja: lupa `await` pada `respond`
+
+Kesalahan pertama yang hampir selalu terjadi: memanggil `respond` tanpa `await`.
+
+```{.nim}
+import std/[asynchttpserver, asyncdispatch, httpcore]
+
+proc handle(req: Request) {.async.} =
+  req.respond(Http200, "ok")
+  echo "sent"
+```
+
+```{.txt}
+main.nim(4, 6) Error: expression 'respond(req, Http200, "ok", nil)' is of type 'Future[system.void]' and has to be used (or discarded)
+```
+
+Pesannya dua bagian. Bagian pertama menyebut tipe hasil panggilan: `Future[system.void]`, bukan
+`void`. Bagian kedua menawarkan dua pilihan, memakai nilainya atau membuangnya dengan sadar. Karena
+kita memang menunggu balasan terkirim, jawabannya `await`. Penulisan yang benar:
+`await req.respond(Http200, "ok")`. Compiler juga menandai baris tempat `{.async.}` dipakai, tanda
+bahwa masalahnya ada di dalam prosedur async.
+
+## Kenapa pengendali dipisah dari soket
+
+Pemisahan di atas bukan gaya-gayaan. Pengendali yang menerima data dan mengembalikan data bisa
+diuji tanpa port, tanpa jaringan, dan tanpa waktu tunggu. Keluarannya pun selalu sama, sehingga bisa
+dipakai sebagai contoh yang diverifikasi. Soket hanya lapisan tipis yang meneruskan permintaan.
+Menjaga lapisan itu setipis mungkin adalah kebiasaan yang dibawa terus saat API tumbuh.
+
+## Latihan
+
+1. Tambahkan rute `/version` pada `dispatch` yang mengembalikan `{"version":"1"}` dengan `Http200`,
+   lalu cetak balasannya.
+2. Tanpa menjalankan, prediksi keluarannya:
+   ```{.nim}
+   import std/httpcore
+
+   func status(path: string): HttpCode =
+     case path
+     of "/ready": Http200
+     else: Http404
+
+   for path in ["/ready", "/other"]:
+     echo status(path).int
+   ```
+3. Tulis dari nol: pengendali yang membaca `page` dari *query string* dan mengembalikannya sebagai
+   JSON, misalnya `{"page":"2"}`.
+4. Kode berikut gagal dikompilasi. Perbaiki, lalu jelaskan isi pesannya:
+   ```{.nim}
+   import std/[asynchttpserver, asyncdispatch, httpcore]
+
+   proc handle(req: Request) {.async.} =
+     await req.respond("ok", Http200)
+   ```
+5. Kapan sebuah permintaan dijawab `Http400`, dan kapan `Http404`? Beri satu contoh untuk
+   masing-masing.
+
+Jawaban ada di [Lampiran A](../appendix/answers.qmd).
+
+## Ringkasan
+
+- `std/httpcore` menyediakan `HttpCode`, `HttpMethod`, dan `HttpHeaders` untuk kedua sisi.
+- `dispatch` murni memisahkan keputusan rute dari soket, sehingga bisa diuji dengan keluaran tetap.
+- Body JSON dibaca dengan `parseJson` dan dibalas dengan `%*` lalu `$`.
+- `parseUri` dan `decodeQuery` mengambil nilai dari *query string*.
+- `newAsyncHttpServer` dan `serve` menyambungkan pengendali; `respond` wajib dipanggil dengan
+  `await`.
+
+## Selanjutnya
+
+Bab berikutnya menyimpan data agar tidak hilang saat server berhenti. Lanjut ke
+[database](database.qmd).

@@ -1,0 +1,4 @@
+200 {"status":"ok"}
+200 {"name":"book"}
+400 {"error":"POST required"}
+404 {"error":"not found"}

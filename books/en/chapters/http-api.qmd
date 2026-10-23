@@ -1,0 +1,276 @@
+# An HTTP API with `asynchttpserver`
+
+Building an HTTP server sounds like a large project. With `std/asynchttpserver`, a small server is
+about a dozen lines, and every part comes from the standard library. What makes server code hard to
+test is not the socket, it is the handler tangled up with the socket.
+
+::: {.callout-note}
+## What you will be able to do
+
+After this chapter you can tell `HttpCode` and `HttpMethod` apart, write simple routes, read a JSON
+body and return JSON, read a *query string* with `std/uri`, start a server with `newAsyncHttpServer`
+and `serve`, and read the `has to be used (or discarded)` message when you forget `await` on
+`respond`.
+:::
+
+## Status, method, and headers
+
+Before touching a socket, get to know the shared types: `HttpCode`, `HttpMethod`, and `HttpHeaders`.
+They all come from `std/httpcore`, the module used by both the client and the server side. Save the
+example as `main.nim`, then run `nim c -r main.nim`.
+
+```{.nim}
+import std/httpcore
+
+var headers = newHttpHeaders()
+headers["Content-Type"] = "application/json"
+
+echo Http200
+echo Http404
+echo HttpGet
+echo headers["Content-Type"]
+```
+
+```{.txt}
+200 OK
+404 Not Found
+GET
+application/json
+```
+
+`Http200` is a value of `HttpCode`, a `distinct` type whose range is limited to 0 through 599.
+`httpcore` provides `$` for it, so `echo Http200` prints `"200 OK"` instead of a bare number. The
+`.int` conversion gives back just the number, and is used later to build compact output.
+`HttpMethod` is an `enum`: `HttpGet` carries the text `GET`, `HttpPost` carries `POST`, and so on.
+
+`HttpHeaders` is a map whose keys ignore case. Writing `headers["Content-Type"] = "application/json"`
+adds one entry; reading it back with different capitalization still finds that entry.
+
+## Simple routes and a pure handler
+
+A single handler receives the method, the path, and the body, then decides the code and the reply.
+Separate that decision from the socket, and the result can be tested as an ordinary function. Save
+the next piece, then run it the same way.
+
+```{.nim}
+import std/[httpcore, json]
+
+type Reply = tuple[code: HttpCode, body: string]
+
+proc dispatch(httpMethod: HttpMethod, path: string, body: string): Reply =
+  case path
+  of "/health":
+    (Http200, """{"status":"ok"}""")
+  of "/items":
+    if httpMethod != HttpPost:
+      (Http400, """{"error":"POST required"}""")
+    else:
+      let payload = parseJson(body)
+      (Http200, $(%*{"name": payload["name"].getStr}))
+  else:
+    (Http404, """{"error":"not found"}""")
+
+let requests = [
+  (HttpGet, "/health", ""),
+  (HttpPost, "/items", """{"name":"book"}"""),
+  (HttpGet, "/items", ""),
+  (HttpGet, "/missing", ""),
+]
+
+for (httpMethod, path, body) in requests:
+  let reply = dispatch(httpMethod, path, body)
+  echo reply.code.int, " ", reply.body
+```
+
+```{.txt}
+200 {"status":"ok"}
+200 {"name":"book"}
+400 {"error":"POST required"}
+404 {"error":"not found"}
+```
+
+Routes are matched with `case path`. The `/items` path accepts `HttpPost` only; another method gets
+`Http400`, meaning the client request is wrong. An unknown path gets `Http404`. The distinction
+matters: `Http400` blames the request, `Http404` says the route does not exist.
+
+The JSON body is read with `parseJson` from `std/json`. A field is taken with `payload["name"]`,
+then `getStr` turns it into a `string`. To reply, `%*{...}` builds JSON directly and `$` turns it
+into text: `$(%*{"name": ...})`. Because `dispatch` calls `parseJson`, it is declared as a `proc`,
+not a `func`. `parseJson` has side effects according to the compiler, and a `func` refuses to call
+it.
+
+The parameter is named `httpMethod`, not `method`, because `method` is a Nim keyword.
+
+## Query string
+
+Data that is not required to travel in the body usually rides along in the URL. `std/uri` splits it
+apart.
+
+```{.nim}
+import std/uri
+
+let target = parseUri("/search?q=nim+lang&page=2")
+
+echo "path: ", target.path
+echo "query: ", target.query
+for key, value in decodeQuery(target.query):
+  echo key, " = ", value
+```
+
+```{.txt}
+path: /search
+query: q=nim+lang&page=2
+q = nim lang
+page = 2
+```
+
+`parseUri` breaks a URL into its parts: `.path`, `.query`, `.hostname`, and others. The `query` part
+is still raw text. The `decodeQuery` iterator splits on `&`, then parses each `key=value` pair. Note
+`q`: the plus sign becomes a space, because in a *query string* `+` really does stand for a space.
+The values it prints are already decoded and ready to use.
+
+## From `Request` to the handler
+
+When the server calls a handler, it hands over a `Request`: an object carrying the method, URL,
+headers, and body. The example builds one `Request` by hand to look at its fields without touching
+the network.
+
+```{.nim}
+import std/[asynchttpserver, httpcore, uri]
+
+let request = Request(reqMethod: HttpGet, url: parseUri("/items/7"))
+
+func describe(req: Request): string =
+  $req.reqMethod & " " & req.url.path
+
+echo describe(request)
+```
+
+```{.txt}
+GET /items/7
+```
+
+`reqMethod` is an `HttpMethod`, and `url` is the same `Uri` that `parseUri` produces. Since
+`Request` is an ordinary object, it can be built inside a test: just fill the fields you need. That
+is why a pure handler is easy to test while the socket does not have to run at all.
+
+## Starting the server
+
+Now connect the pure handler to a real server. `newAsyncHttpServer` creates the server, `serve` binds
+it to a port and calls `handle` for every request. `respond` sends the reply.
+
+```{.nim}
+import std/[asynchttpserver, asyncdispatch, httpcore, uri]
+
+func dispatch(httpMethod: HttpMethod, path: string,
+              body: string): tuple[code: HttpCode, body: string] =
+  case path
+  of "/health":
+    (Http200, """{"status":"ok"}""")
+  else:
+    (Http404, """{"error":"not found"}""")
+
+proc handle(req: Request): Future[void] {.async.} =
+  let (code, body) = dispatch(req.reqMethod, req.url.path, req.body)
+  let headers = newHttpHeaders({"Content-Type": "application/json"})
+  await req.respond(code, body, headers)
+
+proc main() {.async.} =
+  let server = newAsyncHttpServer()
+  await server.serve(Port(8080), handle)
+
+# The real program ends by starting the event loop: waitFor main()
+for (httpMethod, path) in [(HttpGet, "/health"), (HttpGet, "/nope")]:
+  let reply = dispatch(httpMethod, path, "")
+  echo reply.code.int, " ", reply.body
+```
+
+```{.txt}
+200 {"status":"ok"}
+404 {"error":"not found"}
+```
+
+`handle` is marked `{.async.}` because `respond` returns a `Future[void]`, and the result must be
+written with `await`. The `main` procedure builds the server, then calls `serve`. The real server is
+not started here: the example calls `dispatch` directly so the output stays fixed. In a real program
+the last line is `waitFor main()`, which runs the event loop.
+
+Once the server is running, test it with an ordinary command line tool:
+
+```bash
+$ curl -s http://localhost:8080/health
+{"status":"ok"}
+$ curl -s http://localhost:8080/nope
+{"error":"not found"}
+```
+
+## Intentional error: forgetting `await` on `respond`
+
+The first mistake almost everyone makes: calling `respond` without `await`.
+
+```{.nim}
+import std/[asynchttpserver, asyncdispatch, httpcore]
+
+proc handle(req: Request) {.async.} =
+  req.respond(Http200, "ok")
+  echo "sent"
+```
+
+```{.txt}
+main.nim(4, 6) Error: expression 'respond(req, Http200, "ok", nil)' is of type 'Future[system.void]' and has to be used (or discarded)
+```
+
+The message has two parts. The first names the type of the call's result: `Future[system.void]`, not
+`void`. The second offers two choices, use the value or discard it on purpose. Since we do want to
+wait for the reply to be sent, the answer is `await`. The correct spelling is
+`await req.respond(Http200, "ok")`. The compiler also marks the line where `{.async.}` is used, a
+sign that the problem sits inside the async procedure.
+
+## Why the handler is kept apart from the socket
+
+The split above is not decoration. A handler that takes data and returns data can be tested without
+a port, without a network, and without waiting. Its output is always the same, so it can serve as a
+verified example. The socket is only a thin layer that forwards requests. Keeping that layer as thin
+as possible is a habit worth carrying as the API grows.
+
+## Exercises
+
+1. Add a `/version` route to `dispatch` that returns `{"version":"1"}` with `Http200`, then print
+   the reply.
+2. Without running it, predict the output:
+   ```{.nim}
+   import std/httpcore
+
+   func status(path: string): HttpCode =
+     case path
+     of "/ready": Http200
+     else: Http404
+
+   for path in ["/ready", "/other"]:
+     echo status(path).int
+   ```
+3. Write from scratch: a handler that reads `page` from the *query string* and returns it as JSON,
+   for example `{"page":"2"}`.
+4. The code below fails to compile. Fix it, then explain its message:
+   ```{.nim}
+   import std/[asynchttpserver, asyncdispatch, httpcore]
+
+   proc handle(req: Request) {.async.} =
+     await req.respond("ok", Http200)
+   ```
+5. When is a request answered with `Http400`, and when with `Http404`? Give one example of each.
+
+Answers are in [Appendix A](../appendix/answers.qmd).
+
+## Summary
+
+- `std/httpcore` provides `HttpCode`, `HttpMethod`, and `HttpHeaders` for both sides.
+- A pure `dispatch` separates route decisions from the socket, so it can be tested with fixed output.
+- A JSON body is read with `parseJson` and answered with `%*` followed by `$`.
+- `parseUri` and `decodeQuery` pull values out of a *query string*.
+- `newAsyncHttpServer` and `serve` connect the handler; `respond` must be called with `await`.
+
+## Next
+
+The next chapter keeps data around so it survives a server restart. Continue to
+[database](database.qmd).
