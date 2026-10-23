@@ -1,0 +1,182 @@
+# Compiling to JavaScript
+
+Nim does not only produce binaries. With one change of command, the compiler emits JavaScript that
+runs in Node.js or in the browser. This chapter points the JavaScript backend at programs we already
+write, shows what stays the same and what differs, then reads one error that is typical of this
+target. It also closes Part B.
+
+::: {.callout-note}
+## What you will be able to do
+
+After this chapter you can compile a Nim program to JavaScript with `nim js`, run it with `node`,
+know that some modules are unavailable on this target, and read the error "marshal module is not
+supported in javascript".
+:::
+
+## `nim js`: an output target, not another language
+
+The command is `nim js`, not `nim c`. Save the following as `hello.nim`.
+
+```{.nim}
+echo "hello from JavaScript"
+```
+
+Then compile and run it:
+
+```{.bash}
+nim js hello.nim
+node hello.js
+```
+
+```{.txt}
+hello from JavaScript
+```
+
+`nim js` turns the Nim code into a `.js` file next to the source. `node` is what runs it, just as the
+browser will later. The language we write is still Nim; only the output is JavaScript. So there is no
+new syntax to memorize.
+
+The `--backend:js` option does the same thing; `nim js` is just the short form. For Node.js-specific
+APIs, add `-d:nodejs`; without that flag, a function such as `getCurrentDir()` from `std/os` is
+present in the code but fails at runtime. On this backend, `echo` becomes `console.log`, so the
+output shows up in the browser console or the terminal.
+
+## Nim features still work
+
+The JavaScript backend is not a cut-down Nim. Types, procedures, `seq`, and string interpolation all
+keep working.
+
+```{.nim}
+import std/strformat
+
+let width = 7
+let height = 3
+
+echo &"area: {width * height}"
+echo 10 div 3
+echo 10 / 4
+```
+
+```{.txt}
+area: 21
+3
+2.5
+```
+
+Division still follows Nim's rules: `/` yields a `float`, and `div` truncates toward zero. The
+backend maps them to the matching JavaScript operators, so the behavior does not change.
+
+```{.nim}
+let items = @["alpha", "beta", "gamma"]
+
+echo "count: ", items.len
+echo "last:  ", items[^1]
+```
+
+```{.txt}
+count: 3
+last:  gamma
+```
+
+A `seq` becomes a JavaScript array with the same operations: `len`, ordinary indexing, and backward
+indexing with `^1`. A program that never touches files, the network, or raw memory usually runs
+unchanged.
+
+Modules that work purely on data come along too: `std/strutils`, `std/sequtils`, `std/json`, and
+`std/tables` all run on this backend. What gets filtered out is the modules that lean on something
+outside the language, such as files, sockets, or raw memory.
+
+## Browser-only code
+
+Some code only makes sense in a browser. The `std/dom` module gives access to the DOM: grabbing an
+element, changing its text, attaching an event listener. The code below is written in Nim, but it
+can only run in a browser, not with `node`.
+
+```js
+import std/dom
+
+proc onClick(event: Event) =
+  document.getElementById("out").textContent = "clicked"
+
+document.getElementById("btn").addEventListener("click", onClick)
+```
+
+The file produced by `nim js` is loaded from an HTML page that has a `<button id="btn">` and a
+`<div id="out">`. When the button is clicked, the text in `out` changes. Because `document` exists
+only in a browser, this example is deliberately left out of this book's verification script.
+
+Including it is simple: one line, `<script src="main.js"></script>`, in the page, and the script runs
+after the page loads. There is no install step as there is for a binary.
+
+Two limits are worth remembering. First, code that uses threads, pointers, or files is not portable
+to JavaScript. Second, the output is larger and its speed differs from a C binary. Choose the target
+by where the program will run, not by which language features are available.
+
+## Deliberate error: an unavailable module
+
+Not every module can be carried into JavaScript. Ones that depend on raw memory or the operating
+system are rejected up front.
+
+```{.nim}
+import std/marshal
+
+echo "never reached"
+```
+
+```{.txt}
+marshal.nim(52, 10) Error: marshal module is not supported in javascript.
+```
+
+Notice the file named: `marshal.nim`, not ours. The message comes from inside that module, which
+refuses to compile for this target on line 52. It states the condition directly and adds a suggestion
+to use another package for serialization.
+
+An error message can come from inside the standard library, not only from your own code. Reading
+the file name helps separate a problem in your code from a limit of the target.
+
+The fix is to pick a supported module. For data, `std/json` works on every backend. The shape of the
+message is the same for other modules: the JavaScript target has no counterpart, and the compiler
+says so before the program runs.
+
+Some modules simply have no replacement. Work that only makes sense in a binary, such as talking to
+a device or a raw socket, stays on the C backend. Choosing a backend is choosing where the program
+runs, and not every place offers the same tools.
+
+## Exercises
+
+1. Compile the arithmetic example with `nim js`, run it with `node`, then compare with `nim c -r`.
+   Is the output the same?
+2. Without running it, predict the output:
+   ```{.nim}
+   let numbers = @[4, 8, 15]
+
+   var total = 0
+   for n in numbers:
+     total = total + n
+
+   echo "total: ", total
+   ```
+3. Write a small program that uses `std/dom` to change the contents of a `<div>`. Explain why it
+   cannot be run with `node`.
+4. The code below fails to compile to JavaScript. Fix it and explain the message:
+   ```{.nim}
+   import std/marshal
+
+   echo "start"
+   ```
+
+Answers are in [Appendix A](../appendix/answers.qmd).
+
+## Summary
+
+- `nim js` emits JavaScript from the same Nim code; `node` runs it.
+- Types, procedures, `seq`, and string interpolation keep working on this target.
+- Some modules, such as `marshal`, are unavailable for JavaScript and are rejected at compile time.
+- Code that uses `std/dom` runs only in a browser, not under `node`.
+- An error message can name a file inside the standard library, not only your own.
+
+## Next
+
+This chapter closes Part B. The next part moves into practice: building CLIs, HTTP APIs, database
+access, and publishing packages. The answers to this chapter's exercises and the previous ones are in
+[Appendix A](../appendix/answers.qmd).
