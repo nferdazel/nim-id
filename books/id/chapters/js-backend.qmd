@@ -1,6 +1,6 @@
 # Kompilasi ke JavaScript
 
-Nim tidak hanya menghasilkan biner. Dengan satu perubahan perintah, compiler mengeluarkan JavaScript
+Biner bukan satu-satunya keluaran Nim. Dengan satu perubahan perintah, compiler mengeluarkan JavaScript
 yang berjalan di Node.js atau di peramban. Bab ini memakai backend JavaScript pada program yang
 sudah biasa kita tulis, menunjukkan apa yang tetap sama dan apa yang berbeda, lalu membaca satu
 error yang khas target ini. Bab ini sekaligus menutup Bagian B.
@@ -84,7 +84,7 @@ tanpa perubahan sama sekali.
 
 Modul yang murni bekerja dengan data ikut terbawa: `std/strutils`, `std/sequtils`, `std/json`, dan
 `std/tables` semuanya jalan di backend ini. Yang tersaring adalah modul yang bersandar pada hal di
-luar bahasa, seperti berkas, soket, atau memori mentah.
+luar bahasa, seperti berkas, *socket*, atau memori mentah.
 
 ## Kode khusus peramban
 
@@ -108,7 +108,7 @@ peramban, contoh ini sengaja tidak ikut diperiksa oleh skrip verifikasi buku ini
 Menyisipkannya pun sederhana: satu baris `<script src="main.js"></script>` di halaman, dan skrip itu
 berjalan setelah halaman dimuat. Tidak ada langkah pemasangan seperti pada biner.
 
-Dua batasan perlu diingat. Pertama, kode yang memakai utas, penunjuk, atau berkas tidak portabel ke
+Ada dua batasan. Pertama, kode yang memakai *thread*, *pointer*, atau berkas tidak portabel ke
 JavaScript. Kedua, ukuran keluaran lebih besar dan kecepatan jalannya berbeda dari biner C. Pilih
 target berdasarkan tempat program akan dijalankan, bukan berdasarkan fitur bahasa yang tersedia.
 
@@ -129,7 +129,7 @@ marshal.nim(52, 10) Error: marshal module is not supported in javascript.
 
 Perhatikan berkas yang disebut: `marshal.nim`, bukan berkas kita. Pesannya datang dari dalam modul
 itu sendiri, yang menolak dikompilasi ke target ini pada baris 52. Kalimatnya menyebut syaratnya
-langsung dan menambahkan saran memakai paket lain untuk serialisasi.
+langsung dan menambahkan saran memakai *package* lain untuk serialisasi.
 
 Pesan error bisa datang dari dalam pustaka standar, bukan hanya dari kode kita. Membaca nama
 berkasnya membantu memisahkan masalah di kode sendiri dari batas target.
@@ -139,7 +139,7 @@ Pola pesannya sama untuk modul lain: target JavaScript tidak punya padanannya, d
 mengatakannya sebelum program dijalankan.
 
 Sebagian modul memang tidak punya pengganti. Pekerjaan yang hanya masuk akal di biner, misalnya
-mengakses perangkat atau soket mentah, tetap dikerjakan di backend C. Memilih backend adalah memilih
+mengakses perangkat atau *socket* mentah, tetap dikerjakan di backend C. Memilih backend adalah memilih
 tempat program berjalan, dan tidak semua tempat menyediakan hal yang sama.
 
 ## Latihan
@@ -177,6 +177,6 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
 ## Selanjutnya
 
-Bab ini menutup Bagian B. Bagian berikutnya membahas praktik: membangun CLI, API HTTP, mengakses
-basis data, sampai menerbitkan paket. Jawaban latihan bab ini dan bab sebelumnya ada di
+Bagian berikutnya membahas praktik: membangun CLI, API HTTP, mengakses
+basis data, sampai menerbitkan *package*. Jawaban latihan bab ini dan bab sebelumnya ada di
 [Lampiran A](../appendix/answers.qmd).

@@ -99,10 +99,10 @@ echo strlen(text.cstring)
 
 `text.len` melaporkan panjang yang dicatat Nim, yaitu 5 byte, termasuk `\0` di tengahnya. Tetapi
 `strlen` dari C menghitung sampai byte nol pertama, jadi hasilnya 2. Inilah bedanya: `cstring`
-adalah penunjuk ke byte, sedangkan string Nim adalah nilai yang tahu panjangnya.
+adalah *pointer* ke byte, sedangkan string Nim adalah nilai yang tahu panjangnya.
 
 Saat Nim mengubah string menjadi `cstring`, ia menambahkan penanda nol di akhir. Karena itu
-`text.cstring` aman dipakai oleh fungsi C. Yang tetap perlu diingat: fungsi C berhenti di nol
+`text.cstring` aman dipakai oleh fungsi C. Yang tetap berlaku: fungsi C berhenti di nol
 pertama, apa pun isi sesudahnya.
 
 ## Fungsi variadik

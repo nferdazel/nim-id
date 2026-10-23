@@ -57,7 +57,7 @@ C:\Users\nim\bin
 \d+\.\d+
 ```
 
-Tanpa `r`, `\U` dan `\d` bukan escape yang dikenal dan bisa memicu peringatan. Raw string juga
+Tanpa `r`, `\U` dan `\d` bukan escape yang dikenal dan bisa memicu *warning*. Raw string juga
 tidak memperlakukan `"` sebagai penutup, jadi teks di atas terbaca persis seperti tertulis.
 
 ## String multi-baris

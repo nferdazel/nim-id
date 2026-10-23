@@ -174,7 +174,7 @@ echo parsed.name, " is ", parsed.age
 Ada is 36
 ```
 
-`%*{...}` membangun `JsonNode` langsung dari literal, tanpa menulis string JSON lalu mem-parse-nya.
+`%*{...}` membangun `JsonNode` langsung dari literal, tanpa menulis string JSON lalu menguraikannya.
 `to(Tipe)` mengubahnya menjadi objek biasa. Keduanya menghindari penggabungan string manual yang
 mudah salah.
 

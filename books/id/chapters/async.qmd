@@ -1,7 +1,7 @@
 # `async`/`await` dan IO
 
 Program yang menunggu berkas atau jaringan menghabiskan sebagian besar waktunya untuk diam. Model
-`async`/`await` membuat program bisa mengerjakan hal lain selama menunggu, tanpa membuat utas baru.
+`async`/`await` membuat program bisa mengerjakan hal lain selama menunggu, tanpa membuat *thread* baru.
 Nim menyediakan `std/asyncdispatch`. Bab ini memakai `Future`, `await`, dan `waitFor` untuk urutan
 yang keluarannya selalu sama.
 
@@ -39,7 +39,7 @@ Perhatikan tiga hal. Pragma `{.async.}` mengubah prosedur sehingga `return` di d
 `Future`. Di dalam `main`, `await greeting("Nim")` menunggu sampai hasilnya siap lalu membuka
 nilainya. Di luar prosedur async, `waitFor` yang menjalankan mesin async sampai tugasnya selesai.
 
-`waitFor` memulai putaran peristiwa, yaitu mekanisme yang menggilir tugas-tugas yang sedang
+`waitFor` memulai *event loop*, yaitu mekanisme yang menggilir tugas-tugas yang sedang
 menunggu. Biasanya cukup satu `waitFor` di tingkat teratas program; memanggilnya dua kali tetap
 berjalan, tetapi jarang diperlukan.
 
@@ -47,9 +47,9 @@ berjalan, tetapi jarang diperlukan.
 `waitFor` mengembalikan nilai yang sama dengan isi `Future` itu, jadi `let total = waitFor sum()`
 memberi `int` biasa, bukan wadah lagi.
 
-Kenapa tidak memakai utas saja? Utas mahal dan berbagi memori, sehingga butuh penguncian dan
-rawan balapan. Model async memakai satu utas dan menggilir tugas yang sedang menunggu. Seribu
-koneksi yang menunggu balasan tidak berarti seribu utas; yang ada hanya seribu `Future` kecil.
+Kenapa tidak memakai *thread* saja? *Thread* mahal dan berbagi memori, sehingga butuh penguncian dan
+rawan balapan. Model async memakai satu *thread* dan menggilir tugas yang sedang menunggu. Seribu
+koneksi yang menunggu balasan tidak berarti seribu *thread*; yang ada hanya seribu `Future` kecil.
 
 ## Menunggu berurutan
 
@@ -117,7 +117,7 @@ bukan 40. Untuk dua tugas, bedanya kecil; untuk dua ratus permintaan jaringan, b
 Selama tugas-tugas itu tidak saling bergantung, menggabungkannya hampir selalu lebih cepat daripada
 menunggu satu per satu.
 
-Satu hal yang mudah salah: `sleep` biasa (dari `std/os`) memblokir seluruh putaran peristiwa,
+Satu hal yang mudah salah: `sleep` biasa (dari `std/os`) memblokir seluruh *event loop*,
 sedangkan `sleepAsync` mengembalikan kendali ke mesin async. Di dalam prosedur `{.async.}`, pakai versi async dari setiap
 operasi yang menunggu. Kalau tidak, tugas-tugas itu berjalan berurutan lagi tanpa disadari.
 

@@ -258,7 +258,7 @@ pertama.
 `parseopt` sengaja kecil. Ia tidak memeriksa tipe secara otomatis, tidak membuat halaman bantuan,
 dan tidak mendukung subperintah bawaan. Untuk alat yang menerima sepuluh opsi atau kurang, itu justru
 kelebihannya: tidak ada konfigurasi, tidak ada berkas tambahan, dan perilakunya jelas. Kalau
-kebutuhan tumbuh menjadi banyak subperintah dengan bantuan otomatis, ada paket `cligen` di luar
+kebutuhan tumbuh menjadi banyak subperintah dengan bantuan otomatis, ada *package* `cligen` di luar
 pustaka standar. Bab ini tidak memakainya karena satu set contoh dipakai kedua buku, dan pustaka
 standar selalu tersedia bersama compiler.
 

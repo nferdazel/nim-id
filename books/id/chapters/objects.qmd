@@ -5,7 +5,7 @@ berulang, dan aturan sendiri, tuple mulai menyulitkan. Objek memberi nama pada s
 dan Nim menambahkan konstruktor literal yang membuatnya nyaman dipakai.
 
 Bab ini juga membongkar satu perbedaan yang sering mengejutkan: objek nilai dan `ref object`
-berperilaku berbeda saat disalin. Mengabaikannya adalah sumber bug klasik.
+berperilaku berbeda saat disalin. Mengabaikannya sering berujung bug.
 
 ::: {.callout-note}
 ## Tujuan bab
@@ -118,7 +118,7 @@ pada tipe sendiri.
 
 ## `ref object`: disimpan di heap
 
-`ref object` menyimpan datanya di heap, dan variabelnya menyimpan penunjuk ke sana.
+`ref object` menyimpan datanya di heap, dan variabelnya menyimpan *pointer* ke sana.
 
 ```{.nim}
 type Node = ref object
@@ -303,4 +303,4 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 ## Selanjutnya
 
 Bab berikutnya membahas [enum dan set](enums-and-sets.qmd): himpunan nilai bernama dengan urutan
-tetap, dan himpunan bit untuk menguji keanggotaan dengan cepat.
+tetap, dan *bitset* untuk menguji keanggotaan dengan cepat.

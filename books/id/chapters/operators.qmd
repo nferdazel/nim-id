@@ -13,7 +13,7 @@ belakangnya.
 
 Setelah bab ini, pembaca bisa memakai `div` dan `mod` dengan benar untuk bilangan negatif,
 membedakan `/` dari `div`, membaca error `type mismatch` pada operand, serta memakai `and`, `or`,
-`not`, `in`, dan `notin` dengan pemahaman evaluasi singkat.
+`not`, `in`, dan `notin` dengan pemahaman *short-circuit*.
 :::
 
 ## Aritmetika dasar
@@ -99,7 +99,7 @@ Perhatikan baris pertama. Nim **tidak** mendukung penulisan berantai seperti `18
 perbandingan harus disatukan dengan `and`. String dibandingkan secara leksikografis, jadi `"abc"`
 sama dengan `"abc"` persis, termasuk besar-kecil hurufnya.
 
-## Logika dan evaluasi singkat
+## Logika dan *short-circuit*
 
 `and`, `or`, dan `not` bekerja pada `bool`. Yang penting: Nim berhenti mengevaluasi begitu hasilnya
 sudah pasti.
@@ -122,8 +122,8 @@ done
 ```
 
 Output tidak memuat `checking b`. Karena `check("a")` sudah `false`, `and` tahu hasil akhirnya
-pasti `false` dan melewati operan kedua. Sifat ini disebut evaluasi singkat, dan bisa dipakai untuk
-menjaga agar ekspresi kedua tidak dijalankan saat kondisi pertama belum terpenuhi.
+pasti `false` dan melewati operan kedua. Sifat ini disebut *short-circuit*, dan bisa dipakai untuk
+menjaga agar *expression* kedua tidak dijalankan saat kondisi pertama belum terpenuhi.
 
 ## `in` dan `notin`
 
@@ -196,7 +196,7 @@ Expression: a == b
   [2] b: string
 ```
 
-Pesan menunjukkan baris dan kolom, lalu mengutip ekspresi yang gagal beserta tipe setiap operan.
+Pesan menunjukkan baris dan kolom, lalu mengutip *expression* yang gagal beserta tipe setiap operan.
 Bagian yang paling berguna ada di bawahnya: compiler mendaftar semua versi `==` yang dikenalnya,
 supaya kita bisa melihat bahwa tidak ada yang menerima pasangan `int` dan `string`. Perbaikannya
 adalah menyamakan tipe lebih dulu, misalnya `a == parseInt(b)`.
@@ -231,5 +231,5 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
 ## Selanjutnya
 
-Bab berikutnya membahas percabangan: `if`, ekspresi `if`, `case`, dan `when` untuk memilih jalur
+Bab berikutnya membahas percabangan: `if`, *expression* `if`, `case`, dan `when` untuk memilih jalur
 eksekusi.

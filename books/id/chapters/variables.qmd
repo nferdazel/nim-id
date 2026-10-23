@@ -190,7 +190,7 @@ candidates (edit distance, scope distance); see '--spellSuggest':
  (1, 2): 'user_name'
 ```
 
-Perhatikan baris `candidates`: compiler tidak hanya bilang "tidak ada", tapi menawarkan kandidat
+Perhatikan baris `candidates`: compiler tidak sekadar bilang "tidak ada"; ia menawarkan kandidat
 terdekat. Ini salah satu alasan pesan error Nim terasa membantu begitu dibiasakan.
 
 Saran praktis: pilih satu gaya penulisan dan pakai konsisten. Gaya resmi Nim untuk variabel

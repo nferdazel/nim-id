@@ -202,7 +202,7 @@ true
 ```
 
 `char` ditulis dengan kutip tunggal dan menyimpan satu byte. `.ord` memberinya kode numerik,
-`char(...)` dan `chr(...)` melakukan arah sebaliknya. Ekspresi `'\n' == char(10)` benar karena
+`char(...)` dan `chr(...)` melakukan arah sebaliknya. *Expression* `'\n' == char(10)` benar karena
 `\n` memang karakter dengan kode 10. `bool` hanya berisi `true` atau `false` dan menjadi bahan
 operator logika di bab operator.
 

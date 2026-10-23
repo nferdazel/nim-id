@@ -1,7 +1,7 @@
 # `ref`, `ptr`, dan `nil`
 
 Bab objek berhenti tepat sebelum pertanyaan yang paling sering muncul: di mana datanya sebenarnya
-disimpan? `Person(name: "Ada")` pada `ref object` menaruh data di heap dan menyimpan penunjuk ke
+disimpan? `Person(name: "Ada")` pada `ref object` menaruh data di heap dan menyimpan *pointer* ke
 sana. Pada `object` biasa, data menempel langsung di variabelnya. Bab ini membuka kotak itu:
 `ref`, `ptr`, dan `nil`.
 
@@ -15,7 +15,7 @@ beserta risikonya.
 
 ## `ref`: data disimpan di heap
 
-`ref object` menyimpan datanya di heap. Variabelnya hanya memegang penunjuk ke sana.
+`ref object` menyimpan datanya di heap. Variabelnya hanya memegang *pointer* ke sana.
 
 ```{.nim}
 type Person = ref object
@@ -133,7 +133,7 @@ echo c.hits
 3
 ```
 
-`addr c` mengambil alamat `c`; `pc[].hits = 3` mengubah field lewat penunjuk, dan `c.hits` ikut
+`addr c` mengambil alamat `c`; `pc[].hits = 3` mengubah field lewat *pointer*, dan `c.hits` ikut
 berubah.
 
 ## `addr` dan `unsafeAddr`
@@ -153,7 +153,7 @@ echo p[]
 ```
 
 `unsafeAddr` adalah alias lama untuk `addr`, dan dokumentasi `system.nim` di 2.2.12 sudah
-menandainya usang. Compiler tidak selalu memunculkan peringatan saat memakainya, jadi pakai `addr`
+menandainya usang. Compiler tidak selalu memunculkan *warning* saat memakainya, jadi pakai `addr`
 untuk kode baru.
 
 ## `cast` singkat
@@ -173,7 +173,7 @@ mengubah nilai; ia menafsirkan ulang bit yang sama. Bandingkan `cast[int32](3.5'
 menghasilkan `1080033280`: bit float itu dibaca sebagai `int32`. Untuk mengubah tipe mengikuti
 aturan bahasa, pakai `int(x)`, `float(x)`, atau `$x`; `cast` hanya untuk kode tingkat rendah.
 
-## Membaca error: ekspresi tanpa alamat
+## Membaca error: *expression* tanpa alamat
 
 `addr` menuntut lokasi yang tetap. Literal tidak punya lokasi, jadi tidak bisa dialamati.
 
@@ -187,7 +187,7 @@ main.nim(1, 14) Error: expression has no address
 ```
 
 Posisi `(1, 14)` menunjuk literal `42` di `addr 42`, bukan token `addr` itu sendiri; pesannya lalu
-menyebut masalahnya: ekspresi itu tidak punya alamat. Perbaikannya, simpan dulu nilainya ke sebuah
+menyebut masalahnya: *expression* itu tidak punya alamat. Perbaikannya, simpan dulu nilainya ke sebuah
 variabel, lalu ambil alamat variabel itu.
 
 ## `ref object` vs `object`
@@ -197,8 +197,8 @@ Perbedaannya paling terasa saat nilai disalin.
 | Aspek | `object` | `ref object` |
 |---|---|---|
 | data disimpan di | variabel itu sendiri | heap |
-| isi variabel | data langsung | penunjuk |
-| menyalin berarti | menggandakan data | menggandakan penunjuk |
+| isi variabel | data langsung | *pointer* |
+| menyalin berarti | menggandakan data | menggandakan *pointer* |
 | nilai default | default setiap field | `nil` |
 
 `ref object` dipakai saat beberapa bagian kode harus berbagi satu nilai, atau saat datanya besar.

@@ -97,7 +97,7 @@ upper: NIM
 ```
 
 Awalan `&` sebelum string membuka interpolasi: apa pun di dalam `{...}` dievaluasi dan hasilnya
-disisipkan. Isinya boleh ekspresi, bukan hanya nama variabel. Tanpa awalan itu, kurung kurawal
+disisipkan. Isinya boleh *expression*, bukan hanya nama variabel. Tanpa awalan itu, kurung kurawal
 tetap teks biasa, jadi `echo "{name}"` mencetak `{name}` apa adanya. Perhatikan
 `float(count) * price`: Nim tidak mencampur `int` dan `float` diam-diam, jadi konversi harus
 ditulis eksplisit.
@@ -168,7 +168,7 @@ missing_import.nim(1, 6) Error: undeclared identifier: 'fmt'
 ```
 
 Pesan menunjukkan kolom 6, tepat di huruf pertama `fmt`. Compiler tidak menemukan simbol bernama
-`fmt` di ruang lingkup mana pun. Solusinya satu baris di atas kode: `import std/strformat`. Kesalahan yang
+`fmt` di *scope* mana pun. Solusinya satu baris di atas kode: `import std/strformat`. Kesalahan yang
 sama bisa muncul untuk `&"..."`, hanya saja pesannya berbentuk `type mismatch` karena compiler
 mengira `&` adalah operator penggabung string biasa. Pesan `undeclared identifier` selalu berarti
 hal yang sama: nama itu belum diperkenalkan ke berkas, biasanya lewat `import` yang terlupa.
@@ -192,11 +192,11 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
 - `echo` tidak menambahkan pemisah antar argumen dan menutup dengan satu baris baru.
 - `echo` memakai `$`; `repr` menampilkan bentuk yang bisa dibaca mesin, lengkap dengan tanda kutip.
-- `&"..."` dan `fmt"..."` menyisipkan ekspresi ke dalam teks dan butuh `import std/strformat`.
+- `&"..."` dan `fmt"..."` menyisipkan *expression* ke dalam teks dan butuh `import std/strformat`.
 - Aturan format (`>6`, `04d`, `8.2f`) mengatur lebar, pengisian nol, dan presisi.
 - `stdout.write` mencetak tanpa baris baru; tambahkan `"\n"` sendiri bila perlu.
 
 ## Selanjutnya
 
 Bab berikutnya membahas operator: aritmetika dasar dan `div`/`mod`, perbandingan, logika dengan
-evaluasi singkat, serta operator keanggotaan `in` dan `notin`.
+*short-circuit*, serta operator keanggotaan `in` dan `notin`.

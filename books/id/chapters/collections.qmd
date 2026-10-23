@@ -1,8 +1,8 @@
 # `array`, `seq`, dan `openArray`
 
-Dua kumpulan data yang tampak sama bisa berperilaku sangat berbeda. Yang satu ukurannya ditetapkan
+Dua kumpulan data yang tampak sama bisa berperilaku berbeda. Yang satu ukurannya ditetapkan
 saat ditulis dan tidak pernah berubah; yang lain bisa bertambah saat program jalan. Salah memilih
-berarti menabrak dinding di tengah jalan.
+baru terasa saat program sudah berjalan.
 
 Nim mendorong kita menentukan pilihan sejak awal. `array` berukuran tetap dan disimpan langsung di
 tempatnya; `seq` berukuran dinamis dan bisa tumbuh. Bab ini memakai keduanya, lalu menunjukkan
@@ -197,8 +197,8 @@ Error: unhandled exception: index 5 not in 0 .. 2 [IndexDefect]
 
 Program dikompilasi, lalu berhenti saat dijalankan. `IndexDefect` adalah pengecualian yang dilempar
 saat indeks keluar batas, dan pesannya menyebut indeks yang salah beserta rentang yang sah. Perilaku
-ini lebih aman daripada C, yang pada kasus serupa membaca memori di luar larik tanpa peringatan.
-Output di atas dipotong; keluaran lengkapnya juga memuat jejak tumpukan.
+ini lebih aman daripada C, yang pada kasus serupa membaca memori di luar larik tanpa *warning*.
+Output di atas dipotong; keluaran lengkapnya juga memuat *stack trace*.
 
 Pemeriksaan ini menyala sejak awal, termasuk saat program dikompilasi dengan `-d:release`. Hanya
 `-d:danger` yang mematikannya; setelah itu contoh di atas mencetak nilai acak dari luar larik.

@@ -139,7 +139,7 @@ punya *kind*, seperti `nnkInfix`, `nnkIdent`, dan `nnkIntLit`. Inilah arti "kode
 ## `untyped`: sintaks mentah
 
 Argumen macro bisa dideklarasikan `untyped` atau `typed`. `untyped` menerima bentuk kode apa pun,
-bahkan yang belum sah sebagai ekspresi.
+bahkan yang belum sah sebagai *expression*.
 
 ```{.nim}
 import std/macros
@@ -240,7 +240,7 @@ hello, bob
 ```
 
 Macro ini tidak menerima argumen. Ia membaca `Names`, lalu membuat satu prosedur untuk setiap nama.
-`newStmtList` menyusun daftar pernyataan; `&` menyatukan awalan dengan nama, lalu `ident` membuat
+`newStmtList` menyusun daftar *statement*; `&` menyatukan awalan dengan nama, lalu `ident` membuat
 node identifier dari string itu. Menulis ini
 dengan template tidak mungkin: template tidak bisa mengulang atas data dan membuat nama baru.
 

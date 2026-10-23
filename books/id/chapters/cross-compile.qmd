@@ -113,7 +113,7 @@ danger define is not set
 ```
 
 Contoh di atas dijalankan dengan `nim c -r -d:release`. `-d:release` menyalakan optimasi dan
-mematikan jejak tumpukan; pemeriksaan runtime tetap aktif. `--opt:speed` mengurus optimasinya saja,
+mematikan *stack trace*; pemeriksaan runtime tetap aktif. `--opt:speed` mengurus optimasinya saja,
 tanpa mengubah yang lain. `-d:danger` melangkah lebih jauh: ia mematikan semua pemeriksaan runtime.
 
 ```{.nim}
@@ -196,7 +196,7 @@ nim c -d:mingw --os:windows --cpu:amd64 --out:app.exe app.nim
 ```
 
 Tanpa toolchain tersebut, build berhenti di compiler C dengan `fatal error: 'windows.h' file not
-found`. Di Linux, paket MinGW menyediakan `x86_64-w64-mingw32-gcc`, dan Nim sudah menyiapkan
+found`. Di Linux, *package* MinGW menyediakan `x86_64-w64-mingw32-gcc`, dan Nim sudah menyiapkan
 pemetaannya di `config/nim.cfg` pada bagian `@if unix and mingw`.
 
 Perilaku yang lebih halus: mengubah `--os` saja tidak selalu gagal. Di macOS, `--os:linux --

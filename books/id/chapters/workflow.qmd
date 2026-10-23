@@ -105,7 +105,7 @@ Bacalah dari baris pertama:
 | `Error` | tingkat keparahan; build berhenti |
 | `type mismatch` | kategori masalahnya: tipe tidak cocok |
 
-Baris sisanya adalah bukti. `Expression: square("four")` menunjukkan ekspresi yang diperiksa. Baris
+Baris sisanya adalah bukti. `Expression: square("four")` menunjukkan *expression* yang diperiksa. Baris
 `[1] "four": string` menyebut argumen pertama beserta tipenya. Bagian `Expected one of` mendaftar
 prosedur yang mungkin cocok, dan `[1] proc square(n: int): int` menjelaskan syaratnya: parameter
 `n` harus `int`. Jadi masalahnya sederhana: `"four"` adalah `string`, bukan `int`.
@@ -126,9 +126,9 @@ nim check square.nim
 pertamanya sama dengan sebelumnya, yaitu `type mismatch` di baris 4, dan kode keluarnya bukan nol.
 Ini perintah yang dipakai editor di latar belakang karena jauh lebih ringan daripada `nim c`.
 
-## `nimble`: proyek dan paket
+## `nimble`: proyek dan *package*
 
-Nimble ikut terpasang bersama Nim. Perannya dua: pengelola paket, dan perancah proyek. Untuk proyek
+Nimble ikut terpasang bersama Nim. Perannya dua: pengelola *package*, dan *scaffold*. Untuk proyek
 baru:
 
 ```{.bash}
@@ -136,15 +136,15 @@ nimble init notes
 ```
 
 Perintah itu membuat direktori `notes` berisi berkas `notes.nimble`, kode di `src/`, dan kerangka
-tes di `tests/`. Setelah ada, perintah yang sering dipakai:
+*test* di `tests/`. Setelah ada, perintah yang sering dipakai:
 
 | Perintah | Kegunaan |
 |---|---|
 | `nimble build` | membangun proyek |
 | `nimble run` | membangun lalu menjalankannya |
-| `nimble test` | menjalankan tes |
+| `nimble test` | menjalankan *test* |
 | `nimble tasks` | menampilkan tugas yang didefinisikan |
-| `nimble install <paket>` | memasang paket pihak ketiga |
+| `nimble install <paket>` | memasang *package* pihak ketiga |
 
 Berkas `.nimble` mendeklarasikan nama, versi, dan dependensi lewat `requires`. Buku ini sengaja
 hanya memakai pustaka standar, jadi belum ada dependensi yang perlu dipasang. Cukup tahu bahwa
@@ -180,7 +180,7 @@ menggantikannya.
   benar.
 - Pesan error menunjuk berkas, baris, dan kolom; baris pertama menyebut apa, sisanya menjelaskan
   mengapa.
-- `nimble` mengelola proyek dan paket; `nimsuggest` menyuplai editor di belakang layar.
+- `nimble` mengelola proyek dan *package*; `nimsuggest` menyuplai editor di belakang layar.
 
 ## Selanjutnya
 

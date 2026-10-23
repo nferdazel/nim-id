@@ -41,7 +41,7 @@ dibutuhkan adalah "punya field `name`", tidak ada nama bawaan yang menolong.
 
 ## Konsep: syarat yang ditulis sendiri
 
-Konsep mendaftar syarat dalam bentuk ekspresi yang harus benar untuk tipe itu.
+Konsep mendaftar syarat dalam bentuk *expression* yang harus benar untuk tipe itu.
 
 ```{.nim}
 type
@@ -227,9 +227,9 @@ main.nim(3, 5) Named: concept predicate failed
 ```
 
 Bacalah dari bawah. Baris terakhir, `concept predicate failed`, menyebut penyebab sebenarnya. Baris
-di atasnya menunjuk berkas dan baris konsep, yaitu `Named` di baris 3, lalu merinci ekspresi mana
+di atasnya menunjuk berkas dan baris konsep, yaitu `Named` di baris 3, lalu merinci *expression* mana
 yang gagal. Compiler mencoba `x.name` pada `int`, menemukan tidak ada field `name`, dan melaporkannya
-berulang untuk tiap bagian ekspresi. Pesannya panjang, tapi arahnya jelas: periksa konsep di baris
+berulang untuk tiap bagian *expression*. Pesannya panjang, tapi arahnya jelas: periksa konsep di baris
 yang ditunjuk.
 
 ## Batas konsep
@@ -250,9 +250,9 @@ echo value
 main.nim(5, 5) Error: invalid type: 'Named' for var
 ```
 
-Selain itu, pencocokan bersifat struktural: tipe yang kebetulan punya field `name` ikut cocok,
+Pencocokan juga bersifat struktural: tipe yang kebetulan punya field `name` ikut cocok,
 meskipun penulisnya tidak pernah berniat begitu. Konsep juga tidak memeriksa makna, hanya bentuk.
-Untuk tipe yang benar benar harus terdaftar, warisan atau `distinct` lebih tepat daripada konsep.
+Untuk tipe yang benar-benar harus terdaftar, warisan atau `distinct` lebih tepat daripada konsep.
 
 ## Latihan
 

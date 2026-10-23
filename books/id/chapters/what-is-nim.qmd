@@ -43,7 +43,7 @@ Hello, Nim
 ```
 
 `echo` menulis argumennya ke stdout dan menutup dengan baris baru. Tidak ada `main`, tidak ada titik
-koma, dan indentasi yang menentukan blok. Satu berkas boleh berisi pernyataan di tingkat atas
+koma, dan indentasi yang menentukan blok. Satu berkas boleh berisi *statement* di tingkat atas
 seperti ini.
 
 ## Tipe diperiksa sebelum program berjalan
@@ -77,7 +77,7 @@ dieksekusi, mungkin setelah data pengguna masuk.
 
 ## Prosedur dan perulangan
 
-Nim tetap ringkas untuk program yang lebih besar. Prosedur ditulis dengan `proc`, dan ekspresi
+Nim tetap ringkas untuk program yang lebih besar. Prosedur ditulis dengan `proc`, dan *expression*
 terakhir di badannya menjadi nilai balik.
 
 ```{.nim}
@@ -91,7 +91,7 @@ echo greet("Nim")
 Hello, Nim
 ```
 
-`&` menggabungkan dua string. Baris `"Hello, " & name` adalah ekspresi terakhir, jadi itulah yang
+`&` menggabungkan dua string. Baris `"Hello, " & name` adalah *expression* terakhir, jadi itulah yang
 dikembalikan. Tidak perlu `return` selama tidak ada percabangan.
 
 Perulangan memakai indentasi yang sama:
@@ -150,11 +150,11 @@ aman. Jujur soal ini lebih berguna daripada menjual satu bahasa sebagai jawaban 
 
 - Nim dikompilasi ke C lalu ke biner; tidak ada mesin virtual saat program berjalan.
 - Tipe diperiksa saat kompilasi, jadi kesalahan tipe menghentikan build sebelum ada output.
-- `echo` mencetak ke stdout; prosedur memakai `proc` dengan ekspresi terakhir sebagai nilai balik.
+- `echo` mencetak ke stdout; prosedur memakai `proc` dengan *expression* terakhir sebagai nilai balik.
 - Backend bisa diganti (C, C++, Objective-C, JavaScript); pengelola memori bawaan adalah ORC.
 - Ekosistem Nim lebih kecil daripada Python atau JavaScript; pilih Nim karena kebutuhan, bukan tren.
 
 ## Selanjutnya
 
 [Instalasi Nim](installation.qmd) memasang versi 2.2.12 di mesin pembaca lewat `choosenim`,
-pengelola paket, atau biner siap pakai, lalu memastikan `nim --version` menjawab.
+pengelola *package*, atau biner siap pakai, lalu memastikan `nim --version` menjawab.

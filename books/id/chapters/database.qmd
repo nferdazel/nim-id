@@ -2,7 +2,7 @@
 
 Data yang disimpan di variabel hilang begitu program ditutup. Database ada untuk menutup celah itu:
 menyimpan baris sampai program berikutnya dijalankan. Kabar buruknya, sejak Nim 2.0 modul
-`std/db_sqlite` tidak lagi ikut compiler. Modul basis data dipindahkan ke paket terpisah,
+`std/db_sqlite` tidak lagi ikut compiler. Modul basis data dipindahkan ke *package* terpisah,
 `db_connector`. Karena buku ini hanya memakai pustaka standar, kita belajar polanya dengan yang
 sudah tersedia, lalu memetakannya ke SQLite.
 
@@ -52,7 +52,7 @@ Dune is at row 1
 ```
 
 `seq[Book]` menyimpan baris dalam urutan penulisan. `Table[string, int]` menyimpan indeks: dari
-judul buku ke posisinya. Di dunia basis data, keduanya berperan seperti tabel dan indeks.
+judul buku ke posisinya. Keduanya berperan seperti tabel dan indeks.
 
 Perhatikan baris `shelf.sort`. Data ditulis dalam urutan 1984, 1965, 1815, lalu dicetak menaik
 menurut tahun. Di SQL, pekerjaan itu dilakukan `ORDER BY year`; di Nim, `sort`. Tanpa langkah ini,
@@ -102,7 +102,7 @@ Tiga langkah itu, buka, tulis, tutup, sama bentuknya dengan alur `db_sqlite`: `o
 membuka koneksi, `exec` untuk menjalankan perintah, `close` untuk menutupnya. Bedanya, di sini koneksi
 kita adalah berkas biasa.
 
-## Kueri: saring lalu urutkan
+## *Query*: saring lalu urutkan
 
 Kebutuhan sehari-hari sebuah database biasanya dua: ambil sebagian baris, lalu susun urutannya.
 
@@ -234,7 +234,7 @@ berarti berkasnya rusak, tetapi modulnya memang tidak ada di jalur pencarian.
 ## Kapan SQLite tepat
 
 Berkas JSON cukup untuk data kecil yang dibaca dan ditulis utuh. Ia mulai menyusahkan ketika tiga
-hal muncul bersamaan: datanya besar, kueri harus cepat pada sebagian kecil baris, dan beberapa
+hal muncul bersamaan: datanya besar, *query* harus cepat pada sebagian kecil baris, dan beberapa
 program menulis ke berkas yang sama. Di titik itu pergantian ke SQLite masuk akal.
 
 Untuk memakainya, pasang `db_connector`, lalu impor `db_connector/db_sqlite`. Modul itu memerlukan
@@ -255,7 +255,7 @@ Perintahnya ditulis sebagai `sql"SELECT ..."`, yang menghasilkan nilai `SqlQuery
 dalamnya itu penting: jangan menyambung nilai ke dalam string SQL, karena lewat `?` nilai dikirim
 terpisah sehingga tanda kutip di dalamnya tidak merusak perintah. Untuk pengujian, SQLite
 menerima nama basis data `:memory:` sehingga seluruh data hidup di memori dan tidak meninggalkan
-berkas. Selalu tulis `ORDER BY` pada kueri yang hasilnya dicetak, dengan alasan yang sama seperti
+berkas. Selalu tulis `ORDER BY` pada *query* yang hasilnya dicetak, dengan alasan yang sama seperti
 `sort` di bab ini.
 
 ## Latihan
@@ -293,10 +293,10 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
   `COMMIT`.
 - `readFile` melempar `IOError` dan `parseJson` melempar `JsonParsingError`, seperti `DbError` di
   `db_sqlite`.
-- `std/db_sqlite` sudah pindah ke paket `db_connector`; pakai SQLite saat data membesar atau butuh
-  kueri dan transaksi sungguhan.
+- `std/db_sqlite` sudah pindah ke *package* `db_connector`; pakai SQLite saat data membesar atau butuh
+  *query* dan transaksi sungguhan.
 
 ## Selanjutnya
 
 Data punya tempat tetap. Pekerjaan berikutnya adalah mengemas kode supaya bisa dipakai ulang dan
-dibagikan: [membuat dan menerbitkan paket nimble](nimble-packages.qmd).
+dibagikan: [membuat dan menerbitkan *package* nimble](nimble-packages.qmd).

@@ -221,7 +221,7 @@ nim c -r --profiler:on --stackTrace:on app.nim
 ```
 
 Saat selesai, program mencetak `writing profile_results.txt...`, dan berkas `profile_results.txt`
-muncul di direktori kerja. Isinya daftar jejak tumpukan yang diurutkan dari yang paling banyak
+muncul di direktori kerja. Isinya daftar *stack trace* yang diurutkan dari yang paling banyak
 memakai waktu, lengkap dengan persentase per baris. Yang dibaca adalah entri teratas: di situlah
 waktu paling banyak habis.
 

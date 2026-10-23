@@ -176,7 +176,7 @@ echo warm * cool
 `warm + cool` adalah gabungan. Karena kedua himpunan tidak beririsan, `warm * cool` kosong. `card`
 memberi jumlah anggota, misalnya `card({red, green})` bernilai `2`.
 
-## Himpunan bit untuk tipe dasar
+## *Bitset* untuk tipe dasar
 
 Set tidak terbatas pada enum. Tipe ordinal apa pun bisa jadi dasarnya, termasuk `char`.
 

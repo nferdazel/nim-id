@@ -3,7 +3,7 @@
 Operasi bisa gagal di tengah jalan: berkas tidak ada, isi berkas bukan angka, jaringan putus.
 Membiarkan program berhenti mendadak bukan pilihan. Nim memakai pengecualian, dan menambahkan satu hal
 yang jarang dimiliki bahasa lain: compiler melacak pengecualian apa saja yang mungkin dilempar sebuah
-prosedur. Bab ini memakai keduanya sekaligus.
+prosedur.
 
 ::: {.callout-note}
 ## Tujuan bab
@@ -29,7 +29,7 @@ caught: bad input
 
 `newException` membuat nilai pengecualian dari sebuah tipe dan sebuah pesan. Kata kunci `as e` mengikat
 pengecualian yang tertangkap ke nama `e`, dan `e.msg` adalah pesannya. Tanpa `try`, pengecualian yang
-naik sampai puncak akan menghentikan program dengan jejak tumpukan.
+naik sampai puncak akan menghentikan program dengan *stack trace*.
 
 ## Beberapa `except` dan `finally`
 
@@ -184,7 +184,7 @@ command line(1, 2) Error: invalid command line option: '--effect'
 
 ## `defer`: pembersihan yang selalu jalan
 
-`defer` menjadwalkan satu pernyataan untuk dijalankan saat blok yang memuatnya selesai, apa pun yang
+`defer` menjadwalkan satu *statement* untuk dijalankan saat blok yang memuatnya selesai, apa pun yang
 terjadi di tengahnya.
 
 ```{.nim}

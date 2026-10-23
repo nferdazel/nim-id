@@ -216,6 +216,6 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
 ## Selanjutnya
 
-Bab berikutnya membahas `unittest`: menulis tes yang duduk di samping kode, membaca keluarannya, dan
-menjadikan tes sebagai kebiasaan, bukan tambahan di akhir proyek. Lanjut ke
-[`unittest` dan disiplin tes](unit-testing.qmd).
+Bab berikutnya membahas `unittest`: menulis *test* yang duduk di samping kode, membaca keluarannya, dan
+menjadikan *test* sebagai kebiasaan, bukan tambahan di akhir proyek. Lanjut ke
+[`unittest` dan disiplin *test*](unit-testing.qmd).

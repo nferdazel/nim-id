@@ -46,9 +46,9 @@ Satu keunggulan `choosenim`: semuanya dipasang di direktori home, jadi tidak per
 administrator, dan beberapa versi bisa hidup berdampingan. Berpindah versi tidak menghapus versi
 yang lain.
 
-## Lewat pengelola paket
+## Lewat pengelola *package*
 
-Kalau tidak butuh berpindah versi, pengelola paket lebih cepat:
+Kalau tidak butuh berpindah versi, pengelola *package* lebih cepat:
 
 | Sistem | Perintah |
 |---|---|
@@ -63,7 +63,7 @@ Perhatikan satu hal: versi di repositori distro sering tertinggal. Setelah memas
 
 ## Windows
 
-Unduh berkas zip rilis, ekstrak ke direktori pilihan, lalu jalankan `finish.exe` di dalamnya.
+Unduh berkas zip *release*, ekstrak ke direktori pilihan, lalu jalankan `finish.exe` di dalamnya.
 Program kecil itu menambahkan direktori `bin` ke PATH dan menawarkan pemasangan MinGW. `choosenim`
 juga bekerja di Windows dan jauh lebih sering dipakai karena memudahkan ganti versi.
 
@@ -104,7 +104,7 @@ Nim Compiler Version 2.2.12 [MacOSX: arm64]
 ```
 
 Bagian dalam kurung siku menyebut sistem dan arsitektur; isinya berbeda di setiap mesin. Yang
-penting nomor versinya. Nimble, pengelola paket yang menyertai Nim, juga harus ada:
+penting nomor versinya. Nimble, pengelola *package* yang menyertai Nim, juga harus ada:
 
 ```{.bash}
 nimble --version
@@ -116,7 +116,7 @@ Baris pertamanya menyerupai `nimble v0.24.1`. Terakhir, pastikan compiler C siap
 xcode-select --install
 ```
 
-Di Linux, pasang `gcc` atau `clang` lewat pengelola paket. Di Windows, `finish.exe` yang mengurus
+Di Linux, pasang `gcc` atau `clang` lewat pengelola *package*. Di Windows, `finish.exe` yang mengurus
 MinGW. Untuk memastikan, jalankan `gcc --version` atau `clang --version`; keduanya harus menjawab
 nomor versi, bukan `command not found`.
 
@@ -160,7 +160,7 @@ Setelah berpindah, jalankan `nim --version` lagi untuk memastikan versinya benar
 ## Ringkasan
 
 - Tiga syarat: `nim` ada di PATH, compiler C tersedia, versi 2.x.
-- `choosenim` memudahkan berpindah versi; pengelola paket distro lebih cepat tapi sering tertinggal.
+- `choosenim` memudahkan berpindah versi; pengelola *package* distro lebih cepat tapi sering tertinggal.
 - PATH perlu memuat direktori `bin` Nim dan `~/.nimble/bin`.
 - `command not found` berarti shell tidak menemukan perintah di PATH, bukan Nim yang rusak.
 - Buku ini diuji di Nim 2.2.12; cocokkan versi kalau output berbeda.

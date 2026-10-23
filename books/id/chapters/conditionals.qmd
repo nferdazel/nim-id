@@ -41,9 +41,9 @@ Tiga hal yang berbeda dari banyak bahasa lain:
   Nim memakai dua spasi.
 - Nim memakai kata kunci `elif`. `else if` tidak dikenal compiler.
 
-## `if` sebagai ekspresi
+## `if` sebagai *expression*
 
-Di Nim, `if` adalah ekspresi: hasilnya bisa langsung disimpan ke variabel.
+Di Nim, `if` adalah *expression*: hasilnya bisa langsung disimpan ke variabel.
 
 ```{.nim}
 let score = 72
@@ -64,8 +64,8 @@ label: keep going
 ```
 
 Perhatikan bentuk satu baris `if score >= 75: 'A' else: 'B'`. Bentuk ini valid karena setiap cabang
-menghasilkan satu nilai. Kalau `if` dipakai sebagai ekspresi, semua cabang harus bertipe sama, dan
-`else` wajib ada. Tanpa `else`, Nim memperlakukannya sebagai pernyataan biasa, sehingga nilai di
+menghasilkan satu nilai. Kalau `if` dipakai sebagai *expression*, semua cabang harus bertipe sama, dan
+`else` wajib ada. Tanpa `else`, Nim memperlakukannya sebagai *statement* biasa, sehingga nilai di
 dalamnya dianggap tidak terpakai: `let x = if cond: 1` ditolak dengan pesan `has to be used (or
 discarded)`.
 
@@ -171,7 +171,7 @@ tanpa `else`.
 ## Latihan
 
 1. Ubah `temperature` di contoh pertama menjadi `5`, lalu prediksi outputnya sebelum menjalankan.
-2. Tulis ekspresi `if` yang mengubah nilai `age` menjadi `"anak"` (di bawah 13), `"remaja"` (13–19),
+2. Tulis *expression* `if` yang mengubah nilai `age` menjadi `"anak"` (di bawah 13), `"remaja"` (13–19),
    atau `"dewasa"` (20 ke atas), lalu cetak hasilnya.
 3. Tulis prosedur yang menerima `char` dan memakai `case` untuk mengembalikan `"vowel"` untuk
    `'a'`/`'i'`/`'u'`/`'e'`/`'o'`, `"digit"` untuk `'0' .. '9'`, dan `"other"` untuk sisanya.
@@ -188,7 +188,7 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 ## Ringkasan
 
 - `if` memakai `elif`, tidak butuh tanda kurung, dan bloknya ditentukan indentasi.
-- `if` adalah ekspresi; kalau dipakai sebagai nilai, semua cabang harus bertipe sama dan `else` wajib.
+- `if` adalah *expression*; kalau dipakai sebagai nilai, semua cabang harus bertipe sama dan `else` wajib.
 - `case` mendukung daftar nilai (`12, 1, 2`) dan rentang (`3 .. 5`); `of` yang tidak lengkap tanpa
   `else` ditolak compiler.
 - `when` memilih cabang saat kompilasi; hanya cabang terpilih yang dikompilasi.

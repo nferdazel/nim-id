@@ -31,7 +31,7 @@ echo greet("Nim")
 Hello, Nim
 ```
 
-Badan `greet` hanya satu ekspresi, dan ekspresi terakhir sebuah prosedur otomatis menjadi nilai
+Badan `greet` hanya satu *expression*, dan *expression* terakhir sebuah prosedur otomatis menjadi nilai
 baliknya. Jadi `return` tidak wajib.
 
 ## `func`: janji tanpa efek samping
@@ -74,7 +74,7 @@ berkas, atau mengubah argumennya.
 ## `result` dan nilai balik yang dibangun bertahap
 
 Prosedur bertipe nilai balik punya variabel implisit bernama `result`. Nilai awalnya adalah
-default tipe (`0` untuk `int`, `""` untuk `string`), dan ekspresi terakhir menimpanya.
+default tipe (`0` untuk `int`, `""` untuk `string`), dan *expression* terakhir menimpanya.
 
 ```{.nim}
 proc total(items: seq[int]): int =
@@ -172,7 +172,7 @@ echo count
 42
 ```
 
-Pemanggil harus mengoper variabel, bukan angka atau ekspresi. Inilah *pass by reference* di Nim,
+Pemanggil harus mengoper variabel, bukan angka atau *expression*. Inilah *pass by reference* di Nim,
 dan karena tertulis di deklarasi prosedur, pembaca tidak perlu menebaknya.
 
 ## `openArray`: satu prosedur untuk larik dan barisan
@@ -282,7 +282,7 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 ## Ringkasan
 
 - `proc` boleh punya efek samping; `func` dijamin tidak, dan compiler menolak yang melanggar.
-- Ekspresi terakhir menjadi nilai balik; `result` untuk nilai bertahap, `return` untuk keluar awal.
+- *Expression* terakhir menjadi nilai balik; `result` untuk nilai bertahap, `return` untuk keluar awal.
 - Parameter default dan argumen bernama membuat pemanggilan panjang tetap terbaca.
 - `var` parameter menulis balik ke pemanggil; `openArray` menerima larik dan barisan.
 - Nilai balik yang tidak dipakai ditolak compiler; tulis `discard` kalau memang dibuang.

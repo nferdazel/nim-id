@@ -1,7 +1,7 @@
 # Proyek akhir: catatan dari terminal
 
 Alat kecil yang berguna hampir selalu punya bentuk yang sama: beberapa modul, satu berkas data,
-beberapa subperintah, dan beberapa tes. Bagian C sudah menutup setiap potongannya satu per satu.
+beberapa subperintah, dan beberapa *test*. Bagian C sudah menutup setiap potongannya satu per satu.
 Sekarang potongan itu disatukan menjadi satu program yang benar-benar bisa dipakai: `notes`, alat
 baris perintah untuk mencatat hal-hal pendek.
 
@@ -252,7 +252,7 @@ Perhatikan bentuk `--file:/tmp/notes-demo.json`, bukan `--file /tmp/notes-demo.j
 mengambil nilai opsi dari bagian yang sama dengan nama opsinya, dipisah titik dua atau tanda sama
 dengan. Kalau nilainya dipisah spasi, jalur itu dianggap argumen biasa.
 
-## Langkah 4: tes
+## Langkah 4: *test*
 
 Modul penyimpanan punya aturan yang jelas, dan itu bahan yang tepat untuk `std/unittest`. Simpan
 sebagai `a04_tests.nim`.
@@ -302,8 +302,8 @@ suite "store":
 ```
 
 Nama setiap kasus adalah perilaku, bukan nama prosedur. `setup` dan `teardown` menghapus berkas
-sebelum dan sesudah tiap kasus, sehingga urutan pelaksanaan tidak lagi penting dan satu tes tidak
-mewarisi sisa tes sebelumnya. Tes jenis ini yang membuat program kecil tetap bisa diubah setelah
+sebelum dan sesudah tiap kasus, sehingga urutan pelaksanaan tidak lagi penting dan satu *test* tidak
+mewarisi sisa *test* sebelumnya. *Test* jenis ini yang membuat program kecil tetap bisa diubah setelah
 berbulan-bulan.
 
 ## Error sengaja: `JsonNode` bukan object biasa
@@ -334,7 +334,7 @@ sesungguhnya: `note["text"]`, lalu diterjemahkan dengan `getStr` menjadi `string
    `[ ]` di subperintah `list`.
 2. Tanpa menjalankan, prediksi keluarannya: `./notes list` pada berkas yang belum ada, lalu
    `./notes add "one"` dan `./notes list` lagi.
-3. Tulis tes untuk `saveNotes` yang memastikan hasil tulisannya bisa dibaca kembali dan panjangnya
+3. Tulis *test* untuk `saveNotes` yang memastikan hasil tulisannya bisa dibaca kembali dan panjangnya
    tetap.
 4. Kode berikut gagal dikompilasi. Perbaiki, lalu jelaskan pesannya: `let notes = parseJson("[]")`
    diikuti `notes.add("buy milk")`.
@@ -345,7 +345,7 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
 ## Ringkasan
 
-- Satu alat kecil layak dipecah: tipe dan konversi, modul penyimpanan, lapisan CLI, lalu tes.
+- Satu alat kecil layak dipecah: tipe dan konversi, modul penyimpanan, lapisan CLI, lalu *test*.
 - `%*` membangun JSON, `parseJson` membacanya, dan pasangan `toJson` serta `fromJson` mencegah
   konversi ditulis dua kali.
 - `when isMainModule` membuat modul bisa dijalankan sendiri tanpa mengganggu pemakainya.

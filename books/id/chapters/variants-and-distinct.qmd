@@ -5,8 +5,8 @@ Dua kebutuhan muncul berulang. Pertama, satu tipe yang isinya bergantung pada ke
 data sama tetapi tidak boleh tertukar, misalnya id pengguna dan id pesanan.
 
 Nim menjawab keduanya dengan cara berbeda. Object varian menyatukan beberapa bentuk ke dalam satu
-tipe dengan sebuah penanda. `distinct` membuat tipe benar benar baru, sehingga compiler menolak
-pencampuran. Bab ini memakai keduanya. Semua contoh diuji di Nim 2.2.12.
+tipe dengan sebuah penanda. `distinct` membuat tipe benar-benar baru, sehingga compiler menolak
+pencampuran. Semua contoh diuji di Nim 2.2.12.
 
 ::: {.callout-note}
 ## Tujuan bab
@@ -223,7 +223,7 @@ found 4
 found 5
 ```
 
-`Alias(3)` dan `4` sama sama `int`, jadi keduanya diterima tanpa konversi. `UserId` berbeda: nilainya
+`Alias(3)` dan `4` sama-sama `int`, jadi keduanya diterima tanpa konversi. `UserId` berbeda: nilainya
 harus ditulis `int(UserId(5))` sebelum masuk. Pakai alias kalau hanya butuh nama pendek untuk tipe
 yang sama. Pakai `distinct` kalau nilainya tidak boleh tertukar, seperti id, satuan, atau nominal
 uang.

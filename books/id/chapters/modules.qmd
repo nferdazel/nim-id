@@ -112,7 +112,7 @@ Hello, Ada
 ```
 
 `a05_facade` tidak mendefinisikan `greet` sendiri. Ia hanya meneruskan. Pola ini menyembunyikan
-susunan internal sebuah paket dan menyediakan satu pintu masuk.
+susunan internal sebuah *package* dan menyediakan satu pintu masuk.
 
 ## Nama modul harus identifier yang sah
 
@@ -179,7 +179,7 @@ notes
 
 Perhatikan `appName` dipakai langsung, tanpa awalan modul. Tidak ada modul yang dibuat. Karena
 `include` bekerja dengan menyalin teks, satu nama di dalamnya bisa bertabrakan dengan nama di
-berkas induk tanpa peringatan dari compiler. Untuk memisahkan kode, `import` hampir selalu pilihan
+berkas induk tanpa *warning* dari compiler. Untuk memisahkan kode, `import` hampir selalu pilihan
 yang lebih aman.
 
 ## Membaca error: modul tidak ditemukan

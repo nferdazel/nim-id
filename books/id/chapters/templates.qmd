@@ -4,7 +4,7 @@
 menyalin badan template ke tempat pemanggilan, lalu mengompilasi hasil salinan itu. Karena itu
 template bisa menerima argumen yang belum punya tipe, sesuatu yang tidak bisa dilakukan prosedur.
 
-Kebebasan ini ada harganya. Kode yang disalin bisa mengevaluasi ekspresi lebih dari sekali, dan nama
+Kebebasan ini ada harganya. Kode yang disalin bisa mengevaluasi *expression* lebih dari sekali, dan nama
 di dalam template bisa bertabrakan dengan nama pemanggil. Nim menutup masalah kedua dengan aturan
 hygiene, dan menyediakan dua jalan keluar saat kita memang butuh menembusnya.
 
@@ -88,8 +88,8 @@ echo min(4, 8, 1)
 1
 ```
 
-Tipe balik ditulis `untyped`, karena template tidak menetapkan tipe hasil. Ekspresi yang dihasilkan
-menggantikan seluruh pemanggilan, jadi `echo min(9, 2, 5)` menjadi `echo` atas ekspresi `if`.
+Tipe balik ditulis `untyped`, karena template tidak menetapkan tipe hasil. *Expression* yang dihasilkan
+menggantikan seluruh pemanggilan, jadi `echo min(9, 2, 5)` menjadi `echo` atas *expression* `if`.
 
 ## Versi generic dari `min`
 
@@ -150,7 +150,7 @@ proc: 1 (calls: 1)
 
 `a` muncul tiga kali di dalam badan template, jadi `next()` dipanggil tiga kali, dan `calls` naik
 sampai 3. Prosedur `minOf3` menerima nilainya sebagai argumen, jadi `next()` dipanggil sekali.
-Pelajaran praktisnya: jangan oper ekspresi berharga mahal atau punya efek samping ke template.
+Pelajaran praktisnya: jangan oper *expression* berharga mahal atau punya efek samping ke template.
 
 ## Membaca pesan error: simbol yang tidak terlihat
 
@@ -220,7 +220,7 @@ count: 5
 
 `count` disuntikkan ke lingkup pemanggil, sehingga blok di bawah `countTo:` bisa menambahnya.
 Blok itu adalah argumen `body`, yang ikut disalin ke tempatnya. Pustaka standar memakai cara ini:
-`test` di `std/unittest` menerima blok sebagai badan tes, lalu menjalankannya di dalam suite.
+`test` di `std/unittest` menerima blok sebagai badan *test*, lalu menjalankannya di dalam suite.
 
 ## Template, generic, atau prosedur
 

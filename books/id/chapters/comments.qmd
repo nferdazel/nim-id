@@ -107,7 +107,7 @@ tidak muncul di HTML meski terlihat sama di editor.
 
 ## `runnableExamples`: dokumentasi yang diuji
 
-Doc comment bukan hanya teks. Blok `runnableExamples` di dalamnya berisi kode yang benar-benar
+Doc comment bukan sekadar teks. Blok `runnableExamples` di dalamnya berisi kode yang benar-benar
 dikompilasi dan dijalankan oleh `nim doc`. Simpan sebagai `double.nim`.
 
 ```{.nim}

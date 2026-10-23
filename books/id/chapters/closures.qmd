@@ -122,7 +122,7 @@ sama, pemanggilan `current()` yang terakhir sudah melihat perubahan dari `increm
 ## Menangkap `var` dan `let`
 
 Aturan yang perlu dipegang: closure menangkap variabelnya, bukan nilainya. Baik `var` maupun `let`
-diakses lewat variabel yang sama dengan ruang lingkup luarnya; bedanya, `let` tidak bisa diisi ulang
+diakses lewat variabel yang sama dengan *scope* luarnya; bedanya, `let` tidak bisa diisi ulang
 setelah closure dibuat.
 
 ```{.nim}
