@@ -29,13 +29,15 @@ lebih cepat.
 | Perangkat | Versi |
 |---|---|
 | Nim | 2.2.12 |
-| Buku | {{< var version >}} (draf, 16 bab) |
+| Buku | {{< var version >}} (draf, 33 bab) |
 
 ## Cara membaca
 
 Kalau baru pertama kali memakai Nim, baca berurutan. Kalau sudah pernah, lompat ke
 [Variabel](chapters/variables.qmd) dan lanjut dari situ. Setiap bab berakhir dengan latihan;
 jawabannya ada di [Lampiran A](appendix/answers.qmd).
+
+Versi bahasa Inggris: [Learning Nim](https://nim.qouver.com/en/).
 
 ## Sumber
 

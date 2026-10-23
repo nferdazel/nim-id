@@ -29,7 +29,7 @@ systems programming jargon, start with the
 | Tool | Version |
 |---|---|
 | Nim | 2.2.12 |
-| Book | {{< var version >}} (draft, 16 chapters) |
+| Book | {{< var version >}} (draft, 33 chapters) |
 
 ## How to read
 
@@ -37,7 +37,7 @@ If this is your first time with Nim, read in order. If you have used Nim before,
 [Variables](chapters/variables.qmd) and continue from there. Every chapter ends with exercises;
 answers are in [Appendix A](appendix/answers.qmd).
 
-Versi Bahasa Indonesia: [Dasar Pemrograman Nim](/).
+Indonesian version: [Dasar Pemrograman Nim](https://nim.qouver.com/).
 
 ## Source
 
