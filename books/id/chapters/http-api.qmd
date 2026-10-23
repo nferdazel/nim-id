@@ -2,7 +2,7 @@
 
 Membuat server HTTP terdengar seperti proyek besar. Padahal dengan `std/asynchttpserver`, satu
 server sederhana cukup belasan baris, dan semua bagiannya ada di pustaka standar. Yang membuat kode
-server sulit diuji bukan soketnya, melainkan *handler* yang bercampur dengan *socket* itu.
+server sulit diuji bukan *socket*-nya, melainkan *handler* yang bercampur dengan *socket* itu.
 
 ::: {.callout-note}
 ## Tujuan bab
@@ -153,7 +153,7 @@ GET /items/7
 
 `reqMethod` adalah `HttpMethod`, dan `url` adalah `Uri` yang sama seperti hasil `parseUri`. Karena
 `Request` adalah object biasa, ia bisa dibentuk di dalam *test*: cukup isi field yang dibutuhkan.
-Inilah alasan *handler* murni mudah diuji, sementara soketnya tidak perlu ikut berjalan.
+Inilah alasan *handler* murni mudah diuji, sementara *socket*-nya tidak perlu ikut berjalan.
 
 ## Menyalakan server
 

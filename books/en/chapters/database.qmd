@@ -54,8 +54,9 @@ Dune is at row 1
 its position. In database terms, the two play the role of a table and an index.
 
 Note the `shelf.sort` line. The data was written in the order 1984, 1965, 1815, then printed ascending
-by year. In SQL that job belongs to `ORDER BY year`; in Nim, to `sort`. Without it, row order is not
-guaranteed, and output that changes on every run cannot be tested.
+by year. In SQL that job belongs to `ORDER BY year`; in Nim, to `sort`. Without it, rows stay in
+insertion order rather than the order you want. For SQL results the order is not guaranteed at all
+without `ORDER BY`, and output that changes on every run cannot be tested.
 
 ## Saving to a file
 
@@ -222,7 +223,7 @@ main.nim(1, 11) Error: cannot open file: std/db_sqlite
 ```
 
 `main.nim` is the file, `(1, 11)` is line 1 column 11, and `Error` means compilation stopped. Column
-11 is where `std/db_sqlite` begins. `cannot open file` does not mean the file is corrupt, it means the
+11 points at the slash after `std`; the module name itself starts at column 8. `cannot open file` does not mean the file is corrupt, it means the
 module is not on the search path.
 
 ## When SQLite is the right choice
@@ -246,8 +247,9 @@ To use it, install `db_connector`, then import `db_connector/db_sqlite`. That mo
 | transaction | temp file then `moveFile` | `BEGIN`, `COMMIT`, `ROLLBACK` |
 
 Statements are written as `sql"SELECT ..."`, which yields a `SqlQuery`. Its `?` parameters matter:
-never splice values into an SQL string, because with `?` the value travels separately and a quote
-inside it cannot break the statement. For tests, SQLite accepts `:memory:` so
+never splice values into an SQL string. With `?`, `db_sqlite` quotes and escapes the value before
+inserting it, so a quote inside it cannot break the statement. This is not separate parameter binding
+as in some other SQL drivers, so the rule against splicing stays. For tests, SQLite accepts `:memory:` so
 everything lives in memory and no file is left behind. Always write `ORDER BY` on a query whose
 output is printed, for the same reason we called `sort` here.
 

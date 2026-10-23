@@ -30,7 +30,8 @@ textstats/
 
 `src/textstats.nim` adalah pintu masuk *package*. Pemakai menulis `import textstats`, dan compiler
 mencari berkas itu. Modul tambahan diletakkan di `src/textstats/` lalu diimpor sebagai
-`import textstats/utils`. Direktori `private/` di dalamnya menyembunyikan modul dari pemakai.
+`import textstats/utils`. Direktori `private/` di dalamnya menandai modul internal. Itu konvensi, bukan pembatas: compiler
+tetap bisa mengimpornya kalau jalurnya ada di search path.
 Direktori `tests/` memuat *test*, dan `README.md` memuat cara pakai singkat.
 
 `nimble init` membuat kerangka ini:
@@ -194,7 +195,7 @@ nimble install
 ```
 
 Tanpa nama *package*, `nimble install` memasang *package* di direktori kerja ke `~/.nimble`, praktis untuk
-menguji sebelum paketnya terbit. Setelah terbit, pemakai menulis `nimble install textstats`. *Package*
+menguji sebelum *package* itu terbit. Setelah terbit, pemakai menulis `nimble install textstats`. *Package*
 yang belum masuk daftar resmi tetap bisa dipasang lewat URL repositori Git-nya.
 
 ## Versi: major, minor, patch

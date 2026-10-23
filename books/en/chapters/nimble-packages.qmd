@@ -28,7 +28,8 @@ textstats/
 
 `src/textstats.nim` is the front door. A user writes `import textstats` and the compiler looks for
 that file. Extra modules go in `src/textstats/` and are imported as `import textstats/utils`; a
-`private/` directory hides them from users. `tests/` holds tests, `README.md` a short usage note.
+`private/` directory marks internal modules. That is a convention, not a barrier: the compiler can
+still import them when the path is on the search path. `tests/` holds tests, `README.md` a short usage note.
 
 `nimble init` creates this skeleton:
 

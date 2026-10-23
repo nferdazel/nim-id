@@ -56,7 +56,8 @@ judul buku ke posisinya. Keduanya berperan seperti tabel dan indeks.
 
 Perhatikan baris `shelf.sort`. Data ditulis dalam urutan 1984, 1965, 1815, lalu dicetak menaik
 menurut tahun. Di SQL, pekerjaan itu dilakukan `ORDER BY year`; di Nim, `sort`. Tanpa langkah ini,
-urutan baris tidak dijamin, dan keluaran yang berubah setiap kali dijalankan tidak bisa diuji.
+baris tetap mengikuti urutan penulisan, bukan urutan yang dicari. Untuk hasil SQL, urutannya bahkan
+tidak dijamin tanpa `ORDER BY`, dan keluaran yang berubah setiap kali dijalankan tidak bisa diuji.
 
 ## Menyimpan ke berkas
 
@@ -228,7 +229,8 @@ main.nim(1, 11) Error: cannot open file: std/db_sqlite
 ```
 
 Bacanya dari kiri: `main.nim` adalah berkasnya, `(1, 11)` berarti baris 1 kolom 11, dan `Error`
-berarti kompilasi berhenti. Kolom 11 adalah awal nama `std/db_sqlite`. `cannot open file` bukan
+berarti kompilasi berhenti. Kolom 11 menunjuk garis miring setelah `std`; nama modulnya sendiri
+mulai di kolom 8. `cannot open file` bukan
 berarti berkasnya rusak, tetapi modulnya memang tidak ada di jalur pencarian.
 
 ## Kapan SQLite tepat
@@ -252,8 +254,10 @@ Untuk memakainya, pasang `db_connector`, lalu impor `db_connector/db_sqlite`. Mo
 | transaksi | berkas sementara lalu `moveFile` | `BEGIN`, `COMMIT`, `ROLLBACK` |
 
 Perintahnya ditulis sebagai `sql"SELECT ..."`, yang menghasilkan nilai `SqlQuery`. Parameter `?` di
-dalamnya itu penting: jangan menyambung nilai ke dalam string SQL, karena lewat `?` nilai dikirim
-terpisah sehingga tanda kutip di dalamnya tidak merusak perintah. Untuk pengujian, SQLite
+dalamnya itu penting: jangan menyambung nilai ke dalam string SQL. Lewat `?`, `db_sqlite` meng-quote
+dan meng-escape nilai sebelum menyisipkannya, sehingga tanda kutip di dalamnya tidak merusak
+perintah. Ini bukan parameter binding terpisah seperti di driver SQL lain, jadi aturan menyambung
+string sendiri tetap berlaku. Untuk pengujian, SQLite
 menerima nama basis data `:memory:` sehingga seluruh data hidup di memori dan tidak meninggalkan
 berkas. Selalu tulis `ORDER BY` pada *query* yang hasilnya dicetak, dengan alasan yang sama seperti
 `sort` di bab ini.

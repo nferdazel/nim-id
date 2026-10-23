@@ -99,8 +99,9 @@ output=report.txt count=2
 Nilai opsi ditulis dengan pemisah `=` atau `:`, misalnya `--output=report.txt` atau
 `-o:report.txt`. Keduanya diterima mode bawaan `NimMode`. Opsi yang tidak punya nilai diisi lewat
 `shortNoVal` dan `longNoVal`. Untuk `--verbose` dan `-v`, keduanya ditandai sebagai *flag*, sehingga
-token berikutnya tidak ikut diserap. Opsi yang tidak disebut di `longNoVal` boleh mengambil token
-berikutnya sebagai nilainya, dan itulah yang terjadi pada `--count 2`. Karena `val` selalu bertipe
+token berikutnya tidak ikut diserap. Selama `longNoVal` tidak kosong, opsi yang tidak tercantum di
+dalamnya boleh mengambil token berikutnya sebagai nilainya, dan itulah yang terjadi pada `--count 2`.
+Dengan `getopt(args)` polos tanpa `longNoVal`, bentuk `--count 2` tidak menyerap `2`. Karena `val` selalu bertipe
 `string`, angkanya diubah dengan `parseInt` dari `std/strutils`.
 
 ## Subperintah sederhana
@@ -201,8 +202,9 @@ usage: notes [--help] <command> [<file>...]
 ## Argumen tambahan setelah `--`
 
 Terkadang sebuah nama berkas dimulai dengan tanda hubung, misalnya `-draft.txt`. Parser akan
-mengira itu sebuah opsi. Tanda `--` menutup bagian opsi: semua token sesudahnya diperlakukan sebagai
-argumen biasa. Argumen yang belum dibaca diambil dengan `remainingArgs`.
+mengira itu sebuah opsi. Tanda `--` menandai akhir bagian opsi. Parser melaporkannya sebagai opsi
+panjang dengan nama kosong: hentikan putaran di situ, lalu ambil sisa token dengan `remainingArgs`.
+Parser tidak mengubah token berikutnya menjadi argumen dengan sendirinya.
 
 ```{.nim}
 import std/parseopt
@@ -249,8 +251,8 @@ main.nim(1, 14) Error: undeclared identifier: 'initOptParser'
 
 Baca dari kiri: berkas, posisi `(baris, kolom)`, tingkat, lalu pesannya. Posisi `(1, 14)` adalah
 awal nama yang tidak dikenal, tepat setelah `let parser = `. `undeclared identifier` berarti nama
-itu dipakai tanpa pernah dideklarasikan atau diimpor. Baris `candidates` di bawahnya menawarkan nama
-terdekat yang mungkin dimaksud. Perbaikan terpendek: tambahkan `import std/parseopt` di baris
+itu dipakai tanpa pernah dideklarasikan atau diimpor. Baris `candidates` di bawahnya mencetak nama
+yang jarak editnya dekat; pada contoh ini tidak ada yang relevan. Perbaikan terpendek: tambahkan `import std/parseopt` di baris
 pertama.
 
 ## Kapan `parseopt` cukup
@@ -259,7 +261,7 @@ pertama.
 dan tidak mendukung subperintah bawaan. Untuk alat yang menerima sepuluh opsi atau kurang, itu justru
 kelebihannya: tidak ada konfigurasi, tidak ada berkas tambahan, dan perilakunya jelas. Kalau
 kebutuhan tumbuh menjadi banyak subperintah dengan bantuan otomatis, ada *package* `cligen` di luar
-pustaka standar. Bab ini tidak memakainya karena satu set contoh dipakai kedua buku, dan pustaka
+pustaka standar. Bab ini tidak memakainya karena kumpulan contoh dipakai kedua buku, dan pustaka
 standar selalu tersedia bersama compiler.
 
 ## Latihan

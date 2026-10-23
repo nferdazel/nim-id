@@ -99,8 +99,9 @@ output=report.txt count=2
 An option value is written with the `=` or `:` separator, for example `--output=report.txt` or
 `-o:report.txt`. Both are accepted by the default `NimMode`. Options that take no value are listed
 in `shortNoVal` and `longNoVal`. Here `--verbose` and `-v` are marked as flags, so the next token is
-not swallowed. An option not listed in `longNoVal` may take the next token as its value, which is
-what happens with `--count 2`. Since `val` is always a `string`, the number is converted with
+not swallowed. As long as `longNoVal` is not empty, an option that is not listed there may take the
+next token as its value, which is what happens with `--count 2`. With a plain `getopt(args)` and no
+`longNoVal`, `--count 2` does not absorb the `2`. Since `val` is always a `string`, the number is converted with
 `parseInt` from `std/strutils`.
 
 ## A simple subcommand
@@ -200,8 +201,9 @@ usage: notes [--help] <command> [<file>...]
 ## Extra arguments after `--`
 
 Sometimes a file name starts with a dash, for example `-draft.txt`. The parser will think it is an
-option. The `--` marker closes the options section: every token after it is treated as a plain
-argument. Arguments that have not been read yet are taken with `remainingArgs`.
+option. The `--` marker ends the options section. The parser reports it as a long option with an
+empty name: stop the loop there, then take the rest of the tokens with `remainingArgs`. The parser
+does not turn the following tokens into arguments by itself.
 
 ```{.nim}
 import std/parseopt
@@ -249,7 +251,7 @@ main.nim(1, 14) Error: undeclared identifier: 'initOptParser'
 Read it from the left: file, position `(line, column)`, severity, then the message. The position
 `(1, 14)` is the start of the unknown name, right after `let parser = `. `undeclared identifier`
 means the name is used without ever being declared or imported. The `candidates` line below offers
-the closest names the compiler could think of. The shortest fix: add `import std/parseopt` on the
+names with a small edit distance; none of them is relevant here. The shortest fix: add `import std/parseopt` on the
 first line.
 
 ## When `parseopt` is enough
