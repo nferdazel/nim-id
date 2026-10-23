@@ -4,6 +4,9 @@
   width: 178mm,
   height: 233mm,
   margin: (x: 16mm, y: 18mm),
+  // Arah DESIGN.md: badan 10pt, tanpa indentasi baris pertama.
+  font-size: 10pt,
+  first-line-indent: false,
 $if(title)$
   title: [$title$],
 $endif$
@@ -19,7 +22,7 @@ $endif$
 $if(lang)$
   lang: "$lang$",
 $endif$
-  main-color: brand-color.at("primary", default: blue),
+  main-color: rgb("#1f3a5f"),
   logo: {
     let logo-info = brand-logo.at("medium", default: none)
     if logo-info != none { image(logo-info.path, alt: logo-info.at("alt", default: none)) }
@@ -77,3 +80,6 @@ $if(margin-geometry)$
   clearance: $margin-geometry.clearance$,
 )
 $endif$
+
+// DESIGN.md: rata kiri, bukan justify. Justify di kolom sempit membuat sungai spasi.
+#show par: set par(justify: false, spacing: 1.3em)
