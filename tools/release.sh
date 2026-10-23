@@ -1,11 +1,11 @@
 #!/usr/bin/env sh
 # Naikkan versi otomatis dari riwayat commit, lalu commit + tag beranotasi.
 #
-#   ./task rilis              # tingkat naik ditentukan dari pesan commit
-#   ./task rilis --patch      # paksa PATCH
-#   ./task rilis --minor      # paksa MINOR
-#   ./task rilis --major      # paksa MAJOR
-#   ./task rilis --tanpa-cek  # lewati ./task check (tidak disarankan)
+#   ./task release            # bump level derived from commit messages
+#   ./task release --patch    # force PATCH
+#   ./task release --minor    # force MINOR
+#   ./task release --major    # force MAJOR
+#   ./task release --skip-check  # skip ./task check (not recommended)
 #
 # Pemetaan Conventional Commits:
 #   BREAKING CHANGE / tipe!:   MAJOR
@@ -23,7 +23,7 @@ lewati_cek=""
 for a in "$@"; do
   case "$a" in
     --major | --minor | --patch) naik_paksa="${a#--}" ;;
-    --tanpa-cek) lewati_cek=1 ;;
+    --skip-check) lewati_cek=1 ;;
     *)
       echo "argumen tidak dikenal: $a" >&2
       exit 2

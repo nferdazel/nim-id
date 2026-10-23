@@ -25,15 +25,15 @@ Contoh nyata untuk buku ini:
 Selama masih `0.x.y` ikuti aturan yang sama; `1.0.0` baru dipakai saat isi buku dianggap stabil
 untuk pembaca pertama. `0.x` bukan alasan menaikkan angka sesuka hati.
 
-## Otomatis: `./task rilis`
+## Otomatis: `./task release`
 
 Skrip membaca commit sejak tag terakhir, menentukan tingkat naik, lalu membuat commit rilis dan
 tag beranotasi.
 
 ```sh
-./task rilis             # tingkat naik ditentukan otomatis
-./task rilis --minor     # paksa MINOR (mis. bab baru tapi commit-nya lupa diawali feat:)
-./task rilis --tanpa-cek # lewati ./task check (hanya kalau build baru saja dijalankan)
+./task release           # bump level derived from the commits
+./task release --minor   # force MINOR (e.g. new chapters whose commit missed feat:)
+./task release --skip-check # skip ./task check (only when the build just ran)
 ```
 
 Pemetaan dari pesan commit (Conventional Commits):
@@ -58,7 +58,7 @@ git tag -a v0.1.0 -m "nim-id 0.1.0"
 git push origin main --follow-tags
 ```
 
-Sesudah `v0.1.0` ada, semua rilis berikutnya lewat `./task rilis`.
+Sesudah `v0.1.0` ada, semua rilis berikutnya lewat `./task release`.
 
 ## Kenapa tag tidak memicu CI atau deploy
 

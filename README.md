@@ -35,14 +35,14 @@ Butuh [Nim](https://nim-lang.org/install.html) 2.2.12 dan [Quarto](https://quart
 
 | Perintah | Hasil |
 |---|---|
-| `./task contoh` | kompilasi dan verifikasi semua contoh |
+| `./task examples` | kompilasi dan verifikasi semua contoh |
 | `./task site` | render Indonesia + English, hasil di `public/` |
 | `./task id` / `./task en` | render satu bahasa saja |
 | `./task pdf` | PDF kedua bahasa |
 | `./task dev` | preview lokal dengan auto-reload |
 | `./task check` | gerbang lengkap sebelum commit |
-| `./task versi` | cetak nomor versi buku |
-| `./task rilis` | naikkan versi dari pesan commit, lalu commit + tag |
+| `./task version` | cetak nomor versi buku |
+| `./task release` | naikkan versi dari pesan commit, lalu commit + tag |
 
 Kalau Quarto tidak ada di `PATH`:
 
@@ -89,7 +89,7 @@ nama modul yang diawali angka atau memakai tanda hubung.
 
 ## Rilis
 
-Nomor versi ada di `VERSION` dan naik otomatis dari pesan commit lewat `./task rilis`. Tag `vX.Y.Z`
+Nomor versi ada di `VERSION` dan naik otomatis dari pesan commit lewat `./task release`. Tag `vX.Y.Z`
 tidak memicu CI ulang dan tidak memicu deploy, karena commit yang sama sudah lolos di `main`.
 Aturan lengkapnya di [docs/release.md](docs/release.md).
 

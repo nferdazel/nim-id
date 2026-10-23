@@ -34,7 +34,7 @@ kedua buku. Kalau merah, perbaiki dulu. CI menjalankan pemeriksaan yang sama.
 
 ## Gaya commit
 
-Pesan commit memakai awalan Conventional Commits, karena `./task rilis` membacanya untuk menentukan
+Pesan commit memakai awalan Conventional Commits, karena `./task release` membacanya untuk menentukan
 naik versi:
 
 ```

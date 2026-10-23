@@ -1,20 +1,22 @@
 #!/usr/bin/env sh
 #
-# nim-id — satu pintu perintah.
+# nim-id — single entry point for all commands.
 #
-#   ./task contoh   kompilasi + verifikasi semua contoh (butuh Nim 2.2.12)
-#   ./task site     render Indonesia + English, susun public/
-#   ./task id       render hanya versi Indonesia
-#   ./task en       render hanya English (profil Quarto `en`)
-#   ./task pdf      render PDF kedua bahasa
-#   ./task dev      preview lokal (auto-reload)
-#   ./task check    contoh + site (gate sebelum commit)
-#   ./task versi    cetak versi dari berkas VERSION
-#   ./task rilis    naikkan versi otomatis dari commit, lalu commit + tag
+#   ./task examples  compile and verify every example (needs Nim 2.2.12)
+#   ./task site      render Indonesian + English, assemble public/
+#   ./task id        render the Indonesian edition only
+#   ./task en        render the English edition only (Quarto profile `en`)
+#   ./task pdf       render the PDF edition of both books
+#   ./task dev       local preview with auto-reload
+#   ./task check     examples + site (the gate before a commit)
+#   ./task version   print the version from VERSION
+#   ./task release   bump the version from commit messages, commit, and tag
 #   ./task help
 #
-# Skrip POSIX, bukan Taskfile/just: tanpa dependensi tooling baru, perintah yang sama dipakai
-# laptop dan CI — pola yang sama dengan repo cbs (D-001 di sana).
+# Plain POSIX shell, not a Taskfile/just: no new tooling, and the same command runs on a
+# laptop and in CI — the same pattern as the cbs repository (D-001 there).
+#
+# Indonesian aliases are kept for muscle memory: contoh, versi, rilis.
 set -eu
 
 ROOT=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
@@ -24,30 +26,30 @@ QUARTO=${QUARTO:-quarto}
 
 usage() {
   cat <<'TXT'
-pemakaian: ./task <perintah>
+usage: ./task <command>
 
-  contoh   kompilasi + verifikasi semua contoh (butuh Nim 2.2.12)
-  site     render Indonesia + English, susun public/
-  id       render hanya versi Indonesia
-  en       render hanya English
-  pdf      render PDF kedua bahasa
-  dev      preview lokal (auto-reload)
-  check    contoh + site (gate sebelum commit)
-  versi    cetak versi buku (dari berkas VERSION)
-  rilis    naikkan versi dari pesan commit, lalu commit + tag (--major/--minor/--patch)
+  examples  compile and verify every example (needs Nim 2.2.12)
+  site      render Indonesian + English, assemble public/
+  id        render the Indonesian edition only
+  en        render the English edition only
+  pdf       render the PDF edition of both books
+  dev       local preview with auto-reload
+  check     examples + site (the gate before a commit)
+  version   print the book version (from VERSION)
+  release   bump the version from commit messages, commit, then tag (--major/--minor/--patch)
 
-variabel lingkungan:
-  QUARTO   path ke biner quarto (bawaan: quarto dari PATH)
-  NIM      path ke biner nim (bawaan: nim dari PATH)
+environment:
+  QUARTO   path to the quarto binary (default: quarto from PATH)
+  NIM      path to the nim binary (default: nim from PATH)
 TXT
 }
 
 perlu() {
-  command -v "$1" >/dev/null 2>&1 || { echo "butuh '$1' di PATH" >&2; exit 1; }
+  command -v "$1" >/dev/null 2>&1 || { echo "requires '$1' on PATH" >&2; exit 1; }
 }
 
 case "${1:-help}" in
-  contoh)
+  examples | contoh)
     perlu nim
     bash tools/verify-examples.sh
     ;;
@@ -78,14 +80,14 @@ case "${1:-help}" in
     perlu "$QUARTO"
     "$QUARTO" preview
     ;;
-  versi)
+  version | versi)
     tr -d '[:space:]' < VERSION
     echo
     ;;
-  rilis)
+  release | rilis)
     shift
     perlu git
-    sh tools/rilis.sh "$@"
+    sh tools/release.sh "$@"
     ;;
   check)
     perlu nim
@@ -101,7 +103,7 @@ case "${1:-help}" in
     usage
     ;;
   *)
-    echo "perintah tidak dikenal: $1" >&2
+    echo "unknown command: $1" >&2
     echo >&2
     usage >&2
     exit 2

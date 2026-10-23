@@ -101,7 +101,7 @@ Panjang: 900–1.400 kata. Satu bab = satu sesi baca 10–15 menit. Lebih dari i
 ## Definition of Done
 
 - [ ] Bisa dibaca mandiri tanpa bab sebelumnya.
-- [ ] Semua snippet ada di `examples/` dan `./task contoh` hijau.
+- [ ] Semua snippet ada di `examples/` dan `./task examples` hijau.
 - [ ] Minimal satu error sengaja, dengan cara membacanya.
 - [ ] Latihan + jawaban di lampiran.
 - [ ] Tidak ada istilah di luar glosarium tanpa definisi.
