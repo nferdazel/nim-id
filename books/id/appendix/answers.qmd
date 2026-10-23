@@ -725,9 +725,9 @@ hi!
 
 Tanpa tanda bintang, `shout` tidak akan terlihat dari `main.nim`.
 
-**2.** Outputnya `42`, karena `double(21)` menghasilkan `42`. Berkas kedua tidak boleh memanggil
-`mathx.double(21)`. `from mathx import double` hanya memasukkan nama `double`, bukan nama modul
-`mathx`, sehingga `mathx` dianggap identifier yang belum dideklarasikan.
+**2.** Outputnya `42`, karena `double(21)` menghasilkan `42`. Kualifikasi tetap sah: `mathx.double(21)`
+juga menghasilkan `42`, karena `from` hanya membatasi nama yang boleh dipakai tanpa kualifikasi,
+bukan menghapus nama modulnya. Kalau kualifikasi ingin dipaksa, tulis `from mathx import nil`.
 
 **3.** Pesannya `undeclared identifier: 'textutils'`. Garis miring di dalam ekspresi adalah operator
 pembagian, bukan penunjuk modul. Modul yang diimpor bernama `format`, jadi kualifikasi yang benar
@@ -1092,9 +1092,9 @@ Infix
 Simpul luar adalah `Infix` karena `2 * 3` adalah operasi dua operand. Anaknya: operator, lalu kedua
 operand.
 
-## Bab: Concept dan pencocokan tipe
+## Bab: Konsep dan pencocokan tipe
 
-**1.** Concept `Sized` beserta prosedur yang memakainya.
+**1.** Konsep `Sized` beserta prosedur yang memakainya.
 
 ```{.nim}
 type
@@ -1118,7 +1118,7 @@ size 3
 Compiler menolak dengan `concept predicate failed`. Ini bedanya `concept` dari sekadar "punya field
 bernama sama": tipenya ikut diperiksa.
 
-**3.** Menggabungkan dua concept dengan `and`.
+**3.** Menggabungkan dua konsep dengan `and`.
 
 ```{.nim}
 type
@@ -1141,9 +1141,9 @@ echo label(Crate(name: "kit", size: 3))
 kit (3)
 ```
 
-**4.** `Named` adalah concept, bukan tipe yang bisa disimpan di memori, jadi `var value: Named`
+**4.** `Named` adalah konsep, bukan tipe yang bisa disimpan di memori, jadi `var value: Named`
 ditolak sebagai `invalid type: 'Named' for var`. Yang setara adalah mendeklarasikan tipe konkret yang
-memenuhi concept itu.
+memenuhi konsep itu.
 
 ```{.nim}
 type
@@ -1161,7 +1161,7 @@ echo value.name
 Ada
 ```
 
-## Bab: Object variant dan `distinct`
+## Bab: Object varian dan `distinct`
 
 **1.** Tambahkan `triangle` pada enum dan cabang `case` barunya. Fieldnya harus berbeda dari nama yang
 sudah dipakai, jadi `height` milik `rect` tidak bisa dipakai lagi; di sini dipakai `altitude`.
@@ -1222,15 +1222,14 @@ id pengguna dari angka lain. Program kehilangan pengamannya: nilai id bisa tertu
 atau angka biasa tanpa satu pun error, dan bug seperti ini sering baru terlihat di produksi. `distinct`
 membuat kekeliruan itu ditolak saat kompilasi, dan itulah alasan utama memakainya.
 
-**5.** Pemeriksaan otomatis saat kompilasi hanya bisa dilakukan kalau compiler tahu nilai penandanya.
-Pada ekspresi `Shape(kind: rect, ...).radius`, penanda memang literal, tapi akses field lewat nilai
-sementara tetap diperiksa saat berjalan; setelah konstruksi, Nim menyisipkan pemeriksaan yang membaca
-`kind` dan memastikan fieldnya sesuai. Cara menghindarinya adalah membaca lewat `case` pada penanda,
-sehingga cabang yang salah tidak pernah dieksekusi.
+**5.** Nim tidak memeriksa akses field varian saat kompilasi. Setiap akses disertai pemeriksaan
+yang membaca `kind` lalu memastikan fieldnya sesuai, dan pemeriksaan itu berjalan saat program
+berjalan, baik objeknya nilai sementara maupun disimpan di `let` atau `var`. Cara menghindarinya
+adalah membaca lewat `case` pada penanda, sehingga cabang yang salah tidak pernah dieksekusi.
 
 ## Bab: `ref`, `ptr`, dan `nil`
 
-**1.** Dua instance, satu lewat `new`, satu lewat konstruktor literal:
+**1.** Dua instance, keduanya lewat `new` lalu diisi:
 
 ```nim
 type Book = ref object
@@ -1240,7 +1239,9 @@ var a: Book
 new(a)
 a.title = "Nim in Action"
 
-var b = Book(title: "Programming Nim")
+var b: Book
+new(b)
+b.title = "Programming Nim"
 
 echo a.title
 echo b.title
@@ -1339,8 +1340,8 @@ menambahkan pendeteksi siklus yang menemukan pasangan seperti itu dan membebaska
 main.nim(4, 1) Error: signature for '=destroy' must be proc[T: object](x: var T) or proc[T: object](x: T)
 ```
 
-`=destroy` hanya boleh untuk tipe `object` nilai dan `ref object` yang sudah dibebaskan otomatis
-oleh ARC/ORC. `Person` di sini adalah `ref object`, jadi hooknya tidak berlaku. Perbaikannya,
+`=destroy` hanya berlaku untuk tipe `object` nilai. `ref object` sudah dibebaskan otomatis oleh
+ARC/ORC, jadi hooknya justru tidak diterima. `Person` di sini adalah `ref object`. Perbaikannya,
 hapus prosedur itu dan serahkan pembebasan ke ARC/ORC, atau pindahkan sumber dayanya ke tipe
 `object` nilai yang dipegang oleh referensi tersebut.
 
@@ -1660,7 +1661,7 @@ total: 27
 
 **3.** Contoh yang mengubah isi `<div>`, dijalankan dari halaman HTML yang punya elemen itu:
 
-```js
+```nim
 import std/dom
 
 document.getElementById("out").textContent = "from Nim"

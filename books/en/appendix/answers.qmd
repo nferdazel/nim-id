@@ -724,9 +724,10 @@ hi!
 
 Without the star, `shout` would not be visible from `main.nim`.
 
-**2.** The output is `42`, because `double(21)` yields `42`. The second file may not call
-`mathx.double(21)`. `from mathx import double` brings in the name `double`, not the module name
-`mathx`, so `mathx` is treated as an undeclared identifier.
+**2.** The output is `42`, because `double(21)` yields `42`. Qualification still works:
+`mathx.double(21)` also yields `42`, because `from` only restricts which names may be used without
+qualification; it does not remove the module name. To force qualification, write
+`from mathx import nil`.
 
 **3.** The message is `undeclared identifier: 'textutils'`. A slash inside an expression is the
 division operator, not a module selector. The imported module is named `format`, so the correct
@@ -1217,15 +1218,14 @@ any other number. The program loses its guard: an id value can be mixed up with 
 number with no error raised, and this kind of bug often surfaces only in production. `distinct` makes
 that mistake a compile error, which is the main reason to use it.
 
-**5.** The automatic check at compile time only works when the compiler knows the tag's value. In the
-expression `Shape(kind: rect, ...).radius` the tag is a literal, but an access through a temporary
-value is still checked while the program runs: after construction, Nim inserts a check that reads
-`kind` and confirms the field belongs to it. The way around it is to read through a `case` on the tag,
-so the wrong branch is never executed.
+**5.** Nim does not check variant field access at compile time. Every access carries a check that
+reads `kind` and confirms the field belongs to it, and that check runs while the program runs, whether
+the object is a temporary or stored in a `let` or `var`. The way around it is to read through a `case`
+on the tag, so the wrong branch is never executed.
 
 ## Chapter: `ref`, `ptr`, and `nil`
 
-**1.** Two instances, one through `new`, one through the constructor literal:
+**1.** Two instances, both through `new` and then filled in:
 
 ```nim
 type Book = ref object
@@ -1235,7 +1235,9 @@ var a: Book
 new(a)
 a.title = "Nim in Action"
 
-var b = Book(title: "Programming Nim")
+var b: Book
+new(b)
+b.title = "Programming Nim"
 
 echo a.title
 echo b.title
@@ -1334,8 +1336,8 @@ detector that finds such pairs and frees them.
 main.nim(4, 1) Error: signature for '=destroy' must be proc[T: object](x: var T) or proc[T: object](x: T)
 ```
 
-`=destroy` is only for value `object` types and for `ref object`s that ARC/ORC already frees
-automatically. `Person` here is a `ref object`, so the hook does not apply. The fix is to remove
+`=destroy` only applies to value `object` types. A `ref object` is already freed automatically by
+ARC/ORC, so the hook is rejected. `Person` here is a `ref object`. The fix is to remove
 the procedure and let ARC/ORC free it, or to move the resource into a value `object` that the
 reference holds.
 
@@ -1654,7 +1656,7 @@ total: 27
 **3.** An example that changes the contents of a `<div>`, loaded from an HTML page that has the
 element:
 
-```js
+```nim
 import std/dom
 
 document.getElementById("out").textContent = "from Nim"
