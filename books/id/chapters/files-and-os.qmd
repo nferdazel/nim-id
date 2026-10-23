@@ -1,0 +1,221 @@
+# Berkas, direktori, dan OS
+
+Hampir setiap program akhirnya menyentuh berkas: membaca konfigurasi, menulis log, atau melihat isi
+direktori. Di banyak bahasa, urusan ini tersebar di beberapa pustaka. Nim mengumpulkannya di satu
+modul: `std/os`. Bab ini memakai modul itu untuk hal yang paling sering dibutuhkan, sekaligus
+menunjukkan kenapa `import std/os` tidak boleh terlupa.
+
+::: {.callout-note}
+## Tujuan bab
+
+Setelah bab ini, pembaca bisa membongkar dan menyusun jalur berkas, menulis lalu membaca berkas,
+menelusuri direktori dengan keluaran yang stabil, membaca argumen dan variabel lingkungan, serta
+membaca pesan `undeclared identifier` saat sebuah modul lupa diimpor.
+:::
+
+## Satu pintu: modul `std/os`
+
+`std/os` memuat nama berkas, direktori, argumen, dan variabel lingkungan. Kita mulai dari operasi
+jalur yang tidak menyentuh berkas sama sekali. Simpan kode berikut sebagai `main.nim`, lalu jalankan
+`nim c -r main.nim`.
+
+```{.nim}
+import std/os
+
+let path = "/srv/app/logs/today.txt"
+let (dir, name, ext) = splitFile(path)
+
+echo "dir:  ", dir
+echo "name: ", name
+echo "ext:  ", ext
+echo "back: ", joinPath(dir, name & ext)
+```
+
+```{.txt}
+dir:  /srv/app/logs
+name: today
+ext:  .txt
+back: /srv/app/logs/today.txt
+```
+
+`splitFile` membongkar satu jalur menjadi tiga bagian: direktori, nama, dan ekstensi. Perhatikan
+bahwa direktori tidak diakhiri pemisah. `joinPath` adalah kebalikannya: ia menyatukan bagian demi
+bagian dengan pemisah yang benar untuk sistem tempat program berjalan.
+
+Pemisah jalur berbeda antara Unix (`/`) dan Windows (`\`). Karena itu jangan menyambung jalur
+dengan `&`. Pakai `joinPath`, atau operator `/` yang juga disediakan modul ini.
+
+`splitFile` juga bekerja untuk jalur tanpa direktori: `splitFile("notes.txt")` memberi direktori
+kosong. Untuk mengambil satu bagian saja, ada pintasan `extractFilename`, `parentDir`, dan
+`tailDir`. Pakai `splitFile` kalau butuh dua bagian sekaligus; pakai pintasan kalau hanya butuh satu.
+
+## Menulis lalu membaca berkas
+
+Dua prosedur menutup sebagian besar kebutuhan harian: `writeFile` dan `readFile`.
+
+```{.nim}
+import std/[os, strutils]
+
+let path = getTempDir() / "nim_id_files_demo.txt"
+
+writeFile(path, "first line\nsecond line")
+
+for line in readFile(path).splitLines():
+  echo line
+
+removeFile(path)
+echo "exists after remove: ", fileExists(path)
+```
+
+```{.txt}
+first line
+second line
+exists after remove: false
+```
+
+`writeFile` menerima jalur dan satu string, lalu menimpanya kalau berkas sudah ada. `readFile`
+mengembalikan seluruh isi sebagai satu string; barisnya dipecah dengan `splitLines` dari
+`std/strutils`.
+
+Contoh ini menulis ke `getTempDir()`, bukan ke direktori kerja. Alasannya praktis: contoh harus
+berjalan di mesin siapa pun tanpa meninggalkan berkas di tempat yang tidak terduga. Setelah selesai,
+`removeFile` menghapusnya dan `fileExists` membuktikan berkasnya sudah tidak ada. Untuk membuat
+direktori, pakai `createDir`; untuk memeriksa keberadaannya, `dirExists`.
+
+Kalau berkasnya tidak ada, `readFile` tidak mengembalikan penanda error seperti di C. Ia melempar
+`IOError`, dan pesannya memuat jalur yang dicari. Pola Nim konsisten di sini: kesalahan yang tidak
+bisa diabaikan menjadi pengecualian, lalu ditangani dengan `try` dan `except` di tempat yang tahu
+cara menanganinya.
+
+## Menelusuri direktori
+
+Untuk melihat isi direktori, pakai `walkDir`. Ia menghasilkan pasangan: jenis entri dan jalurnya.
+
+```{.nim}
+import std/[os, algorithm]
+
+let dir = getTempDir() / "nim_id_walk_demo"
+createDir(dir)
+writeFile(dir / "b.txt", "second")
+writeFile(dir / "a.txt", "first")
+
+var names: seq[string]
+for kind, path in walkDir(dir):
+  names.add extractFilename(path)
+
+sort names
+for name in names:
+  echo name
+
+removeDir(dir)
+```
+
+```{.txt}
+a.txt
+b.txt
+```
+
+Urutan `walkDir` mengikuti urutan sistem berkas dan tidak dijamin. Karena itu nama dikumpulkan dulu,
+baru diurutkan dengan `sort` dari `std/algorithm`. Tanpa langkah ini, keluaran bisa berbeda setiap
+kali program dijalankan, dan contoh yang keluarannya berubah tidak bisa dipakai untuk menguji.
+
+`kind` bertipe `PathComponent`. Nilainya antara lain `pcFile`, `pcDir`, dan dua varian tautan
+simbolik. Contoh di atas mengabaikan `kind`, tetapi `case` atas nilainya adalah cara lazim
+memisahkan berkas dari subdirektori.
+
+`walkDir` tidak masuk ke subdirektori; ia membaca satu tingkat saja. Untuk menelusuri seluruh pohon
+direktori, ada `walkDirRec`, yang mengeluarkan setiap berkas di bawah direktori awal beserta
+jalurnya.
+
+## Argumen dan variabel lingkungan
+
+Banyak alat kecil mengambil konfigurasi dari argumen dan variabel lingkungan. Keduanya ada di
+`std/os`.
+
+```{.nim}
+import std/os
+
+echo "arguments: ", paramCount()
+
+for i in 0 ..< paramCount():
+  echo i, ": ", paramStr(i)
+```
+
+```{.txt}
+arguments: 0
+```
+
+`paramCount()` menghitung argumen setelah nama program, dan `paramStr(i)` mengambil argumen ke-`i`
+mulai dari nol. Saat contoh di atas dijalankan tanpa argumen, hasilnya nol. Jalankan biner hasilnya
+dengan dua argumen tambahan, dan perulangan itu akan mencetak keduanya.
+
+```{.nim}
+import std/os
+
+echo getEnv("NIM_ID_GREETING", "no greeting set")
+```
+
+```{.txt}
+no greeting set
+```
+
+`getEnv` menerima nama variabel dan nilai cadangan. Kalau `NIM_ID_GREETING` belum diatur, yang
+dipakai adalah `"no greeting set"`. Nilai cadangan mencegah program gagal hanya karena sebuah
+variabel lingkungan belum disetel. Kalau seluruh argumen dibutuhkan sebagai satu barisan, ada
+`commandLineParams()` yang mengembalikannya sebagai `seq[string]`.
+
+## Error sengaja: lupa mengimpor `std/os`
+
+Nama-nama di atas tidak tersedia begitu saja. Lupakan `import std/os`, dan compiler berhenti di
+baris pertama.
+
+```{.nim}
+echo getCurrentDir()
+```
+
+```{.txt}
+main.nim(1, 6) Error: undeclared identifier: 'getCurrentDir'
+```
+
+Baca dari kiri. `main.nim` adalah berkasnya. `(1, 6)` berarti baris 1, kolom 6: posisi awal nama
+yang tidak dikenal, tepat setelah `echo `. `undeclared identifier` berarti nama itu dipakai tanpa
+pernah dideklarasikan atau diimpor. Baris `candidates` tepat di bawahnya menawarkan nama terdekat
+yang mungkin dimaksud.
+
+Perbaikan terpendek: tambahkan `import std/os` di baris pertama. Kebiasaan yang berguna, kalau
+compiler menyebut nama yang menurut kita seharusnya ada, periksa daftar `import` lebih dulu.
+
+## Latihan
+
+1. Cetak nama berkas dan ekstensinya dari jalur `/etc/nim/nim.cfg` memakai `splitFile`.
+2. Tanpa menjalankan, prediksi keluarannya:
+   ```{.nim}
+   import std/os
+
+   echo splitFile("notes.txt").name
+   ```
+3. Tulis program yang menulis dua baris ke sebuah berkas di `getTempDir()`, membacanya kembali,
+   lalu mencetak jumlah barisnya. Bersihkan berkas di akhir.
+4. Kode berikut gagal. Perbaiki, lalu jelaskan kenapa:
+   ```{.nim}
+   import std/os
+
+   if fileExists("/tmp") == "yes":
+     echo "found"
+   ```
+
+Jawaban ada di [Lampiran A](../appendix/answers.qmd).
+
+## Ringkasan
+
+- `std/os` menangani jalur, berkas, direktori, argumen, dan variabel lingkungan.
+- Susun jalur dengan `joinPath` atau `/`, bukan dengan `&`, supaya pemisahnya benar di setiap sistem.
+- `readFile` dan `writeFile` cukup untuk berkas biasa; bersihkan berkas sementara setelah dipakai.
+- Urutan `walkDir` tidak dijamin; urutkan sendiri kalau keluaran harus stabil.
+- Lupa `import std/os` menghasilkan `undeclared identifier` di kompilasi, bukan crash saat runtime.
+
+## Selanjutnya
+
+Bab berikutnya membahas `unittest`: menulis tes yang duduk di samping kode, membaca keluarannya, dan
+menjadikan tes sebagai kebiasaan, bukan tambahan di akhir proyek. Lanjut ke
+[`unittest` dan disiplin tes](unit-testing.qmd).

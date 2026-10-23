@@ -1,0 +1,217 @@
+# Files, directories, and OS
+
+Sooner or later every program touches a file: reading configuration, writing a log, or listing a
+directory. In many languages that work is spread across several libraries. Nim keeps it in one
+module: `std/os`. This chapter uses that module for the tasks you will reach for most, and shows why
+`import std/os` is not optional.
+
+::: {.callout-note}
+## What you will be able to do
+
+After this chapter you can split and rebuild file paths, write and then read a file, walk a
+directory with stable output, read command-line arguments and environment variables, and read the
+`undeclared identifier` message when a module is not imported.
+:::
+
+## One door: the `std/os` module
+
+`std/os` covers file names, directories, arguments, and environment variables. We start with path
+operations that never touch a file. Save the following as `main.nim`, then run
+`nim c -r main.nim`.
+
+```{.nim}
+import std/os
+
+let path = "/srv/app/logs/today.txt"
+let (dir, name, ext) = splitFile(path)
+
+echo "dir:  ", dir
+echo "name: ", name
+echo "ext:  ", ext
+echo "back: ", joinPath(dir, name & ext)
+```
+
+```{.txt}
+dir:  /srv/app/logs
+name: today
+ext:  .txt
+back: /srv/app/logs/today.txt
+```
+
+`splitFile` breaks one path into three parts: directory, name, and extension. Notice that the
+directory has no trailing separator. `joinPath` is the reverse: it joins the parts with the
+separator the running system expects.
+
+Path separators differ between Unix (`/`) and Windows (`\`). So do not glue paths with `&`. Use
+`joinPath`, or the `/` operator the same module provides.
+
+`splitFile` also works for a path with no directory: `splitFile("notes.txt")` yields an empty
+directory. To take a single part, there are shortcuts: `extractFilename`, `parentDir`, and `tailDir`.
+Reach for `splitFile` when you need two parts at once, and a shortcut when you need only one.
+
+## Writing and reading a file
+
+Two procedures cover most daily needs: `writeFile` and `readFile`.
+
+```{.nim}
+import std/[os, strutils]
+
+let path = getTempDir() / "nim_id_files_demo.txt"
+
+writeFile(path, "first line\nsecond line")
+
+for line in readFile(path).splitLines():
+  echo line
+
+removeFile(path)
+echo "exists after remove: ", fileExists(path)
+```
+
+```{.txt}
+first line
+second line
+exists after remove: false
+```
+
+`writeFile` takes a path and a single string, and overwrites the file if it already exists.
+`readFile` returns the whole contents as one string; the lines are split with `splitLines` from
+`std/strutils`.
+
+This example writes into `getTempDir()`, not the working directory. The reason is practical: the
+example must run on any machine without leaving files in unexpected places. When it finishes,
+`removeFile` deletes the file and `fileExists` proves it is gone. To create a directory, use
+`createDir`; to test for one, `dirExists`.
+
+If the file is missing, `readFile` does not return an error marker as in C. It raises `IOError`, and
+the message carries the path it looked for. Nim is consistent here: an error you cannot ignore
+becomes an exception, handled with `try` and `except` where the code knows what to do about it.
+
+## Walking a directory
+
+To list the contents of a directory, use `walkDir`. It yields a pair: the entry kind and its path.
+
+```{.nim}
+import std/[os, algorithm]
+
+let dir = getTempDir() / "nim_id_walk_demo"
+createDir(dir)
+writeFile(dir / "b.txt", "second")
+writeFile(dir / "a.txt", "first")
+
+var names: seq[string]
+for kind, path in walkDir(dir):
+  names.add extractFilename(path)
+
+sort names
+for name in names:
+  echo name
+
+removeDir(dir)
+```
+
+```{.txt}
+a.txt
+b.txt
+```
+
+`walkDir` follows the file system order, which is not guaranteed. So the names are collected first,
+then sorted with `sort` from `std/algorithm`. Without that step the output can differ on every run,
+and an example whose output changes cannot be checked.
+
+`kind` has type `PathComponent`. Its values include `pcFile`, `pcDir`, and two symlink variants. The
+example ignores `kind`, but a `case` over it is the usual way to tell files from subdirectories.
+
+`walkDir` does not descend into subdirectories; it reads one level. To traverse a whole directory
+tree, use `walkDirRec`, which yields every file below the starting directory along with its path.
+
+## Arguments and environment variables
+
+Many small tools take their configuration from arguments and environment variables. Both live in
+`std/os`.
+
+```{.nim}
+import std/os
+
+echo "arguments: ", paramCount()
+
+for i in 0 ..< paramCount():
+  echo i, ": ", paramStr(i)
+```
+
+```{.txt}
+arguments: 0
+```
+
+`paramCount()` counts the arguments after the program name, and `paramStr(i)` reads the `i`-th
+argument, starting at zero. Run without arguments, the example prints zero. Run the resulting
+binary with two extra arguments, and the loop prints both of them.
+
+```{.nim}
+import std/os
+
+echo getEnv("NIM_ID_GREETING", "no greeting set")
+```
+
+```{.txt}
+no greeting set
+```
+
+`getEnv` takes a variable name and a fallback value. If `NIM_ID_GREETING` is not set, the value used
+is `"no greeting set"`. The fallback keeps the program from failing just because an environment
+variable was never configured. When you need every argument as one sequence, `commandLineParams()`
+returns them as a `seq[string]`.
+
+## Deliberate error: forgetting to import `std/os`
+
+The names above are not available by default. Forget `import std/os`, and the compiler stops on the
+first line.
+
+```{.nim}
+echo getCurrentDir()
+```
+
+```{.txt}
+main.nim(1, 6) Error: undeclared identifier: 'getCurrentDir'
+```
+
+Read it from the left. `main.nim` is the file. `(1, 6)` is line 1, column 6: the start of the
+unknown name, just after `echo `. `undeclared identifier` means the name was used without ever being
+declared or imported. The `candidates` line right below offers the closest names it knows.
+
+The shortest fix: add `import std/os` on the first line. A useful habit, when the compiler names
+something you were sure existed, is to check the `import` list first.
+
+## Exercises
+
+1. Print the file name and extension of the path `/etc/nim/nim.cfg` using `splitFile`.
+2. Without running it, predict the output:
+   ```{.nim}
+   import std/os
+
+   echo splitFile("notes.txt").name
+   ```
+3. Write a program that writes two lines to a file in `getTempDir()`, reads it back, then prints the
+   number of lines. Clean up the file at the end.
+4. The code below fails. Fix it, then explain why:
+   ```{.nim}
+   import std/os
+
+   if fileExists("/tmp") == "yes":
+     echo "found"
+   ```
+
+Answers are in [Appendix A](../appendix/answers.qmd).
+
+## Summary
+
+- `std/os` handles paths, files, directories, arguments, and environment variables.
+- Build paths with `joinPath` or `/`, not with `&`, so the separator is right on every system.
+- `readFile` and `writeFile` cover ordinary files; clean up temporary files after use.
+- `walkDir` order is not guaranteed; sort yourself when the output must be stable.
+- A missing `import std/os` gives an `undeclared identifier` at compile time, not a crash at runtime.
+
+## Next
+
+The next chapter covers `unittest`: writing tests that sit next to the code, reading their output,
+and making testing a habit rather than something bolted on at the end. Continue to
+[`unittest` and test discipline](unit-testing.qmd).

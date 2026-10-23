@@ -1,0 +1,4 @@
+dir:  /srv/app/logs
+name: today
+ext:  .txt
+back: /srv/app/logs/today.txt
