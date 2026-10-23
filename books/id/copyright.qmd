@@ -1,0 +1,34 @@
+# Hak Cipta dan Lisensi {.unnumbered}
+
+**Dasar Pemrograman Nim**\
+Belajar bahasa Nim dari nol, dalam bahasa Indonesia
+
+Penulis: Fredianto\
+Versi: {{< var version >}}\
+Tanggal: 23 Oktober 2026
+
+© 2026 Fredianto. Buku ini diterbitkan sendiri, tanpa penerbit dan tanpa ISBN.
+
+## Teks buku
+
+Teks buku dilisensikan di bawah [Creative Commons Attribution-ShareAlike 4.0
+International (CC BY-SA 4.0)](https://creativecommons.org/licenses/by-sa/4.0/deed.id).
+
+Artinya pembaca boleh menyalin, mencetak, dan mengubah teks buku, termasuk untuk keperluan
+komersial. Syaratnya dua: sebutkan penulis dan sumbernya, dan sebarkan hasil ubahan dengan
+lisensi yang sama. Teks lengkap lisensi ada di akar repositori pada berkas `LICENSE`.
+
+## Kode contoh
+
+Semua kode di `examples/` dan potongan kode di dalam buku dilisensikan di bawah
+[MIT](https://opensource.org/license/mit). Pembaca boleh memakai, mengubah, dan menjual kode
+tanpa syarat atribusi. Teks lengkapnya ada di berkas `LICENSE-CODE`.
+
+## Sumber dan kontak
+
+- Kode sumber buku: [github.com/nferdazel/nim-id](https://github.com/nferdazel/nim-id)
+- Situs: [nim.qouver.com](https://nim.qouver.com)
+- Laporan kesalahan: [github.com/nferdazel/nim-id/issues](https://github.com/nferdazel/nim-id/issues)
+
+Kesalahan yang ditemukan pembaca adalah bahan perbaikan, bukan aib. Kalau ada contoh yang tidak
+jalan di versi Nim terbaru, laporkan lewat issues.

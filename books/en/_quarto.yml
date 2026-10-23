@@ -11,6 +11,7 @@ book:
   language: en
   chapters:
     - index.qmd
+    - copyright.qmd
     - chapters/what-is-nim.qmd
     - chapters/installation.qmd
     - chapters/workflow.qmd
