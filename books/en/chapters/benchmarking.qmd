@@ -1,0 +1,292 @@
+# Benchmarks and profiling
+
+A slow program is rarely slow on the line you blame. Intuition points at the long loop; the
+measurement often points at a small procedure that is called far more often. The sensible order is to
+measure first and guess later. The trouble is that measuring has its own traps, and those traps are
+invisible in the code.
+
+::: {.callout-note}
+## What you will be able to do
+
+After this chapter you can measure a block with `getMonoTime`, read a `Duration` and
+`inMilliseconds`, write examples whose output stays stable, tell CPU time from wall-clock time, and
+run the profiler that ships with Nim 2.2.12.
+:::
+
+## Measuring one block
+
+`std/monotimes` provides `getMonoTime`. It reads the monotonic clock: the value only moves forward and
+is not affected by system clock adjustments. This clock is for intervals, not for recording dates.
+
+```{.nim}
+import std/[monotimes, times]
+
+proc sumUp(iterations: int): int =
+  for i in 0 ..< iterations:
+    result += i
+
+# Warm-up: the first run pays for page faults and cold caches.
+discard sumUp(10_000)
+
+const Iterations = 200_000
+let start = getMonoTime()
+let checksum = sumUp(Iterations)
+let elapsed = getMonoTime() - start
+
+echo "iterations: ", Iterations
+echo "checksum: ", checksum
+echo "elapsed is not negative: ", elapsed.inMilliseconds >= 0
+```
+
+```{.txt}
+iterations: 200000
+checksum: 19999900000
+elapsed is not negative: true
+```
+
+Subtracting two `MonoTime` values yields a `Duration`. That number is read in other units through
+`inMilliseconds`, `inMicroseconds`, or `inSeconds`, and those functions live in `std/times`, not in
+`std/monotimes`. Both modules are therefore imported together: one supplies the clock, the other the
+way to read it.
+
+The duration itself never appears in the output, and that is deliberate. A timing number changes on
+every machine and every run, so an output block containing one can never match during automated
+checks. The examples stay identical on any machine; time is used for comparisons, and the comparison
+result is what gets printed.
+
+The line `discard sumUp(10_000)` is a *warm-up*. On the first call, memory pages have not been
+touched yet and the processor cache is still cold, so the measurement looks slower than the code
+really is.
+
+## One measurement is not enough
+
+A single measurement almost always lies, and always in the same direction: the number comes out too
+large. Other processes run in between, the garbage collector takes its turn, or the processor slows
+down because of heat. Noise can only add time, never remove it.
+
+```{.nim}
+import std/[monotimes, times]
+
+proc checksum(n: int): int =
+  for i in 1 .. n:
+    result += i
+
+const Repetitions = 5
+var best = high(int64)
+var last = 0
+
+# Repeat the same block and keep the fastest run.
+for _ in 1 .. Repetitions:
+  let start = getMonoTime()
+  last = checksum(50_000)
+  let elapsed = (getMonoTime() - start).inMilliseconds
+  if elapsed < best:
+    best = elapsed
+
+echo "repetitions: ", Repetitions
+echo "checksum: ", last
+echo "best is not negative: ", best >= 0
+```
+
+```{.txt}
+repetitions: 5
+checksum: 1250025000
+best is not negative: true
+```
+
+Repeating the same block and keeping the fastest run gives an estimate closer to the real cost.
+`best` starts at `high(int64)`, so the first round always replaces it. The example only reports that
+the result is not negative, so the output stays the same on a slow machine and a fast one.
+
+The number of repetitions is a trade-off: too few and the noise still wins, too many and the waiting
+is not worth the information. Five to ten rounds are enough for a block that runs in milliseconds.
+
+## Comparing two versions
+
+The more common question is not "how fast" but "which one is faster". Two versions are measured
+inside the same process, and the results are compared.
+
+```{.nim}
+import std/[monotimes, times]
+
+proc byConcatenation(rounds: int): string =
+  for i in 0 ..< rounds:
+    result = result & "x"
+
+proc byAppend(rounds: int): string =
+  for i in 0 ..< rounds:
+    result.add 'x'
+
+const Rounds = 20_000
+
+# Warm up both versions before the timed runs.
+discard byConcatenation(100)
+discard byAppend(100)
+
+let slowStart = getMonoTime()
+let slowText = byConcatenation(Rounds)
+let slowMs = (getMonoTime() - slowStart).inMilliseconds
+
+let fastStart = getMonoTime()
+let fastText = byAppend(Rounds)
+let fastMs = (getMonoTime() - fastStart).inMilliseconds
+
+echo "same result: ", slowText == fastText
+echo "fast <= slow: ", fastMs <= slowMs
+```
+
+```{.txt}
+same result: true
+fast <= slow: true
+```
+
+The two procedures build a string in different ways. `result = result & "x"` copies the whole old
+string into a new one every time, so the total copying grows quadratically. `result.add 'x'` appends
+a character to the existing buffer, so its cost stays constant on average. At 20,000 rounds both
+produce the same text, but the second one is far cheaper.
+
+The output prints only two booleans: the results match, and the fast version is not slower. Those
+booleans hold on any machine, while the millisecond numbers can drift from 10 to 15 without changing
+the conclusion.
+
+## CPU time and wall-clock time
+
+There are two ways to answer "how long". `cpuTime` from `std/times` counts the processor time the
+process used: the part that was computed, not the part that waited. `epochTime` counts wall-clock
+time as seconds since 1970, useful as a timestamp.
+
+```{.nim}
+import std/times
+
+proc mix(rounds: int): int =
+  for i in 0 ..< rounds:
+    result = result xor i
+
+let before = cpuTime()
+let value = mix(100_000)
+let after = cpuTime()
+
+echo "value: ", value
+echo "cpu time is not negative: ", after - before >= 0.0
+echo "wall clock looks plausible: ", epochTime() > 1.0e9
+```
+
+```{.txt}
+value: 0
+cpu time is not negative: true
+wall clock looks plausible: true
+```
+
+The difference shows up when the program waits: downloading a file uses little CPU time and a lot of
+wall-clock time. For measuring computation, the monotonic clock is the right tool. Do not use
+`epochTime` for intervals, because the system clock can be adjusted and the subtraction can even come
+out negative.
+
+## Deliberate error: `inMilliseconds` wants a `Duration`
+
+The name `inMilliseconds` is easy to remember until the call is wrong. The code below hands it a
+timestamp instead of an interval.
+
+```{.nim}
+import std/[monotimes, times]
+
+let elapsed = getMonoTime() - getMonoTime()
+echo elapsed.inMilliseconds
+
+# epochTime returns a float, not a Duration.
+echo inMilliseconds(epochTime())
+```
+
+```{.txt}
+main.nim(7, 20) Error: type mismatch
+Expression: inMilliseconds(epochTime())
+  [1] epochTime(): float
+
+Expected one of (first mismatch at [position]):
+[1] proc inMilliseconds(dur: Duration): int64
+```
+
+The message carries three useful parts. `Expression:` shows the call under inspection. The line
+`[1] epochTime(): float` shows the type that was given: `float`. The `Expected one of` block shows
+what is accepted: `inMilliseconds(dur: Duration): int64`. One of the two has to change. Since an
+interval is what you want, subtract two `MonoTime` values first, then call `inMilliseconds` on the
+result as in the first example.
+
+## The profiler that ships with Nim
+
+Besides measuring by hand, the Nim compiler includes a sampling profiler. Add `import std/nimprof` and
+compile with two switches:
+
+```bash
+nim c -r --profiler:on --stackTrace:on app.nim
+```
+
+When the program ends it prints `writing profile_results.txt...`, and a file named
+`profile_results.txt` appears in the working directory. It lists stack traces sorted by the time they
+used, with a percentage on each line. The entry at the top is the one to read: that is where the time
+went.
+
+This profiler samples, so its usefulness scales with how long the program runs. A program that
+finishes instantly produces an almost empty file; increase the workload first. Two other switches are
+handy: `--stackTraceMsgs:on` adds a message to each frame, and `--profileVM:on` profiles the code that
+runs at compile time.
+
+## System tools: `perf` and Instruments
+
+For a program that is already large, wrapping one block in `getMonoTime` is not practical. On Linux,
+`perf` samples the entire process:
+
+```bash
+perf record --call-graph dwarf ./app
+perf report
+```
+
+`--call-graph dwarf` asks for full call stacks, so the report can be read as a tree. On macOS that
+role belongs to Instruments, shipped with Xcode. Both work from outside the code and show where the
+whole program spends its time, not one block you picked.
+
+## Reading the results and knowing when to stop
+
+A few habits keep the numbers honest:
+
+- Compare within one machine and one process only. A difference between machines mixes processor
+  speed with build settings.
+- If the gap is the size of the noise, run it again; anything below a factor of two is not worth
+  trusting.
+- Numbers from a small block do not necessarily hold in a real program. Code that touches files or
+  the network is far more expensive.
+
+Optimization is not always needed. If the program already finishes in a time you can wait for,
+chasing milliseconds only adds code that is harder to read. If the time goes into input/output or
+waiting for a network reply, making the arithmetic faster changes nothing. Measure first, find the
+hot spot with a profiler, then change the algorithm: replacing a bad algorithm is almost always worth
+more than patching small details.
+
+## Exercises
+
+1. Change `Iterations` in the first example to 100,000, then predict `checksum` before running it.
+2. Why does no example in this chapter print a duration? Answer using the words "stable output".
+3. Write a program that compares `add` at the end of a `seq` with `insert` at its front, then print a
+   single boolean like the second example.
+4. Remove `import std/times` from the first example, fix the error that appears, and explain the
+   message.
+5. Name two situations where optimizing the code in this chapter is not worth it, with your reasons.
+
+Answers are in [Appendix A](../appendix/answers.qmd).
+
+## Summary
+
+- `getMonoTime` from `std/monotimes` takes an interval; `inMilliseconds` and friends live in
+  `std/times`.
+- A single measurement always overstates the cost; warm up, repeat, then keep the fastest run.
+- Examples in this book never print time, only iteration counts, checksums, and boolean comparisons.
+- `cpuTime` counts processor time, `epochTime` counts wall-clock time; the monotonic clock is used for
+  intervals.
+- Measure first, profile to find the hot spot, and stop once the speed is good enough.
+
+## Next
+
+The numbers are in, and the hot spot is known. What is missing is a binary that runs on a machine
+other than the one that built it. The next chapter covers target selection, compiler switches, and
+static binaries. Go to
+[Cross-compiling and deploying binaries](cross-compile.qmd).

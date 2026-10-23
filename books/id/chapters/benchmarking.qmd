@@ -1,0 +1,291 @@
+# Benchmark dan profiling
+
+Program yang lambat jarang lambat di baris yang dituduh. Intuisi menunjuk perulangan panjang; hasil
+pengukuran sering menunjuk prosedur kecil yang dipanggil jauh lebih sering. Urutan yang masuk akal:
+ukur dulu, baru menebak. Masalahnya, mengukur juga punya jebakan yang tidak terlihat dari kodenya.
+
+::: {.callout-note}
+## Tujuan bab
+
+Setelah bab ini, pembaca bisa mengukur satu blok dengan `getMonoTime`, membaca `Duration` dan
+`inMilliseconds`, menulis contoh yang keluarannya stabil, membedakan waktu CPU dari waktu dinding,
+serta menjalankan profiler bawaan Nim 2.2.12.
+:::
+
+## Mengukur satu blok
+
+`std/monotimes` menyediakan `getMonoTime`. Ia membaca jam monotonik: nilainya selalu naik dan tidak
+terpengaruh penyesuaian jam sistem. Jam ini untuk selang, bukan untuk mencatat tanggal.
+
+```{.nim}
+import std/[monotimes, times]
+
+proc sumUp(iterations: int): int =
+  for i in 0 ..< iterations:
+    result += i
+
+# Warm-up: the first run pays for page faults and cold caches.
+discard sumUp(10_000)
+
+const Iterations = 200_000
+let start = getMonoTime()
+let checksum = sumUp(Iterations)
+let elapsed = getMonoTime() - start
+
+echo "iterations: ", Iterations
+echo "checksum: ", checksum
+echo "elapsed is not negative: ", elapsed.inMilliseconds >= 0
+```
+
+```{.txt}
+iterations: 200000
+checksum: 19999900000
+elapsed is not negative: true
+```
+
+Pengurangan dua `MonoTime` menghasilkan `Duration`. Angka itu dibaca dalam satuan lain lewat
+`inMilliseconds`, `inMicroseconds`, atau `inSeconds`, dan fungsi-fungsi itu tinggal di `std/times`,
+bukan `std/monotimes`. Karena itu kedua modul diimpor bersama: satu menyediakan jamnya, satu cara
+membacanya.
+
+Durasinya sendiri tidak pernah muncul di keluaran, dan itu disengaja. Angka waktu berubah di setiap
+mesin dan setiap kali dijalankan, sehingga blok keluaran yang memuatnya tidak mungkin cocok saat
+diperiksa otomatis. Contoh di buku ini dijaga supaya keluarannya sama di mesin mana pun; waktu
+dipakai untuk membandingkan, hasil perbandingannya yang dicetak.
+
+Baris `discard sumUp(10_000)` adalah *warm-up*. Pada pemanggilan pertama, halaman memori belum
+disentuh dan cache prosesor masih dingin, jadi ukurannya lebih lambat dari kemampuan sebenarnya.
+
+## Satu kali ukur tidak cukup
+
+Satu kali pengukuran hampir selalu menipu, dan arahnya selalu sama: angkanya jadi lebih besar. Proses
+lain ikut berjalan, pengumpul sampah mengambil giliran, atau prosesor melambat karena panas.
+Gangguan hanya bisa menambah waktu, tidak mengurangi.
+
+```{.nim}
+import std/[monotimes, times]
+
+proc checksum(n: int): int =
+  for i in 1 .. n:
+    result += i
+
+const Repetitions = 5
+var best = high(int64)
+var last = 0
+
+# Repeat the same block and keep the fastest run.
+for _ in 1 .. Repetitions:
+  let start = getMonoTime()
+  last = checksum(50_000)
+  let elapsed = (getMonoTime() - start).inMilliseconds
+  if elapsed < best:
+    best = elapsed
+
+echo "repetitions: ", Repetitions
+echo "checksum: ", last
+echo "best is not negative: ", best >= 0
+```
+
+```{.txt}
+repetitions: 5
+checksum: 1250025000
+best is not negative: true
+```
+
+Mengulang blok yang sama lalu menyimpan yang tercepat memberi taksiran yang lebih dekat ke biaya
+sebenarnya. `best` mulai dari `high(int64)`, jadi putaran pertama selalu menggantinya. Contoh ini
+menjalankan bloknya lima kali dan hanya melaporkan bahwa hasilnya tidak negatif, supaya keluarannya
+tetap sama di mesin lambat maupun cepat.
+
+Jumlah ulangan ada komprominya: terlalu sedikit dan derau masih menang, terlalu banyak dan waktu
+tunggunya tidak sebanding. Lima sampai sepuluh putaran cukup untuk blok yang berjalan dalam
+hitungan milidetik.
+
+## Membandingkan dua versi
+
+Pertanyaan yang lebih sering muncul bukan "berapa cepat", melainkan "mana yang lebih cepat". Untuk
+itu, dua versi diukur dalam satu proses yang sama, lalu hasilnya dibandingkan.
+
+```{.nim}
+import std/[monotimes, times]
+
+proc byConcatenation(rounds: int): string =
+  for i in 0 ..< rounds:
+    result = result & "x"
+
+proc byAppend(rounds: int): string =
+  for i in 0 ..< rounds:
+    result.add 'x'
+
+const Rounds = 20_000
+
+# Warm up both versions before the timed runs.
+discard byConcatenation(100)
+discard byAppend(100)
+
+let slowStart = getMonoTime()
+let slowText = byConcatenation(Rounds)
+let slowMs = (getMonoTime() - slowStart).inMilliseconds
+
+let fastStart = getMonoTime()
+let fastText = byAppend(Rounds)
+let fastMs = (getMonoTime() - fastStart).inMilliseconds
+
+echo "same result: ", slowText == fastText
+echo "fast <= slow: ", fastMs <= slowMs
+```
+
+```{.txt}
+same result: true
+fast <= slow: true
+```
+
+Kedua prosedur membentuk string dengan cara berbeda. `result = result & "x"` menyalin seluruh isi
+string lama ke string baru setiap kali, sehingga total penyalinan tumbuh kuadratik. `result.add 'x'`
+menambah karakter ke penyangga yang sudah ada, sehingga biayanya rata-rata tetap. Pada 20.000
+putaran keduanya menghasilkan teks yang sama, tetapi yang kedua jauh lebih murah.
+
+Keluaran yang dicetak hanya dua boolean: hasilnya sama, dan versi cepat tidak lebih lambat. Boolean
+itu tetap benar di mesin mana pun, sedangkan angka milidetiknya bisa bergeser dari 10 ke 15 tanpa
+mengubah kesimpulan.
+
+## Waktu CPU dan waktu dinding
+
+Ada dua cara menjawab "berapa lama". `cpuTime` dari `std/times` menghitung waktu prosesor yang dipakai
+proses: bagian yang dihitung, bukan yang menunggu. `epochTime` menghitung waktu dinding sebagai detik
+sejak 1970, berguna sebagai cap waktu.
+
+```{.nim}
+import std/times
+
+proc mix(rounds: int): int =
+  for i in 0 ..< rounds:
+    result = result xor i
+
+let before = cpuTime()
+let value = mix(100_000)
+let after = cpuTime()
+
+echo "value: ", value
+echo "cpu time is not negative: ", after - before >= 0.0
+echo "wall clock looks plausible: ", epochTime() > 1.0e9
+```
+
+```{.txt}
+value: 0
+cpu time is not negative: true
+wall clock looks plausible: true
+```
+
+Bedanya terasa saat program menunggu: mengunduh berkas menghabiskan sedikit waktu CPU dan banyak
+waktu dinding. Untuk mengukur pekerjaan hitung, jam monotonik lebih tepat. `epochTime` jangan dipakai
+untuk selang, karena jam sistem bisa disesuaikan dan hasil pengurangannya bisa negatif.
+
+## Error sengaja: `inMilliseconds` menerima `Duration`
+
+Nama `inMilliseconds` mudah diingat sampai pemanggilannya salah. Kode berikut mengirim cap waktu,
+bukan selang.
+
+```{.nim}
+import std/[monotimes, times]
+
+let elapsed = getMonoTime() - getMonoTime()
+echo elapsed.inMilliseconds
+
+# epochTime returns a float, not a Duration.
+echo inMilliseconds(epochTime())
+```
+
+```{.txt}
+main.nim(7, 20) Error: type mismatch
+Expression: inMilliseconds(epochTime())
+  [1] epochTime(): float
+
+Expected one of (first mismatch at [position]):
+[1] proc inMilliseconds(dur: Duration): int64
+```
+
+Pesan ini memuat tiga bagian yang berguna. `Expression:` menunjukkan pemanggilan yang diperiksa.
+Baris `[1] epochTime(): float` menunjukkan tipe yang diberikan: `float`. Blok `Expected one of`
+menunjukkan yang diterima: `inMilliseconds(dur: Duration): int64`. Salah satu dari keduanya harus
+berubah. Karena yang diinginkan selang, kurangi dua `MonoTime` lebih dulu, lalu panggil
+`inMilliseconds` pada hasilnya seperti pada contoh pertama.
+
+## Profiler bawaan Nim
+
+Selain mengukur sendiri, compiler Nim menyertakan profiler sampling. Tambahkan `import std/nimprof`
+dan kompilasi dengan dua saklar:
+
+```bash
+nim c -r --profiler:on --stackTrace:on app.nim
+```
+
+Saat selesai, program mencetak `writing profile_results.txt...`, dan berkas `profile_results.txt`
+muncul di direktori kerja. Isinya daftar jejak tumpukan yang diurutkan dari yang paling banyak
+memakai waktu, lengkap dengan persentase per baris. Yang dibaca adalah entri teratas: di situlah
+waktu paling banyak habis.
+
+Profiler ini mengambil sampel, jadi kegunaannya sebanding dengan lamanya program berjalan. Program
+yang selesai dalam sekejap menghasilkan berkas hampir kosong; perbesar bebannya dulu. Dua saklar
+lain: `--stackTraceMsgs:on` menambahkan pesan tiap bingkai, dan `--profileVM:on` memprofilkan kode
+yang berjalan saat kompilasi.
+
+## Alat sistem: `perf` dan Instruments
+
+Untuk program yang sudah besar, membungkus satu blok dengan `getMonoTime` tidak praktis. Di Linux,
+`perf` mengambil sampel seluruh proses:
+
+```bash
+perf record --call-graph dwarf ./app
+perf report
+```
+
+`--call-graph dwarf` meminta jejak pemanggilan lengkap, sehingga hasilnya bisa dibaca sebagai pohon.
+Di macOS, peran itu dipegang Instruments dari Xcode. Keduanya bekerja dari luar kode dan menunjukkan
+panasnya seluruh program, bukan satu blok yang kita pilih.
+
+## Membaca hasil dan kapan berhenti
+
+Beberapa kebiasaan membuat angka tidak menyesatkan:
+
+- Bandingkan hanya dalam satu mesin dan satu proses. Selisih antar mesin mencampur kecepatan
+  prosesor dengan pengaruh build.
+- Kalau selisihnya sebesar derau, ulangi; beda di bawah dua kali lipat belum layak dipercaya.
+- Angka dari blok kecil belum tentu berlaku di program nyata. Bagian yang menyentuh berkas atau
+  jaringan jauh lebih mahal.
+
+Optimasi tidak selalu perlu. Kalau program sudah selesai dalam waktu yang bisa ditunggu, mengejar
+beberapa milidetik hanya menambah kode yang sulit dibaca. Kalau waktu habis di input/output atau
+menunggu jaringan, mempercepat perhitungan tidak mengubah apa pun. Ukur dulu, temukan titik panasnya
+dengan profiler, baru ubah algoritmanya: mengganti algoritma yang salah hampir selalu lebih besar
+hasilnya daripada menambal detail kecil.
+
+## Latihan
+
+1. Ubah `Iterations` pada contoh pertama menjadi 100.000, lalu prediksi `checksum` sebelum
+   menjalankannya.
+2. Kenapa durasi tidak pernah dicetak oleh contoh di bab ini? Jawab dengan kata "keluaran yang
+   stabil".
+3. Tulis program yang membandingkan `add` di ujung `seq` dengan `insert` di awalnya, lalu cetak satu
+   boolean seperti contoh kedua.
+4. Hapus `import std/times` dari contoh pertama, lalu perbaiki error yang muncul dan jelaskan
+   pesannya.
+5. Sebutkan dua keadaan di mana mengoptimasi kode pada bab ini tidak sepadan, beserta alasannya.
+
+Jawaban ada di [Lampiran A](../appendix/answers.qmd).
+
+## Ringkasan
+
+- `getMonoTime` dari `std/monotimes` mengambil selang; `inMilliseconds` dan kawan-kawannya ada di
+  `std/times`.
+- Satu kali ukur selalu melebih-lebihkan; lakukan *warm-up*, ulangi, lalu ambil putaran tercepat.
+- Contoh di buku ini tidak mencetak waktu, hanya jumlah iterasi, checksum, dan perbandingan boolean.
+- `cpuTime` menghitung waktu prosesor, `epochTime` menghitung waktu dinding; jam monotonik dipakai
+  untuk selang.
+- Ukur dulu, profil untuk menemukan titik panas, dan berhenti kalau kecepatannya sudah cukup.
+
+## Selanjutnya
+
+Angka sudah ada, dan titik panas sudah ketemu. Yang belum: biner yang bisa dijalankan di mesin
+selain mesin pengembang. Bab berikutnya membahas pilihan target, saklar compiler, dan biner statis.
+Lanjut ke [Cross-compile dan deploy biner](cross-compile.qmd).
