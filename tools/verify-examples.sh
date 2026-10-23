@@ -53,6 +53,8 @@ cek_error() {
   local harap="${src%.nim}.expected-error"
   if [ ! -f "$harap" ]; then
     catat_gagal "$3: gagal dikompilasi tanpa ${harap#"$root"/}"
+    # Tampilkan sebabnya: tanpa ini kegagalan hanya terbaca sebagai "gagal".
+    sed -n '1,3p' "$stderr_file" | sed 's/^/      /' >&2
   elif grep -qF -- "$(cat "$harap")" "$stderr_file"; then
     catat_lulus
   else
