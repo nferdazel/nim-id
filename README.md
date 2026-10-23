@@ -1,5 +1,7 @@
 # nim-id
 
+[![ci](https://github.com/nferdazel/nim-id/actions/workflows/ci.yml/badge.svg)](https://github.com/nferdazel/nim-id/actions/workflows/ci.yml)
+
 Buku belajar bahasa [Nim](https://nim-lang.org) dalam dua bahasa: Indonesia dan English.
 Situs: `nim.qouver.com` (`/en/` untuk versi Inggris).
 

@@ -77,3 +77,26 @@ ls -1dt releases/*/        # pilih rilis sebelumnya
 ln -sfn "$(readlink -f releases/<sha-lama>)" web
 curl -sS -o /dev/null -w '%{http_code}\n' https://nim.qouver.com/
 ```
+
+## Webhook
+
+- Hook `nim-id` ada di `/srv/qouver/config/webhook.json` (mode `600`, milik `sachiel`), dijalankan
+  unit **user** `webhook` (`systemctl --user`), mendengarkan `127.0.0.1:9000`.
+- GitHub: webhook `https://api.qouver.com/hooks/nim-id`, event **push**, HMAC-SHA256
+  (`X-Hub-Signature-256`).
+- Rahasia HMAC disimpan di dua sisi: `webhook.json` dan pengaturan webhook GitHub. Rotasi =
+  ganti di keduanya, lalu `systemctl --user restart webhook`.
+- Ref-guard di skrip hanya menerima `refs/heads/main`; event lain keluar dengan kode 0 (tidak
+  dianggap gagal).
+- Health check memakai **origin langsung** (`--resolve nim.qouver.com:443:127.0.0.1` + retry 5×2
+  detik). Request dari VPS ke edge Cloudflare sendiri pernah gagal sesaat dan sempat memicu
+  rollback palsu; CF diuji terpisah dari luar.
+
+Jalankan manual (tanpa push):
+
+```bash
+cd /srv/qouver/apps/nim-id && ./scripts/deploy-static.sh nim-id refs/heads/main
+```
+
+Skrip menyalin versi terbarunya sendiri dari `monorepo/ops/scripts/` setelah deploy sukses, jadi
+perubahan pada skrip ikut terpasang pada deploy berikutnya.
