@@ -117,5 +117,17 @@ becomes a link.
 | `foreign function interface` | FFI | a way to call code from another language, here C | [FFI to C](../chapters/ffi-c.qmd) |
 | `application binary interface` | ABI | the rules for layout and calls at the binary level | [FFI to C](../chapters/ffi-c.qmd) |
 | `browser` | peramban | the program that runs the output of a JavaScript build | [Compiling to JavaScript](../chapters/js-backend.qmd) |
+| `subcommand` | subperintah | a second command inside a CLI tool (`tool add`) | [CLI tools with `parseopt`](../chapters/cli-tools.qmd) |
+| `option` | opsi | a named argument that changes a command's behaviour (`--count=4`) | [CLI tools with `parseopt`](../chapters/cli-tools.qmd) |
+| `exit code` | kode keluar | the number a process returns to its caller | [CLI tools with `parseopt`](../chapters/cli-tools.qmd) |
+| `entry point` | pintu masuk | the first file or procedure that runs | [CLI tools with `parseopt`](../chapters/cli-tools.qmd) |
+| `route` | rute | the mapping from an HTTP path and method to a handler | [An HTTP API with `asynchttpserver`](../chapters/http-api.qmd) |
+| `handler` | pengendali | the function that handles one request or event | [An HTTP API with `asynchttpserver`](../chapters/http-api.qmd) |
+| `socket` | soket | the endpoint of a network connection used by servers and clients | [An HTTP API with `asynchttpserver`](../chapters/http-api.qmd) |
+| `row` | baris | one record in a table or query result | [Storing data: `Table`, JSON, and SQLite](../chapters/database.qmd) |
+| `query` | kueri | a request for data from a database | [Storing data: `Table`, JSON, and SQLite](../chapters/database.qmd) |
+| `transaction` | transaksi | a group of changes that must all succeed or none at all | [Storing data: `Table`, JSON, and SQLite](../chapters/database.qmd) |
+| `package` | paket | a distributable unit of code that can be installed | [Building and publishing a nimble package](../chapters/nimble-packages.qmd) |
+| `maintainer` | pemelihara | the person responsible for looking after a package | [Building and publishing a nimble package](../chapters/nimble-packages.qmd) |
 
 New terms go into the master list first, and only then into a chapter.

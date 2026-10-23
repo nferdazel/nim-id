@@ -117,5 +117,17 @@ menjadi tautan.
 | FFI | `foreign function interface` | cara memanggil kode bahasa lain, di sini C | [FFI ke C](../chapters/ffi-c.qmd) |
 | ABI | `application binary interface` | aturan tata letak dan pemanggilan di tingkat biner | [FFI ke C](../chapters/ffi-c.qmd) |
 | peramban | `browser` | program yang menjalankan hasil kompilasi JavaScript | [Kompilasi ke JavaScript](../chapters/js-backend.qmd) |
+| subperintah | `subcommand` | perintah kedua di dalam satu alat CLI (`tool add`) | [CLI dengan `parseopt`](../chapters/cli-tools.qmd) |
+| opsi | `option` | argumen bernama yang mengubah perilaku perintah (`--count=4`) | [CLI dengan `parseopt`](../chapters/cli-tools.qmd) |
+| kode keluar | `exit code` | angka yang dikembalikan proses ke pemanggilnya | [CLI dengan `parseopt`](../chapters/cli-tools.qmd) |
+| pintu masuk | `entry point` | berkas atau prosedur pertama yang dijalankan | [CLI dengan `parseopt`](../chapters/cli-tools.qmd) |
+| rute | `route` | pemetaan jalur dan metode HTTP ke pengendali | [HTTP API dengan `asynchttpserver`](../chapters/http-api.qmd) |
+| pengendali | `handler` | fungsi yang menangani satu permintaan atau peristiwa | [HTTP API dengan `asynchttpserver`](../chapters/http-api.qmd) |
+| soket | `socket` | ujung koneksi jaringan yang dipakai server dan klien | [HTTP API dengan `asynchttpserver`](../chapters/http-api.qmd) |
+| baris | `row` | satu catatan di dalam tabel atau hasil kueri | [Menyimpan data: `Table`, JSON, dan SQLite](../chapters/database.qmd) |
+| kueri | `query` | permintaan data ke basis data | [Menyimpan data: `Table`, JSON, dan SQLite](../chapters/database.qmd) |
+| transaksi | `transaction` | rangkaian perubahan yang harus berhasil semua atau tidak sama sekali | [Menyimpan data: `Table`, JSON, dan SQLite](../chapters/database.qmd) |
+| paket | `package` | satuan distribusi kode yang bisa dipasang | [Membuat dan menerbitkan paket nimble](../chapters/nimble-packages.qmd) |
+| pemelihara | `maintainer` | orang yang bertanggung jawab merawat sebuah paket | [Membuat dan menerbitkan paket nimble](../chapters/nimble-packages.qmd) |
 
 Istilah baru ditambahkan ke daftar induk lebih dulu, baru dipakai di bab.

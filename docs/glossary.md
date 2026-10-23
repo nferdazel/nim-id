@@ -128,6 +128,18 @@ diterjemahkan ke bahasa Indonesia secara paksa; kolom **Jangan** mencatat varian
 | ABI | application binary interface | aturan tata letak dan pemanggilan di tingkat biner | — | ffi-c |
 | peramban | browser | program yang menjalankan hasil kompilasi JavaScript | browser (kecuali di kode) | js-backend |
 
+| subperintah | subcommand | perintah kedua di dalam satu alat CLI (`tool add`) | — | cli-tools |
+| opsi | option | argumen bernama yang mengubah perilaku perintah (`--count=4`) | — | cli-tools |
+| kode keluar | exit code | angka yang dikembalikan proses ke pemanggilnya | exit status | cli-tools |
+| pintu masuk | entry point | berkas atau prosedur pertama yang dijalankan | entry point | cli-tools |
+| rute | route | pemetaan jalur dan metode HTTP ke pengendali | — | http-api |
+| pengendali | handler | fungsi yang menangani satu permintaan atau peristiwa | — | http-api |
+| soket | socket | ujung koneksi jaringan yang dipakai server dan klien | — | http-api |
+| baris | row | satu catatan di dalam tabel atau hasil kueri | — | database |
+| kueri | query | permintaan data ke basis data | query (kecuali di kode) | database |
+| transaksi | transaction | rangkaian perubahan yang harus berhasil semua atau tidak sama sekali | — | database |
+| paket | package | satuan distribusi kode yang bisa dipasang | package | nimble-packages |
+| pemelihara | maintainer | orang yang bertanggung jawab merawat sebuah paket | — | nimble-packages |
 Aturan singkat:
 
 - Istilah di kolom pertama dipakai di teks Indonesia; kolom English di teks Inggris.
