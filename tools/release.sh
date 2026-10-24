@@ -121,7 +121,7 @@ fi
 
 echo "commit sejak ${tag_lama:-awal repo}: $jumlah"
 echo "naik: $naik  →  $versi_lama → $versi_baru"
-printf '%s\n' "$log" | grep -E '^(feat|fix|docs|chore|refactor|test|style|perf)[^ ]*: |!:' | sed 's/^/  /' || true
+printf '%s\n' "$subjects" | grep -E '^(feat|fix|docs|chore|refactor|test|style|perf)[^ ]*: |!:' | sed 's/^/  /' || true
 
 # VERSION ditulis lebih dulu: gerbang membangun PDF, dan PDF yang dibangun harus
 # sudah membawa nomor baru. Kalau gerbang gagal, VERSION tertinggal naik dan pohon
