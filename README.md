@@ -17,7 +17,7 @@ code.
 - **English PDF:** [Learning-Nim.pdf](https://nim.qouver.com/en/Learning-Nim.pdf)
 
 One Markdown source produces the web and PDF editions. Every file in `examples/` is compiled, run,
-and its output compared with the expected file, in both editions, on every change.
+and its output compared with the expected file on every change.
 
 ## Contents
 
