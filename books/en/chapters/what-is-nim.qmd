@@ -138,7 +138,7 @@ honest about this is more useful than selling one language as the answer to ever
 
 1. Change the `hello` program above so it prints your name instead of `Nim`.
 2. In the addition example, change `1..5` to `1..10`. Predict the output before running it.
-3. Write a program that prints `7 * 6` together with its result. Save it as `kali.nim`.
+3. Write a program that prints `7 * 6` together with its result. Save it as `multiply.nim`.
 4. The code `var age: int = "twenty"` fails to compile. Explain why the compiler points at column
    16, and not at column 5 where the name `age` sits.
 5. Without running it, decide whether `echo greet(42)` on the `greet` example is valid. Explain your
