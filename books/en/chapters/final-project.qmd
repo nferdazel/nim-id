@@ -324,7 +324,8 @@ main.nim(6, 10) Error: undeclared field: 'text' for type json.JsonNode [type dec
 
 The message points at line 6, column 10, right at `.text`, then names the cause: there is no field
 called `text` on `json.JsonNode`. In the brackets the compiler also names the file where the type is
-declared, so it is clear which type is meant. The fix is to index it like the JSON object it really
+declared, so it is clear which type is meant. That line number belongs to Nim 2.2.12 and may move
+in other versions. The fix is to index it like the JSON object it really
 is, `note["text"]`, and convert the result to a `string` with `getStr`.
 
 ## Exercises

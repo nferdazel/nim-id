@@ -234,7 +234,8 @@ main.nim(5, 9) Error: undeclared field: 'email'
 
 The message names the field it was looking for. Start from the type declaration: `Person` has only
 `name`, so `email` truly does not exist. This is the easiest error class to fix, because the answer
-lives in the type definition, not in the line that used it.
+lives in the type definition, not in the line that used it. The real message appends
+`for type Person`; it is trimmed here.
 
 ## Basic inheritance
 

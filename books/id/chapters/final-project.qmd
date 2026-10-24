@@ -326,7 +326,8 @@ main.nim(6, 10) Error: undeclared field: 'text' for type json.JsonNode [type dec
 
 *Message* ini menunjuk *line* 6 kolom 10, tepat di `.text`, lalu menyebut sebabnya: field bernama `text`
 tidak ada pada `json.JsonNode`. Di dalam tanda kurung, compiler juga menyebut *file* tempat *type* itu
-dideklarasikan, supaya jelas *type* mana yang dimaksud. Perbaikannya memakai *index* seperti *object* JSON
+dideklarasikan, supaya jelas *type* mana yang dimaksud. Nomor *line* di dalam kurung itu milik
+Nim 2.2.12 dan bisa bergeser di versi lain. Perbaikannya memakai *index* seperti *object* JSON
 sesungguhnya: `note["text"]`, lalu diterjemahkan dengan `getStr` menjadi `string`.
 
 ## Latihan

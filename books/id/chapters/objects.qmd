@@ -237,7 +237,8 @@ main.nim(5, 9) Error: undeclared field: 'email'
 
 *Message*-nya menyebut field yang dicari. Awali pemeriksaan dari deklarasi *type*: `Person` hanya punya
 `name`, jadi `email` memang tidak ada. Ini jenis error yang paling mudah diperbaiki, karena
-jawabannya ada di definisi *type*, bukan di *line* pemakaiannya.
+jawabannya ada di definisi *type*, bukan di *line* pemakaiannya. *Message* aslinya menambahkan
+`for type Person` di ekor; di sini dipotong.
 
 ## Warisan dasar
 

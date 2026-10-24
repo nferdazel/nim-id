@@ -190,7 +190,8 @@ main.nim(3, 19) Error: object constructor needs an object type
 ```
 
 *Message*-nya singkat saja: sintaksis *constructor* hanya untuk `object`. Untuk tuple, pakai literal
-`(x: 3, y: 4)`.
+`(x: 3, y: 4)`. *Message* aslinya menambahkan lokasi deklarasi tuple di dalam tanda kurung; di sini
+dipotong.
 
 ## Latihan
 

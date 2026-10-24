@@ -191,7 +191,8 @@ main.nim(3, 19) Error: object constructor needs an object type
 ```
 
 The message stays short: constructor syntax belongs to `object`. For a tuple, use the literal
-`(x: 3, y: 4)`.
+`(x: 3, y: 4)`. The real message appends the tuple's declaration site in brackets; it is trimmed
+here.
 
 ## Exercises
 
