@@ -42,6 +42,7 @@ jobs:
 
   buku:
     name: "Buku: render dua bahasa + PDF"
+    needs: contoh
     runs-on: ubuntu-latest
     timeout-minutes: 15
     # Only the tag run creates a release; branch and pull request runs stay read-only.
