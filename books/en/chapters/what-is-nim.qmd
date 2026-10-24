@@ -24,8 +24,11 @@ binary. That binary is what runs.
 Three consequences follow:
 
 - Mistakes are found before the program runs, not when the bad line is finally executed.
-- The program runs as fast as C, because it becomes C.
-- The result is a single file you can copy to another machine without installing Nim there.
+- Speed is on par with C: what runs is generated C. Runtime checks and memory management add a
+  little overhead, and that overhead can be measured.
+- The result is a single file you can copy to another machine without installing Nim there. It
+  still depends on system libraries such as libc, and a program that links extra libraries needs
+  those on the target machine too.
 
 The cost: every change needs a recompile. For small programs, that is a matter of seconds. As a
 program grows, the difference gets more expensive: a bug that only appears in production costs far
@@ -108,8 +111,9 @@ JavaScript backend produces a `.js` file from the same code. For most programs w
 backend by hand, and [Compiling to JavaScript](js-backend.qmd) covers that on its own.
 
 Nim 2.x uses ORC as its default memory management. ORC counts references and collects cycles, and
-destructors run when a value leaves its scope. No garbage collector stops the whole program to
-sweep memory. For everyday code, what matters is this: we never call `free`, and forgetting to
+destructors run when a value leaves its scope. No garbage collector stops to sweep the whole heap in
+one long pause; the cost is spread across allocation points, and the cycle collector runs when its
+list of roots crosses a threshold. For everyday code, what matters is this: we never call `free`, and forgetting to
 release memory is not a fatal mistake.
 
 Nim also has *templates* and *macros*: code that runs at compile time to produce other code. That is

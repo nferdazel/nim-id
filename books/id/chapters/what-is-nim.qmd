@@ -24,8 +24,11 @@ membuat biner. Biner itulah yang dijalankan.
 Konsekuensinya tiga:
 
 - Error ditemukan sebelum program berjalan, bukan saat *line* yang salah akhirnya dieksekusi.
-- Program berjalan secepat kode C, karena memang menjadi kode C.
-- *Result* akhirnya satu *file* yang bisa disalin ke mesin lain, tanpa memasang Nim di sana.
+- Kecepatannya setara kode C: yang dijalankan memang kode C hasil *generate*. Pemeriksaan runtime
+  dan pengelola *memory* menambah sedikit biaya, dan biaya itu bisa diukur sendiri.
+- *Result*-nya satu *file* yang bisa disalin ke mesin lain tanpa memasang Nim di sana. Ia tetap
+  bergantung pada *library* sistem seperti libc, dan program yang menautkan *library* tambahan butuh
+  *library* itu di mesin tujuan.
 
 Harganya: setiap perubahan perlu di-compile ulang. Untuk program kecil, itu hitungan detik. Kalau
 programnya tumbuh, perbedaan ini terasa makin mahal: bug yang hanya muncul di produksi jauh lebih
@@ -108,8 +111,9 @@ JavaScript menghasilkan *file* `.js` dari kode yang sama. Untuk sebagian besar p
 perlu memilih backend secara manual, dan [Compile ke JavaScript](js-backend.qmd) membahasnya sendiri.
 
 Nim 2.x memakai ORC sebagai pengelola *memory* bawaan. ORC menghitung referensi dan mengumpulkan
-siklus, dan *destructor* berjalan saat *value* keluar dari *scope*-nya. Tidak ada garbage
-collector yang menghentikan seluruh program untuk menyapu *memory*. Untuk kode sehari-hari yang
+siklus, dan *destructor* berjalan saat *value* keluar dari *scope*-nya. Tidak ada *garbage
+collector* yang berhenti untuk menyapu seluruh *heap* dalam satu jeda panjang; biayanya tersebar di
+titik alokasi, dan pengumpul siklusnya berjalan saat daftar akar melewati ambang. Untuk kode sehari-hari yang
 penting: kita tidak call `free`, dan lupa tidak membebaskan *memory* bukan error fatal.
 
 Nim juga punya *template* dan *macro*: kode yang dijalankan saat compile untuk menghasilkan kode
