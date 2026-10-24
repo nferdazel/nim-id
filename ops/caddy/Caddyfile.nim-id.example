@@ -36,7 +36,7 @@ nim.qouver.com {
 	header @skrip Cache-Control "public, max-age=300, must-revalidate"
 
 	# HTML selalu revalidasi.
-	@lain not path /fonts/* *.woff2 *.css *.js *.svg *.png *.jpg *.webp
+	@lain not path /fonts/* *.woff2 *.css *.js *.svg *.png *.jpg *.webp *.pdf
 	header @lain Cache-Control "no-cache"
 
 	# PDF rilis: jangan di-cache lama, supaya versi baru langsung terlihat.
