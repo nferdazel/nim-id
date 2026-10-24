@@ -121,12 +121,16 @@ echo "commit sejak ${tag_lama:-awal repo}: $jumlah"
 echo "naik: $naik  →  $versi_lama → $versi_baru"
 printf '%s\n' "$log" | grep -E '^(feat|fix|docs|chore|refactor|test|style|perf)[^ ]*: |!:' | sed 's/^/  /' || true
 
+# VERSION ditulis lebih dulu: gerbang membangun PDF, dan PDF yang dibangun harus
+# sudah membawa nomor baru. Kalau gerbang gagal, VERSION tertinggal naik dan pohon
+# kerja kotor, yang justru sinyal jujur untuk diperiksa.
+printf '%s\n' "$versi_baru" > VERSION
+
 if [ -z "$lewati_cek" ]; then
   echo "menjalankan gerbang ./task check ..."
   QUARTO="${QUARTO:-quarto}" sh ./task check
 fi
 
-printf '%s\n' "$versi_baru" > VERSION
 git add VERSION
 git commit -m "chore: rilis $versi_baru" >/dev/null
 git tag -a "$tag_baru" -m "nim-id $versi_baru"
