@@ -778,7 +778,8 @@ hr {
   /* Saat tabel menggulung, kolom istilah dibekukan supaya istilah tetap terbaca. Header lengket
      tidak bisa dipakai di sini: kotak gulungnya adalah tabel itu sendiri, jadi `sticky; top:0`
      pada <thead> tidak ikut halaman saat digulung. */
-  #quarto-document-content table:has(thead th:nth-child(3)) td:first-child {
+  #quarto-document-content table:has(thead th:nth-child(3)) td:first-child,
+  #quarto-document-content table:has(thead th:nth-child(3)) th:first-child {
     position: sticky;
     left: 0;
     background-color: var(--kertas);
