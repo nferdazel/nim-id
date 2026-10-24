@@ -263,8 +263,66 @@ Rex knows 3 tricks
 
 `Dog` mewarisi field `name` dari `Animal` dan menambah `tricks`. *Procedure* yang menerima `Animal`
 juga menerima `Dog`, karena `Dog` adalah `Animal` yang lebih khusus. Warisan memakai `ref object`
-dengan `RootObj` sebagai akar hierarki. Bab ini berhenti di sini; pemilihan *procedure* saat runtime
-dibahas di bagian menengah.
+dengan `RootObj` sebagai akar hierarki.
+
+## Memilih *procedure* saat runtime
+
+`proc` memilih versi berdasarkan *type* statis, bukan *type* *object* saat berjalan. Untuk perilaku yang
+memang bergantung pada *type* saat berjalan, Nim menyediakan `method`.
+
+```{.nim}
+type
+  Animal = ref object of RootObj
+    name: string
+  Dog = ref object of Animal
+    tricks: int
+  Cat = ref object of Animal
+
+method speak(a: Animal): string {.base.} = a.name & " makes a sound"
+method speak(d: Dog): string = d.name & " barks"
+method speak(c: Cat): string = c.name & " meows"
+
+let animals: seq[Animal] = @[Dog(name: "Rex", tricks: 3), Cat(name: "Milo")]
+for a in animals:
+  echo speak(a)
+```
+
+```{.txt}
+Rex barks
+Milo meows
+```
+
+Walaupun `animals` bertipe `seq[Animal]`, `speak(a)` memanggil `method` milik *type* aslinya. Satu
+`method` ditandai `{.base.}` sebagai akar hierarki; tanpa penanda itu compiler memberi *warning*
+karena bentuk lamanya sudah usang.
+
+Sebagai pembanding, `proc` dengan nama sama tidak melihat *type* saat berjalan:
+
+```{.nim}
+type
+  Animal = ref object of RootObj
+    name: string
+  Dog = ref object of Animal
+  Cat = ref object of Animal
+
+proc speak(a: Animal): string = "a sound"
+proc speak(d: Dog): string = "a bark"
+proc speak(c: Cat): string = "a meow"
+
+let animals: seq[Animal] = @[Dog(name: "Rex"), Cat(name: "Milo")]
+for a in animals:
+  echo speak(a)
+```
+
+```{.txt}
+a sound
+a sound
+```
+
+Kedua *object* itu `Dog` dan `Cat`, tetapi `proc` yang di-call selalu versi `Animal`. Pilih `method`
+hanya kalau perilaku memang berbeda per *type*; selain itu `proc` lebih murah dan lebih mudah dibaca.
+
+## Latihan
 
 ## Latihan
 

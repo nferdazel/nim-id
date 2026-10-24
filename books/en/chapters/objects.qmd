@@ -260,8 +260,66 @@ Rex knows 3 tricks
 
 `Dog` inherits the `name` field from `Animal` and adds `tricks`. A procedure taking `Animal` also
 accepts a `Dog`, because a `Dog` is a more specific `Animal`. Inheritance uses `ref object` with
-`RootObj` at the root of the hierarchy. This chapter stops here; runtime procedure selection is
-covered in the intermediate part.
+`RootObj` at the root of the hierarchy.
+
+## Choosing a procedure at runtime
+
+A `proc` picks its version from the static type, not from the object's type at runtime. For behavior
+that really depends on the runtime type, Nim has `method`.
+
+```{.nim}
+type
+  Animal = ref object of RootObj
+    name: string
+  Dog = ref object of Animal
+    tricks: int
+  Cat = ref object of Animal
+
+method speak(a: Animal): string {.base.} = a.name & " makes a sound"
+method speak(d: Dog): string = d.name & " barks"
+method speak(c: Cat): string = c.name & " meows"
+
+let animals: seq[Animal] = @[Dog(name: "Rex", tricks: 3), Cat(name: "Milo")]
+for a in animals:
+  echo speak(a)
+```
+
+```{.txt}
+Rex barks
+Milo meows
+```
+
+Even though `animals` is a `seq[Animal]`, `speak(a)` calls the method of the object's actual type. One
+method is marked `{.base.}` as the root of the hierarchy; without that marker the compiler warns
+because the old form is deprecated.
+
+For comparison, a `proc` with the same name never looks at the runtime type:
+
+```{.nim}
+type
+  Animal = ref object of RootObj
+    name: string
+  Dog = ref object of Animal
+  Cat = ref object of Animal
+
+proc speak(a: Animal): string = "a sound"
+proc speak(d: Dog): string = "a bark"
+proc speak(c: Cat): string = "a meow"
+
+let animals: seq[Animal] = @[Dog(name: "Rex"), Cat(name: "Milo")]
+for a in animals:
+  echo speak(a)
+```
+
+```{.txt}
+a sound
+a sound
+```
+
+Both objects are a `Dog` and a `Cat`, yet the proc that runs is always the `Animal` version. Reach for
+`method` only when behavior differs per type; otherwise a `proc` is cheaper and easier to read.
+
+## Exercises
 
 ## Exercises
 
