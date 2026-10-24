@@ -66,6 +66,7 @@ book:
     - appendix/glossary.qmd
     - appendix/cheatsheet.qmd
     - appendix/nim-for-others.qmd
+    - colophon.qmd
   search: true
   sidebar:
     style: docked
@@ -92,5 +93,4 @@ format:
     lang: en
     template-partials:
       - assets/typst/typst-show.typ
-    papersize: a5
     number-sections: true

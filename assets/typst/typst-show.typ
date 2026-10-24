@@ -26,6 +26,12 @@
 #let code-paper = rgb("#f4f1ea")  // code panel, one step off the paper
 #let panel-fill = rgb("#f1f3f5")  // fill pandoc's syntax highlighter paints
 
+// Marks the page on which a part opening is drawn. The flag is raised before
+// the page break and lowered right after it, so the header of the part page
+// still reads `true` (the page is evaluated at its own start) while no later
+// page inherits it.
+#let part-page = state("part-page", false)
+
 // --- Book metadata ---------------------------------------------------------
 #let doc-title = [$title$]
 #let doc-subtitle = [$subtitle$]
@@ -84,52 +90,76 @@
 // Everything else is the type hierarchy DESIGN.md asks for.
 #let cover-page = block(width: 178mm, height: 233mm, fill: white)[
   #set text(fill: ink)
-  // The cover is one dark slab and a lot of paper: the title sits reversed in
-  // the accent field, the imprint sits at the foot, and nothing else competes.
-  #place(top + left, rect(width: 178mm, height: 80mm, fill: accent))
+
+// Short code spans stay on one line. A reference like `examples/` split into
+// "exam" and "ples/" reads as a typo; long spans may still wrap, because
+// forcing them whole would push them through the margin.
+#show raw.where(block: false): it => {
+  if it.text.len() < 24 { box(it) } else { it }
+}
+  // Trade-book jacket: the title at the head, an engraved plate in the middle,
+  // the imprint in a solid band at the foot. The plate is a field of 45-degree
+  // lines with Nim's crown left in reserve, so the cover needs no image file
+  // and still holds up when the press has only black ink.
   #place(top + left, block(width: 178mm)[
-    #pad(x: 22mm, top: 19mm)[
-      #text(size: 8.5pt, tracking: 0.2em, fill: white.transparentize(30%))[#upper(edition-label)]
-      #v(13mm)
-      #text(size: 27pt, weight: "bold", fill: white, hyphenate: false)[#doc-title]
+    #pad(x: 22mm, top: 21mm)[
+      #text(size: 8.5pt, tracking: 0.2em, fill: ink-soft)[#upper(edition-label)]
       #v(5mm)
-      #text(size: 11.5pt, style: "italic", fill: white.transparentize(12%))[#doc-subtitle]
+      #line(length: 100%, stroke: 0.5pt + rule)
+      #v(10mm)
+      #text(size: 28pt, weight: "bold", hyphenate: false)[#doc-title]
+      #v(4.5mm)
+      #text(size: 11.5pt, style: "italic", fill: ink-soft)[#doc-subtitle]
     ]
   ])
-  // What is inside, named the way the parts are named: three parts, then the
-  // appendices. Each row is a rule, a letter, and the title.
-  #place(top + left, dx: 22mm, dy: 104mm, block(width: 134mm)[
-    #let rows = if doc-lang == "id" {
-      (("A", "Dasar"), ("B", "Menengah"), ("C", "Praktik"), ("", "Lampiran A sampai D"))
-    } else {
-      (("A", "Fundamentals"), ("B", "Intermediate"), ("C", "Practice"), ("", "Appendices A to D"))
+  #place(top + center, dy: 88mm, block(width: 132mm, height: 96mm)[
+    #rect(width: 132mm, height: 96mm, stroke: 0.9pt + ink)
+    // The engraved field: one path, one stroke, spacing measured in points so
+    // the lines stay even regardless of the plate size in millimetres.
+    #{
+      let pt = 2.834645669
+      let w = 126.8 * pt
+      let h = 90.8 * pt
+      let step = 5.0
+      let n = int(calc.ceil((w + h) / step))
+      place(top + left, dx: 2.6mm, dy: 2.6mm, block(width: 126.8mm, height: 90.8mm)[
+        #for i in range(0, n) {
+          let c = i * step
+          let x1 = calc.max(0.0, c - h)
+          let x2 = calc.min(w, c)
+          place(top + left, line(start: (x1 * 1pt, (c - x1) * 1pt), end: (x2 * 1pt, (c - x2) * 1pt), stroke: 0.35pt + ink.transparentize(72%)))
+        }
+      ])
     }
-    #for (letter, name) in rows {
-      grid(
-        columns: (6mm, 1fr),
-        align: (left, left),
-        text(size: 9pt, fill: accent, weight: "bold")[#letter],
-        text(size: 9pt, fill: ink-soft)[#name],
-      )
-      v(2.2mm)
-      line(length: 100%, stroke: 0.4pt + rule)
-      v(2.2mm)
-    }
+    // The crown, knocked out of the field: paper fill, one accent keyline,
+    // a solid band at its base and three finials on the points.
+    #place(top + center, dy: 19mm, block(width: 78mm, height: 52mm)[
+      #place(top + left, polygon(
+        fill: white,
+        stroke: 1.2pt + accent,
+        (3mm, 52mm), (75mm, 52mm), (75mm, 8mm), (61mm, 26mm), (39mm, 4mm), (17mm, 26mm), (3mm, 8mm),
+      ))
+      #place(top + left, dx: 3mm, dy: 40mm, rect(width: 72mm, height: 12mm, fill: accent))
+      #place(top + left, dx: 0.2mm, dy: 5.2mm, circle(radius: 2.8mm, fill: accent))
+      #place(top + left, dx: 36.2mm, dy: 1.2mm, circle(radius: 2.8mm, fill: accent))
+      #place(top + left, dx: 72.2mm, dy: 5.2mm, circle(radius: 2.8mm, fill: accent))
+    ])
+    #place(bottom + center, dy: -11mm, block[
+      #line(length: 18mm, stroke: 0.4pt + rule)
+      #v(2.4mm)
+      #text(size: 7.5pt, tracking: 0.34em, fill: ink-soft)[NIM]
+    ])
   ])
-  #place(bottom + left, block(width: 178mm)[
-    #pad(x: 22mm, bottom: 24mm)[
-      #line(length: 134mm, stroke: 1.2pt + accent)
-      #v(1.4mm)
-      #line(length: 134mm, stroke: 0.5pt + rule)
-      #v(6mm)
+  #place(bottom + left, block(width: 178mm, height: 26mm, fill: accent)[
+    #pad(x: 22mm, top: 6.5mm)[
       #grid(
         columns: (1fr, auto),
         align: (left, right),
-        text(size: 12pt)[#doc-author],
-        text(size: 9pt, fill: ink-soft)[#version-word #doc-version],
+        text(size: 12.5pt, fill: white)[#doc-author],
+        text(size: 9pt, fill: white.transparentize(22%))[#version-word #doc-version],
       )
-      #v(2.5mm)
-      #text(size: 8.5pt, fill: ink-soft)[#license-line]
+      #v(2.6mm)
+      #text(size: 8pt, fill: white.transparentize(22%))[#license-line]
     ]
   ])
 ]
@@ -275,6 +305,8 @@
 // and the front matter carry no folio. This must be set before the book is
 // built, because its own pages are created inside `book` and would otherwise
 // already carry a number.
+#set text(fill: ink)
+
 #set page(numbering: none)
 
 #show: book.with(
@@ -324,7 +356,50 @@ $endif$
 // The heading element itself stays in place, so the outline and the running
 // head keep working.
 // ---------------------------------------------------------------------------
-#show heading.where(level: 1): it => chapter-opening(it, break-page: true)
+// ---------------------------------------------------------------------------
+// Appendix divider
+//
+// Quarto opens the appendices with an unnumbered level-1 heading. It is the
+// same page as a part opening, so it lists what follows: the four appendices
+// with their letters and pages, instead of a bare word on an empty page.
+// ---------------------------------------------------------------------------
+#let appendix-divider(it) = {
+  pagebreak(weak: true)
+  part-change.update(x => true)
+  [
+    #context {
+      set par(justify: false)
+      v(34mm)
+      text(size: 24pt, weight: "bold", hyphenate: false)[#it.body]
+      v(5mm)
+      line(length: 100%, stroke: 0.5pt + rule)
+      v(10mm)
+      let items = query(heading.where(level: 1)).filter(hn =>
+        hn.numbering != none and appendix-state.at(hn.location()) != none)
+      for hn in items {
+        let num = numbering("A", counter(heading).at(hn.location()).first())
+        link(hn.location(), grid(
+          columns: (1.1cm, 1fr, auto),
+          align: (left, left, right),
+          text(size: 9.5pt, fill: accent, weight: "bold")[#num],
+          text(size: 9.5pt)[#hn.body #box(width: 1fr, repeat(text(size: 9.5pt, fill: rule)[. #h(3pt)]))],
+          text(size: 9.5pt)[#hn.location().page()],
+        ))
+        v(3mm)
+      }
+    }
+  ]
+}
+
+#show heading.where(level: 1): it => {
+  // The appendix divider carries no number and no chapter furniture.
+  let divider-word = if doc-lang == "id" { "Lampiran" } else { "Appendices" }
+  if it.numbering == none and it.body.has("text") and it.body.text == divider-word {
+    appendix-divider(it)
+  } else {
+    chapter-opening(it, break-page: true)
+  }
+}
 
 // ---------------------------------------------------------------------------
 // Part opening
@@ -334,7 +409,9 @@ $endif$
 // "Bagian C", so a second number would only contradict them).
 // ---------------------------------------------------------------------------
 #let part(title) = {
+  part-page.update(x => true)
   pagebreak(weak: true)
+  part-page.update(x => false)
   part-change.update(x => true)
   part-state.update(x => title)
   part-counter.step()
@@ -351,9 +428,12 @@ $endif$
       line(length: 100%, stroke: 0.5pt + rule)
       v(10mm)
       let chapters = query(heading.where(level: 1)).filter(it =>
-        it.numbering != none and part-state.at(it.location()) == title)
+        it.numbering != none
+          and appendix-state.at(it.location()) == none
+          and part-state.at(it.location()) == title)
       for hn in chapters {
-        let num = numbering("1", counter(heading).at(hn.location()).first())
+        let raw = numbering(hn.numbering, ..counter(heading).at(hn.location()))
+        let num = if raw.ends-with(".") { raw.slice(0, -1) } else { raw }
         link(hn.location(), grid(
           columns: (1.1cm, 1fr, auto),
           align: (left, left, right),
@@ -378,7 +458,9 @@ $endif$
 #set page(header: context {
   let pn = counter(page).at(here()).first()
   // Part openings carry the field and the numeral; no running head on top.
-  if part-change.at(here()) { return }
+  // The state is read at the page number rather than at `here()`: the part is
+  // drawn after the page has started, so the update lands inside the page.
+  if part-page.at(here()) { return }
   let openers = query(heading.where(level: 1))
   // A chapter that starts on this page needs no running head.
   if openers.any(it => it.location().page() == pn) { return }
@@ -414,7 +496,11 @@ $endif$
     // so the printed numbers are contiguous and match the table of contents.
     if pn <= 2 { return }
     set text(size: 8.5pt, fill: ink-soft)
-    align(center, numbering("1", pn))
+    // The margins mirror, so the text block sits half a centimetre off the
+    // trim on either side. The folio is nudged back so every number lands on
+    // the same axis through the book.
+    let shift = (32mm - 27mm) / 2
+    place(center + horizon, dx: if calc.odd(pn) { -shift } else { shift }, numbering("1", pn))
   },
 )
 //
@@ -424,7 +510,7 @@ $endif$
 // ---------------------------------------------------------------------------
 #show par: set par(
   justify: false,
-  leading: 0.72em,
+  leading: 0.75em,
   // DESIGN.md, "PDF": 1.3 em between paragraphs, with no first-line indent.
   spacing: 1.3em,
   first-line-indent: 0pt,
@@ -559,9 +645,9 @@ $endif$
     width: 100%,
     radius: 1pt,
     inset: (x: 10pt, y: 8pt),
-    block(below: 4pt, text(size: 0.95em, weight: "bold")[
-      #if icon != none [#text(fill: accent)[#icon] ]#title
-    ]) + block(above: 2pt, body),
+    // The icon argument is accepted and ignored: DESIGN.md allows no
+    // decorative glyphs, and the FontAwesome font is not embedded.
+    block(below: 4pt, text(size: 0.95em, weight: "bold")[#title]) + block(above: 2pt, body),
   )
 }
 

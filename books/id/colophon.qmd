@@ -1,0 +1,13 @@
+# Kolofon {.unnumbered}
+
+Buku ini disusun dari sumber Markdown dan dibangun dengan Quarto 1.10.19 serta Typst. Setiap contoh
+di `examples/` dikompilasi dengan Nim 2.2.12 pada setiap perubahan, dan keluarannya dibandingkan
+dengan berkas harapan yang tersimpan di repositori.
+
+Teks buku dilisensikan CC BY-SA 4.0 dan kode contoh MIT. Rincian lisensi ada di halaman hak cipta,
+yang juga memuat sumber dan cara melaporkan *error*.
+
+Kalau ada yang salah, laporkan lewat [issues](https://github.com/nferdazel/nim-id/issues). Buku ini
+hidup: versi berikutnya memperbaiki apa yang pembaca temukan.
+
+Terima kasih sudah membaca sampai sini.

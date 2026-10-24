@@ -1,0 +1,14 @@
+# Colophon {.unnumbered}
+
+This book is written in Markdown and built with Quarto 1.10.19 and Typst. Every example in
+`examples/` is compiled with Nim 2.2.12 on each change, and its output is compared against the
+expected file kept in the repository.
+
+The book text is licensed CC BY-SA 4.0 and the code samples MIT. The details are on the copyright
+page, which also lists the source and how to report errors.
+
+If something is wrong, report it in the
+[issues](https://github.com/nferdazel/nim-id/issues). This book is alive: the next version fixes what
+readers find.
+
+Thank you for reading this far.
