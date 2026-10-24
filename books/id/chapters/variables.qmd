@@ -221,8 +221,8 @@ kode lebih mudah dibaca kalau *value* itu diisi eksplisit saat deklarasi.
 
 Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
-1. Deklarasikan `const Tahun = 2026` dan `var pesan = ""`. Isi `pesan` dengan interpolasi
-   `&"terbit {Tahun}"`, lalu tampilkan.
+1. Deklarasikan `const Year = 2026` dan `var message = ""`. Isi `message` dengan interpolasi
+   `&"released in {Year}"`, lalu tampilkan.
 2. Tanpa menjalankan, prediksi *output*-nya:
    ```{.nim}
    var a = 1

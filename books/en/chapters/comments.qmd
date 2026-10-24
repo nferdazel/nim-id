@@ -62,10 +62,10 @@ echo "unreachable"
 The compiler rejects it:
 
 ```{.txt}
-main.nim(3, 1) Error: end of multiline comment expected
+broken.nim(3, 1) Error: end of multiline comment expected
 ```
 
-Read the message. `main.nim` is the file, `(3, 1)` is line 3, column 1, and `Error` means the build
+Read the message. `broken.nim` is the file (sometimes written as a full path), `(3, 1)` is line 3, column 1, and `Error` means the build
 stops. The text, "end of multiline comment expected", says the compiler reached the end of the file
 before finding `]#`.
 

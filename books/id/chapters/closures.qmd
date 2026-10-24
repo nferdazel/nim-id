@@ -281,8 +281,8 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
 - *Procedure* adalah *value* bertipe `proc(...)`; ia bisa disimpan, dioper, dan di-return.
 - Closure adalah *procedure* bersama *variable* yang ditangkapnya.
-- `var` ditangkap dengan menunjuk, `let` dengan menyalin; closure dari *calling* yang sama berbagi
-  satu *variable*.
+- Closure menunjuk *variable* itu sendiri, baik `var` maupun `let`; bedanya hanya `let` tidak bisa
+  diisi ulang sesudahnya. Closure dari *calling* yang sama berbagi satu *variable*.
 - Closure di dalam *loop* menunjuk *variable* putaran yang sama; buat lewat *procedure* terpisah
   agar tiap closure punya salinannya sendiri.
 - Closure memakai konvensi `{.closure.}`; mencampurnya dengan *type* `{.nimcall.}` ditolak compiler.

@@ -58,6 +58,9 @@ Bacalah dari kiri ke kanan:
 Di depan posisi itu Nim menulis nama *file*-nya, kadang sebagai path lengkap
 (`/home/.../hello.nim(1, 16)`) tergantung versi dan sistem. Yang dibaca tetap posisinya.
 
+`echo` di *line* kedua menulis *argument*-nya ke stdout dan menutup dengan *newline*. Tidak ada `main`
+di sini, dan satu *file* boleh berisi *statement* di tingkat atas seperti itu.
+
 Tidak ada *output*, karena tidak ada program yang berjalan. Bagi pemula ini terasa seperti halangan.
 Lama-lama ini jadi keuntungan: error yang sama di Python baru muncul ketika *line* itu
 dieksekusi, mungkin setelah data pengguna masuk.

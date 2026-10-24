@@ -163,7 +163,10 @@ d = temp
 ```
 
 `Box(name: "temp")` is a temporary value; assigning it to `d` can move its contents, so `=sink` is
-called. When the source is an ordinary variable, the path taken is `=copy`.
+called. When the source is an ordinary variable, the path taken is `=copy`. Like `=copy`, this
+hook takes over the duty of destroying the old value: `d` holds `old` before it is overwritten, and
+the example above never calls `=destroy(dest)`, so a type that owns a resource has to add that call
+itself.
 
 ## `move`: moving without hooks
 

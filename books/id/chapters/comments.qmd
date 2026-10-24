@@ -65,10 +65,10 @@ echo "unreachable"
 Compiler menolaknya:
 
 ```{.txt}
-main.nim(3, 1) Error: end of multiline comment expected
+broken.nim(3, 1) Error: end of multiline comment expected
 ```
 
-Bacalah *message*-nya. `main.nim` adalah *file* itu, `(3, 1)` *line* 3, kolom 1, dan `Error` berarti build
+Bacalah *message*-nya. `broken.nim` adalah *file* itu (kadang ditulis dengan path lengkap), `(3, 1)` *line* 3, kolom 1, dan `Error` berarti build
 berhenti. Isinya, "end of multiline comment expected", artinya compiler mencapai akhir *file*
 sebelum menemukan `]#`.
 

@@ -173,8 +173,8 @@ tanpa `else`.
 Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
 1. Ubah `temperature` di contoh pertama menjadi `5`, lalu prediksi *output*-nya sebelum menjalankan.
-2. Tulis *expression* `if` yang mengubah *value* `age` menjadi `"anak"` (di bawah 13), `"remaja"` (13–19),
-   atau `"dewasa"` (20 ke atas), lalu tampilkan *result*-nya.
+2. Tulis *expression* `if` yang mengubah *value* `age` menjadi `"child"` (di bawah 13), `"teen"` (13–19),
+   atau `"adult"` (20 ke atas), lalu tampilkan *result*-nya.
 3. Tulis *procedure* yang menerima `char` dan memakai `case` untuk mengembalikan `"vowel"` untuk
    `'a'`/`'i'`/`'u'`/`'e'`/`'o'`, `"digit"` untuk `'0' .. '9'`, dan `"other"` untuk sisanya.
 4. Kode berikut gagal di-compile. Perbaiki, lalu sebutkan *line* dan kolom yang ditunjuk compiler:

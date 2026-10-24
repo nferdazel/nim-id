@@ -53,7 +53,7 @@ berapa kali bilangan pembagi muat, `mod` memberi sisanya. Membagi dengan nol tid
 
 ## Pangkat dan akar
 
-Operator `^` bukan bawaan; ia datang dari `std/math` dan bekerja pada `float`.
+Operator `^` bukan bawaan; ia datang dari `std/math` dan menerima `int` maupun `float`.
 
 ```{.nim}
 import std/math
@@ -69,9 +69,9 @@ echo pow(3.0, 3.0)
 27.0
 ```
 
-Untuk pangkat *integer*, kalikan berulang di dalam *loop* atau konversi ke `float` lebih
-dulu. Menulis `2 ^ 10` dengan dua *integer* tidak di-compile menjadi pangkat bulat, jadi
-niatnya perlu dibuat eksplisit.
+Pangkat *integer* juga tersedia: `2 ^ 10` menghasilkan `1024` bertipe `int`, karena *type* hasilnya
+mengikuti bilangan yang dipangkatkan. Untuk pangkat yang jangkauannya melebihi `int`, konversi ke
+`float` lebih dulu.
 
 ## *Comparison*
 
@@ -225,7 +225,7 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
 - `/` selalu menghasilkan `float`; pembagian bulat memakai `div`, sisanya `mod`.
 - `mod` mengikuti tanda bilangan yang dibagi; membagi dengan nol menghentikan program.
-- `^` berasal dari `std/math` dan bekerja pada `float`.
+- `^` berasal dari `std/math` dan menerima `int` maupun `float`.
 - `and` dan `or` mengevaluasi singkat; pada `int` keduanya berarti operasi bitwise.
 - `in` dan `notin` memeriksa keanggotaan pada *range*, *set*, *array*, dan string.
 

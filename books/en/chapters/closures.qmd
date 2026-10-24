@@ -281,7 +281,8 @@ Answers are in [Appendix A](../appendix/answers.qmd).
 
 - A procedure is a value of type `proc(...)`; it can be stored, passed, and returned.
 - A closure is a procedure together with the variables it captured.
-- `var` is captured by reference, `let` by copy; closures from the same call share one variable.
+- A closure refers to the variable itself, whether `var` or `let`; the only difference is that `let`
+  cannot be reassigned afterwards. Closures from the same call share one variable.
 - Closures inside a loop refer to the same loop variable; create them through a separate procedure
   so each closure gets its own copy.
 - Closures use the `{.closure.}` convention; mixing them with a `{.nimcall.}` type is rejected by the

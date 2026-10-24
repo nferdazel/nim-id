@@ -52,7 +52,7 @@ program stops with a `DivByZeroDefect`.
 
 ## Powers and roots
 
-The `^` operator is not built in; it comes from `std/math` and works on `float`.
+The `^` operator is not built in; it comes from `std/math` and accepts both `int` and `float`.
 
 ```{.nim}
 import std/math
@@ -68,8 +68,8 @@ echo pow(3.0, 3.0)
 27.0
 ```
 
-For an integer power, multiply in a loop or convert to `float` first. Writing `2 ^ 10` with two
-integers does not compile into integer exponentiation, so the intent has to be made explicit.
+Integer powers work too: the result type follows the input, so `2 ^ 10` yields `1024` as an `int`.
+For powers beyond the range of `int`, convert to `float` first.
 
 ## Comparison
 
@@ -222,7 +222,7 @@ Answers are in [Appendix A](../appendix/answers.qmd).
 
 - `/` always yields a `float`; integer division uses `div` and the remainder uses `mod`.
 - `mod` follows the sign of the dividend; dividing by zero stops the program.
-- `^` comes from `std/math` and works on `float`.
+- `^` comes from `std/math` and accepts both `int` and `float`.
 - `and` and `or` short-circuit; on `int` they mean bitwise operations.
 - `in` and `notin` test membership in a range, a set, an array, and a string.
 

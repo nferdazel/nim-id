@@ -58,6 +58,9 @@ Read it from left to right:
 Ahead of that position Nim writes the file name, sometimes as a full path
 (`/home/.../hello.nim(1, 16)`) depending on version and system. The position is what you read.
 
+`echo` on the second line writes its argument to stdout and ends the line. There is no `main` here,
+and a single file may hold top-level statements like this one.
+
 There is no output, because no program runs. To a beginner this feels like an obstacle. Over time it
 becomes an advantage: the same mistake in Python surfaces only when that line executes, perhaps
 after real user data has arrived.
