@@ -55,13 +55,15 @@ if [ "$jumlah" = 0 ]; then
   exit 1
 fi
 
-log=$(git log "$rentang" --pretty='%s%n%b')
+subjects=$(git log "$rentang" --pretty='%s')
+bodies=$(git log "$rentang" --pretty='%b')
 
 ada_major=0
 ada_minor=0
-if printf '%s\n' "$log" | grep -Eq '^[A-Za-z]+(\([^)]*\))?!: |^BREAKING[ -]CHANGE:'; then
+if printf '%s\n' "$subjects" | grep -Eq '^[A-Za-z]+(\([^)]*\))?!: ' || \
+   printf '%s\n' "$bodies" | grep -Eq '^BREAKING[ -]CHANGE:'; then
   ada_major=1
-elif printf '%s\n' "$log" | grep -Eq '^feat(\([^)]*\))?: '; then
+elif printf '%s\n' "$subjects" | grep -Eq '^feat(\([^)]*\))?: '; then
   ada_minor=1
 fi
 

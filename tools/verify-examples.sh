@@ -75,6 +75,7 @@ for dir in "$root"/examples/*/; do
       *) continue ;;
     esac
     rel="${src#"$root"/}"
+    subcache="$cache/$(echo "${rel%.nim}" | tr '/' '_')"
     stdout_file="$out/$nama.out"
     stderr_file="$out/$nama.err"
     biner="$out/$nama"
@@ -87,7 +88,7 @@ for dir in "$root"/examples/*/; do
 
     if [ "$mode" = "js" ]; then
       js_file="$out/$nama.js"
-      if "$nim_bin" js --hints:off --out:"$js_file" --nimcache:"$cache" "$src" \
+      if "$nim_bin" js --hints:off --out:"$js_file" --nimcache:"$subcache" "$src" \
           >"$stdout_file" 2>"$stderr_file"; then
         if ! command -v node >/dev/null 2>&1; then
           catat_gagal "$rel: butuh node untuk menjalankan hasil nim js"
@@ -103,7 +104,7 @@ for dir in "$root"/examples/*/; do
     fi
 
     # shellcheck disable=SC2086
-    if "$nim_bin" c -r --hints:off $mode --out:"$biner" --nimcache:"$cache" "$src" \
+    if "$nim_bin" c -r --hints:off $mode --out:"$biner" --nimcache:"$subcache" "$src" \
         >"$stdout_file" 2>"$stderr_file"; then
       cek_keluaran "$src" "$stdout_file" "$rel"
     else
