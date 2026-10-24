@@ -26,6 +26,12 @@ mkdir -p public/en
 cp -a books/id/_book/. public/
 cp -a books/en/_book/. public/en/
 
+# Situs dan PDF dipasang sebagai satu paket. Kalau salah satu PDF tidak ikut
+# terbangun, tautan unduhannya mati, jadi render dianggap gagal.
+for pdf in "public/Dasar-Pemrograman-Nim.pdf" "public/en/Learning-Nim.pdf"; do
+  [ -f "$pdf" ] || { echo "PDF tidak ada: $pdf"; exit 1; }
+done
+
 # Cache busting: nama berkas CSS tetap (Quarto tidak memberi hash), sedangkan Cloudflare
 # menyimpan aset berhari-hari. Sematkan versi di URL supaya rilis baru tidak memakai CSS lama.
 versi="$(tr -d '[:space:]' < VERSION)"

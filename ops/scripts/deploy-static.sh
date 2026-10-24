@@ -67,7 +67,7 @@ git reset --hard origin/main
 REV="$(git rev-parse --short HEAD)"
 log "==> konten di $REV"
 
-# 4. Render kedua bahasa + susun public/. PDF tidak dibuat di sini.
+# 4. Render kedua bahasa + susun public/. PDF ikut dibangun render yang sama.
 QUARTO="$QUARTO" bash tools/build-site.sh 2>&1 | tee -a "$LOG" || die "render gagal"
 [ -f "public/index.html" ] || die "hasil render tidak berisi index.html"
 
