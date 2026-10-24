@@ -4,6 +4,7 @@ on:
   pull_request:
   push:
     branches: [main]
+    tags: ['v*']
   workflow_dispatch:
 
 permissions:
@@ -43,6 +44,9 @@ jobs:
     name: "Buku: render dua bahasa + PDF"
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    # Only the tag run creates a release; branch and pull request runs stay read-only.
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v4
 
@@ -73,3 +77,34 @@ jobs:
           name: pdf
           path: public/**/*.pdf
           retention-days: 30
+
+      # F-15. A release exists only if the tag names this exact version: without
+      # the guard a mistyped tag would publish 0.7.3 PDFs under a 0.7.8 label.
+      - name: "Tag cocok dengan VERSION"
+        if: startsWith(github.ref, 'refs/tags/v')
+        env:
+          TAG: ${{ github.ref_name }}
+        run: |
+          version="$(tr -d '[:space:]' < VERSION)"
+          if [ "v$version" != "$TAG" ]; then
+            echo "tag '$TAG' does not match VERSION '$version'" >&2
+            exit 1
+          fi
+
+      # Same commit and the same Quarto and Nim versions the VPS uses, so these
+      # attach the same PDFs the site serves. Re-running a failed tag build
+      # uploads the assets again instead of failing on an existing release.
+      - name: "Terbitkan rilis GitHub"
+        if: startsWith(github.ref, 'refs/tags/v')
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ github.ref_name }}
+        run: |
+          set -- \
+            "public/Dasar-Pemrograman-Nim.pdf#Dasar Pemrograman Nim (ID).pdf" \
+            "public/en/Learning-Nim.pdf#Learning Nim (EN).pdf"
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            gh release upload "$TAG" "$@" --clobber
+          else
+            gh release create "$TAG" "$@" --title "$TAG" --generate-notes
+          fi

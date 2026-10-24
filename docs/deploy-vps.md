@@ -56,8 +56,16 @@ Dipicu webhook saat push ke `main`, sama seperti aplikasi lain:
 Skrip: ref-guard → `flock` → `git fetch`/`reset` → `tools/build-site.sh` (id + en) → rsync `public/` ke `releases/<sha>` →
 swap `web` → `curl` health check → rollback symlink kalau gagal → sisakan 3 rilis.
 
-PDF **tidak** dibuat di VPS. PDF dibuat di GitHub Actions saat tag `v*`, supaya server tidak perlu
-menanggung toolchain typesetting dan hasilnya reproducible.
+PDF dibuat di dua tempat, dari commit yang sama:
+
+- **VPS**, saat deploy: `deploy-static.sh` memanggil `tools/build-site.sh`, yang merender `html` dan
+  `typst` sekaligus. Ini yang disajikan situs.
+- **GitHub Actions**, saat tag `v*` di-push: job `buku` merender ulang lalu menerbitkan kedua PDF
+  sebagai aset GitHub Release. Job itu berhenti kalau nama tag tidak sama dengan isi `VERSION`, jadi
+  label rilis tidak bisa meleset.
+
+Keduanya memakai Quarto dan Nim versi yang sama, jadi isinya identik. Rilis tidak memicu deploy:
+webhook hanya mendengar `refs/heads/main`.
 
 ## Quarto di server (tanpa root)
 
