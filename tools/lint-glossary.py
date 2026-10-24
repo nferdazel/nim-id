@@ -123,7 +123,9 @@ TAUTAN = re.compile(r"\]\([^)]*\)")
 
 
 def prosa(teks):
-    teks = FENCE.sub(" ", teks)
+    # A fenced block becomes its own newlines. Replacing it with a single space would
+    # pull every line below it upwards and make the reported numbers wrong.
+    teks = FENCE.sub(lambda m: "\n" * m.group(0).count("\n"), teks)
     teks = INLINE.sub(" ", teks)
     teks = TAUTAN.sub("] ", teks)
     return teks
@@ -136,13 +138,18 @@ def main():
         if not berkas.exists():
             continue
         teks = prosa(berkas.read_text())
-        for baris_no, baris in enumerate(teks.splitlines(), 1):
-            rendah = baris.lower()
-            for salah, benar in TERLARANG.items():
-                if re.search(r"\b" + re.escape(salah) + AKHIRAN + r"\b", rendah):
-                    rel = berkas.relative_to(ROOT)
-                    print(f"{rel}:{baris_no}: '{salah}' seharusnya '{benar}'")
-                    temuan += 1
+        for salah, benar in TERLARANG.items():
+            # The prose is hard-wrapped, so a two-word term can sit either side of a line
+            # break. Match any run of whitespace between the words and keep the newlines,
+            # so the line number comes from the text itself.
+            pola = re.compile(
+                r"\b" + r"\s+".join(map(re.escape, salah.split())) + AKHIRAN + r"\b", re.I
+            )
+            for temuan_pola in pola.finditer(teks):
+                baris_no = teks.count("\n", 0, temuan_pola.start()) + 1
+                rel = berkas.relative_to(ROOT)
+                print(f"{rel}:{baris_no}: '{salah}' seharusnya '{benar}'")
+                temuan += 1
 
     if temuan:
         print(f"\n{temuan} istilah terlarang")
