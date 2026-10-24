@@ -55,7 +55,9 @@ cek_error() {
     catat_gagal "$3: gagal dikompilasi tanpa ${harap#"$root"/}"
     # Tampilkan sebabnya: tanpa ini kegagalan hanya terbaca sebagai "gagal".
     sed -n '1,3p' "$stderr_file" | sed 's/^/      /' >&2
-  elif grep -qF -- "$(cat "$harap")" "$stderr_file"; then
+  # `grep -F` treats every line of a multi-line pattern as a separate alternative, so a
+  # two-line expectation would pass on either line alone. Compare the whole text instead.
+  elif python3 -c 'import sys; h = open(sys.argv[1]).read().strip(); e = open(sys.argv[2]).read(); sys.exit(0 if h and h in e else 1)' "$harap" "$stderr_file"; then
     catat_lulus
   else
     catat_gagal "$3: pesan error tidak memuat isi ${harap#"$root"/}"
