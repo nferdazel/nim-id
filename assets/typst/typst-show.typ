@@ -573,11 +573,9 @@ $endif$
     if openers.len() == 0 { return }
     if pn < openers.first().location().page() { return }
     set text(size: 8.5pt, fill: ink-soft)
-    // The margins mirror, so the text block sits half a centimetre off the
-    // trim on either side. The folio is nudged back so every number lands on
-    // the same axis through the book.
-    let shift = (32mm - 27mm) / 2
-    place(center + horizon, dx: if calc.odd(pn) { -shift } else { shift }, numbering("1", pn))
+    // Margins are symmetrical (29.5mm on both sides), so the folio sits
+    // directly on the center axis through the book without shift.
+    place(center + horizon, numbering("1", pn))
   },
 )
 //
