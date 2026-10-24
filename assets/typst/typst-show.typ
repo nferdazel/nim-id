@@ -582,11 +582,19 @@ $endif$
 )
 //
 // Ragged right on purpose: justified text at this measure would open rivers
-// of space (DESIGN.md). Hyphenation stays on so the ragged edge does not
-// wander too far.
+// of space (DESIGN.md). Typst ships no hyphenation patterns for Indonesian —
+// 0 soft hyphens in 408 pages, against 9 in the English edition — so keeping
+// `hyphenate` on buys the Indonesian edition nothing and the ragged edge has to
+// be carried by the breaker instead.
 // ---------------------------------------------------------------------------
 #show par: set par(
   justify: false,
+  // Typst's default breaker is greedy: it fills each line and leaves whatever
+  // is left for the last one. "optimized" weighs the paragraph as a whole, which
+  // pulls one- and two-word closing lines back into the line above. Measured on
+  // this book: widows fell from 9 to 1 in ID and from 8 to 0 in EN, with the page
+  // count unchanged (408 / 401) and the panel splits unchanged (2 / 4).
+  linebreaks: "optimized",
   leading: 0.75em,
   // DESIGN.md, "PDF": 1.3 em between paragraphs, with no first-line indent.
   spacing: 1.3em,
