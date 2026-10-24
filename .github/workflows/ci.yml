@@ -36,6 +36,9 @@ jobs:
       - name: "Verifikasi contoh"
         run: bash tools/verify-examples.sh
 
+      - name: "Verifikasi blok lampiran"
+        run: python3 tools/check-appendix.py
+
   buku:
     name: "Buku: render dua bahasa + PDF"
     runs-on: ubuntu-latest

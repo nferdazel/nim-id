@@ -34,7 +34,7 @@ usage: ./task <command>
   en        render the English edition only
   pdf       render the PDF edition of both books
   dev       local preview with auto-reload
-  check     examples + site (the gate before a commit)
+  check     examples + appendix + site (the gate before a commit)
   version   print the book version (from VERSION)
   release   bump the version from commit messages, commit, then tag (--major/--minor/--patch)
 
@@ -97,6 +97,7 @@ case "${1:-help}" in
     python3 tools/check-parity.py
     python3 tools/check-glossary-page.py
     bash tools/verify-examples.sh
+    python3 tools/check-appendix.py
     QUARTO="$QUARTO" bash tools/build-site.sh
     ;;
   help|-h|--help)

@@ -283,7 +283,7 @@ echo name
    ```
 
 **3.** *Expression* di dalam `{...}` dievaluasi, jadi penjumlahannya benar-benar dihitung:
-   ```{.nim}
+   ```{.nim .fragment}
    echo &"{3 + 4}"
    ```
    *Output*: `7`.
@@ -307,7 +307,7 @@ echo name
    *result*-nya `-1`.
 
 **4.** Dua *comparison* harus disatukan dengan `and`:
-   ```{.nim}
+   ```{.nim .fragment}
    echo 1 <= x and x <= 100
    ```
 
@@ -713,7 +713,7 @@ proc shout*(text: string): string =
   text & "!"
 ```
 
-```{.nim}
+```{.nim .fragment}
 # main.nim
 import shout
 
@@ -734,7 +734,7 @@ bukan menghapus nama *module* itu. Kalau kualifikasi ingin dipaksa, tulis `from 
 pembagian, bukan *pointer* *module*. *Module* yang diimpor bernama `format`, jadi kualifikasi yang benar
 memakai titik saja:
 
-```{.nim}
+```{.nim .fragment}
 import textutils/format
 
 echo format.upper("hi")
@@ -751,7 +751,7 @@ HI
 const appName* = "notes"
 ```
 
-```{.nim}
+```{.nim .fragment}
 # main.nim
 import config_module
 
@@ -1540,7 +1540,7 @@ kalau error-nya benar-benar terjadi.
 
 **1.** Bungkus dua `Future` dengan `all`, lalu tunggu bersama.
 
-```{.nim}
+```{.nim .fragment}
 proc main() {.async.} =
   let results = await all(fetch("alpha", 30), fetch("beta", 10))
   for result in results:
@@ -1581,7 +1581,7 @@ echo waitFor total(value(2), value(3))
 
 **4.** Ganti `await` di *procedure* sinkron dengan `waitFor`.
 
-```{.nim}
+```{.nim .fragment}
 proc main(): int =
   waitFor work()
 ```
@@ -1599,7 +1599,7 @@ int half(int x) {
 }
 ```
 
-```{.nim}
+```{.nim .fragment}
 {.compile: "helper.c".}
 
 proc half(x: cint): cint {.importc.}
@@ -1629,7 +1629,7 @@ main.nim(1, 37) Error: invalid pragma: compile: "helper.c"
 Pindahkan ke tempatnya sendiri: `{.compile.}` berdiri di *line*-nya, dan `{.importc.}` dipasang pada
 deklarasi *procedure*.
 
-```{.nim}
+```{.nim .fragment}
 {.compile: "helper.c".}
 
 proc triple(x: cint): cint {.importc.}
@@ -2351,7 +2351,7 @@ main()
 
 **1.** Tambahkan satu *procedure* di `a02_store.nim`, sejajar dengan `removeNote`:
 
-```{.nim}
+```{.nim .fragment}
 proc setDone*(path: string, index: int, done: bool): bool =
   var notes = loadNotes(path)
   if index < 0 or index >= notes.len:
@@ -2364,7 +2364,7 @@ proc setDone*(path: string, index: int, done: bool): bool =
 Lalu ubah dua tempat di `a03_main.nim`. Cabang `list` print penanda, dan satu cabang baru
 menangani *subcommand* `done`:
 
-```{.nim}
+```{.nim .fragment}
   of "list":
     let notes = loadNotes(storePath)
     if notes.len == 0:
@@ -2406,7 +2406,7 @@ Setelah `add "one"`, *file* itu berisi satu catatan, sehingga `list` print:
 
 **3.** *Test* untuk `saveNotes` cukup menulis, membaca kembali, lalu memeriksa keduanya:
 
-```{.nim}
+```{.nim .fragment}
   test "saves and reads back":
     saveNotes(testPath(), @[
       Note(text: "first", done: false),
