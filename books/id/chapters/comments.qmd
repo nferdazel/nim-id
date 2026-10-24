@@ -28,7 +28,7 @@ comments do not run
 
 *Line comment* boleh berdiri sendiri di awal *line*, atau menempel di ujung kode. Compiler membuang
 keduanya sebelum kode mesin dibuat, jadi tidak ada biaya di runtime. Yang penting: *comment*
-menjelaskan *kenapa*, bukan *apa*. `# tambah satu` di atas `total += 1` tidak memberi informasi apa
+menjelaskan kenapa, bukan apa. `# tambah satu` di atas `total += 1` tidak memberi informasi apa
 pun.
 
 ## *Block comment*: `#[ ... ]#`
@@ -74,7 +74,7 @@ sebelum menemukan `]#`.
 
 Ada pelajaran penting di posisinya. Kita write `#[` di *line* 1, tetapi compiler menunjuk *line* 3:
 *line* kosong setelah *line* terakhir. Compiler baru tahu *comment*-nya tidak pernah ditutup waktu
-mencapai akhir *file*. Jadi posisi yang dilaporkan adalah tempat compiler *menyadari* masalahnya,
+mencapai akhir *file*. Jadi posisi yang dilaporkan adalah tempat compiler menyadari masalahnya,
 bukan selalu tempat error itu di-write. Karena itu, saat menemui error yang menunjuk di luar
 dugaan, periksa beberapa *line* sebelumnya.
 

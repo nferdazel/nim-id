@@ -240,7 +240,8 @@ hal muncul bersamaan: datanya besar, *query* harus cepat pada sebagian kecil *ro
 program write ke *file* yang sama. Di titik itu pergantian ke SQLite masuk akal.
 
 Untuk memakainya, pasang `db_connector`, lalu mengimpor `db_connector/db_sqlite`. *Module* itu memerlukan
-`libsqlite3` pada sistem. Bentuk pemakaiannya sama, hanya lebih banyak:
+`libsqlite3` pada sistem. Di macOS `libsqlite3` sudah ikut terpasang; di Debian dan Ubuntu ia datang
+dari `apt install libsqlite3-dev`. Bentuk pemakaiannya sama, hanya lebih banyak:
 
 | Kebutuhan | Di bab ini | Di `db_sqlite` |
 |---|---|---|

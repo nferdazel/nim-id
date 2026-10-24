@@ -118,7 +118,7 @@ Bacalah dari *line* pertama:
 *procedure* yang mungkin cocok, dan `[1] proc square(n: int): int` menjelaskan syaratnya: *parameter*
 `n` harus `int`. Jadi masalahnya sederhana: `"four"` adalah `string`, bukan `int`.
 
-Kebiasaan yang baik: baca *line* pertama untuk tahu *di mana* dan *apa*, baru baca sisanya kalau
+Kebiasaan yang baik: baca *line* pertama untuk tahu di mana dan apa, baru baca sisanya kalau
 butuh alasan. Untuk galat *calling* *procedure*, daftar `Expected one of` sering kali sudah berisi
 jawabannya.
 

@@ -218,6 +218,9 @@ git remote add origin git@github.com:sari/textstats.git
 git push -u origin main
 ```
 
+Git here is an ordinary tool, not part of Nim. If `git --version` does not answer, install Git and
+set a name and email once (`git config --global user.name`, `user.email`) before the commands above.
+
 Once the repository exists, the package is registered once; every later release is marked with a tag:
 
 ```{.bash}

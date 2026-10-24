@@ -28,6 +28,9 @@ nim js hello.nim
 node hello.js
 ```
 
+`node` adalah Node.js, dan compiler Nim tidak membutuhkannya. Kalau `node --version` belum menjawab,
+pasang Node.js lebih dulu; tanpa itu hasil compile tetap ada, tetapi tidak bisa dijalankan.
+
 ```{.txt}
 hello from JavaScript
 ```

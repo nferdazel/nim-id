@@ -233,7 +233,8 @@ things show up together: the data is large, queries must be fast over a small sl
 several programs write to the same file. At that point moving to SQLite makes sense.
 
 To use it, install `db_connector`, then import `db_connector/db_sqlite`. That module needs
-`libsqlite3` on the system. The shape of the code is the same, only richer:
+`libsqlite3` on the system. macOS ships the library; on Debian and Ubuntu it comes from
+`apt install libsqlite3-dev`. The shape of the code is the same, only richer:
 
 | Need | In this chapter | In `db_sqlite` |
 |---|---|---|

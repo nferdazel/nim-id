@@ -218,7 +218,7 @@ perubahan yang memutus kode harus menaikkan angka major.
 ## Menerbitkan ke repositori Git
 
 Nimble tidak menyimpan kode *package*. Yang dipegangnya hanya daftar nama *package* beserta URL repositori.
-Karena itu kode harus ada di Git lebih dulu:
+Sebabnya, kode harus ada di Git lebih dulu:
 
 ```{.bash}
 git init
@@ -227,6 +227,9 @@ git commit -m "textstats 0.1.0"
 git remote add origin git@github.com:sari/textstats.git
 git push -u origin main
 ```
+
+Git di sini bukan bagian dari Nim. Kalau `git --version` belum menjawab, pasang Git dan atur nama
+serta email sekali (`git config --global user.name`, `user.email`) sebelum menjalankan blok di atas.
 
 Setelah repositorinya ada, satu *package* cukup didaftarkan sekali. *Release* berikutnya cukup ditandai
 dengan tag:
