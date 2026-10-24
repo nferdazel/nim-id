@@ -127,10 +127,11 @@ main()
 Nim has 3 characters
 ```
 
-`Channel[Count]` only accepts a `tuple[string, int]`. Each thread has its own heap, so a `ref`
-object from one thread must not be used in another. Wrapping a result into one value and sending it
-through a `Channel` is the safe pattern. Another option is a global variable, as in the first
-example.
+`Channel[Count]` only accepts a `tuple[string, int]`. Since Nim 2.x threads share one process heap,
+but the reference counter is not atomic, so a `ref` object must not be handed to another thread as it
+is. Wrapping a result into one value and sending it through a `Channel` is the safe pattern, because
+the channel copies what it carries. For larger data, `std/isolation` offers `Isolated`, which moves
+ownership instead of copying.
 
 ## `--threads:on` is no longer needed
 
@@ -179,9 +180,11 @@ dominated by waiting. A thread uses another CPU core, so it fits work that is do
 computation. Threads are more expensive to create, and memory is not shared for free, so they are
 not worth one per tiny task.
 
-Each thread has its own heap, so a `ref` object created in one thread must not be used in another.
-When data has to cross a thread boundary, send it through a `Channel` or keep it in a simple global
-variable.
+Threads share the process heap, so what limits sharing is not the space but the reference counter,
+which is not atomic, plus the compiler's `gcsafe` check. When data has to cross a thread boundary,
+send it through a `Channel` or wrap it in `Isolated`. A global variable is safe only for data the GC
+does not manage, and even then it needs a lock: without one, two threads writing to the same variable
+lose writes.
 
 One old note: `std/threadpool` with `spawn`, `^`, and `sync` still exists, but it is marked
 `deprecated` in Nim 2.2.12. The compiler suggests nimble packages such as `malebolgia`, `taskpools`,

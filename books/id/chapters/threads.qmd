@@ -127,10 +127,11 @@ main()
 Nim has 3 characters
 ```
 
-`Channel[Count]` hanya menerima `tuple[string, int]`. *Thread* punya heap sendiri, jadi *object*
-`ref` dari satu *thread* tidak boleh dipakai di *thread* lain. Membungkus *result* ke dalam satu
-*value* lalu mengirimnya lewat `Channel` adalah pola yang aman. Cara lain adalah *variable* global,
-seperti pada contoh pertama.
+`Channel[Count]` hanya menerima `tuple[string, int]`. Sejak Nim 2.x *thread* berbagi satu heap
+proses, tetapi penghitung referensinya tidak atomik, jadi *object* `ref` tidak boleh diserahkan ke
+*thread* lain begitu saja. Membungkus *result* ke dalam satu *value* lalu mengirimnya lewat `Channel`
+adalah pola yang aman, karena `Channel` menyalin isinya. Untuk data yang lebih besar, `std/isolation`
+menyediakan `Isolated` yang memindahkan kepemilikan tanpa menyalin.
 
 ## `--threads:on` tidak lagi perlu
 
@@ -179,9 +180,11 @@ pekerjaan didominasi menunggu. *Thread* memakai inti CPU lain, jadi cocok saat p
 hitungan. *Thread* lebih mahal dibuat, dan *memory* tidak dibagi begitu saja, sehingga tidak layak
 dibuat satu per tugas kecil.
 
-*Thread* juga punya heap sendiri, jadi *object* `ref` tidak otomatis bisa dipakai lintas *thread*.
-Kalau data harus melewati batas *thread*, kirim lewat `Channel` atau simpan di *variable* global yang
-sederhana.
+*Thread* berbagi heap dengan prosesnya, jadi yang membatasi bukan ruang *memory*-nya, melainkan
+penghitung referensi yang tidak atomik dan pemeriksaan `gcsafe` dari compiler. Kalau data harus
+melewati batas *thread*, kirim lewat `Channel` atau bungkus dengan `Isolated`. *Variable* global
+hanya aman untuk data yang tidak dikelola GC, dan itu pun tetap butuh penguncian: tanpa penguncian,
+dua *thread* yang menulis ke *variable* yang sama kehilangan sebagian penulisan.
 
 Satu catatan lama: `std/threadpool` dengan `spawn`, `^`, dan `sync` masih ada, tetapi ditandai
 `deprecated` di Nim 2.2.12. Compiler menyarankan *package* nimble seperti `malebolgia`, `taskpools`,
