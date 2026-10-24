@@ -1,9 +1,11 @@
 # Macro: kode yang membangun kode
 
 Template sudah menyelesaikan banyak pekerjaan: ia mengganti satu potongan kode dengan potongan
-lain. Tapi template hanya menempel teks. Ia tidak menerima *argument* sebagai data AST yang bisa
-dibongkar, dan tidak bisa mengulang atas isi data untuk membangun kode baru. *Type* masih bisa
-diperiksa lewat `when typeof(x) is ...`, tapi itu hanya memilih cabang, bukan membangun bentuk baru.
+lain, dan ia bekerja pada pohon sintaksis, bukan pada teks. *Argument*-nya sampai sebagai node, dan
+nama lokal di dalamnya tidak bentrok dengan nama milik *caller*. Yang tidak bisa ia lakukan adalah
+membongkar node itu: di dalam template tidak ada cara memeriksa bentuknya, mengulang atas isinya,
+atau membangun bentuk baru. *Type* masih bisa diperiksa lewat `when typeof(x) is ...`, tapi itu hanya
+memilih cabang.
 Begitu kebutuhan sampai di situ, `macro` mengambil alih: *procedure* yang berjalan saat compile dan
 menerima kode sebagai data.
 
@@ -314,7 +316,7 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
 ## Ringkasan
 
-- `template` menyisipkan kode apa adanya; *argument* yang dipakai dua kali dievaluasi dua kali.
+- `template` menyisipkan kode di posisi pemakaian; *argument* yang dipakai dua kali dievaluasi dua kali.
 - `macro` adalah *procedure* saat compile yang menerima `NimNode` dan return `NimNode`.
 - `quote do` membangun AST; backtick menempelkan node atau *value* dari luar, dan nama lokalnya
   aman dari bentrok.

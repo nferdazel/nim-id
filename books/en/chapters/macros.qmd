@@ -1,8 +1,10 @@
 # Macros: code that builds code
 
-A template replaces one piece of code with another, but it only pastes text. It cannot take an
-argument as AST data to take apart, and it cannot loop over data to build new code. Types can still
-be checked with `when typeof(x) is ...`, but that only picks a branch; it does not build a new shape.
+A template replaces one piece of code with another, and it does so on the syntax tree, not on text.
+Arguments arrive as nodes, and a name declared inside does not collide with the caller's. What it
+cannot do is take those nodes apart: inside a template there is no way to inspect their shape, loop
+over their contents, or build a new shape. Types can still be checked with `when typeof(x) is ...`,
+but that only picks a branch.
 At that point `macro` takes over: a procedure that runs at compile time and takes code as data.
 
 This chapter starts from templates, shows the point where they run out, then builds a macro step by
@@ -305,7 +307,7 @@ Answers are in [Appendix A](../appendix/answers.qmd).
 
 ## Summary
 
-- A `template` pastes code as written; an argument used twice is evaluated twice.
+- A `template` expands at the call site; an argument used twice is evaluated twice.
 - A `macro` is a compile-time procedure that takes `NimNode` and returns `NimNode`.
 - `quote do` builds an AST; a backtick splices a node or value from outside, and its local names are
   safe from clashes.
