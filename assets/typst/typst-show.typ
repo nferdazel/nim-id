@@ -26,6 +26,41 @@
 #let code-paper = rgb("#f4f1ea")  // code panel, one step off the paper
 #let panel-fill = rgb("#f1f3f5")  // fill pandoc's syntax highlighter paints
 
+// --- Indent grid (mm) ------------------------------------------------------
+// One set of axes for every hanging or inset element, so a chapter number, a
+// list marker and a table cell start on the same line from page to page and
+// neither drifts when a heading gains a digit or a marker gains a character.
+// The values are measured from the edge of the text block; the margins mirror,
+// so the numbers hold on both the recto and the verso.
+//
+//   heading number   16 mm of margin, right-aligned, 4 mm clear of the text
+//   list marker       4 mm in, 3 mm wide, so every marker is right-aligned at 7 mm
+//   list body         9 mm (indent + marker column + gap) — one hanging indent
+//                     for bullets and for numbers alike
+//   numbered list    13.5 mm of the text block, shared by the table of
+//                     contents and the part / appendix chapter lists
+//   box inset         2.8 mm inside every code panel, table cell and callout
+#let g-num-col = 16mm       // margin column that holds a hanging heading number
+#let g-num-gap = 4mm        // from that number's right edge to the heading text
+#let g-list-indent = 4mm    // left edge of the list marker column
+#let g-list-mark = 3mm      // marker column width; markers are right-aligned in it
+#let g-list-gap = 2mm       // from the marker column to the item body
+#let g-list-num-col = 13.5mm // number column of the contents and part lists
+#let g-box-inset = 2.8mm    // inner padding shared by panels, tables, callouts
+
+// A hanging heading number. It is drawn in the margin instead of the text
+// block, in a fixed-width box that is right-aligned inside the column, so the
+// digit count changes the number's left edge and never its right one — a
+// heading number therefore keeps one axis through the whole book. The margin
+// column is placed as one box of known width, which is what makes the number's
+// advance predictable; measuring the number itself is not, because `measure`
+// runs before the heading's own text size takes effect and would report a
+// narrower number than the one that is drawn.
+#let hanging-number(n) = place(
+  dx: -(g-num-col + g-num-gap),
+  box(width: g-num-col, align(right, text(fill: accent)[#n])),
+)
+
 // Marks the page on which a part opening is drawn. The flag is raised before
 // the page break and lowered right after it, so the header of the part page
 // still reads `true` (the page is evaluated at its own start) while no later
@@ -223,7 +258,7 @@
     )
   }
   link(loc, grid(
-    columns: (1.35cm, 1fr, auto),
+    columns: (g-list-num-col, 1fr, auto),
     align: (left + horizon, left + horizon, right + horizon),
     text(size: 10pt, weight: "bold", fill: accent)[#if numbered [#num]],
     text(size: 10pt, weight: if numbered { "bold" } else { "regular" })[
@@ -249,20 +284,42 @@
     v(5mm)
     line(length: 100%, stroke: 0.5pt + rule)
     v(8mm)
+    let divider-word = if doc-lang == "id" { "Lampiran" } else { "Appendices" }
+    // A part bar and the chapters under it are one unit. Left to break freely,
+    // the bar ends up at the foot of a page with two rows after it, or the rows
+    // carry on under a bar that stayed behind. A part with more chapters than a
+    // page holds cannot be kept whole, so those groups stay breakable.
+    let groups = ()
+    let group = ()
     for hn in query(heading) {
       // `and` does not short-circuit in Typst, so the tests are separate.
       if hn.level == none or not hn.outlined { continue }
       if hn.level > depth { continue }
-      let loc = hn.location()
-      if part-change.at(loc) [
-        #v(1.1em)
-        #line(length: 100%, stroke: 0.4pt + rule)
-        #v(0.35em)
-        #text(size: 8.5pt, tracking: 0.12em, fill: ink-soft)[#upper(part-state.at(loc))]
-        #v(0.45em)
-      ]
-      if hn.level == 1 { toc-row(hn) } else { pad(left: 5mm, toc-row(hn)) }
-      v(0.4em)
+      if part-change.at(hn.location()) and group.len() > 0 {
+        groups.push(group)
+        group = ()
+      }
+      group.push(hn)
+    }
+    if group.len() > 0 { groups.push(group) }
+    for group in groups {
+      block({
+        let head = group.first().location()
+        if part-change.at(head) [
+          #v(1.1em)
+          #line(length: 100%, stroke: 0.4pt + rule)
+          #v(0.35em)
+          #text(size: 8.5pt, tracking: 0.12em, fill: ink-soft)[#upper(part-state.at(head))]
+          #v(0.45em)
+        ]
+        for hn in group {
+          // The divider page announces the appendices with the bar above;
+          // listing its own heading would repeat the same word one line lower.
+          if hn.numbering == none and hn.body.has("text") and hn.body.text == divider-word { continue }
+          if hn.level == 1 { toc-row(hn) } else { pad(left: 5mm, toc-row(hn)) }
+          v(0.4em)
+        }
+      }, breakable: group.len() > 25)
     }
   }
 }
@@ -368,6 +425,9 @@ $endif$
 #let appendix-divider(it) = {
   pagebreak(weak: true)
   part-change.update(x => true)
+  // The divider starts a new group in the table of contents; without this the
+  // bar would still carry the last chapter part's title.
+  part-state.update(x => it.body)
   [
     #context {
       set par(justify: false)
@@ -381,8 +441,8 @@ $endif$
       for hn in items {
         let num = numbering("A", counter(heading).at(hn.location()).first())
         link(hn.location(), grid(
-          columns: (1.1cm, 1fr, auto),
-          align: (left, left, right),
+          columns: (g-list-num-col, 1fr, auto),
+          align: (left + horizon, left + horizon, right + horizon),
           text(size: 9.5pt, fill: accent, weight: "bold")[#num],
           text(size: 9.5pt)[#hn.body #box(width: 1fr, repeat(text(size: 9.5pt, fill: rule)[. #h(3pt)]))],
           text(size: 9.5pt)[#hn.location().page()],
@@ -437,8 +497,8 @@ $endif$
         let raw = numbering(hn.numbering, ..counter(heading).at(hn.location()))
         let num = if raw.ends-with(".") { raw.slice(0, -1) } else { raw }
         link(hn.location(), grid(
-          columns: (1.1cm, 1fr, auto),
-          align: (left, left, right),
+          columns: (g-list-num-col, 1fr, auto),
+          align: (left + horizon, left + horizon, right + horizon),
           text(size: 9.5pt, fill: accent, weight: "bold")[#num],
           text(size: 9.5pt)[#hn.body #box(width: 1fr, repeat(text(size: 9.5pt, fill: rule)[. #h(3pt)]))],
           text(size: 9.5pt)[#hn.location().page()],
@@ -494,9 +554,12 @@ $endif$
   numbering: none,
   footer: context {
     let pn = counter(page).at(here()).first()
-    // The cover and the title page carry no folio; everything after them does,
-    // so the printed numbers are contiguous and match the table of contents.
-    if pn <= 2 { return }
+    // Front matter carries no folio at all, and the first number appears on the
+    // first chapter: the table of contents is drawn inside the book block and
+    // never reaches this rule, so a fixed page number would be a guess.
+    let openers = query(heading.where(level: 1)).filter(it => it.numbering != none)
+    if openers.len() == 0 { return }
+    if pn < openers.first().location().page() { return }
     set text(size: 8.5pt, fill: ink-soft)
     // The margins mirror, so the text block sits half a centimetre off the
     // trim on either side. The folio is nudged back so every number lands on
@@ -519,9 +582,23 @@ $endif$
 )
 
 // A list item's body hangs under the first line instead of under the marker, so
-// a wrapped item stays readable at 10pt in a 119 mm measure.
-#show list: set list(indent: 1.1em, body-indent: 0.5em, spacing: 0.4em)
-#show enum: set enum(indent: 1.1em, body-indent: 0.5em, spacing: 0.4em)
+// a wrapped item stays readable at 10pt in a 119 mm measure. Every marker is
+// right-aligned in the same 3 mm column — a bullet, "1." and "10." all end on
+// one axis, and the body of a bulleted item starts where the body of a numbered
+// one does. The marker column is fixed, so it does not grow when a list reaches
+// a second digit.
+#show list: set list(
+  indent: g-list-indent,
+  body-indent: g-list-gap,
+  spacing: 0.4em,
+  marker: box(width: g-list-mark, align(right, [•])),
+)
+#show enum: set enum(
+  indent: g-list-indent,
+  body-indent: g-list-gap,
+  spacing: 0.4em,
+  numbering: n => box(width: g-list-mark, align(right, numbering("1.", n))),
+)
 
 // ---------------------------------------------------------------------------
 // Headings, levels 2 to 4
@@ -533,8 +610,7 @@ $endif$
 #show heading.where(level: 2): it => {
   set text(size: 1.32em, weight: "bold")
   let number = if it.numbering != none {
-    let n = counter(heading).display(it.numbering)
-    place(dx: -measure(n).width - 5mm, text(fill: accent)[#n])
+    hanging-number(counter(heading).display(it.numbering))
   }
   block(above: 1.7em, below: 0.6em, sticky: true, number + it.body)
 }
@@ -542,8 +618,7 @@ $endif$
 #show heading.where(level: 3): it => {
   set text(size: 1.15em, weight: "bold")
   let number = if it.numbering != none {
-    let n = counter(heading).display(it.numbering)
-    place(dx: -measure(n).width - 5mm, text(fill: accent)[#n])
+    hanging-number(counter(heading).display(it.numbering))
   }
   block(above: 1.4em, below: 0.5em, sticky: true, number + it.body)
 }
@@ -551,8 +626,7 @@ $endif$
 #show heading.where(level: 4): it => {
   set text(size: 1.02em, weight: "bold")
   let number = if it.numbering != none {
-    let n = counter(heading).display(it.numbering)
-    place(dx: -measure(n).width - 5mm, text(fill: accent)[#n])
+    hanging-number(counter(heading).display(it.numbering))
   }
   block(above: 1.2em, below: 0.4em, sticky: true, number + it.body)
 }
@@ -582,7 +656,7 @@ $endif$
       fill: code-paper,
       stroke: 0.4pt + rule,
       radius: 2pt,
-      inset: (x: 8pt, y: 7pt),
+      inset: (x: g-box-inset, y: 7pt),
       above: 0.85em,
       below: 0.85em,
       width: 100%,
@@ -600,7 +674,7 @@ $endif$
 // bold and keeps its rule; cells get enough padding to breathe, and a wide
 // table is allowed to break across pages rather than run off the trim.
 // ---------------------------------------------------------------------------
-#set table(inset: (x: 6pt, y: 5pt), stroke: none, align: left)
+#set table(inset: (x: g-box-inset, y: 5pt), stroke: none, align: left)
 #set table.hline(stroke: 0.5pt + rule)
 // Header rows repeat on every page a long table spans (Typst's default), so a
 // reader who meets the glossary mid-table still knows the three columns.
@@ -646,7 +720,7 @@ $endif$
     stroke: (left: 2pt + accent, rest: 0.4pt + rule),
     width: 100%,
     radius: 1pt,
-    inset: (x: 10pt, y: 8pt),
+    inset: (x: g-box-inset, y: 8pt),
     // The icon argument is accepted and ignored: DESIGN.md allows no
     // decorative glyphs, and the FontAwesome font is not embedded.
     block(below: 4pt, text(size: 0.95em, weight: "bold")[#title]) + block(above: 2pt, body),
