@@ -8,7 +8,7 @@ The book text is licensed CC BY-SA 4.0 and the code samples MIT. The details are
 page, which also lists the source and how to report errors.
 
 If something is wrong, report it in the
-[issues](https://github.com/nferdazel/nim-id/issues). This book is alive: the next version fixes what
-readers find.
+[issues](https://github.com/nferdazel/nim-id/issues). This book is actively maintained: future revisions
+incorporate what readers find.
 
 Thank you for reading this far.

@@ -230,7 +230,7 @@ Nimble reads version-shaped tags such as `v0.2.0` to learn which releases exist,
 commit, then tag. `nimble publish` needs a GitHub account and a personal access token and proposes
 the package to the official list in `nim-lang/packages`. Once per package, not per release.
 
-## When a package deserves to be published
+## When a package is ready to be published
 
 Not all code needs to be a package. If only one program uses it, keep it as a module in that project.
 A package earns its keep when:
@@ -248,7 +248,7 @@ because mistakes only show up once someone uses the code.
 
 Answers are in [Appendix A](../appendix/answers.qmd).
 
-1. Name four things that must be in place before a package deserves to be published.
+1. Name four things that must be in place before a package is ready to be published.
 2. Without running it, predict the output:
    ```{.nim}
    import a01_textstats as ts

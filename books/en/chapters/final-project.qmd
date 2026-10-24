@@ -1,7 +1,7 @@
 # Final project: notes from the terminal
 
 A small useful tool almost always has the same shape: a few modules, one data file, a handful of
-subcommands, and some tests. Part C has closed the pieces this tool needs. Now they are put together into
+subcommands, and some tests. Part C has covered the building blocks this tool needs. Now they are put together into
 one program that can genuinely be used: `notes`, a command line tool for writing short things
 down.
 

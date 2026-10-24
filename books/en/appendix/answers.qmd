@@ -8,11 +8,11 @@ can explain why. The section number matches the chapter number: A.5 holds the an
 **1.** Change the string:
 
 ```{.nim}
-echo "Hello, Sari"
+echo "Hello, Ada"
 ```
 
 ```{.txt}
-Hello, Sari
+Hello, Ada
 ```
 
 **2.** The output is `55`. The sum of `1..10` is 55. The range is inclusive, so 10 counts.

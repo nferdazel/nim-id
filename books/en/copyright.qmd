@@ -42,5 +42,5 @@ book has no ISBN and is not issued by any publisher.
 - Website: [nim.qouver.com](https://nim.qouver.com)
 - Bug reports: [github.com/nferdazel/nim-id/issues](https://github.com/nferdazel/nim-id/issues)
 
-Mistakes found by readers are material for the next fix, not a disgrace. If an example stops
+Corrections and reports found by readers help improve upcoming revisions. If an example stops
 working on a newer Nim, report it in the issues.

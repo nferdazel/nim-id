@@ -94,7 +94,7 @@ zero.
 
 ## Two closures sharing one variable
 
-Several closures born from the same call use the same variable.
+Several closures created within the same call share the same variable.
 
 ```{.nim}
 proc makePair(): (proc(): int, proc(): int) =
