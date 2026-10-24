@@ -24,3 +24,13 @@ books/*/_variables.yml
 .idea/
 .vscode/
 Thumbs.db
+
+# Compiled samples: `nim c -r examples/x/a01.nim` leaves a binary beside the
+# source. Only sources and their recorded output belong in the repo.
+examples/**/a[0-9][0-9]_*
+!examples/**/*.nim
+!examples/**/*.expected
+!examples/**/*.expected-error
+!examples/**/*.c
+!examples/**/*.inc
+!examples/**/*.mode
