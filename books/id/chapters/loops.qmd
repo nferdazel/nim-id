@@ -6,7 +6,7 @@ bug paling tua: batas yang salah satu, *element* terakhir tidak ikut, atau *inde
 
 Nim tidak menyediakan `for (int i = 0; i < n; i++)` seperti C. *Loop* `for` di Nim selalu
 memakai *iterator*: *range*, *array*, `seq`, atau iterator buatan sendiri. Bentuk itu menghapus banyak
-*error* penghitungan *index*.
+error penghitungan *index*.
 
 ::: {.callout-note}
 ## Tujuan bab
@@ -103,8 +103,8 @@ cyd
 2: cyd
 ```
 
-`for name in names` call iterator `items` secara implisit: setiap putaran mengambil *element itu*.
-Kalau *index itu* dibutuhkan, tulis dua nama *variable*. Bentuk itu memakai `pairs`, yang menghasilkan
+`for name in names` call iterator `items` secara implisit: setiap putaran mengambil *element* itu.
+Kalau *index* itu dibutuhkan, tulis dua nama *variable*. Bentuk itu memakai `pairs`, yang menghasilkan
 *index* dan *element* sekaligus. Untuk `array` dan `seq`, *index* `pairs` bertipe `int` mulai dari nol.
 Untuk `Table` dan *type* lain, `pairs` menghasilkan pasangan yang sesuai *type* tersebut.
 
@@ -130,7 +130,7 @@ remaining: 2
 Kondisi diperiksa **sebelum** badan dijalankan, jadi `while` bisa berjalan nol kali. Bentuk ini
 satu-satunya `while` yang ada; Nim tidak menyediakan `do .. while`.
 
-Pastikan ada sesuatu di dalam badan yang akhirnya membuat kondisi salah; kalau tidak, *loop itu*
+Pastikan ada sesuatu di dalam badan yang akhirnya membuat kondisi salah; kalau tidak, *loop* itu
 tidak pernah berhenti dan kita harus menghentikan prosesnya sendiri.
 
 ## `break` dan `continue`
@@ -189,7 +189,7 @@ yang sama di posisi serupa.
 
    echo total
    ```
-3. Tulis *loop* yang menjumlahkan *element* sebuah `seq[int]` memakai `pairs`, lalu print total dan
+3. Tulis *loop* yang menjumlahkan *element* sebuah `seq[int]` memakai `pairs`, lalu tampilkan total dan
    *index* *element* terbesar.
 4. Kode berikut tidak pernah berhenti. Perbaiki tanpa mengubah maksudnya:
    ```{.nim}

@@ -1,14 +1,14 @@
 # HTTP API dengan `asynchttpserver`
 
 Membuat server HTTP terdengar seperti proyek besar. Padahal dengan `std/asynchttpserver`, satu
-server sederhana cukup belasan *line*, dan semua bagiannya ada di **standard library**. Yang membuat kode
+server sederhana cukup belasan *line*, dan semua bagiannya ada di *standard library*. Yang membuat kode
 server sulit diuji bukan *socket*-nya, melainkan *handler* yang bercampur dengan *socket* itu.
 
 ::: {.callout-note}
 ## Tujuan bab
 
-Setelah bab ini, pembaca bisa membedakan `HttpCode` dan `HttpMethod`, write *route* sederhana,
-read body JSON lalu return JSON, read *query string* dengan `std/uri`, menyalakan
+Setelah bab ini, pembaca bisa membedakan `HttpCode` dan `HttpMethod`, menulis *route* sederhana,
+membaca body JSON lalu mengembalikan JSON, membaca *query string* dengan `std/uri`, menyalakan
 server dengan `newAsyncHttpServer` dan `serve`, serta membaca *message* `has to be used (or discarded)`
 saat lupa `await` pada `respond`.
 :::
@@ -38,7 +38,7 @@ GET
 application/json
 ```
 
-`Http200` adalah *value* `HttpCode`, *type* `distinct` yang *value itu* dibatasi 0 sampai 599. `httpcore`
+`Http200` adalah *value* `HttpCode`, *type* `distinct` yang *value* itu dibatasi 0 sampai 599. `httpcore`
 memberi `$` untuk *type* ini, sehingga `echo Http200` print `"200 OK"`, bukan angka telanjang.
 Konversi `.int` return angkanya saja, dan dipakai nanti untuk menyusun *output* yang ringkas.
 `HttpMethod` adalah `enum`: `HttpGet` bernilai teks `GET`, `HttpPost` bernilai `POST`, begitu
@@ -93,7 +93,7 @@ for (httpMethod, path, body) in requests:
 
 *Route* dicocokkan dengan `case path`. *Path* `/items` menerima `HttpPost` saja; metode lain dijawab
 `Http400`, yang berarti permintaan klien tidak sesuai. *Path* yang tidak dikenal dijawab `Http404`.
-Pemisahan ini penting: `Http400` menyalahkan permintaan, `Http404` mengatakan *route itu* tidak ada.
+Pemisahan ini penting: `Http400` menyalahkan permintaan, `Http404` mengatakan *route* itu tidak ada.
 
 Body JSON di-read dengan `parseJson` dari `std/json`. Field diambil memakai `payload["name"]`, lalu
 `getStr` mengubahnya menjadi `string`. Untuk membalas, `%*{...}` membangun JSON langsung dan `$`
@@ -127,7 +127,7 @@ page = 2
 
 `parseUri` membongkar URL menjadi bagian-bagiannya: `.path`, `.query`, `.hostname`, dan lainnya.
 Bagian `query` masih teks mentah. Iterator `decodeQuery` membagi atas `&`, lalu mengurai tiap
-pasangan `kunci=nilai`. Perhatikan `q`: tanda plus menjadi spasi, karena pada *query string* `+`
+pasangan `key=value`. Perhatikan `q`: tanda plus menjadi spasi, karena pada *query string* `+`
 memang mewakili spasi. *Value* yang di-print sudah terurai, siap dipakai.
 
 ## Dari `Request` ke *handler*
@@ -193,11 +193,11 @@ for (httpMethod, path) in [(HttpGet, "/health"), (HttpGet, "/nope")]:
 ```
 
 `handle` bertanda `{.async.}` karena `respond` return `Future[void]`, dan *result*-nya harus
-di-write dengan `await`. *Procedure* `main` membangun server, lalu call `serve`. Server asli tidak
+di-write dengan `await`. *Procedure* `main` membangun server, lalu memanggil `serve`. Server asli tidak
 dinyalakan di sini: contoh hanya call `dispatch` langsung supaya *output*-nya tetap. Di program
 sungguhan, *line* terakhir adalah `waitFor main()`, yang menjalankan *event loop*.
 
-Setelah server berjalan, uji dengan *tool* *command line* biasa:
+Setelah server berjalan, uji dengan tool command line biasa:
 
 ```bash
 $ curl -s http://localhost:8080/health
@@ -208,7 +208,7 @@ $ curl -s http://localhost:8080/nope
 
 ## Error sengaja: lupa `await` pada `respond`
 
-*Error* pertama yang hampir selalu terjadi: memanggil `respond` tanpa `await`.
+Error pertama yang hampir selalu terjadi: memanggil `respond` tanpa `await`.
 
 ```{.nim}
 import std/[asynchttpserver, asyncdispatch, httpcore]
@@ -223,7 +223,7 @@ main.nim(4, 6) Error: expression 'respond(req, Http200, "ok", nil)' is of type '
 ```
 
 *Message*-nya dua bagian. Bagian pertama menyebut *type* *result* panggilan: `Future[system.void]`, bukan
-`void`. Bagian kedua menawarkan dua pilihan, memakai *value itu* atau membuangnya dengan sadar. Karena
+`void`. Bagian kedua menawarkan dua pilihan, memakai *value* itu atau membuangnya dengan sadar. Karena
 kita memang menunggu balasan terkirim, jawabannya `await`. Penulisan yang benar:
 `await req.respond(Http200, "ok")`. Compiler juga menandai *line* tempat `{.async.}` dipakai, tanda
 bahwa masalahnya ada di dalam *procedure* async.
@@ -238,7 +238,7 @@ Menjaga lapisan itu setipis mungkin adalah kebiasaan yang dibawa terus saat API 
 ## Latihan
 
 1. Tambahkan *route* `/version` pada `dispatch` yang return `{"version":"1"}` dengan `Http200`,
-   lalu print balasannya.
+   lalu tampilkan balasannya.
 2. Tanpa menjalankan, prediksi *output*-nya:
    ```{.nim}
    import std/httpcore
@@ -253,7 +253,7 @@ Menjaga lapisan itu setipis mungkin adalah kebiasaan yang dibawa terus saat API 
    ```
 3. Tulis dari nol: *handler* yang membaca `page` dari *query string* dan mengembalikannya sebagai
    JSON, misalnya `{"page":"2"}`.
-4. Kode berikut gagal *di-compile*. Perbaiki, lalu jelaskan isi *message*-nya:
+4. Kode berikut gagal di-compile. Perbaiki, lalu jelaskan isi *message*-nya:
    ```{.nim}
    import std/[asynchttpserver, asyncdispatch, httpcore]
 

@@ -1,14 +1,14 @@
 # Proyek akhir: catatan dari terminal
 
-*Tool* kecil yang berguna hampir selalu punya bentuk yang sama: beberapa *module*, satu *file* data,
-beberapa *subcommand*, dan beberapa *test*. Bagian C sudah menutup potongan yang dibutuhkan *tool* ini.
-Sekarang potongan itu disatukan menjadi satu program yang benar-benar bisa dipakai: `notes`, *tool*
-*command line* untuk mencatat hal-hal pendek.
+Tool kecil yang berguna hampir selalu punya bentuk yang sama: beberapa *module*, satu *file* data,
+beberapa *subcommand*, dan beberapa *test*. Bagian C sudah menutup potongan yang dibutuhkan tool ini.
+Sekarang potongan itu disatukan menjadi satu program yang benar-benar bisa dipakai: `notes`, tool
+command line untuk mencatat hal-hal pendek.
 
 ::: {.callout-note}
 ## Tujuan bab
 
-Setelah bab ini, pembaca bisa memecah satu *tool* kecil menjadi *module* terpisah, menyimpan data ke
+Setelah bab ini, pembaca bisa memecah satu tool kecil menjadi *module* terpisah, menyimpan data ke
 *file* JSON, read *subcommand* dengan `std/parseopt`, write *test*-nya dengan `std/unittest`, dan
 membaca *error message* ketika JSON diperlakukan seperti object biasa.
 :::
@@ -53,7 +53,7 @@ langkah berikut.
 
 ## Langkah 2: *module* penyimpanan
 
-Sekarang pindahkan bagian yang menyentuh *file* ke *module itu* sendiri. Simpan sebagai
+Sekarang pindahkan bagian yang menyentuh *file* ke *module* itu sendiri. Simpan sebagai
 `a02_store.nim`.
 
 ```{.nim}
@@ -124,9 +124,9 @@ left: 1
 ```
 
 *Module* ini adalah seluruh aturan penyimpanan dalam satu tempat. `loadNotes` return *seq*
-kosong kalau *file itu* belum ada, sehingga *caller* pertama tidak perlu menanganinya sendiri.
+kosong kalau *file* itu belum ada, sehingga *caller* pertama tidak perlu menanganinya sendiri.
 `removeNote` return `bool` sebagai laporan, bukan menghentikan program dengan *exception*,
-karena *index* di luar *range* adalah *error* pemakaian yang wajar.
+karena *index* di luar *range* adalah error pemakaian yang wajar.
 
 Blok `when isMainModule` adalah bagian yang hanya berjalan saat *file* ini dijalankan langsung.
 Ketika *module* lain mengimpornya, blok itu dilewati. Karena itu *module* bisa diuji sendiri, tanpa CLI.
@@ -135,7 +135,7 @@ lalu menghapusnya sendiri di akhir.
 
 ## Langkah 3: *subcommand*
 
-Lapisan terakhir adalah *tool* *command line* itu. Simpan sebagai `a03_main.nim`.
+Lapisan terakhir adalah tool command line itu. Simpan sebagai `a03_main.nim`.
 
 ```{.nim}
 import std/[parseopt, os, strutils]
@@ -250,8 +250,8 @@ rm -f /tmp/notes-demo.json
 ```
 
 Perhatikan bentuk `--file:/tmp/notes-demo.json`, bukan `--file /tmp/notes-demo.json`. `parseopt`
-mengambil *value* *option* dari bagian yang sama dengan nama *option itu*, dipisah titik dua atau tanda sama
-dengan. Kalau *value itu* dipisah spasi, *path* itu dianggap *argument* biasa.
+mengambil *value* *option* dari bagian yang sama dengan nama *option* itu, dipisah titik dua atau tanda sama
+dengan. Kalau *value* itu dipisah spasi, *path* itu dianggap *argument* biasa.
 
 ## Langkah 4: *test*
 
@@ -331,22 +331,22 @@ sesungguhnya: `note["text"]`, lalu diterjemahkan dengan `getStr` menjadi `string
 
 ## Latihan
 
-1. Tambahkan *subcommand* `done <index>` yang menandai catatan sebagai selesai, lalu print `[x]` atau
+1. Tambahkan *subcommand* `done <index>` yang menandai catatan sebagai selesai, lalu tampilkan `[x]` atau
    `[ ]` di *subcommand* `list`.
 2. Tanpa menjalankan, prediksi *output*-nya: `./notes list` pada *file* yang belum ada, lalu
    `./notes add "one"` dan `./notes list` lagi.
 3. Tulis *test* untuk `saveNotes` yang memastikan *result* tulisannya bisa dibaca kembali dan panjangnya
    tetap.
-4. Kode berikut gagal *di-compile*. Perbaiki, lalu jelaskan *message*-nya: `let notes = parseJson("[]")`
+4. Kode berikut gagal di-compile. Perbaiki, lalu jelaskan *message*-nya: `let notes = parseJson("[]")`
    diikuti `notes.add("buy milk")`.
 5. Sebutkan satu keuntungan menyimpan fungsi penyimpanan di *module* terpisah, dan satu pekerjaan yang
-   harus ditambahkan sebelum *tool* ini dipakai di dua komputer sekaligus.
+   harus ditambahkan sebelum tool ini dipakai di dua komputer sekaligus.
 
 Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
 ## Ringkasan
 
-- Satu *tool* kecil layak dipecah: *type* dan konversi, *module* penyimpanan, lapisan CLI, lalu *test*.
+- Satu tool kecil layak dipecah: *type* dan konversi, *module* penyimpanan, lapisan CLI, lalu *test*.
 - `%*` membangun JSON, `parseJson` membacanya, dan pasangan `toJson` serta `fromJson` mencegah
   konversi di-write dua kali.
 - `when isMainModule` membuat *module* bisa dijalankan sendiri tanpa mengganggu pemakainya.
@@ -357,7 +357,7 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
 ## Selanjutnya
 
-Bagian C selesai. Yang tersisa dari buku ini adalah *tool*: daftar istilah, lembar rangkuman,
+Bagian C selesai. Yang tersisa dari buku ini adalah tool: daftar istilah, lembar rangkuman,
 dan catatan untuk pembaca yang datang dari bahasa lain. Mulai dari daftar istilah, karena di
 sanalah setiap kata yang dipakai buku ini dijelaskan satu kali saja. Lanjut ke
 [Glosarium](../appendix/glossary.qmd).

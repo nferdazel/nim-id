@@ -11,7 +11,7 @@ apa pun dan baru mengeluh jauh di dalam. Dengan batasan, *type* yang salah ditol
 ::: {.callout-note}
 ## Tujuan bab
 
-Setelah bab ini, pembaca bisa write *procedure* dan *type* generic, memasang batasan pada *parameter*
+Setelah bab ini, pembaca bisa menulis *procedure* dan *type* generic, memasang batasan pada *parameter*
 *type*, membaca *error message* saat batasannya tidak dipenuhi, serta membedakan inferensi otomatis dan
 *argument* *type* eksplisit.
 :::
@@ -38,7 +38,7 @@ nim
 disebut instansiasi, dan *result*-nya dua *procedure* berbeda yang sama-sama bernama `identity`.
 
 Nama `T` hanya berlaku di dalam deklarasi itu, dan dua *procedure* *result* instansiasi tidak berbagi
-kode: yang satu bekerja dengan `int`, yang lain dengan `string`. Karena itu, *error* di dalam
+kode: yang satu bekerja dengan `int`, yang lain dengan `string`. Karena itu, error di dalam
 badan generic baru terlihat saat salah satu versinya dibuat. Compiler memeriksa tiap versi secara
 terpisah, dan *error message*-nya sering menyebut *type* yang sedang disimpulkan.
 
@@ -105,7 +105,7 @@ echo boxed("text").value
 text
 ```
 
-`Box[int]` dan `Box[string]` adalah dua *type* berbeda yang dibuat dari satu deklarasi. *Constructor itu*
+`Box[int]` dan `Box[string]` adalah dua *type* berbeda yang dibuat dari satu deklarasi. *Constructor* itu
 di-write `Box[T](value: value)`, dan `T` di situ disesuaikan dari *value* yang dioper.
 
 *Procedure* yang bekerja pada `Box[T]` juga harus membawa *parameter* *type* yang sama. Itulah sebabnya
@@ -137,7 +137,7 @@ menebak *type* isinya. *Argument* *type* di-write di dalam kurung siku setelah n
 
 ## `typedesc`: menerima *type* sebagai *argument*
 
-Kadang yang dioper bukan *value*, melainkan *type itu*. *Parameter* bertipe `typedesc` menerima *type* itu.
+Kadang yang dioper bukan *value*, melainkan *type* itu. *Parameter* bertipe `typedesc` menerima *type* itu.
 
 ```{.nim}
 proc nameOf(T: typedesc): string =
@@ -153,11 +153,11 @@ string
 ```
 
 `nameOf(int)` tidak mengoper *value* `int`, melainkan *type* `int` itu sendiri. Panggilan seperti ini
-umum di **standard library**, misalnya untuk membuat koleksi kosong bertipe tertentu.
+umum di *standard library*, misalnya untuk membuat koleksi kosong bertipe tertentu.
 
-## `static[T]`: *value* yang diketahui saat *compile*
+## `static[T]`: *value* yang diketahui saat compile
 
-*Parameter* *type* bisa diberi batas `static`. Artinya *value itu* harus diketahui saat *compile*, bukan
+*Parameter* *type* bisa diberi batas `static`. Artinya *value* itu harus diketahui saat compile, bukan
 saat program berjalan.
 
 ```{.nim}
@@ -176,7 +176,7 @@ echo fill[int, 2](9)
 
 `N` dipakai sebagai ukuran `array[N, T]`, dan ukuran *array* harus tetap, jadi `N` wajib diketahui
 compiler. Karena `N` tidak muncul di daftar *parameter* *value*, keduanya di-write eksplisit:
-`fill[char, 3]`. *Result* `fill[char, 3]('z')` adalah *array* tiga *character*. Ukuran `N` menjadi bagian
+`fill[char, 3]`. *Result* `fill[char, 3]('z')` adalah *array* tiga character. Ukuran `N` menjadi bagian
 dari *type* *result*, jadi `fill[int, 2](9)` menghasilkan `array[2, int]`, *type* yang berbeda dari
 `fill[int, 3](9)`.
 
@@ -192,9 +192,9 @@ dari *type* *result*, jadi `fill[int, 2](9)` menghasilkan `array[2, int]`, *type
    echo pair(3)
    echo pair("a")
    ```
-3. Kenapa `makeSeq(3)` tidak bisa *di-compile* tanpa `[int]`? Jelaskan dengan menyebut di mana `T`
+3. Kenapa `makeSeq(3)` tidak bisa di-compile tanpa `[int]`? Jelaskan dengan menyebut di mana `T`
    muncul.
-4. Kode berikut gagal *di-compile*. Perbaiki batasannya, lalu jelaskan isi *message*-nya:
+4. Kode berikut gagal di-compile. Perbaiki batasannya, lalu jelaskan isi *message*-nya:
    ```{.nim}
    proc double[T: SomeInteger](value: T): T =
      value * 2
@@ -211,7 +211,7 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 - `[T]` juga dipakai pada `type`, bukan hanya *procedure*.
 - `T` disimpulkan dari *argument* yang bertipe `T`; kalau tidak ada, tulis *argument* *type* eksplisit.
 - `typedesc` menerima *type* sebagai *argument*, dan `static` menuntut *value* yang diketahui saat
-  *compile*.
+  compile.
 
 ## Selanjutnya
 

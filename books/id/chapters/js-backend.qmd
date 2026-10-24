@@ -1,6 +1,6 @@
-# *Compile* ke JavaScript
+# Compile ke JavaScript
 
-Biner bukan satu-satunya *output* Nim. Dengan satu perubahan *command*, compiler mengeluarkan JavaScript
+Biner bukan satu-satunya *output* Nim. Dengan satu perubahan command, compiler mengeluarkan JavaScript
 yang berjalan di Node.js atau di *browser*. Bab ini memakai backend JavaScript pada program yang
 sudah biasa kita tulis, menunjukkan apa yang tetap sama dan apa yang berbeda, lalu membaca satu
 error yang khas target ini. Bab ini sekaligus menutup Bagian B.
@@ -8,20 +8,20 @@ error yang khas target ini. Bab ini sekaligus menutup Bagian B.
 ::: {.callout-note}
 ## Tujuan bab
 
-Setelah bab ini, pembaca bisa *meng-compile* program Nim ke JavaScript dengan `nim js`, menjalankannya
+Setelah bab ini, pembaca bisa meng-compile program Nim ke JavaScript dengan `nim js`, menjalankannya
 dengan `node`, tahu bahwa sebagian *module* tidak tersedia di target ini, dan membaca error "marshal
 module is not supported in javascript".
 :::
 
 ## `nim js`: target *output*, bukan bahasa lain
 
-*Command itu* `nim js`, bukan `nim c`. Simpan kode berikut sebagai `hello.nim`.
+Command itu `nim js`, bukan `nim c`. Simpan kode berikut sebagai `hello.nim`.
 
 ```{.nim}
 echo "hello from JavaScript"
 ```
 
-Lalu *compile* dan jalankan:
+Lalu compile dan jalankan:
 
 ```{.bash}
 nim js hello.nim
@@ -36,7 +36,7 @@ hello from JavaScript
 menjalankannya, sama seperti *browser* nanti. Bahasa yang kita tulis tetap Nim; hanya *output*-nya yang
 JavaScript. Karena itu tidak ada sintaks baru yang perlu dihafal.
 
-*Command* `--backend:js` melakukan hal yang sama; `nim js` hanya bentuk pendeknya. Untuk API khusus
+Command `--backend:js` melakukan hal yang sama; `nim js` hanya bentuk pendeknya. Untuk API khusus
 Node.js, tambahkan `-d:nodejs`; tanpa *flag* itu, fungsi seperti `getCurrentDir()` dari `std/os` ada di
 kode tetapi gagal saat dijalankan. `echo` di backend ini menjadi `console.log`, jadi *output*-nya
 muncul di konsol *browser* atau di terminal.
@@ -128,11 +128,11 @@ marshal.nim(52, 10) Error: marshal module is not supported in javascript.
 ```
 
 Perhatikan *file* yang disebut: `marshal.nim`, bukan *file* kita. *Message*-nya datang dari dalam *module*
-itu sendiri, yang menolak *di-compile* ke target ini pada *line* 52. Kalimatnya menyebut syaratnya
+itu sendiri, yang menolak di-compile ke target ini pada *line* 52. Kalimatnya menyebut syaratnya
 langsung dan menambahkan saran memakai *package* lain untuk serialisasi.
 
-*Error message* bisa datang dari dalam **standard library**, bukan hanya dari kode kita. Membaca nama
-*file itu* membantu memisahkan masalah di kode sendiri dari batas target.
+*Error message* bisa datang dari dalam *standard library*, bukan hanya dari kode kita. Membaca nama
+*file* itu membantu memisahkan masalah di kode sendiri dari batas target.
 
 Solusinya memilih *module* yang didukung. Untuk urusan data, `std/json` bekerja di semua backend.
 Pola *message*-nya sama untuk *module* lain: target JavaScript tidak punya padanannya, dan compiler
@@ -144,7 +144,7 @@ tempat program berjalan, dan tidak semua tempat menyediakan hal yang sama.
 
 ## Latihan
 
-1. *Compile* contoh aritmetika dengan `nim js`, jalankan pakai `node`, lalu bandingkan dengan
+1. Compile contoh aritmetika dengan `nim js`, jalankan pakai `node`, lalu bandingkan dengan
    *result* `nim c -r`. Apakah *output*-nya sama?
 2. Tanpa menjalankan, prediksi *output*-nya:
    ```{.nim}
@@ -158,7 +158,7 @@ tempat program berjalan, dan tidak semua tempat menyediakan hal yang sama.
    ```
 3. Tulis program kecil yang memakai `std/dom` untuk mengubah isi sebuah `<div>`. Jelaskan kenapa
    program itu tidak bisa dijalankan dengan `node`.
-4. Kode berikut gagal *di-compile* ke JavaScript. Perbaiki dan jelaskan *message*-nya:
+4. Kode berikut gagal di-compile ke JavaScript. Perbaiki dan jelaskan *message*-nya:
    ```{.nim}
    import std/marshal
 
@@ -171,9 +171,9 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
 - `nim js` mengeluarkan JavaScript dari kode Nim yang sama; `node` menjalankannya.
 - *Type*, *procedure*, `seq`, dan interpolasi string tetap bekerja di target ini.
-- Sebagian *module*, misalnya `marshal`, tidak tersedia untuk JavaScript dan ditolak saat *compile*.
+- Sebagian *module*, misalnya `marshal`, tidak tersedia untuk JavaScript dan ditolak saat compile.
 - Kode yang memakai `std/dom` hanya berjalan di *browser*, bukan di `node`.
-- *Error message* bisa menyebut *file* di dalam **standard library**, bukan hanya *file* kita.
+- *Error message* bisa menyebut *file* di dalam *standard library*, bukan hanya *file* kita.
 
 ## Selanjutnya
 

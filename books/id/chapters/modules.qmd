@@ -37,7 +37,7 @@ Hello, Nim
 Dua hal menentukan apakah `greet` dan `version` terlihat dari *module* lain.
 
 - Tanda bintang setelah nama, `greet*`, menandai simbol supaya bisa dipakai *module* lain.
-  Tanpa bintang, simbol hanya hidup di dalam *module itu*. Ini kebalikan dari bahasa yang
+  Tanpa bintang, simbol hanya hidup di dalam *module* itu. Ini kebalikan dari bahasa yang
   mengekspor semua nama secara default.
 - `when isMainModule` menandai blok yang hanya berjalan saat *file* ini dijalankan langsung. Ketika
   *module* lain mengimpornya, blok itu dilewati. *Module* bisa sekaligus menjadi program kecil yang bisa
@@ -80,7 +80,7 @@ Hello, Grace
 Bedanya praktis: `import` membuka semua nama, `from ... import` membuka yang disebut saja. Pada
 *module* besar, bentuk kedua membuat daftar ketergantungan terbaca dari satu *line*.
 
-Nama *module itu* sendiri tetap terikat. Setelah `from a01_greeting import greet`, `a01_greeting.version`
+Nama *module* itu sendiri tetap terikat. Setelah `from a01_greeting import greet`, `a01_greeting.version`
 masih bisa di-write. Kalau justru ingin memaksa kualifikasi, pakai `from a01_greeting import nil`.
 
 ## `export`: meneruskan simbol ke *module* lain
@@ -156,11 +156,11 @@ HELLO
 
 Garis miring menunjuk letak *file*, bukan nama *module*. *Module* di atas tetap bernama `format`, jadi
 akses lengkapnya `format.upper`, bukan `textutils/format.upper`. Aturan yang sama berlaku untuk
-**standard library**: `import std/strutils` mengambil *module* bernama `strutils` dari *directory* `std`.
+*standard library*: `import std/strutils` mengambil *module* bernama `strutils` dari *directory* `std`.
 
 ## `include`: menyisipkan *file*, bukan mengimpor
 
-`include` tidak membuat *module* baru. Ia menyalin isi *file* ke posisi *command itu*, seakan di-write di
+`include` tidak membuat *module* baru. Ia menyalin isi *file* ke posisi command itu, seakan di-write di
 sana. Karena itu `include` berguna untuk memecah satu *module* yang sangat panjang, bukan untuk
 memisahkan tanggung jawab.
 
@@ -199,9 +199,9 @@ main.nim(1, 8) Error: cannot open file: not_a_real_module
 
 Posisi `(1, 8)` menunjuk nama *module* di *line* `import`. Compiler tidak tahu *file* itu memang tidak
 ada atau hanya salah ketik, jadi *message*-nya literal: *file* tidak bisa dibuka. Periksa kembali nama
-*file* dan letaknya. Untuk **standard library**, awalan `std/` adalah konvensi yang membuat asal *module*
+*file* dan letaknya. Untuk *standard library*, awalan `std/` adalah konvensi yang membuat asal *module*
 jelas: `import std/strutils`. Bentuk tanpa awalan masih dikenali compiler, tetapi tidak menunjukkan
-bahwa *module* itu bagian dari **standard library**.
+bahwa *module* itu bagian dari *standard library*.
 
 ## Latihan
 
@@ -222,9 +222,9 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 ## Ringkasan
 
 - Satu *file* Nim adalah satu *module*; nama *file* menjadi nama *module*, dan harus identifier yang sah.
-- Tanpa tanda `*`, simbol tidak keluar dari *module itu*.
+- Tanpa tanda `*`, simbol tidak keluar dari *module* itu.
 - `import` membuka semua nama yang diekspor, `from ... import` membuka sebagian, `export` meneruskan.
-- *Module* di *directory* tetap bernama *file itu*, bukan *path itu*.
+- *Module* di *directory* tetap bernama *file* itu, bukan *path* itu.
 - `include` menyalin teks dan tidak membuat *module*; pakai `import` untuk memisahkan kode.
 
 ## Selanjutnya

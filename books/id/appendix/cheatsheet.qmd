@@ -9,7 +9,7 @@ diuji di Nim 2.2.12.
 |---|---|
 | *value* yang boleh berubah | `var count = 0` |
 | diisi sekali | `let name = "Nim"` |
-| diketahui saat *compile* | `const MaxItems = 128` |
+| diketahui saat compile | `const MaxItems = 128` |
 | *type* di-write eksplisit | `var age: int8 = 24` |
 | tanpa *value* awal, berisi default *type* | `var flag: bool` |
 
@@ -20,7 +20,7 @@ diuji di Nim 2.2.12.
 | *integer* | `let n = 42` |
 | *float* | `let f = 3.14` |
 | boolean | `let b = true` |
-| *character* | `let c = 'x'` |
+| character | `let c = 'x'` |
 | teks | `let s = "text"` |
 | *type* bulat berlebar | `int8`, `int16`, `int32`, `int64`, `int` |
 | *float* | `float32`, `float64`, `float` |
@@ -38,7 +38,7 @@ diuji di Nim 2.2.12.
 | gabung | `"a" & "b"` |
 | *index* | `s[0]`, `s[^1]` |
 | potong | `s[1 .. 3]`, `s[^3 .. ^1]` |
-| satu *character* bertipe `char` | `s[0]` |
+| satu character bertipe `char` | `s[0]` |
 | panjang | `s.len` |
 
 *Raw string* dan *multiline string* di-write tanpa escape:
@@ -160,7 +160,7 @@ echo green in flags
 
 | Konsep | Kode |
 |---|---|
-| **return value** | `proc add(a, b: int): int = a + b` |
+| *return value* | `proc add(a, b: int): int = a + b` |
 | tanpa *side effect* | `func square(x: int): int = x * x` |
 | *parameter* default | `proc greet(name: string, punctuation = "!")` |
 | *named argument* | `greet(punctuation = "?")` |
@@ -330,17 +330,17 @@ echo twice(4)
 int twice(int x) { return x * 2; }
 ```
 
-## *Command* `nim` dan `nimble`
+## Command `nim` dan `nimble`
 
-| *Command* | Arti |
+| Command | Arti |
 |---|---|
-| `nim c file.nim` | *compile* |
-| `nim r file.nim` | *compile* lalu jalankan |
+| `nim c file.nim` | compile |
+| `nim r file.nim` | compile lalu jalankan |
 | `nim check file.nim` | periksa *type* saja |
 | `nim c -d:release file.nim` | build teroptimasi |
 | `nim c -o:app file.nim` | tentukan nama biner |
 | `nim c --mm:orc file.nim` | pilih mode *memory* |
-| `nim js file.nim` | *compile* ke JavaScript |
+| `nim js file.nim` | compile ke JavaScript |
 | `nim doc file.nim` | buat dokumentasi |
 | `nim c --hints:off file.nim` | senyapkan hint |
 | `nimble test` | jalankan *test* |

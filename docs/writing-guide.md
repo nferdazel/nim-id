@@ -63,8 +63,11 @@ Keputusan berikut diambil pemilik buku, dan menggantikan kebiasaan yang bertenta
   (setelah "bisa", "lalu", "untuk", atau sebagai imperatif) pakai verba Indonesia. Satu aksi satu
   verba: jangan bergantian antara `di-call` dan "dipanggil" dalam satu bab. Nomina tetap Indonesia:
   "pemanggilan", "kembalian", "penulisan".
-- **Miring.** Hanya istilah yang ada di glosarium. Kata Inggris di luar glosarium ditulis tegak.
-  Di awal kalimat istilah tetap miring dengan huruf kapital: `*Output*`.
+- **Miring.** Hanya istilah yang ada di glosarium, ditambah frasa asing yang belum diserap
+  (*machine learning*, *query string*, *abstract syntax tree*). Kata yang sudah diserap dan dipakai
+  sebagai kata biasa ditulis tegak: compiler, string, command, character. Begitu juga istilah yang
+  sudah menjadi bagian frasa Indonesia ("object varian"). Di awal kalimat istilah tetap miring
+  dengan huruf kapital: `*Output*`.
 - **Judul.** Istilah glosarium di judul dicetak miring, tidak pernah tebal.
 - ***seq***, bukan *sequence*: itu nama tipe yang dipakai kode.
 - ***type*** sah sebagai bentuk pendek *data type*.

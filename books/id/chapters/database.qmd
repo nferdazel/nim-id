@@ -3,7 +3,7 @@
 Data yang disimpan di *variable* hilang begitu program ditutup. Database ada untuk menutup celah itu:
 menyimpan *row* sampai program berikutnya dijalankan. Kabar buruknya, sejak Nim 2.0 *module*
 `std/db_sqlite` tidak lagi ikut compiler. *Module* basis data dipindahkan ke *package* terpisah,
-`db_connector`. Karena buku ini hanya memakai **standard library**, kita belajar polanya dengan yang
+`db_connector`. Karena buku ini hanya memakai *standard library*, kita belajar polanya dengan yang
 sudah tersedia, lalu memetakannya ke SQLite.
 
 ::: {.callout-note}
@@ -100,7 +100,7 @@ print JSON dengan indentasi; untuk *file*, `toUgly` lebih hemat karena tidak men
 menjadi struktur yang bisa ditelusuri.
 
 Tiga langkah itu, buka, tulis, tutup, sama bentuknya dengan alur `db_sqlite`: `open` untuk
-membuka koneksi, `exec` untuk menjalankan *command*, `close` untuk menutupnya. Bedanya, di sini koneksi
+membuka koneksi, `exec` untuk menjalankan command, `close` untuk menutupnya. Bedanya, di sini koneksi
 kita adalah *file* biasa.
 
 ## *Query*: saring lalu urutkan
@@ -135,7 +135,7 @@ for item in result:
 1984 Neuromancer
 ```
 
-`row["year"].getInt` mengambil satu field dan menuntut *type itu* `int`. *Loop* itu berperan
+`row["year"].getInt` mengambil satu field dan menuntut *type* itu `int`. *Loop* itu berperan
 seperti klausa `WHERE`: hanya *row* yang lolos syarat ikut dikumpulkan. `sort` berperan seperti
 `ORDER BY`.
 
@@ -183,14 +183,14 @@ update rejected
 Triknya ada di `save`: seluruh data baru di-write ke *file* sementara, baru dipindahkan menimpa
 *file* lama dengan `moveFile`. Pemindahan itu satu langkah, jadi pembaca tidak pernah melihat *file*
 setengah jadi. Kalau validasi gagal sebelum `writeFile`, *file* lama tidak tersentuh sama sekali.
-Itulah arti *commit* dan *rollback* di sini.
+Itulah arti commit dan rollback di sini.
 
-SQLite menyediakan keduanya secara eksplisit. Bungkus beberapa *command* dengan
+SQLite menyediakan keduanya secara eksplisit. Bungkus beberapa command dengan
 `db.exec(sql"BEGIN")`, lalu tutup dengan `db.exec(sql"COMMIT")`. Kalau ada yang salah di tengah,
-`db.exec(sql"ROLLBACK")` membatalkan semuanya. Tanpa `BEGIN`, setiap *command* langsung tersimpan,
+`db.exec(sql"ROLLBACK")` membatalkan semuanya. Tanpa `BEGIN`, setiap command langsung tersimpan,
 dan pembatalan tidak mungkin.
 
-## Bila *file itu* belum ada
+## Bila *file* itu belum ada
 
 Berbeda dengan C yang return kode error, Nim melempar *exception*. Program yang mengabaikannya
 akan berhenti.
@@ -211,14 +211,14 @@ except IOError:
 no database yet
 ```
 
-`readFile` melempar `IOError` kalau *file itu* tidak ada; `parseJson` melempar `JsonParsingError`
+`readFile` melempar `IOError` kalau *file* itu tidak ada; `parseJson` melempar `JsonParsingError`
 kalau isinya rusak. Keduanya harus ditangani di tempat yang tahu apa yang harus dilakukan, misalnya
-memulai *file* kosong. Pola ini persis pola `DbError` di `db_sqlite`: *error* yang tidak bisa
-diabaikan muncul sebagai *exception*, bukan sebagai **return value**.
+memulai *file* kosong. Pola ini persis pola `DbError` di `db_sqlite`: error yang tidak bisa
+diabaikan muncul sebagai *exception*, bukan sebagai *return value*.
 
 ## Error sengaja: *module* yang sudah pindah
 
-Kode yang mengimpor *module* basis data langsung dari **standard library** kini gagal di *line* pertama.
+Kode yang mengimpor *module* basis data langsung dari *standard library* kini gagal di *line* pertama.
 
 ```{.nim}
 import std/db_sqlite
@@ -228,10 +228,10 @@ import std/db_sqlite
 main.nim(1, 11) Error: cannot open file: std/db_sqlite
 ```
 
-Bacanya dari kiri: `main.nim` adalah *file itu*, `(1, 11)` berarti *line* 1 kolom 11, dan `Error`
-berarti *compile* berhenti. Kolom 11 menunjuk garis miring setelah `std`; nama *module itu* sendiri
+Bacanya dari kiri: `main.nim` adalah *file* itu, `(1, 11)` berarti *line* 1 kolom 11, dan `Error`
+berarti compile berhenti. Kolom 11 menunjuk garis miring setelah `std`; nama *module* itu sendiri
 mulai di kolom 8. `cannot open file` bukan
-berarti *file itu* rusak, tetapi *module itu* memang tidak ada di *search path*.
+berarti *file* itu rusak, tetapi *module* itu memang tidak ada di *search path*.
 
 ## Kapan SQLite tepat
 
@@ -246,17 +246,17 @@ Untuk memakainya, pasang `db_connector`, lalu mengimpor `db_connector/db_sqlite`
 |---|---|---|
 | membuka | `readFile(path)` | `open("data.db", "", "", "")` |
 | menutup | *file* ditutup otomatis | `db.close()` |
-| menjalankan *command* | `writeFile` | `db.exec(sql…)` |
+| menjalankan command | `writeFile` | `db.exec(sql…)` |
 | jumlah *row* terpengaruh | tidak ada | `db.execAffectedRows` |
 | semua *result* | `parseJson` lalu `for` | `db.getAllRows(sql…)` |
 | satu *row* | `rows[0]` | `db.getRow(sql…)` |
 | menyisipkan *value* | `%*{...}` | `db.exec(sql…)` |
 | *transaction* | *file* sementara lalu `moveFile` | `BEGIN`, `COMMIT`, `ROLLBACK` |
 
-*Command itu* di-write sebagai `sql"SELECT ..."`, yang menghasilkan *value* `SqlQuery`. *Parameter* `?` di
+Command itu di-write sebagai `sql"SELECT ..."`, yang menghasilkan *value* `SqlQuery`. *Parameter* `?` di
 dalamnya itu penting: jangan menyambung *value* ke dalam string SQL. Lewat `?`, `db_sqlite` meng-quote
 dan meng-escape *value* sebelum menyisipkannya, sehingga tanda kutip di dalamnya tidak merusak
-*command*. Ini bukan *parameter* binding terpisah seperti di driver SQL lain, jadi aturan menyambung
+command. Ini bukan *parameter* binding terpisah seperti di driver SQL lain, jadi aturan menyambung
 string sendiri tetap berlaku. Untuk pengujian, SQLite
 menerima nama basis data `:memory:` sehingga seluruh data hidup di *memory* dan tidak meninggalkan
 *file*. Selalu tulis `ORDER BY` pada *query* yang *result*-nya di-print, dengan alasan yang sama seperti
@@ -277,7 +277,7 @@ menerima nama basis data `:memory:` sehingga seluruh data hidup di *memory* dan 
    echo years
    ```
 3. Simpan tiga *row* ke sebuah *file* JSON di `getTempDir()`, baca kembali, print jumlah *row*-nya,
-   lalu hapus *file itu*.
+   lalu hapus *file* itu.
 4. Kode berikut berhenti saat dijalankan. Perbaiki, lalu jelaskan *exception* yang muncul:
    ```{.nim}
    import std/json

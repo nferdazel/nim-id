@@ -2,7 +2,7 @@
 
 *Procedure* `minMax` perlu return dua angka: *value* terkecil dan terbesar. Di banyak bahasa,
 jalan pintasnya adalah mengembalikan *array* atau *object* kecil. Nim punya cara yang lebih langsung:
-tuple, *value* gabungan berukuran tetap yang *element itu* boleh berbeda *type*.
+tuple, *value* gabungan berukuran tetap yang *element* itu boleh berbeda *type*.
 
 Tuple itu kecil dan murah. Ia dipakai untuk mengembalikan beberapa *value* sekaligus, menamai
 pasangan, atau menampung data sementara yang belum perlu menjadi *type* penuh.
@@ -11,12 +11,12 @@ pasangan, atau menampung data sementara yang belum perlu menjadi *type* penuh.
 ## Tujuan bab
 
 Setelah bab ini, pembaca bisa membuat tuple anonim dan bernama, mengakses fieldnya, membongkar
-*value itu* ke beberapa *variable*, dan memakai tuple sebagai **return value** *procedure*.
+*value* itu ke beberapa *variable*, dan memakai tuple sebagai *return value* *procedure*.
 :::
 
 ## Tuple anonim: *value* yang menempel
 
-Bentuk paling sederhana adalah tuple anonim. *Element itu* diakses lewat *index*.
+Bentuk paling sederhana adalah tuple anonim. *Element* itu diakses lewat *index*.
 
 ```{.nim}
 let pair = (1, "two")
@@ -46,7 +46,7 @@ echo corner.x, ",", corner.y
 ```
 
 Perhatikan `(x: 3, y: 4)`, bukan `Point(x: 3, y: 4)`. Tuple tidak punya *constructor* seperti
-*object*. Cara membuatnya selalu literal dengan nama field di dalam tanda kurung, dan *type itu*
+*object*. Cara membuatnya selalu literal dengan nama field di dalam tanda kurung, dan *type* itu
 di-write lewat anotasi *variable*.
 
 Bentuk pendek `x, y: int` menamai dua field sekaligus. Nama dan urutannya adalah bagian dari *type*,
@@ -90,9 +90,9 @@ echo x, " ", y
 Bentuk `let (a, b) = ...` membuat dua *variable* sekaligus. Dengan `var`, keduanya bisa diubah, tapi
 mengubah `y` tidak menyentuh `x`. Tanpa destructuring, kode yang sama butuh tiga *line*.
 
-## Tuple sebagai **return value**
+## Tuple sebagai *return value*
 
-**Return value** *procedure* boleh bertipe tuple bernama.
+*Return value* *procedure* boleh bertipe tuple bernama.
 
 ```{.nim}
 proc minMax(values: openArray[int]): tuple[min, max: int] =
@@ -116,7 +116,7 @@ Di dalam *procedure*, field `result` diisi satu per satu. Di sisi *caller*, *res
 dibongkar dengan `let (low, high) = ...`. Tidak ada *type* bantu, tidak ada *array* sementara.
 
 Batas praktisnya: tuple nyaman untuk dua sampai tiga *value*. Begitu field bertambah banyak, atau
-*value itu* perlu aturan dan operasi sendiri, *object* lebih tepat, dan itu bab berikutnya.
+*value* itu perlu aturan dan operasi sendiri, *object* lebih tepat, dan itu bab berikutnya.
 
 ## Membongkar di dalam *loop*
 
@@ -135,7 +135,7 @@ for (number, word) in words:
 ```
 
 Setiap *element* *seq* adalah tuple, dan `(number, word)` membongkarnya pada tiap putaran. Tanpa
-itu, pembaca harus write `item[0]` dan `item[1]`, yang tidak menjelaskan apa pun.
+itu, pembaca harus menulis `item[0]` dan `item[1]`, yang tidak menjelaskan apa pun.
 
 ## Melihat semua field sekaligus
 
@@ -171,7 +171,7 @@ echo a, b
 main.nim(1, 5) Error: tuple with 2 elements expected, but got '(int, int, int)' with 3 elements
 ```
 
-*Message* itu menyebut kedua belah pihak: pola menunggu 2 *element*, *value itu* punya 3. Solusinya menambah
+*Message* itu menyebut kedua belah pihak: pola menunggu 2 *element*, *value* itu punya 3. Solusinya menambah
 *variable* atau memakai *element* lain. Posisi `(1, 5)` menunjuk ke awal pola `(a, b)`.
 
 ## Membaca error: tuple bukan *object*
@@ -194,7 +194,7 @@ main.nim(3, 19) Error: object constructor needs an object type
 
 ## Latihan
 
-1. Buat `type Range = tuple[low, high: int]`, isi dengan `(low: 0, high: 10)`, lalu print kedua
+1. Buat `type Range = tuple[low, high: int]`, isi dengan `(low: 0, high: 10)`, lalu tampilkan kedua
    fieldnya.
 2. Tanpa menjalankan, prediksi *output*-nya:
    ```{.nim}
@@ -214,11 +214,11 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
 ## Ringkasan
 
-- Tuple adalah *value* gabungan berukuran tetap; *element itu* boleh berbeda *type*.
+- Tuple adalah *value* gabungan berukuran tetap; *element* itu boleh berbeda *type*.
 - Tuple anonim diakses lewat *index*, tuple bernama lewat field.
 - Tuple dibuat dengan literal, bukan dengan *constructor* bergaya *object*.
 - `let (a, b) = ...` membongkar tuple dalam satu *line*, dan juga bekerja di kepala `for`.
-- *Procedure* bisa return tuple, lalu *caller* membongkarnya.
+- *Procedure* bisa mengembalikan tuple, lalu *caller* membongkarnya.
 
 ## Selanjutnya
 

@@ -1,7 +1,7 @@
 # Template: kode yang diperluas compiler
 
 *Template* di-write mirip *procedure*, tapi cara kerjanya berbeda. Compiler tidak memanggilnya; ia
-menyalin badan template ke tempat *calling*, lalu *meng-compile* *result* salinan itu. Karena itu
+menyalin badan template ke tempat *calling*, lalu meng-compile *result* salinan itu. Karena itu
 template bisa menerima *argument* yang belum punya *type*, sesuatu yang tidak bisa dilakukan *procedure*.
 
 Kebebasan ini ada harganya. Kode yang disalin bisa mengevaluasi *expression* lebih dari sekali, dan nama
@@ -11,7 +11,7 @@ hygiene, dan menyediakan dua jalan keluar saat kita memang butuh menembusnya.
 ::: {.callout-note}
 ## Tujuan bab
 
-Setelah bab ini, pembaca bisa write template, menjelaskan hygiene dan kapan memakai `{.inject.}`
+Setelah bab ini, pembaca bisa menulis template, menjelaskan hygiene dan kapan memakai `{.inject.}`
 dan `{.dirty.}`, serta memilih antara template, generic, dan *procedure* biasa dengan alasan yang
 jelas.
 :::
@@ -19,7 +19,7 @@ jelas.
 ## Template pertama: `swap`
 
 Template dideklarasikan dengan kata kunci `template`. *Parameter* `untyped` berarti *argument*-nya
-disalin apa adanya, belum diperiksa *type itu*.
+disalin apa adanya, belum diperiksa *type* itu.
 
 ```{.nim}
 template swap(a, b: untyped) =
@@ -39,7 +39,7 @@ echo x, " ", y
 
 Compiler menyalin tiga *line* badan `swap` ke tempat *calling* dengan `a` menjadi `x` dan `b`
 menjadi `y`. *Result*-nya sama seperti menulis pertukaran itu langsung. *Argument*-nya tidak disalin
-*value itu*, jadi `swap` bekerja untuk *variable* `int` maupun `string`.
+*value* itu, jadi `swap` bekerja untuk *variable* `int` maupun `string`.
 
 ## Hygiene: nama di dalam template tidak bocor
 
@@ -69,7 +69,7 @@ keduanya hidup berdampingan tanpa saling mengganggu.
 
 ## Template untuk `min` tiga *value*
 
-**Standard library** sudah menyediakan `min` untuk dua *value*, dan itu *procedure*, bukan template. Untuk
+*Standard library* sudah menyediakan `min` untuk dua *value*, dan itu *procedure*, bukan template. Untuk
 melihat ekspansi template pada perhitungan, kita write `min` versi tiga *value*.
 
 ```{.nim}
@@ -149,7 +149,7 @@ proc: 1 (calls: 1)
 ```
 
 `a` muncul tiga kali di dalam badan template, jadi `next()` di-call tiga kali, dan `calls` naik
-sampai 3. *Procedure* `minOf3` menerima *value itu* sebagai *argument*, jadi `next()` di-call sekali.
+sampai 3. *Procedure* `minOf3` menerima *value* itu sebagai *argument*, jadi `next()` di-call sekali.
 Pelajaran praktisnya: jangan oper *expression* berharga mahal atau punya *side effect* ke template.
 
 ## Membaca *error message*: simbol yang tidak terlihat
@@ -219,7 +219,7 @@ count: 5
 ```
 
 `count` disuntikkan ke lingkup *caller*, sehingga blok di bawah `countTo:` bisa menambahnya.
-Blok itu adalah *argument* `body`, yang ikut disalin ke tempatnya. **Standard library** memakai cara ini:
+Blok itu adalah *argument* `body`, yang ikut disalin ke tempatnya. *Standard library* memakai cara ini:
 `test` di `std/unittest` menerima blok sebagai badan *test*, lalu menjalankannya di dalam suite.
 
 ## Template, generic, atau *procedure*
@@ -228,7 +228,7 @@ Pilih berdasarkan kebutuhan, bukan kebiasaan.
 
 | | Template | Generic | *Procedure* |
 |---|---|---|---|
-| Kapan dikerjakan | disalin saat *compile* | dibuat per *type* saat *compile* | di-call saat runtime |
+| Kapan dikerjakan | disalin saat compile | dibuat per *type* saat compile | di-call saat runtime |
 | *Type* *argument* | bebas, sering `untyped` | satu *type* per versi | sudah tetap |
 | *Side effect* *argument* | bisa berulang | sekali | sekali |
 
@@ -269,7 +269,7 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
 ## Ringkasan
 
-- Template menyalin badannya ke tempat *calling*; *result*-nya *di-compile* bersama kode *caller*.
+- Template menyalin badannya ke tempat *calling*; *result*-nya di-compile bersama kode *caller*.
 - Hygiene memberi nama unik pada simbol template, sehingga tidak bocor maupun bentrok.
 - *Argument* template bisa dievaluasi berkali-kali; ini berbeda dari *procedure* yang mengevaluasinya
   sekali.

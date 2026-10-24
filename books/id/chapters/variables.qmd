@@ -2,7 +2,7 @@
 
 Nim punya tiga kata kunci untuk menyimpan *value*: `var`, `let`, dan `const`. Di layar ketiganya
 kelihatan sama saja. Yang berbeda adalah janji yang ditepati compiler: mana yang boleh berubah,
-kapan *value itu* ditentukan, dan siapa yang boleh mengubahnya.
+kapan *value* itu ditentukan, dan siapa yang boleh mengubahnya.
 
 Salah memilih tidak langsung membuat program error. Yang terjadi biasanya lebih mahal: *value*
 berubah di tempat yang tidak diduga, dan bug-nya baru muncul dua ratus *line* kemudian. Bab ini
@@ -41,7 +41,7 @@ Dua hal yang perlu diperhatikan:
   antaranya. Spasi di *output* di atas datang dari string `"Hello, "`, bukan dari `echo`. Kalau butuh
   spasi, tulis sendiri.
 - `&"..."` adalah *string interpolation* dari `std/strformat`: teks di dalam `{...}` diganti
-  dengan *value* *variable itu*. Tanpa `import std/strformat`, bentuk ini tidak dikenal compiler.
+  dengan *value* *variable* itu. Tanpa `import std/strformat`, bentuk ini tidak dikenal compiler.
 
 `var` berarti *value* boleh diganti kapan saja setelah deklarasi:
 
@@ -62,7 +62,7 @@ score: 15
 Pada contoh sebelumnya, *type* *variable* tidak di-write. Compiler menyimpulkannya dari *value* awal:
 `"Nim"` adalah `string`, `2008` adalah `int`. Ini disebut *type inference*.
 
-Kalau *type* perlu ditegaskan (misalnya untuk menghemat *memory*, atau karena *value itu* akan diisi
+Kalau *type* perlu ditegaskan (misalnya untuk menghemat *memory*, atau karena *value* itu akan diisi
 belakangan), tulis setelah nama *variable* dengan tanda titik dua:
 
 ```{.nim}
@@ -78,7 +78,7 @@ echo age, " ", temperature, " ", active, " ", initial
 24 36.5 true S
 ```
 
-`int8` adalah *integer* 8-bit, *range itu* −128 sampai 127. Nim menyediakan `int8`, `int16`,
+`int8` adalah *integer* 8-bit, *range* itu −128 sampai 127. Nim menyediakan `int8`, `int16`,
 `int32`, `int64`, dan `int` (ukuran mengikuti arsitektur mesin). `float` adalah nama lain dari
 `float64`.
 
@@ -108,8 +108,8 @@ main.nim(3, 1) Error: 'pi' cannot be assigned to
 | `Error` | tingkat keparahan; `Warning` dan `Hint` tidak menghentikan build |
 | `'pi' cannot be assigned to` | yang salah: `pi` dideklarasikan `let`, jadi hanya boleh diisi sekali |
 
-Inilah bedanya dengan `var`. `let` adalah *variable* yang *value itu* ditetapkan saat deklarasi dan
-tidak boleh diubah setelahnya. Kalau *value itu* harus dihitung lebih dulu, hitung di *line*
+Inilah bedanya dengan `var`. `let` adalah *variable* yang *value* itu ditetapkan saat deklarasi dan
+tidak boleh diubah setelahnya. Kalau *value* itu harus dihitung lebih dulu, hitung di *line*
 deklarasinya:
 
 ```{.nim}
@@ -127,9 +127,9 @@ Karena `let` hanya boleh diisi sekali, mendeklarasikannya tanpa *value* juga dit
 main.nim(1, 5) Error: 'let' symbol requires an initialization
 ```
 
-## `const`: *value itu* diketahui saat *compile*
+## `const`: *value* itu diketahui saat compile
 
-`const` lebih ketat lagi. *Value itu* harus sudah bisa dihitung **saat *compile***, bukan saat
+`const` lebih ketat lagi. *Value* itu harus sudah bisa dihitung **saat *compile***, bukan saat
 program berjalan.
 
 ```{.nim}
@@ -148,13 +148,13 @@ notes (max 128)
 ```
 
 Bedanya dengan `let` bukan sekadar "lebih tidak boleh diubah". `const` disubstitusi langsung oleh
-compiler, jadi *value itu* bisa dipakai untuk hal yang harus diketahui sebelum program jalan:
+compiler, jadi *value* itu bisa dipakai untuk hal yang harus diketahui sebelum program jalan:
 ukuran array tetap, *parameter* generic, atau cabang `when`. Konsekuensinya, `const` tidak bisa
 diisi *result* yang baru diketahui saat runtime, misalnya isi *file* atau waktu sistem.
 
 Aturan praktisnya:
 
-| Kata kunci | Bisa diubah? | Kapan *value itu* ditentukan | Pakai untuk |
+| Kata kunci | Bisa diubah? | Kapan *value* itu ditentukan | Pakai untuk |
 |---|---|---|---|
 | `var` | ya, berkali-kali | runtime | state yang memang berubah |
 | `let` | tidak, sekali | runtime, saat deklarasi | *value* yang dihitung lalu dibekukan |
@@ -215,12 +215,12 @@ echo count, "|", active, "|", repr(text)
 
 `repr` menampilkan bentuk yang bisa dibaca mesin; karena itu string kosong di-print sebagai `""`,
 bukan kosong sama sekali. *Default value* ini aman (tidak ada sampah *memory* seperti di C), tapi
-kode lebih mudah dibaca kalau *value itu* diisi eksplisit saat deklarasi.
+kode lebih mudah dibaca kalau *value* itu diisi eksplisit saat deklarasi.
 
 ## Latihan
 
 1. Deklarasikan `const Tahun = 2026` dan `var pesan = ""`. Isi `pesan` dengan interpolasi
-   `&"terbit {Tahun}"`, lalu print.
+   `&"terbit {Tahun}"`, lalu tampilkan.
 2. Tanpa menjalankan, prediksi *output*-nya:
    ```{.nim}
    var a = 1
@@ -228,7 +228,7 @@ kode lebih mudah dibaca kalau *value itu* diisi eksplisit saat deklarasi.
    a = 2
    echo a, "-", b
    ```
-3. Kenapa `let x: int` gagal *di-compile*? Tulis ulang supaya valid tanpa mengubah maksudnya.
+3. Kenapa `let x: int` gagal di-compile? Tulis ulang supaya valid tanpa mengubah maksudnya.
 4. Kode berikut error. Perbaiki, lalu jelaskan kenapa error-nya begitu:
    ```{.nim}
    var name = "Nim"
@@ -240,7 +240,7 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
 ## Ringkasan
 
-- `var` boleh diubah, `let` diisi sekali, `const` ditentukan saat *compile*.
+- `var` boleh diubah, `let` diisi sekali, `const` ditentukan saat compile.
 - `let` dan `const` tidak boleh dideklarasikan tanpa *value*.
 - `echo` tidak menambahkan pemisah antar *argument*; `&"..."` butuh `import std/strformat`.
 - Identifier Nim mengabaikan besar-kecil dan `_`, kecuali huruf pertama, sehingga

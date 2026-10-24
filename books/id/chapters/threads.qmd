@@ -127,7 +127,7 @@ main()
 Nim has 3 characters
 ```
 
-`Channel[Count]` hanya menerima `tuple[string, int]`. *Thread* punya *heap* sendiri, jadi *object*
+`Channel[Count]` hanya menerima `tuple[string, int]`. *Thread* punya heap sendiri, jadi *object*
 `ref` dari satu *thread* tidak boleh dipakai di *thread* lain. Membungkus *result* ke dalam satu
 *value* lalu mengirimnya lewat `Channel` adalah pola yang aman. Cara lain adalah *variable* global,
 seperti pada contoh pertama.
@@ -179,17 +179,17 @@ pekerjaan didominasi menunggu. *Thread* memakai inti CPU lain, jadi cocok saat p
 hitungan. *Thread* lebih mahal dibuat, dan *memory* tidak dibagi begitu saja, sehingga tidak layak
 dibuat satu per tugas kecil.
 
-*Thread* juga punya *heap* sendiri, jadi *object* `ref` tidak otomatis bisa dipakai lintas *thread*.
+*Thread* juga punya heap sendiri, jadi *object* `ref` tidak otomatis bisa dipakai lintas *thread*.
 Kalau data harus melewati batas *thread*, kirim lewat `Channel` atau simpan di *variable* global yang
 sederhana.
 
 Satu catatan lama: `std/threadpool` dengan `spawn`, `^`, dan `sync` masih ada, tetapi ditandai
 `deprecated` di Nim 2.2.12. Compiler menyarankan *package* nimble seperti `malebolgia`, `taskpools`,
-atau `weave`. Bab ini hanya memakai **standard library**, jadi `Thread` dan `Channel` yang dipakai.
+atau `weave`. Bab ini hanya memakai *standard library*, jadi `Thread` dan `Channel` yang dipakai.
 
 ## Error sengaja: *type* `Channel` yang salah
 
-`Channel` memeriksa *message type*-nya saat *compile*. Mengambil *message* sebagai *type* lain ditolak
+`Channel` memeriksa *message type*-nya saat compile. Mengambil *message* sebagai *type* lain ditolak
 sebelum program berjalan.
 
 ```{.nim}
@@ -245,7 +245,7 @@ ubah *type* *channel* menjadi `Channel[int]` dan kirim angka sejak awal.
 3. Tulis dari nol: satu *thread* mengirim lima angka lewat `Channel[int]`, *thread* utama
    menjumlahkannya selama antrean masih berisi *message*.
 4. Kapan *thread* lebih tepat daripada `async`? Sebutkan satu beban kerja.
-5. Kode pada bagian *error* gagal *di-compile*. Perbaiki dengan mengubah *type* *channel*, lalu
+5. Kode pada bagian error gagal di-compile. Perbaiki dengan mengubah *type* *channel*, lalu
    jelaskan *message*-nya.
 
 Jawaban ada di [Lampiran A](../appendix/answers.qmd).

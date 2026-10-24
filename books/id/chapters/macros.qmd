@@ -4,7 +4,7 @@ Template sudah menyelesaikan banyak pekerjaan: ia mengganti satu potongan kode d
 lain. Tapi template hanya menempel teks. Ia tidak menerima *argument* sebagai data AST yang bisa
 dibongkar, dan tidak bisa mengulang atas isi data untuk membangun kode baru. *Type* masih bisa
 diperiksa lewat `when typeof(x) is ...`, tapi itu hanya memilih cabang, bukan membangun bentuk baru.
-Begitu kebutuhan sampai di situ, `macro` mengambil alih: *procedure* yang berjalan saat *compile* dan
+Begitu kebutuhan sampai di situ, `macro` mengambil alih: *procedure* yang berjalan saat compile dan
 menerima kode sebagai data.
 
 Bab ini mulai dari template, menunjukkan titik ketika ia mentok, lalu membangun macro selangkah
@@ -13,7 +13,7 @@ demi selangkah. Semua contoh diuji di Nim 2.2.12.
 ::: {.callout-note}
 ## Tujuan bab
 
-Setelah bab ini, pembaca bisa menjelaskan perbedaan `template` dan `macro`, read AST lewat
+Setelah bab ini, pembaca bisa menjelaskan perbedaan `template` dan `macro`, membaca AST lewat
 `NimNode` dan `treeRepr`, memakai `quote do`, memilih `untyped` atau `typed`, membangun node
 dengan `newTree`, dan tahu kapan sebaiknya tetap memakai template.
 :::
@@ -69,7 +69,7 @@ Kalau *argument* itu mahal atau mengubah state, ini bug.
 
 ## Macro: menerima kode sebagai data
 
-`macro` adalah *procedure* yang dijalankan compiler saat *compile*. Ia menerima *argument* dalam bentuk
+`macro` adalah *procedure* yang dijalankan compiler saat compile. Ia menerima *argument* dalam bentuk
 *abstract syntax tree* (AST) dan return AST baru. Bentuk `quote do` membangun AST itu dengan
 tulisan yang menyerupai kode biasa.
 
@@ -97,7 +97,7 @@ calls: 1
 ```
 
 `quote do` menghasilkan AST yang berisi `block`, `let`, dan penjumlahan. Tanda backtick menempelkan
-*value* dari luar ke dalam *result*-nya: `` `x` `` menaruh AST *argument* di posisi itu. Karena *value itu*
+*value* dari luar ke dalam *result*-nya: `` `x` `` menaruh AST *argument* di posisi itu. Karena *value* itu
 disimpan lebih dulu di `let it`, `bump()` hanya di-call sekali. Nama `it` yang dideklarasikan di
 dalam `quote do` juga diberi penanda internal, sehingga tidak bentrok dengan `it` milik kode
 *caller*.
@@ -113,7 +113,7 @@ Bedanya dengan template:
 ## Melihat AST: `NimNode` dan `treeRepr`
 
 *Result* `quote do`, dan setiap *argument* `untyped` atau `typed`, bertipe `NimNode`. *Parameter*
-`static` berbeda: *value itu* diterima sebagai *value* biasa, bukan node. `treeRepr` print node.
+`static` berbeda: *value* itu diterima sebagai *value* biasa, bukan node. `treeRepr` print node.
 
 ```{.nim}
 import std/macros
@@ -134,7 +134,7 @@ Infix
 ```
 
 `1 + 2` bukan teks, tapi simpul `Infix` dengan tiga anak: operator dan dua operand. Setiap simpul
-punya *kind*, seperti `nnkInfix`, `nnkIdent`, dan `nnkIntLit`. Inilah arti "kode sebagai data".
+punya kind, seperti `nnkInfix`, `nnkIdent`, dan `nnkIntLit`. Inilah arti "kode sebagai data".
 
 ## `untyped`: sintaks mentah
 
@@ -187,8 +187,8 @@ bisa membongkar node *type* untuk disisipkan ke kode yang dibangun.
 
 ## Membangun node sendiri: `newTree`
 
-`quote do` nyaman, tapi hanya bisa write bentuk yang sudah tetap. Untuk bentuk yang ditentukan
-saat *compile*, susun node manual.
+`quote do` nyaman, tapi hanya bisa menulis bentuk yang sudah tetap. Untuk bentuk yang ditentukan
+saat compile, susun node manual.
 
 ```{.nim}
 import std/macros
@@ -214,7 +214,7 @@ bergantung pada data.
 
 ## Membangkitkan banyak kode dari satu daftar
 
-Kekuatan sebenarnya muncul saat kode yang dihasilkan bergantung pada data saat *compile*.
+Kekuatan sebenarnya muncul saat kode yang dihasilkan bergantung pada data saat compile.
 
 ```{.nim}
 import std/macros
@@ -249,7 +249,7 @@ dengan template tidak mungkin: template tidak bisa mengulang atas data dan membu
 Sebelum menulis macro, tanyakan apakah template sudah cukup. Template lebih sederhana, tidak butuh
 `import std/macros`, dan *error message*-nya lebih mudah dibaca.
 
-Kalau yang dibutuhkan hanya *value* yang dihitung saat *compile*, `const` dengan `func` sudah
+Kalau yang dibutuhkan hanya *value* yang dihitung saat compile, `const` dengan `func` sudah
 menyelesaikannya.
 
 ```{.nim}
@@ -269,7 +269,7 @@ echo Area
 Aturan praktisnya:
 
 - Ganti kode dengan kode, tanpa membaca bentuk *argument*: `template`.
-- Butuh *value* saat *compile*: `const` atau blok `static:`.
+- Butuh *value* saat compile: `const` atau blok `static:`.
 - Butuh membaca AST, *type*, atau membangkitkan kode dari data: `macro`.
 
 ## Membaca error: `typed` menuntut *argument* yang sah
@@ -302,10 +302,10 @@ sendiri di dalam macro.
 
 ## Latihan
 
-1. Tulis template `minOf(a, b)` yang return *value* terkecil, lalu print `minOf(3, 7)`.
+1. Tulis template `minOf(a, b)` yang return *value* terkecil, lalu tampilkan `minOf(3, 7)`.
 2. Tanpa menjalankan, prediksi *output* `doubler(bump() + bump())` dengan template dari bagian
    batas template. Sebutkan *value* `calls` di akhir.
-3. Tulis macro `triple(x)` yang return `x * 3` memakai `quote do`, lalu print `triple(4)`.
+3. Tulis macro `triple(x)` yang return `x * 3` memakai `quote do`, lalu tampilkan `triple(4)`.
 4. Macro `echoType` memakai `$x.getType`. Jelaskan kenapa versi itu gagal kalau *parameter*-nya diubah
    menjadi `untyped`.
 5. Tulis macro `dumpAst(x)` yang print `treeRepr` dari *argument*-nya, lalu panggil dengan `2 * 3`.
@@ -315,7 +315,7 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 ## Ringkasan
 
 - `template` menyisipkan kode apa adanya; *argument* yang dipakai dua kali dievaluasi dua kali.
-- `macro` adalah *procedure* saat *compile* yang menerima `NimNode` dan return `NimNode`.
+- `macro` adalah *procedure* saat compile yang menerima `NimNode` dan return `NimNode`.
 - `quote do` membangun AST; backtick menempelkan node atau *value* dari luar, dan nama lokalnya
   aman dari bentrok.
 - `treeRepr` menampilkan AST; `getType` hanya bekerja pada *argument* `typed`.

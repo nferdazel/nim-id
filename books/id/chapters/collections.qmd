@@ -11,7 +11,7 @@ tempatnya; `seq` berukuran dinamis dan bisa tumbuh. Bab ini memakai keduanya, la
 ::: {.callout-note}
 ## Tujuan bab
 
-Setelah bab ini, pembaca bisa write `array` berukuran tetap, menumbuhkan `seq` dengan `add`,
+Setelah bab ini, pembaca bisa menulis `array` berukuran tetap, menumbuhkan `seq` dengan `add`,
 `insert`, dan `delete`, memakai *index* `[^1]` untuk *element* terakhir, write *parameter* `openArray`
 yang menerima `array` maupun `seq`, serta mengenali error *index* di luar batas.
 :::
@@ -38,12 +38,12 @@ last: 60
 all: [90, 80, 60]
 ```
 
-`[90, 75, 60]` adalah literal `array`; *type itu* `array[3, int]`. *Index itu* mulai dari `0`, jadi
+`[90, 75, 60]` adalah literal `array`; *type* itu `array[3, int]`. *Index* itu mulai dari `0`, jadi
 *element* terakhir ada di `len - 1`. Nim menyediakan cara membaca dari belakang: `[^1]` berarti satu
 dari ujung, sama dengan `scores[2]` di sini.
 
-*Element* `array` boleh diubah satu per satu selama *variable itu* `var`. Deklarasi `let scores` membuat
-seluruh *array* tetap, termasuk *element itu*.
+*Element* `array` boleh diubah satu per satu selama *variable* itu `var`. Deklarasi `let scores` membuat
+seluruh *array* tetap, termasuk *element* itu.
 
 ## `array[N, T]` dan *default value*
 
@@ -64,7 +64,7 @@ len: 3
 ```
 
 *Type* `array[3, int]` berarti tiga *element* bertipe `int`. Tanpa *value* awal, Nim mengisi semua *element*
-dengan default *type* *element itu*: `0` untuk `int`, `""` untuk `string`. Panjangnya ikut menjadi bagian
+dengan default *type* *element* itu: `0` untuk `int`, `""` untuk `string`. Panjangnya ikut menjadi bagian
 dari *type*: `array[3, int]` dan `array[4, int]` adalah dua *type* berbeda.
 
 ## `seq`: ukuran bisa berubah
@@ -90,7 +90,7 @@ Awalan `@` mengubah literal `array` menjadi `seq`, jadi `@["ada", "bob"]` bertip
 *element* tidak di-write dalam *type*.
 
 Perhatikan *line* terakhir: `echo` print `@["ada", "bob", "cyd"]`, lengkap dengan `@`. Tanda itu
-menandai bahwa *value itu* `seq`, bukan `array`.
+menandai bahwa *value* itu `seq`, bukan `array`.
 
 ## Menyisipkan dan menghapus
 
@@ -113,7 +113,7 @@ first: 10 last: 40
 ```
 
 `insert(15, 1)` menyisipkan *value* `15` di *index* `1`, dan *element* sesudahnya bergeser satu tempat.
-`delete(2)` menghapus *element* di *index* `2`; perhatikan bahwa *index itu* dihitung **setelah** sisipan,
+`delete(2)` menghapus *element* di *index* `2`; perhatikan bahwa *index* itu dihitung **setelah** sisipan,
 bukan sebelum. Keduanya mengubah panjang `seq`.
 
 ## `seq` kosong dan pengisian bertahap
@@ -133,7 +133,7 @@ echo "len: ", squares.len
 len: 4
 ```
 
-`@[]` adalah `seq` kosong tanpa *element*. Karena kosong, *type itu* tidak bisa disimpulkan dari isinya,
+`@[]` adalah `seq` kosong tanpa *element*. Karena kosong, *type* itu tidak bisa disimpulkan dari isinya,
 jadi anotasinya wajib: `seq[int]`. Setelah itu `add` di-call berulang kali di dalam *loop*.
 
 ## `openArray`: parameter yang menerima keduanya
@@ -167,7 +167,7 @@ bukan berbagi. Mengubah salinannya tidak menyentuh yang asli, berbeda dari `list
 ## Batas *index* dan error out-of-bounds
 
 *Index* yang sah untuk `array` dan `seq` berukuran `len` adalah `0` sampai `len - 1`. *Index* *constant*
-yang melewati batas ditangkap saat *compile*:
+yang melewati batas ditangkap saat compile:
 
 ```{.nim}
 let values = [10, 20, 30]
@@ -182,7 +182,7 @@ main.nim(3, 13) Error: conversion from int literal(5) to range 0..2(int) is inva
 Nim menghitung ulang *index* terhadap *range* yang sah (`0..2` untuk tiga *element*). Karena `5` tidak
 masuk *range* itu, programnya tidak pernah dibuat.
 
-Kalau *index itu* baru diketahui saat program jalan, compiler tidak bisa menolong:
+Kalau *index* itu baru diketahui saat program jalan, compiler tidak bisa menolong:
 
 ```{.nim}
 let values = [10, 20, 30]
@@ -195,12 +195,12 @@ echo values[index]
 Error: unhandled exception: index 5 not in 0 .. 2 [IndexDefect]
 ```
 
-Program *di-compile*, lalu berhenti saat dijalankan. `IndexDefect` adalah *exception* yang dilempar
+Program di-compile, lalu berhenti saat dijalankan. `IndexDefect` adalah *exception* yang dilempar
 saat *index* keluar batas, dan *message*-nya menyebut *index* yang salah beserta *range* yang sah. Perilaku
 ini lebih aman daripada C, yang pada kasus serupa membaca *memory* di luar *array* tanpa *warning*.
 *Output* di atas dipotong; *output* lengkapnya juga memuat *stack trace*.
 
-Pemeriksaan ini menyala sejak awal, termasuk saat program *di-compile* dengan `-d:release`. Hanya
+Pemeriksaan ini menyala sejak awal, termasuk saat program di-compile dengan `-d:release`. Hanya
 `-d:danger` yang mematikannya; setelah itu contoh di atas print *value* acak dari luar *array*.
 
 ## Latihan
@@ -215,7 +215,7 @@ Pemeriksaan ini menyala sejak awal, termasuk saat program *di-compile* dengan `-
    ```
 3. Tulis *procedure* `smallest(values: openArray[int]): int` yang return *value* terkecil, lalu
    panggil dengan sebuah `array` dan sebuah `seq`.
-4. `var x = @[]` gagal *di-compile*, sementara `var y: seq[int]` jalan dan panjangnya `0`. Jelaskan
+4. `var x = @[]` gagal di-compile, sementara `var y: seq[int]` jalan dan panjangnya `0`. Jelaskan
    kenapa keduanya berbeda.
 5. Kode berikut gagal. Perbaiki, lalu jelaskan kenapa compiler menolaknya:
    ```{.nim}
@@ -233,9 +233,9 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
   menghapus.
 - `openArray[T]` sebagai *parameter* menerima `array` dan `seq` tanpa menyalin, tapi tidak bisa disimpan
   atau di-return.
-- *Index* konstan di luar batas ditolak saat *compile*; *index* saat runtime melempar `IndexDefect`.
+- *Index* konstan di luar batas ditolak saat compile; *index* saat runtime melempar `IndexDefect`.
 
 ## Selanjutnya
 
 Bab berikutnya membahas cara membungkus logika ke dalam [*procedure* dan fungsi](procedures.qmd):
-*parameter*, **return value**, dan perbedaan `proc` dengan `func`.
+*parameter*, *return value*, dan perbedaan `proc` dengan `func`.

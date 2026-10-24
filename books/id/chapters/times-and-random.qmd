@@ -1,8 +1,8 @@
-# *Time* dan *random*
+# Time dan random
 
 Dua hal membuat program terasa hidup: jam dan keberuntungan. Keduanya menyimpan jebakan yang sama
 untuk *test*. Jam mengembalikan sesuatu yang berbeda tiap kali dipanggil, dan angka acak tanpa *seed*
-juga. Nim menaruh kedua *module* itu di **standard library**: `std/times` dan `std/random`.
+juga. Nim menaruh kedua *module* itu di *standard library*: `std/times` dan `std/random`.
 
 ::: {.callout-note}
 ## Tujuan bab
@@ -40,10 +40,10 @@ Simpan sebagai `main.nim`, lalu jalankan `nim c -r main.nim`. Setiap contoh di b
 `utc()` sebagai zona, sehingga *output*-nya sama di mesin mana pun. Zona bawaan `dateTime` adalah
 `local()`, yang mengikuti jam dinding komputer.
 
-*Specifier* `format` yang umum: `yyyy` untuk tahun empat digit, `MM` untuk bulan dua digit, `dd` untuk
+Specifier `format` yang umum: `yyyy` untuk tahun empat digit, `MM` untuk bulan dua digit, `dd` untuk
 hari, dan `HH:mm:ss` untuk jam, menit, serta detik. Bentuk `MMM` menghasilkan nama bulan yang
 disingkat, `MMMM` nama panjang, sedangkan `ddd` nama hari. Field seperti `launch.hour` dan
-`launch.minute` mengambil bagian *DateTime* tanpa memformat ulang.
+`launch.minute` mengambil bagian DateTime tanpa memformat ulang.
 
 Di Nim 2.2.12, nama lama untuk *procedure* ini adalah `initDateTime`, dan namanya sudah ditandai
 `deprecated`. Pakai `dateTime`.
@@ -76,7 +76,7 @@ echo dateOnly.hour, ":", dateOnly.minute
 
 Selama polanya cocok, *result*-nya pasti. Teks tanpa jam, seperti `"2024-03-01"`, menjadi tengah malam,
 yaitu jam `0` dan menit `0`. Kalau teksnya tidak cocok, `parse` melempar `exception`, bukan
-mengembalikan *value* kosong. Kasus itu dibahas di bagian *error*.
+mengembalikan *value* kosong. Kasus itu dibahas di bagian error.
 
 ## Selisih waktu dan *timestamp*
 
@@ -104,7 +104,7 @@ echo start.toTime.toUnix
 ```
 
 Contohnya melintasi pergantian bulan: 1 Maret pukul 23:30 ditambah dua jam menjadi 2 Maret pukul
-01:30. Nim mengurus pergantian tanggalnya sendiri. Cetakan `2 hours` datang dari `$` pada `Duration`.
+01:30. Nim mengurus pergantian tanggalnya sendiri. *Output* `2 hours` datang dari `$` pada `Duration`.
 
 Untuk berbicara dengan sistem lain, waktu sering perlu diubah menjadi angka. `toTime` mengubah
 `DateTime` menjadi `Time`, dan `toUnix` mengembalikan detik sejak 1 Januari 1970 UTC. Angka inilah
@@ -112,8 +112,8 @@ yang biasanya disimpan di basis data atau dikirim lewat JSON.
 
 ## Angka acak yang bisa diulang
 
-Generasi acak di Nim punya *generator* dengan *state*. `randomize(seed)` menyetel *generator* global,
-sedangkan `initRand(seed)` mengembalikan *generator* sendiri yang bisa disimpan di *variable*.
+Generasi acak di Nim punya generator dengan state. `randomize(seed)` menyetel generator global,
+sedangkan `initRand(seed)` mengembalikan generator sendiri yang bisa disimpan di *variable*.
 Memberi *seed* tetap membuat urutannya sama setiap kali program dijalankan.
 
 ```{.nim}
@@ -138,7 +138,7 @@ echo r.rand(100)
 10
 ```
 
-*Line* `1` dan `10` muncul dua kali karena *generator* baru dengan *seed* `1234` mengulang urutan dari
+*Line* `1` dan `10` muncul dua kali karena generator baru dengan *seed* `1234` mengulang urutan dari
 awal. Sifat inilah yang membuat *test* berguna. Tanpa *seed* tetap, `randomize()` mengambil entropi
 dari sistem, dan *test* yang bergantung padanya akan gagal sesekali tanpa pola.
 
@@ -148,7 +148,7 @@ Angka dari `rand(100)` ada di *range* `0` sampai `99`; batas atasnya eksklusif. 
 ## Memilih dan mengocok
 
 Dua *procedure* yang menghemat kode: `sample` memilih satu *element*, `shuffle` mengocok urutan di
-tempat. Keduanya menerima *generator* sebagai *argument* pertama, jadi *result*-nya bisa diulang.
+tempat. Keduanya menerima generator sebagai *argument* pertama, jadi *result*-nya bisa diulang.
 
 ```{.nim}
 import std/random
@@ -171,7 +171,7 @@ ada
 ```
 
 `sample` tidak mengubah *seq* asalnya. `shuffle` mengubahnya di tempat, jadi *seq* itu harus
-disimpan di *variable* `var`. Mengocok salinan sementara lalu membuangnya adalah *error* yang
+disimpan di *variable* `var`. Mengocok salinan sementara lalu membuangnya adalah error yang
 sering terjadi.
 
 ## Bahaya `now()` di dalam *test*
@@ -223,7 +223,7 @@ Error: unhandled exception: Failed to parse '2024-13-01' with format 'yyyy-MM-dd
 ```
 
 *Message*-nya menyebut teks aslinya, polanya, dan bagian yang gagal, di sini `MM`. Output lengkapnya juga
-memuat jejak *stack*. Perbaikannya adalah memeriksa teks lebih dulu, atau membungkus `parse` dengan
+memuat jejak stack. Perbaikannya adalah memeriksa teks lebih dulu, atau membungkus `parse` dengan
 `try` dan `except TimeParseError`.
 
 ## Latihan
@@ -236,9 +236,9 @@ memuat jejak *stack*. Perbaikannya adalah memeriksa teks lebih dulu, atau membun
    let lastDay = dateTime(2024, mDec, 31, 23, 59, 0, 0, utc())
    echo lastDay + initDuration(minutes = 2)
    ```
-3. Tulis dari nol: *procedure* yang melempar dadu bernilai 1 sampai 6, dengan *generator* ber-*seed*
+3. Tulis dari nol: *procedure* yang melempar dadu bernilai 1 sampai 6, dengan generator ber-*seed*
    tetap sehingga lemparan pertama selalu sama.
-4. Kode berikut gagal *di-compile*. Perbaiki, lalu jelaskan *message*-nya:
+4. Kode berikut gagal di-compile. Perbaiki, lalu jelaskan *message*-nya:
    ```{.nim}
    import std/times
 

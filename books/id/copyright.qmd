@@ -31,7 +31,7 @@ tidak punya ISBN dan tidak diterbitkan oleh penerbit mana pun.
 
 - Kode sumber buku: [github.com/nferdazel/nim-id](https://github.com/nferdazel/nim-id)
 - Situs: [nim.qouver.com](https://nim.qouver.com)
-- Laporan *error*: [github.com/nferdazel/nim-id/issues](https://github.com/nferdazel/nim-id/issues)
+- Laporan error: [github.com/nferdazel/nim-id/issues](https://github.com/nferdazel/nim-id/issues)
 
-*Error* yang ditemukan pembaca adalah bahan perbaikan, bukan aib. Kalau ada contoh yang tidak
+Error yang ditemukan pembaca adalah bahan perbaikan, bukan aib. Kalau ada contoh yang tidak
 jalan di versi Nim terbaru, laporkan lewat issues.

@@ -7,14 +7,14 @@ ukur dulu, baru menebak. Masalahnya, mengukur juga punya jebakan yang tidak terl
 ::: {.callout-note}
 ## Tujuan bab
 
-Setelah bab ini, pembaca bisa mengukur satu blok dengan `getMonoTime`, read `Duration` dan
+Setelah bab ini, pembaca bisa mengukur satu blok dengan `getMonoTime`, membaca `Duration` dan
 `inMilliseconds`, write contoh yang *output*-nya stabil, membedakan waktu CPU dari waktu dinding,
 serta menjalankan profiler bawaan Nim 2.2.12.
 :::
 
 ## Mengukur satu blok
 
-`std/monotimes` menyediakan `getMonoTime`. Ia membaca jam monotonik: *value itu* selalu naik dan tidak
+`std/monotimes` menyediakan `getMonoTime`. Ia membaca jam monotonik: *value* itu selalu naik dan tidak
 terpengaruh penyesuaian jam sistem. Jam ini untuk selang, bukan untuk mencatat tanggal.
 
 ```{.nim}
@@ -53,7 +53,7 @@ mesin dan setiap kali dijalankan, sehingga blok *output* yang memuatnya tidak mu
 diperiksa otomatis. Contoh di buku ini dijaga supaya *output*-nya sama di mesin 64-bit mana pun; waktu
 dipakai untuk membandingkan, *result* *comparison*-nya yang di-print.
 
-*Line* `discard sumUp(10_000)` adalah *warm-up*. Pada *calling* pertama, halaman *memory* belum
+*Line* `discard sumUp(10_000)` adalah warm-up. Pada *calling* pertama, halaman *memory* belum
 disentuh dan cache prosesor masih dingin, jadi ukurannya lebih lambat dari kemampuan sebenarnya.
 
 ## Satu kali ukur tidak cukup
@@ -142,7 +142,7 @@ fast <= slow: true
 
 Kedua *procedure* membentuk string dengan cara berbeda. `result = result & "x"` menyalin seluruh isi
 string lama ke string baru setiap kali, sehingga total penyalinan tumbuh kuadratik. `result.add 'x'`
-menambah *character* ke penyangga yang sudah ada, sehingga biayanya rata-rata tetap. Pada 20.000
+menambah character ke penyangga yang sudah ada, sehingga biayanya rata-rata tetap. Pada 20.000
 putaran keduanya menghasilkan teks yang sama, tetapi yang kedua jauh lebih murah.
 
 *Output* yang di-print hanya dua boolean: *result*-nya sama, dan versi cepat tidak lebih lambat. Boolean
@@ -214,7 +214,7 @@ berubah. Karena yang diinginkan selang, kurangi dua `MonoTime` lebih dulu, lalu 
 ## Profiler bawaan Nim
 
 Selain mengukur sendiri, compiler Nim menyertakan profiler sampling. Tambahkan `import std/nimprof`
-dan *compile* dengan dua *flag*:
+dan compile dengan dua *flag*:
 
 ```bash
 nim c -r --profiler:on --stackTrace:on app.nim
@@ -228,9 +228,9 @@ waktu paling banyak habis.
 Profiler ini mengambil sampel, jadi kegunaannya sebanding dengan lamanya program berjalan. Program
 yang selesai dalam sekejap menghasilkan *file* hampir kosong; perbesar bebannya dulu. Dua *flag*
 lain: `--stackTraceMsgs:on` menampilkan *message* yang dipasang lewat `setFrameMsg`, dan `--profileVM:on`
-memprofilkan kode yang berjalan saat *compile*.
+memprofilkan kode yang berjalan saat compile.
 
-## *Tool* sistem: `perf` dan Instruments
+## Tool sistem: `perf` dan Instruments
 
 Untuk program yang sudah besar, membungkus satu blok dengan `getMonoTime` tidak praktis. Di Linux,
 `perf` mengambil sampel seluruh proses:
@@ -266,7 +266,7 @@ dengan profiler, baru ubah algoritmanya: mengganti algoritma yang salah hampir s
    menjalankannya.
 2. Kenapa durasi tidak pernah di-print oleh contoh di bab ini? Jawab dengan kata "*output* yang
    stabil".
-3. Tulis program yang membandingkan `add` di ujung `seq` dengan `insert` di awalnya, lalu print satu
+3. Tulis program yang membandingkan `add` di ujung `seq` dengan `insert` di awalnya, lalu tampilkan satu
    boolean seperti contoh kedua.
 4. Hapus `import std/times` dari contoh pertama, lalu perbaiki error yang muncul dan jelaskan
    *message*-nya.
@@ -278,7 +278,7 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
 - `getMonoTime` dari `std/monotimes` mengambil selang; `inMilliseconds` dan kawan-kawannya ada di
   `std/times`.
-- Satu kali ukur selalu melebih-lebihkan; lakukan *warm-up*, ulangi, lalu ambil putaran tercepat.
+- Satu kali ukur selalu melebih-lebihkan; lakukan warm-up, ulangi, lalu ambil putaran tercepat.
 - Contoh di buku ini tidak print waktu, hanya jumlah iterasi, checksum, dan *comparison* boolean.
 - `cpuTime` menghitung waktu prosesor, `epochTime` menghitung waktu dinding; jam monotonik dipakai
   untuk selang.

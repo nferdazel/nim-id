@@ -5,13 +5,13 @@ bisa menolong. Kode yang memakai `0`, `1`, `2` lebih ringkas, tapi setelah sebul
 ingat angka `2` itu apa. Enum menutup dua celah itu: nama yang dibaca manusia, dengan urutan yang
 ditentukan compiler.
 
-Set melangkah lebih jauh. Kalau *value itu* sudah menjadi enum, sekumpulan *value* bisa disimpan
+Set melangkah lebih jauh. Kalau *value* itu sudah menjadi enum, sekumpulan *value* bisa disimpan
 sebagai bit, dan pertanyaan "apakah ini termasuk?" dijawab satu operasi.
 
 ::: {.callout-note}
 ## Tujuan bab
 
-Setelah bab ini, pembaca bisa mendefinisikan enum, read *value* ordinalnya, mengubah integer
+Setelah bab ini, pembaca bisa mendefinisikan enum, membaca *value* ordinalnya, mengubah integer
 menjadi enum, dan memakai `set` beserta `incl`, `excl`, serta `in`.
 :::
 
@@ -69,8 +69,8 @@ green
 green
 ```
 
-Dua *line* terakhir print hal yang sama, karena `echo` memakai `$` yang sama. Kalau *value itu*
-literal, *range itu* diperiksa saat *compile*: `Color(9)` ditolak dengan
+Dua *line* terakhir print hal yang sama, karena `echo` memakai `$` yang sama. Kalau *value* itu
+literal, *range* itu diperiksa saat compile: `Color(9)` ditolak dengan
 `9 can't be converted to Color`.
 
 ## Set: *set* *value*
@@ -195,7 +195,7 @@ false
 4
 ```
 
-Kita read teks *character* demi *character*, dan set menyimpan mana yang sudah muncul. `card` bernilai
+Kita read teks character demi character, dan set menyimpan mana yang sudah muncul. `card` bernilai
 4 karena `hello` hanya memuat empat huruf berbeda.
 
 Dasar set harus ordinal dengan paling banyak 2^16 *value*. `set[int]` melewati batas itu, dan
@@ -223,7 +223,7 @@ eksplisit lewat `Color(1)`, dan penulisan itulah tempat pembaca melihat niatnya.
 
 ## Latihan
 
-1. Tambahkan anggota `yellow` pada `Color`, lalu print `ord(yellow)`.
+1. Tambahkan anggota `yellow` pada `Color`, lalu tampilkan `ord(yellow)`.
 2. Tanpa menjalankan, prediksi *output*-nya:
    ```{.nim}
    type Color = enum

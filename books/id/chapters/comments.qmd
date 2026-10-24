@@ -1,7 +1,7 @@
 # *Comment* dan doc comment
 
 *Comment* adalah bagian kode yang tidak dijalankan compiler. Karena itu banyak orang menganggapnya
-gratis, lalu write terlalu banyak. Di Nim ada tiga bentuk dengan aturan berbeda, dan salah satu di
+gratis, lalu menulis terlalu banyak. Di Nim ada tiga bentuk dengan aturan berbeda, dan salah satu di
 antaranya menjadi bahan dokumentasi. Salah menaruhnya membuat dokumentasi hilang tanpa satu pun
 *error message*.
 
@@ -9,7 +9,7 @@ antaranya menjadi bahan dokumentasi. Salah menaruhnya membuat dokumentasi hilang
 ## Tujuan bab
 
 Setelah bab ini, pembaca bisa memakai *line comment* `#`, *block comment* `#[ ]#`, dan doc comment
-`##` secara tepat, menghasilkan dokumentasi dengan `nim doc`, dan write contoh yang ikut diuji
+`##` secara tepat, menghasilkan dokumentasi dengan `nim doc`, dan menulis contoh yang ikut diuji
 compiler lewat `runnableExamples`.
 :::
 
@@ -68,14 +68,14 @@ Compiler menolaknya:
 main.nim(3, 1) Error: end of multiline comment expected
 ```
 
-Bacalah *message*-nya. `main.nim` adalah *file itu*, `(3, 1)` *line* 3, kolom 1, dan `Error` berarti build
+Bacalah *message*-nya. `main.nim` adalah *file* itu, `(3, 1)` *line* 3, kolom 1, dan `Error` berarti build
 berhenti. Isinya, "end of multiline comment expected", artinya compiler mencapai akhir *file*
 sebelum menemukan `]#`.
 
 Ada pelajaran penting di posisinya. Kita write `#[` di *line* 1, tetapi compiler menunjuk *line* 3:
 *line* kosong setelah *line* terakhir. Compiler baru tahu *comment*-nya tidak pernah ditutup waktu
 mencapai akhir *file*. Jadi posisi yang dilaporkan adalah tempat compiler *menyadari* masalahnya,
-bukan selalu tempat *error itu* di-write. Karena itu, saat menemui error yang menunjuk di luar
+bukan selalu tempat error itu di-write. Karena itu, saat menemui error yang menunjuk di luar
 dugaan, periksa beberapa *line* sebelumnya.
 
 ## Doc comment: `##`
@@ -97,7 +97,7 @@ echo area(3.0, 4.0)
 12.0
 ```
 
-Terhadap program, `##` sama saja dengan `#`: tidak berpengaruh apa pun. Yang berbeda, *command*
+Terhadap program, `##` sama saja dengan `#`: tidak berpengaruh apa pun. Yang berbeda, command
 `nim doc area.nim` mengumpulkan semua doc comment dan menghasilkan *file* HTML di *directory*
 `htmldocs/`, di sini `htmldocs/area.html`. Isinya persis dua *line* penjelasan di atas *procedure* tadi.
 
@@ -108,7 +108,7 @@ tidak muncul di HTML meski terlihat sama di editor.
 ## `runnableExamples`: dokumentasi yang diuji
 
 Doc comment bukan sekadar teks. Blok `runnableExamples` di dalamnya berisi kode yang benar-benar
-*di-compile* dan dijalankan oleh `nim doc`. Simpan sebagai `double.nim`.
+di-compile dan dijalankan oleh `nim doc`. Simpan sebagai `double.nim`.
 
 ```{.nim}
 proc double*(n: int): int =
@@ -124,9 +124,9 @@ echo double(21)
 42
 ```
 
-Jalankan `nim doc double.nim`. *Command* itu *meng-compile* blok contoh dan menjalankannya; kalau
+Jalankan `nim doc double.nim`. Command itu meng-compile blok contoh dan menjalankannya; kalau
 `doAssert` gagal, `nim doc` berhenti dengan *exit code* bukan nol. Artinya, contoh di dokumentasi
-tidak bisa "basi": dia ikut gagal begitu perilaku *procedure itu* berubah. Ini alasan penulis *library*
+tidak bisa "basi": dia ikut gagal begitu perilaku *procedure* itu berubah. Ini alasan penulis library
 Nim banyak memakai `runnableExamples` ketimbang contoh statis yang tak pernah diuji.
 
 Satu catatan: `nim doc` hanya menjalankan `runnableExamples` pada deklarasi yang diekspor (yang
@@ -164,7 +164,7 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 - `#` mengabaikan sisa *line*; `#[ ... ]#` mengabaikan *range* dan boleh bersarang.
 - *Block comment* yang tidak ditutup dilaporkan di posisi akhir *file*, bukan di tempat `#[`.
 - `##` adalah doc comment; hanya bentuk ini yang masuk *output* `nim doc` ke `htmldocs/`.
-- `runnableExamples` di dalam doc comment *di-compile* dan dijalankan `nim doc`.
+- `runnableExamples` di dalam doc comment di-compile dan dijalankan `nim doc`.
 - *Comment* yang baik menjelaskan alasan; kode mati tidak disimpan di dalam *comment*.
 
 ## Selanjutnya

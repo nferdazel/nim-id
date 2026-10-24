@@ -12,7 +12,7 @@ dan cara berpindah antar *type* tanpa kehilangan data.
 
 Setelah bab ini, pembaca bisa memilih *type* integer sesuai *range* yang dibutuhkan, membaca error
 overflow, write literal heksadesimal dan biner, serta mengonversi *value* antar *type* dengan sadar
-apa yang terjadi pada *value itu*.
+apa yang terjadi pada *value* itu.
 :::
 
 ## *Range* dan ukuran setiap *type* integer
@@ -38,7 +38,7 @@ int   -9223372036854775808 .. 9223372036854775807  size 8
 ```
 
 `low` dan `high` memberi batas bawah dan atas sebuah *type*; `sizeof` memberi ukurannya dalam byte.
-Polanya konsisten: setiap tambahan satu bit menggandakan *range itu*.
+Polanya konsisten: setiap tambahan satu bit menggandakan *range* itu.
 
 | *Type* | *Range* | Ukuran |
 |---|---|---|
@@ -76,7 +76,7 @@ echo 2e3          # scientific notation is a float
 ```
 
 Awalan `0x` menandai heksadesimal, `0b` biner, dan `0o` oktal. Garis bawah di dalam angka hanya
-*tool* mata; compiler mengabaikannya. *Line* terakhir terlihat seperti *integer*, tapi
+tool mata; compiler mengabaikannya. *Line* terakhir terlihat seperti *integer*, tapi
 `2e3` adalah `float`; karena itu *result*-nya `2000.0`, bukan `2000`.
 
 ## Ketika *value* melewati batas
@@ -95,12 +95,12 @@ Error: unhandled exception: over- or underflow [OverflowDefect]
 ```
 
 *Message* pertama menyebut *file* dan *line*. *Message* kedua menyebut jenis masalahnya: `OverflowDefect`.
-Secara bawaan Nim memeriksa overflow dan menghentikan program, bukan diam-diam membungkus *value itu*
+Secara bawaan Nim memeriksa overflow dan menghentikan program, bukan diam-diam membungkus *value* itu
 menjadi −128. Pemeriksaan itu bisa dimatikan dengan `--overflowChecks:off` (atau `-d:danger`),
 dan saat itu *line* di atas benar-benar menghasilkan −128. Jangan lakukan itu untuk menghilangkan
 error; *result* yang membungkus hampir selalu bug yang lebih sulit dilacak.
 
-Kalau *value itu* sudah diketahui saat menulis kode, compiler menangkapnya lebih awal:
+Kalau *value* itu sudah diketahui saat menulis kode, compiler menangkapnya lebih awal:
 
 ```{.nim}
 const TooBig: int8 = 127 + 1
@@ -203,14 +203,14 @@ true
 
 `char` di-write dengan kutip tunggal dan menyimpan satu byte. `.ord` memberinya kode numerik,
 `char(...)` dan `chr(...)` melakukan arah sebaliknya. *Expression* `'\n' == char(10)` benar karena
-`\n` memang *character* dengan kode 10. `bool` hanya berisi `true` atau `false` dan menjadi bahan
+`\n` memang character dengan kode 10. `bool` hanya berisi `true` atau `false` dan menjadi bahan
 operator logika di bab operator.
 
 ## Latihan
 
 1. Tulis tiga literal, yaitu `0xFF`, `0b1010`, dan `1_000`. Prediksi *output* `echo` untuk masing-masing
    sebelum menjalankannya.
-2. Apa yang terjadi pada kode ini, dan mengapa *message*-nya muncul saat runtime, bukan saat *compile*?
+2. Apa yang terjadi pada kode ini, dan mengapa *message*-nya muncul saat runtime, bukan saat compile?
    ```{.nim}
    var n: int8 = 127
    n = n + 1
@@ -218,7 +218,7 @@ operator logika di bab operator.
    ```
 3. Kenapa `float32(0.1) == 0.1` bernilai `false`, padahal `0.1` dan `float32(0.1)` tampak sama?
 4. Konversi `2.99` menjadi `int`. *Result*-nya 2 atau 3? Jelaskan mengapa.
-5. Kode `const Big: int8 = 200` gagal *di-compile*. Perbaiki tanpa menambah *value* lain, lalu
+5. Kode `const Big: int8 = 200` gagal di-compile. Perbaiki tanpa menambah *value* lain, lalu
    jelaskan mengapa *type* sebelumnya salah.
 
 Jawaban ada di [Lampiran A](../appendix/answers.qmd).

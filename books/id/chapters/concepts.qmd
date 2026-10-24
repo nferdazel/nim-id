@@ -12,7 +12,7 @@ overloading, dan membaca *error message* ketika syaratnya tidak terpenuhi. Semua
 ::: {.callout-note}
 ## Tujuan bab
 
-Setelah bab ini, pembaca bisa write `concept`, memakainya sebagai batasan generic, menggabung
+Setelah bab ini, pembaca bisa menulis `concept`, memakainya sebagai batasan generic, menggabung
 syarat dengan `and` dan `or`, memakai konsep untuk memilih overloading, dan membaca *message*
 `concept predicate failed`.
 :::
@@ -36,7 +36,7 @@ echo total(@[1.5, 2.5])
 ```
 
 `SomeNumber` mencakup *type* bilangan. Satu *procedure*, dua *type* berbeda, tanpa menulis ulang. Batasan
-seperti ini berguna selama bentuk yang diinginkan sudah ada di **standard library**. Begitu yang
+seperti ini berguna selama bentuk yang diinginkan sudah ada di *standard library*. Begitu yang
 dibutuhkan adalah "punya field `name`", tidak ada nama bawaan yang menolong.
 
 ## Konsep: syarat yang ditulis sendiri
@@ -194,7 +194,7 @@ size: 3
 ```
 
 Karena satu *type* yang cocok mungkin hanya punya salah satu field, badan *procedure* harus memeriksa
-cabang mana yang berlaku. `when x is HasName` memilih saat *compile*, dan tiap cabang hanya mengakses
+cabang mana yang berlaku. `when x is HasName` memilih saat compile, dan tiap cabang hanya mengakses
 field yang dijamin ada. Ini pola yang sering muncul begitu `or` dipakai.
 
 ## Membaca error: predicate gagal
@@ -234,7 +234,7 @@ yang ditunjuk.
 
 ## Batas konsep
 
-Konsep adalah *tool* pencocokan, bukan *type* biasa. Ia tidak bisa dipakai untuk mendeklarasikan
+Konsep adalah tool pencocokan, bukan *type* biasa. Ia tidak bisa dipakai untuk mendeklarasikan
 *variable*.
 
 ```{.nim}

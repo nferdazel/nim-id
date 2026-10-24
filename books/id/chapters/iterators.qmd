@@ -1,14 +1,14 @@
 # Iterator dan `yield`
 
-*Seq* (`seq`) menyimpan semua *element itu* di *memory*. Itu boros kalau *element itu* banyak, atau baru
+*Seq* (`seq`) menyimpan semua *element* itu di *memory*. Itu boros kalau *element* itu banyak, atau baru
 bisa dihitung saat dibutuhkan. Nim punya iterator: rutin yang menghasilkan *value* satu per satu, saat
-diminta. *Value itu* tidak disimpan; yang berpindah adalah posisi iteratornya. Karena itu iterator bisa
+diminta. *Value* itu tidak disimpan; yang berpindah adalah posisi iteratornya. Karena itu iterator bisa
 melewati data yang sangat besar, atau bahkan data yang belum ada, tanpa menunggu semuanya siap.
 
 ::: {.callout-note}
 ## Tujuan bab
 
-Setelah bab ini, pembaca bisa write iterator dengan `yield`, memakainya di dalam `for`, memakai
+Setelah bab ini, pembaca bisa menulis iterator dengan `yield`, memakainya di dalam `for`, memakai
 `items` dan `pairs`, membuat iterator closure yang bisa dilanjutkan, serta membaca *error message* saat
 iterator inline diperlakukan sebagai *value*.
 :::
@@ -117,7 +117,7 @@ while true:
 
 `countBetween` adalah fungsi yang bisa dilanjutkan. `var it = countBetween` menyiapkan iteratornya,
 dan *argument* `(3, 5)` diberikan pada tiap *calling*. `finished(it)` bernilai `true` setelah iterator
-selesai. Perhatikan urutannya: panggil dulu, periksa `finished`, baru pakai *value itu*. Manual Nim
+selesai. Perhatikan urutannya: panggil dulu, periksa `finished`, baru pakai *value* itu. Manual Nim
 memperingatkan bahwa `finished` baru bernilai `true` satu putaran setelah *value* terakhir keluar, jadi
 *value* pada putaran itu harus dibuang.
 
@@ -144,7 +144,7 @@ for n in numbers():
 3
 ```
 
-`countTo` menangkap `n`, lalu return iterator anonim yang memakainya. Pola ini memisahkan
+`countTo` menangkap `n`, lalu mengembalikan iterator anonim yang memakainya. Pola ini memisahkan
 penyiapan dari pengambilan *value*, dan *result*-nya bisa langsung dipakai di `for`.
 
 ## Membaca error: iterator inline bukan *value*
@@ -174,7 +174,7 @@ pakai langsung di `for`, atau tandai iteratornya `{.closure.}` kalau memang perl
 Iterator tidak menyimpan *element*, jadi ia hemat *memory* dan bisa berhenti lebih awal. Harganya: satu
 *element* hanya bisa dilewati sekali. Tidak ada *index* acak, tidak ada `.len`, dan tidak bisa diurutkan.
 
-*Seq* menampilkan semua *element* di *memory*. Ia cocok kalau *element itu* perlu diindeks, diurutkan, atau
+*Seq* menampilkan semua *element* di *memory*. Ia cocok kalau *element* itu perlu diindeks, diurutkan, atau
 dipakai berkali-kali.
 
 Aturan praktisnya: pilih iterator kalau alirannya besar atau tak terbatas, dan kalau pencarian sering

@@ -135,9 +135,9 @@ cabang `rect`. Perbaikannya jelas dari isi *message*, yaitu hapus `width` dan is
 
 ## Error saat runtime: `FieldDefect`
 
-Nim tidak memeriksa akses field varian saat *compile*. Pemeriksaan penanda disisipkan pada setiap
+Nim tidak memeriksa akses field varian saat compile. Pemeriksaan penanda disisipkan pada setiap
 akses dan berjalan saat program berjalan, bahkan ketika penandanya literal di *constructor*. Yang
-tetap ditolak saat *compile* adalah *constructor* yang mengisi field di cabang yang salah.
+tetap ditolak saat compile adalah *constructor* yang mengisi field di cabang yang salah.
 
 ```{.nim}
 type
@@ -159,7 +159,7 @@ Error: unhandled exception: field 'width' is not accessible for type 'Shape' usi
 ```
 
 Di sini `c.width` diminta padahal `c` adalah lingkaran. Compiler tidak selalu bisa membuktikan itu
-saat *compile*, jadi Nim menyisipkan pemeriksaan yang berjalan saat akses terjadi. Karena penandanya
+saat compile, jadi Nim menyisipkan pemeriksaan yang berjalan saat akses terjadi. Karena penandanya
 tidak pernah berubah setelah konstruksi, bug ini biasanya berarti ada cabang di kode yang lupa
 diperiksa. Aturannya: akses field variant hanya lewat `case` pada penandanya.
 
@@ -198,7 +198,7 @@ echo float(price)
 main.nim(3, 22) Error: type mismatch: got 'float64' for '10.0' but expected 'Dollars = distinct float'
 ```
 
-Compiler menolak `10.0` karena *type itu* `float64`, bukan `Dollars`. Tulis `Dollars(10.0)`. *Message*
+Compiler menolak `10.0` karena *type* itu `float64`, bukan `Dollars`. Tulis `Dollars(10.0)`. *Message*
 errornya menyebut kedua *type*, jadi arah perbaikannya langsung terbaca.
 
 ## `distinct` vs alias *type*
@@ -223,9 +223,9 @@ found 4
 found 5
 ```
 
-`Alias(3)` dan `4` sama-sama `int`, jadi keduanya diterima tanpa konversi. `UserId` berbeda: *value itu*
+`Alias(3)` dan `4` sama-sama `int`, jadi keduanya diterima tanpa konversi. `UserId` berbeda: *value* itu
 harus di-write `int(UserId(5))` sebelum masuk. Pakai alias kalau hanya butuh nama pendek untuk *type*
-yang sama. Pakai `distinct` kalau *value itu* tidak boleh tertukar, seperti id, satuan, atau nominal
+yang sama. Pakai `distinct` kalau *value* itu tidak boleh tertukar, seperti id, satuan, atau nominal
 uang.
 
 ## Menambah kembali operasi yang dibutuhkan
@@ -278,18 +278,18 @@ perbaikannya. Inilah pengaman yang tidak dimiliki alias *type*.
    `area`.
 2. Tanpa menjalankan, prediksi *output* bila `Shape(kind: circle, width: 3.0)` diganti menjadi
    `Shape(kind: circle, radius: 3.0)`. Jelaskan.
-3. Tulis *type* `Meters = distinct int` beserta *procedure* `$`-nya, lalu print satu *value itu*.
+3. Tulis *type* `Meters = distinct int` beserta *procedure* `$`-nya, lalu tampilkan satu *value* itu.
 4. Ubah `type UserId = distinct int` menjadi alias `int`. Apa yang hilang dari program, dan kenapa
    itu penting?
 5. Jelaskan kenapa `echo Shape(kind: rect, width: 3.0, height: 4.0).radius` gagal saat berjalan,
-   bukan saat *compile*.
+   bukan saat compile.
 
 Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
 ## Ringkasan
 
 - Object varian memakai field `case` dengan satu discriminator; hanya field cabang aktif yang ada.
-- *Constructor* yang mengisi field di luar cabang ditolak sebagai error *compile*.
+- *Constructor* yang mengisi field di luar cabang ditolak sebagai error compile.
 - Akses field variant tanpa memeriksa penanda berakhir `FieldDefect` saat program berjalan.
 - `distinct` membuat *type* baru; konversi ke dan dari *type* dasar harus eksplisit.
 - Alias *type* tidak memisahkan apa pun; `distinct` cocok untuk id, satuan, dan *value* yang mudah

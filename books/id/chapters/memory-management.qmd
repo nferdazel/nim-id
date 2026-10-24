@@ -2,7 +2,7 @@
 
 Program yang mengalokasikan tanpa pernah membersihkan akan tumbuh sampai kehabisan *memory*. Di
 bahasa dengan garbage collector, itu diurus otomatis; di Nim 2.x, keputusannya diambil saat
-*compile* lewat mode *memory*. Bab ini menjelaskan ARC dan ORC, lalu hook yang di-call compiler
+compile lewat mode *memory*. Bab ini menjelaskan ARC dan ORC, lalu hook yang di-call compiler
 pada saat yang tepat: `=destroy`, `=copy`, dan `=sink`.
 
 ::: {.callout-note}
@@ -91,7 +91,7 @@ after block
 destroy outer
 ```
 
-Bacalah urutannya. `make()` print `make`, lalu return sebuah `Box`; *value* itu disimpan di
+Bacalah urutannya. `make()` print `make`, lalu mengembalikan sebuah `Box`; *value* itu disimpan di
 `y`. Di akhir blok, `y` keluar dari *scope* dan `=destroy` di-call untuknya, jadi
 `destroy temp` muncul sebelum `after block`. `x` baru dibuang di akhir `main()`, jadi
 `destroy outer` paling akhir.
@@ -104,7 +104,7 @@ Dari urutan di atas, aturannya jelas:
 - ***Value* sementara.** Dibuang paling cepat di akhir *statement* yang memakainya, dan sering baru
   di akhir *scope*. Jangan bergantung pada momen persisnya.
 - **Penimpaan.** Saat sebuah *variable* ditimpa *value* baru, *value* lamanya dibuang lebih dulu, kecuali
-  *type itu* punya hook `=copy` atau `=sink` sendiri: hook itulah yang bertanggung jawab.
+  *type* itu punya hook `=copy` atau `=sink` sendiri: hook itulah yang bertanggung jawab.
 
 Yang tidak terjadi: `=destroy` tidak di-call tepat saat *value* dibuat, dan tidak di-call untuk
 `ptr` yang menunjuk ke *value* itu.
@@ -239,7 +239,7 @@ Biarkan hook bawaan kalau *type* hanya berisi data biasa; compiler sudah menyedi
    ```
 3. Kenapa `move(a)` mengosongkan `a` tetapi tidak call `=sink`?
 4. Jelaskan kenapa ORC bisa membebaskan dua *object* yang saling menunjuk, sedangkan ARC tidak.
-5. Kode berikut gagal *di-compile*. Perbaiki, lalu jelaskan *error message*-nya:
+5. Kode berikut gagal di-compile. Perbaiki, lalu jelaskan *error message*-nya:
    ```{.nim}
    type Person = ref object
      name: string
@@ -264,5 +264,5 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
 ## Selanjutnya
 
-Bab berikutnya menelusuri [**standard library**](standard-library.qmd): `strutils`, `sequtils`, `tables`,
+Bab berikutnya menelusuri [*standard library*](standard-library.qmd): `strutils`, `sequtils`, `tables`,
 dan `json`, lalu kapan memilih masing-masing.

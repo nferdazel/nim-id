@@ -4,7 +4,7 @@ Di banyak bahasa, `+` pada dua *integer* menghasilkan *integer*, dan pembagian s
 *float*. Nim membalik sebagian kebiasaan itu: `/` selalu menghasilkan `float`, sedangkan
 pembagian bulat punya operatornya sendiri, `div`.
 
-Kesalahpahaman soal operator kecil, tapi *effect itu* nyata: *result* yang salah tanpa error, atau *type*
+Kesalahpahaman soal operator kecil, tapi *effect* itu nyata: *result* yang salah tanpa error, atau *type*
 yang tidak terduga. Bab ini merangkum operator yang paling sering dipakai dan jebakan di
 belakangnya.
 
@@ -70,7 +70,7 @@ echo pow(3.0, 3.0)
 ```
 
 Untuk pangkat *integer*, kalikan berulang di dalam *loop* atau konversi ke `float` lebih
-dulu. Menulis `2 ^ 10` dengan dua *integer* tidak *di-compile* menjadi pangkat bulat, jadi
+dulu. Menulis `2 ^ 10` dengan dua *integer* tidak di-compile menjadi pangkat bulat, jadi
 niatnya perlu dibuat eksplisit.
 
 ## *Comparison*

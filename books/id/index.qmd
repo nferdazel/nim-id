@@ -2,7 +2,7 @@
 
 Buku ini mengajarkan bahasa [Nim](https://nim-lang.org) dalam bahasa Indonesia, untuk pembaca yang
 sudah pernah menulis program di bahasa lain (Python, JavaScript, PHP, atau Go) tetapi belum pernah
-memakai bahasa yang *di-compile* ke native.
+memakai bahasa yang di-compile ke native.
 
 Buku ini **bukan** terjemahan dokumentasi resmi. Dokumentasi resmi Nim sudah lengkap dan berbahasa
 Inggris; buku ini pelengkap, bukan pengganti. Pembaca yang sudah nyaman dengan bahasa Inggris dan
@@ -11,7 +11,7 @@ istilah sistem bisa langsung ke [dokumentasi resmi](https://nim-lang.org/documen
 ## Untuk siapa buku ini
 
 Buku ini menjelaskan apa yang berbeda di Nim, bukan mengulang dasar pemrograman. Pembaca
-diasumsikan sudah mengenal *variable*, *loop*, fungsi, dan *error*. Kalau istilah itu masih asing,
+diasumsikan sudah mengenal *variable*, *loop*, fungsi, dan error. Kalau istilah itu masih asing,
 selesaikan dulu satu pengantar bahasa lain, lalu kembali ke sini. Buku ini juga bukan pengantar
 pemrograman yang pertama; ia mempercepat pembaca yang sudah punya bekal, bukan membangun bekal itu
 dari nol.
@@ -21,11 +21,11 @@ dari nol.
 Yang dibutuhkan hanya komputer sendiri. Panduan pemasangan ada di
 [Instalasi Nim](chapters/installation.qmd), dan cukup dijalankan sekali. Setelah `nim` tersedia,
 semua contoh di buku ini bisa dijalankan langsung di terminal. Untuk mengerjakan latihan, cukup
-editor teks biasa; tidak ada kerangka kerja atau *tool* tambahan yang perlu dipasang.
+editor teks biasa; tidak ada kerangka kerja atau tool tambahan yang perlu dipasang.
 
 Buku ini bukan kumpulan potongan kode yang diragukan. Setiap contoh disimpan di `examples/`,
-*di-compile*, dan *output*-nya dibandingkan otomatis. Beberapa contoh memang sengaja gagal
-*di-compile*, supaya pembaca terbiasa membaca *compiler message* sejak awal.
+di-compile, dan *output*-nya dibandingkan otomatis. Beberapa contoh memang sengaja gagal
+di-compile, supaya pembaca terbiasa membaca *error message* sejak awal.
 
 ## Cara membaca
 

@@ -5,13 +5,13 @@ perlu memilih *path*: saldo cukup atau tidak, nama kosong atau terisi, sistemnya
 
 `if` sudah akrab bagi siapa pun yang pernah menulis di bahasa lain. Yang khas di Nim ada tiga: `if`
 bisa langsung menghasilkan *value*, `case` menuntut semua kemungkinan tertutup, dan `when` memilih
-cabang **saat *compile***: cabang yang tidak terpilih tidak ikut *di-compile*.
+cabang **saat *compile***: cabang yang tidak terpilih tidak ikut di-compile.
 
 ::: {.callout-note}
 ## Tujuan bab
 
-Setelah bab ini, pembaca bisa write `if`/`elif`/`else`, mengambil *value* dari sebuah `if`, memakai
-`case` dengan *set* dan *range*, memisahkan kode per sistem operasi lewat `when`, dan read
+Setelah bab ini, pembaca bisa menulis `if`/`elif`/`else`, mengambil *value* dari sebuah `if`, memakai
+`case` dengan *set* dan *range*, memisahkan kode per sistem operasi lewat `when`, dan membaca
 *message* `type mismatch` serta `not all cases are covered`.
 :::
 
@@ -103,7 +103,7 @@ dan `of "a" .. "c"` ditolak dengan *message* `range of string is invalid`.
 ## `when`: cabang yang dipilih compiler
 
 `when` terlihat seperti `if`, tapi diputuskan **saat *compile***. Hanya cabang yang terpilih yang
-benar-benar *di-compile*.
+benar-benar di-compile.
 
 ```{.nim}
 when defined(windows):
@@ -119,8 +119,8 @@ separator: /
 ```
 
 Di Linux dan macOS, `defined(windows)` bernilai salah, jadi *output*-nya `/`. Di Windows, hanya *line*
-`const PathSeparator = '\\'` yang *di-compile* dan *result*-nya backslash. Perbedaan dengan `if` jelas di
-sini: pada `if`, kedua cabang harus tetap bisa *di-compile* meski salah satu tidak pernah jalan.
+`const PathSeparator = '\\'` yang di-compile dan *result*-nya backslash. Perbedaan dengan `if` jelas di
+sini: pada `if`, kedua cabang harus tetap bisa di-compile meski salah satu tidak pernah jalan.
 Pola ini juga dipakai untuk `when isMainModule:` atau `when sizeof(int) == 8:`.
 
 ## Membaca *error message*: kondisi harus `bool`
@@ -141,7 +141,7 @@ main.nim(3, 4) Error: type mismatch: got 'int' for 'count' but expected 'bool'
 | Bagian | Arti |
 |---|---|
 | `main.nim(3, 4)` | *file*, *line* 3, kolom 4: posisi `count` di kondisi |
-| `Error` | tingkat keparahan; menghentikan *compile* |
+| `Error` | tingkat keparahan; menghentikan compile |
 | `got 'int'` | *type* yang benar-benar diberikan |
 | `expected 'bool'` | *type* yang diharapkan `if` |
 
@@ -172,10 +172,10 @@ tanpa `else`.
 
 1. Ubah `temperature` di contoh pertama menjadi `5`, lalu prediksi *output*-nya sebelum menjalankan.
 2. Tulis *expression* `if` yang mengubah *value* `age` menjadi `"anak"` (di bawah 13), `"remaja"` (13–19),
-   atau `"dewasa"` (20 ke atas), lalu print *result*-nya.
+   atau `"dewasa"` (20 ke atas), lalu tampilkan *result*-nya.
 3. Tulis *procedure* yang menerima `char` dan memakai `case` untuk mengembalikan `"vowel"` untuk
    `'a'`/`'i'`/`'u'`/`'e'`/`'o'`, `"digit"` untuk `'0' .. '9'`, dan `"other"` untuk sisanya.
-4. Kode berikut gagal *di-compile*. Perbaiki, lalu sebutkan *line* dan kolom yang ditunjuk compiler:
+4. Kode berikut gagal di-compile. Perbaiki, lalu sebutkan *line* dan kolom yang ditunjuk compiler:
    ```{.nim}
    var name = "Nim"
 
@@ -191,7 +191,7 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 - `if` adalah *expression*; kalau dipakai sebagai *value*, semua cabang harus bertipe sama dan `else` wajib.
 - `case` mendukung daftar *value* (`12, 1, 2`) dan *range* (`3 .. 5`); `of` yang tidak lengkap tanpa
   `else` ditolak compiler.
-- `when` memilih cabang saat *compile*; hanya cabang terpilih yang *di-compile*.
+- `when` memilih cabang saat compile; hanya cabang terpilih yang di-compile.
 - Kondisi `if` harus bertipe `bool`; Nim tidak menganggap `0` atau `""` sebagai salah.
 
 ## Selanjutnya

@@ -1,7 +1,7 @@
-# Tur **standard library**
+# Tur *standard library*
 
-Bahasa yang bagus tanpa *library* akan melelahkan. Nim mengirim **standard library** bersama compiler,
-dan *module itu* diimpor dengan awalan `std/`. Bab ini menelusuri empat *module* yang paling sering
+Bahasa yang bagus tanpa library akan melelahkan. Nim mengirim *standard library* bersama compiler,
+dan *module* itu diimpor dengan awalan `std/`. Bab ini menelusuri empat *module* yang paling sering
 dipakai hari-hari: `strutils`, `sequtils`, `tables`, dan `json`. Setiap *module* dibahas secukupnya;
 sisanya punya bab sendiri.
 
@@ -13,9 +13,9 @@ Setelah bab ini, pembaca bisa mengolah teks dengan `std/strutils`, mengubah *seq
 antara `Table` dan `seq` dengan alasan yang jelas.
 :::
 
-## Mengimpor *module* **standard library**
+## Mengimpor *module* *standard library*
 
-*Module* **standard library** diimpor dengan awalan `std/`, misalnya `import std/strutils` atau
+*Module* *standard library* diimpor dengan awalan `std/`, misalnya `import std/strutils` atau
 `import std/sequtils`. Awalan itu memisahkan *module* resmi dari *file* lokal. Tanpa `import`, nama
 seperti `strip` atau `hasKey` tidak dikenal compiler.
 
@@ -138,7 +138,7 @@ code
 ```
 
 `parseJson` mengubah teks JSON menjadi `JsonNode`. Field diakses seperti peta: `data["name"]`.
-Untuk mengambil *value itu*, pakai `getStr`, `getInt`, `getFloat`, atau `getBool` sesuai jenisnya.
+Untuk mengambil *value* itu, pakai `getStr`, `getInt`, `getFloat`, atau `getBool` sesuai jenisnya.
 `pretty` print JSON dengan indentasi agar mudah dibaca.
 
 ## `std/json`: membangun data
@@ -180,7 +180,7 @@ mudah salah.
 
 ## Membaca error: kunci yang tidak ada
 
-Mengakses kunci yang tidak ada bukan error *compile*; program baru berhenti saat berjalan.
+Mengakses kunci yang tidak ada bukan error compile; program baru berhenti saat berjalan.
 
 ```{.nim}
 import std/json
@@ -199,9 +199,9 @@ saat kuncinya hilang.
 
 ## *Module* lain punya babnya sendiri
 
-**Standard library** jauh lebih luas dari empat *module* ini. `std/os` dibahas di bab *file* dan operasi
+*Standard library* jauh lebih luas dari empat *module* ini. `std/os` dibahas di bab *file* dan operasi
 sistem, `std/strformat` di bab *variable*, dan `std/math` serta `std/algorithm` muncul di bab operasi
-dan *file*. `std/random` dan `std/times` dibahas di bab [*time* dan *random*](times-and-random.qmd). Pola mengimpornya sama: `import std/nama`.
+dan *file*. `std/random` dan `std/times` dibahas di bab [time dan random](times-and-random.qmd). Pola mengimpornya sama: `import std/nama`.
 
 ## Latihan
 
@@ -216,7 +216,7 @@ dan *file*. `std/random` dan `std/times` dibahas di bab [*time* dan *random*](ti
    ```
 3. Buat `Table[string, int]` berisi tiga *value*, print satu *value* yang ada, dan satu *value* lewat
    `getOrDefault` untuk kunci yang tidak ada.
-4. Tulis dari nol: parse `{"city": "Bandung"}` lalu print isi `city`.
+4. Tulis dari nol: parse `{"city": "Bandung"}` lalu tampilkan isi `city`.
 5. Kode berikut gagal saat dijalankan. Perbaiki tanpa mengubah isi `t`, lalu jelaskan *message*
    error-nya:
    ```{.nim}
@@ -230,7 +230,7 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
 ## Ringkasan
 
-- *Module* **standard library** diimpor dengan awalan `std/`, misalnya `import std/strutils`.
+- *Module* *standard library* diimpor dengan awalan `std/`, misalnya `import std/strutils`.
 - `strutils` mengolah teks (`strip`, `split`, `join`), `sequtils` mengubah *seq* (`filterIt`,
   `mapIt`).
 - `Table[K, V]` memetakan kunci ke *value* untuk pencarian cepat; `seq` tetap dipakai saat urutan

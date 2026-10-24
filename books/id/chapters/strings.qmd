@@ -1,4 +1,4 @@
-# String, raw string, dan *character*
+# String, raw string, dan character
 
 Hampir setiap program menyentuh teks. Di Nim, `string` adalah *seq* byte yang boleh diubah di
 tempat, berbeda dari bahasa yang memperlakukan string sebagai *value* beku. Perbedaan itu muncul di
@@ -10,7 +10,7 @@ mengubahnya dengan aman.
 ::: {.callout-note}
 ## Tujuan bab
 
-Setelah bab ini, pembaca bisa write escape sequence dan raw string, mengambil *character* dan
+Setelah bab ini, pembaca bisa menulis escape sequence dan raw string, mengambil character dan
 potongan teks dengan *index* dan slicing, membedakan `&` dari `add`, serta menjelaskan kenapa
 `s[0] = 'N'` ditolak saat `s` dideklarasikan `let`.
 :::
@@ -36,8 +36,8 @@ brace: { }
 
 Garis miring terbalik di dalam string membuka *escape sequence*. `\n` menjadi *newline*, `\"`
 menjadi tanda kutip yang tidak menutup string, dan `\\` menjadi satu garis miring. Perhatikan *line*
-terakhir: kurung kurawal `{` biasa-biasa saja di string biasa. *Character* itu hanya punya arti
-khusus di dalam *interpolasi* `&"..."` yang dibahas di bab berikutnya.
+terakhir: kurung kurawal `{` biasa-biasa saja di string biasa. Character itu hanya punya arti
+khusus di dalam interpolasi `&"..."` yang dibahas di bab berikutnya.
 
 ## Raw string
 
@@ -83,8 +83,8 @@ line two
 END
 ```
 
-Perhatikan `len` bernilai 18. Isi string adalah `line one\nline two\n`: 8 + 1 + 8 + 1 *character*.
-*Newline* setelah `"""` pembuka ikut terhitung, dan itu sering menjadi sumber *error* hitung
+Perhatikan `len` bernilai 18. Isi string adalah `line one\nline two\n`: 8 + 1 + 8 + 1 character.
+*Newline* setelah `"""` pembuka ikut terhitung, dan itu sering menjadi sumber error hitung
 saat pembaca baru memakainya. Raw string tiga kutip juga tidak memproses escape.
 
 ## Panjang dan *index*
@@ -134,7 +134,7 @@ im rock
 ```
 
 *Range* `a..b` berarti dari *index* `a` sampai `b`, keduanya masuk. Karena `^n` dihitung dari
-belakang, `s[^5..^1]` mengambil lima *character* terakhir. Slicing menghasilkan string baru; string
+belakang, `s[^5..^1]` mengambil lima character terakhir. Slicing menghasilkan string baru; string
 aslinya tidak berubah.
 
 ## `&` versus `add`
@@ -219,14 +219,14 @@ kurung siku dibuat agar spasi tidak terlihat sekilas hilang.
    echo "a" & "b" & "c"
    echo "abc".len
    ```
-3. Tulis path `C:\temp\new` memakai raw string, lalu print.
+3. Tulis path `C:\temp\new` memakai raw string, lalu tampilkan.
 4. Kode berikut gagal. Perbaiki, lalu jelaskan kenapa gagal:
    ```{.nim}
    let s = "abc"
    s.add("d")
    echo s
    ```
-5. Ambil tiga *character* terakhir dari `"programming"` dengan slicing, lalu print *result*-nya.
+5. Ambil tiga character terakhir dari `"programming"` dengan slicing, lalu tampilkan *result*-nya.
 
 Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 

@@ -1,4 +1,4 @@
-# *Procedure*, parameter, dan **return value**
+# *Procedure*, parameter, dan *return value*
 
 Di banyak bahasa, semua rutin disebut "fungsi". Nim memisahkan dua hal: rutin yang boleh mengubah
 keadaan di luar dirinya (`proc`), dan rutin yang dijamin tidak (`func`). Compiler menegakkan
@@ -10,7 +10,7 @@ ubah?", karena jawabannya selalu "tidak ada".
 ::: {.callout-note}
 ## Tujuan bab
 
-Setelah bab ini, pembaca bisa write *procedure* bertipe jelas, memilih antara `proc` dan `func`,
+Setelah bab ini, pembaca bisa menulis *procedure* bertipe jelas, memilih antara `proc` dan `func`,
 memakai *parameter* default, *named argument*, `var` *parameter*, dan `openArray`,
 serta membaca *message*
 error `can have side effects`.
@@ -18,7 +18,7 @@ error `can have side effects`.
 
 ## `proc`: rutin yang boleh punya *side effect*
 
-Tulis daftar *parameter* bertipe di dalam tanda kurung, lalu *type* **return value** setelah titik dua.
+Tulis daftar *parameter* bertipe di dalam tanda kurung, lalu *type* *return value* setelah titik dua.
 
 ```{.nim}
 proc greet(name: string): string =
@@ -63,7 +63,7 @@ shout("hello")
 main.nim(1, 6) Error: 'shout' can have side effects
 ```
 
-Baca dari depan: *file*, posisi `(baris, kolom)`, tingkat, lalu isi *message*-nya. `(1, 6)` menunjuk
+Baca dari depan: *file*, posisi `(line, column)`, tingkat, lalu isi *message*-nya. `(1, 6)` menunjuk
 *line* 1 kolom 6, tepat di nama `shout`. Compiler menambahkan `Hint` yang menyebut `echo` sebagai
 penyebabnya. Perbaikan langsungnya: ganti `func` menjadi `proc`, karena `echo` write ke layar,
 sebuah *side effect*.
@@ -71,9 +71,9 @@ sebuah *side effect*.
 Aturan praktisnya: `func` untuk perhitungan murni, `proc` saat rutin memang print, write
 *file*, atau mengubah *argument*-nya.
 
-## `result` dan **return value** yang dibangun bertahap
+## `result` dan *return value* yang dibangun bertahap
 
-*Procedure* bertipe **return value** punya *variable* implisit bernama `result`. *Value* awalnya adalah
+*Procedure* bertipe *return value* punya *variable* implisit bernama `result`. *Value* awalnya adalah
 default *type* (`0` untuk `int`, `""` untuk `string`), dan *expression* terakhir menimpanya.
 
 ```{.nim}
@@ -88,7 +88,7 @@ echo total(@[1, 2, 3, 4])
 10
 ```
 
-`result` berguna saat **return value** dibangun bertahap. Di `total`, tiap putaran menambah `result`
+`result` berguna saat *return value* dibangun bertahap. Di `total`, tiap putaran menambah `result`
 tanpa *variable* tambahan.
 
 ## `return` untuk keluar lebih awal
@@ -115,7 +115,7 @@ positive
 ```
 
 Dua `if` pertama sudah menangani kasusnya, jadi *line* terakhir hanya dieksekusi untuk bilangan
-positif, dan *result*-nya menjadi **return value**.
+positif, dan *result*-nya menjadi *return value*.
 
 ## *Default value* dan *named argument*
 
@@ -220,7 +220,7 @@ string: answer
 
 ## `discard`: saat *result*-nya memang dibuang
 
-Nim menolak **return value** yang dibuang diam-diam. Kode berikut gagal *di-compile*:
+Nim menolak *return value* yang dibuang diam-diam. Kode berikut gagal di-compile:
 
 ```{.nim}
 proc bump(counter: var int): int =
@@ -236,7 +236,7 @@ echo hits
 main.nim(6, 5) Error: expression 'bump(hits)' is of type 'int' and has to be used (or discarded)
 ```
 
-*Message*-nya menyebut dua pilihan: pakai *value itu*, atau buang dengan sadar. Karena kita hanya ingin
+*Message*-nya menyebut dua pilihan: pakai *value* itu, atau buang dengan sadar. Karena kita hanya ingin
 *effect* sampingnya, tulis `discard`.
 
 ```{.nim}
@@ -268,7 +268,7 @@ echo hits
    ```
 3. Tulis `proc average(values: openArray[float]): float` yang return rata-rata, lalu
    panggil sekali dengan *array* dan sekali dengan *seq*.
-4. Kode berikut gagal *di-compile*. Perbaiki, lalu jelaskan isi *message*-nya:
+4. Kode berikut gagal di-compile. Perbaiki, lalu jelaskan isi *message*-nya:
    ```{.nim}
    proc double(x: int): int =
      value * 2
@@ -282,10 +282,10 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 ## Ringkasan
 
 - `proc` boleh punya *side effect*; `func` dijamin tidak, dan compiler menolak yang melanggar.
-- *Expression* terakhir menjadi **return value**; `result` untuk *value* bertahap, `return` untuk keluar awal.
+- *Expression* terakhir menjadi *return value*; `result` untuk *value* bertahap, `return` untuk keluar awal.
 - *Parameter* default dan *named argument* membuat *calling* panjang tetap terbaca.
 - `var` *parameter* menulis balik ke *caller*; `openArray` menerima *array* dan *seq*.
-- **Return value** yang tidak dipakai ditolak compiler; tulis `discard` kalau memang dibuang.
+- *Return value* yang tidak dipakai ditolak compiler; tulis `discard` kalau memang dibuang.
 
 ## Selanjutnya
 

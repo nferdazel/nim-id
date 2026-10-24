@@ -37,7 +37,7 @@ hello, Nim
 
 Perhatikan tiga hal. Pragma `{.async.}` mengubah *procedure* sehingga `return` di dalamnya mengisi
 `Future`. Di dalam `main`, `await greeting("Nim")` menunggu sampai *result*-nya siap lalu membuka
-*value itu*. Di luar *procedure* async, `waitFor` yang menjalankan mesin async sampai tugasnya selesai.
+*value* itu. Di luar *procedure* async, `waitFor` yang menjalankan mesin async sampai tugasnya selesai.
 
 `waitFor` memulai *event loop*, yaitu mekanisme yang menggilir tugas-tugas yang sedang
 menunggu. Biasanya cukup satu `waitFor` di tingkat teratas program; memanggilnya dua kali tetap
@@ -121,7 +121,7 @@ Satu hal yang mudah salah: `sleep` biasa (dari `std/os`) memblokir seluruh *even
 sedangkan `sleepAsync` return kendali ke mesin async. Di dalam *procedure* `{.async.}`, pakai versi async dari setiap
 operasi yang menunggu. Kalau tidak, tugas-tugas itu berjalan berurutan lagi tanpa disadari.
 
-*Error* di dalam *procedure* async muncul saat `Future`-nya di-`await`. Artinya `try` dan `except`
+Error di dalam *procedure* async muncul saat `Future`-nya di-`await`. Artinya `try` dan `except`
 dipasang di sekitar `await`, bukan di dalam *procedure* yang melempar. Kalau beberapa tugas digabung
 dengan `all`, satu tugas yang gagal menggagalkan seluruh gabungan.
 
@@ -153,11 +153,11 @@ keluar: pakai `waitFor` kalau *caller*-nya bukan *procedure* async. `(7, 25)` me
 Ada dua perbaikan yang wajar. Ubah `main` menjadi *procedure* async lalu panggil dengan `waitFor`,
 atau biarkan `main` sinkron dan panggil `waitFor work()` di dalamnya.
 
-Ada juga `asyncCheck`, yang memasang pemeriksa pada `Future` supaya *error* yang tidak ditunggu
-tetap dilaporkan. Hati-hati memakainya: kalau tugas itu gagal, *error itu* di-raise di putaran
-peristiwa dan program bisa berhenti dengan unhandled exception. Kalau *error* memang ingin
+Ada juga `asyncCheck`, yang memasang pemeriksa pada `Future` supaya error yang tidak ditunggu
+tetap dilaporkan. Hati-hati memakainya: kalau tugas itu gagal, error itu di-raise di putaran
+peristiwa dan program bisa berhenti dengan unhandled exception. Kalau error memang ingin
 diabaikan, `discard` pada `Future` itulah yang menelannya. Pakai `await` selama *result* atau
-*error itu* penting.
+error itu penting.
 
 ## Latihan
 
@@ -187,10 +187,10 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 - `waitFor` menjalankan mesin async dari kode sinkron; biasanya cukup sekali di tingkat teratas.
 - `await` berurutan menjumlahkan jeda; `all` menumpuknya sambil menjaga urutan *argument*.
 - *Output* contoh dijaga pasti dengan mengandalkan urutan `await`, bukan waktu.
-- `await` di luar *procedure* async ditolak saat *compile*.
+- `await` di luar *procedure* async ditolak saat compile.
 
 ## Selanjutnya
 
-Bab berikutnya menghubungkan Nim dengan kode C yang sudah ada: *meng-compile* *file* C bersama
+Bab berikutnya menghubungkan Nim dengan kode C yang sudah ada: meng-compile *file* C bersama
 program, mendeklarasikan fungsi dengan `{.importc.}`, dan memakai *type* C dengan benar. Lanjut ke
 [FFI ke C](ffi-c.qmd).

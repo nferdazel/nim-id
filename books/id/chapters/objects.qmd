@@ -38,7 +38,7 @@ memakai *default value*.
 
 ## Field yang bisa diubah
 
-Field boleh diubah selama *variable itu* dideklarasikan `var`.
+Field boleh diubah selama *variable* itu dideklarasikan `var`.
 
 ```{.nim}
 type Point = object
@@ -57,7 +57,7 @@ echo p.x, ",", p.y
 
 ## *Default value* *object*
 
-*Object* yang dideklarasikan tanpa isi sudah aman dipakai; setiap field berisi default *type itu*.
+*Object* yang dideklarasikan tanpa isi sudah aman dipakai; setiap field berisi default *type* itu.
 
 ```{.nim}
 type Counter = object
@@ -90,7 +90,7 @@ echo Person(name: "Ada")
 (name: "Ada")
 ```
 
-*Output*-nya menyerupai literal asalnya: nama field beserta *value itu*. Cocok untuk inspeksi
+*Output*-nya menyerupai literal asalnya: nama field beserta *value* itu. Cocok untuk inspeksi
 cepat, tapi biasanya belum enak dibaca manusia.
 
 ## Menimpa `$` sendiri
@@ -118,7 +118,7 @@ pada *type* sendiri.
 
 ## `ref object`: disimpan di heap
 
-`ref object` menyimpan datanya di heap, dan *variable itu* menyimpan *pointer* ke sana.
+`ref object` menyimpan datanya di heap, dan *variable* itu menyimpan *pointer* ke sana.
 
 ```{.nim}
 type Node = ref object
@@ -268,7 +268,7 @@ dibahas di bagian menengah.
 
 ## Latihan
 
-1. Tambahkan field `email: string` pada `Person`, isi lewat *constructor*, lalu print.
+1. Tambahkan field `email: string` pada `Person`, isi lewat *constructor*, lalu tampilkan.
 2. Tanpa menjalankan, prediksi *output*-nya:
    ```{.nim}
    type Task = object
@@ -279,7 +279,7 @@ dibahas di bagian menengah.
    echo t.done, " ", t.title
    ```
 3. Tulis `type Book = ref object of RootObj` dengan field `title` dan `pages`, buat satu instance,
-   lalu print lewat *procedure* yang menerima `Book`.
+   lalu tampilkan lewat *procedure* yang menerima `Book`.
 4. Kode berikut gagal. Perbaiki tanpa mengubah `let`:
    ```{.nim}
    type Point = object
@@ -294,8 +294,8 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
 ## Ringkasan
 
-- `object` mengelompokkan field bernama; `Tipe(field: nilai)` adalah *constructor* literal.
-- Field yang tidak diisi memakai default *type itu*, dan *object* tanpa isi tetap aman dipakai.
+- `object` mengelompokkan field bernama; `Type(field: value)` adalah *constructor* literal.
+- Field yang tidak diisi memakai default *type* itu, dan *object* tanpa isi tetap aman dipakai.
 - *Object* *value* punya `$` bawaan; `ref object` tidak, jadi definisikan `$` atau pakai `p[]`.
 - Menyalin *object* *value* menggandakan datanya; menyalin `ref object` menggandakan *pointer*-nya.
 - `object of RootObj` mewariskan field; `new` mengalokasikan `ref` yang masih `nil`.

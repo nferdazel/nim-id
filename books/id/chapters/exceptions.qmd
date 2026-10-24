@@ -91,9 +91,9 @@ except NegativeAge as e:
 caught: age cannot be negative
 ```
 
-`Defect` dipakai untuk *error* program seperti *index* di luar batas, dan sengaja tidak ikut
-ditangkap oleh `except CatchableError`. Jadi `except CatchableError` menangkap semua *error* yang
-wajar dipulihkan, bukan *error* yang menandakan logika program keliru.
+`Defect` dipakai untuk error program seperti *index* di luar batas, dan sengaja tidak ikut
+ditangkap oleh `except CatchableError`. Jadi `except CatchableError` menangkap semua error yang
+wajar dipulihkan, bukan error yang menandakan logika program keliru.
 
 ## `raise` dengan konteks yang lebih berguna
 
@@ -175,7 +175,7 @@ except ValueError as e:
 error: failed
 ```
 
-Pemeriksaan ini berjalan saat *compile*. *Flag* lama `--effect:off` yang mematikannya sudah tidak
+Pemeriksaan ini berjalan saat compile. *Flag* lama `--effect:off` yang mematikannya sudah tidak
 ada di Nim 2.2.12.
 
 ```{.txt}
@@ -210,7 +210,7 @@ blok `finally`. Untuk satu atau dua *line* pembersihan, bentuk ini lebih mudah d
 
 ## Latihan
 
-1. Tangkap `ValueError` dari `parseInt("x")` dan print *message*-nya memakai `e.msg`.
+1. Tangkap `ValueError` dari `parseInt("x")` dan tampilkan *message*-nya memakai `e.msg`.
 2. Tanpa menjalankan, prediksi *output*-nya:
    ```{.nim}
    try:
@@ -223,7 +223,7 @@ blok `finally`. Untuk satu atau dua *line* pembersihan, bentuk ini lebih mudah d
      echo "done"
    ```
 3. Buat `type TooLarge = object of CatchableError` dan lempar saat sebuah `int` melebihi 100.
-4. Kode berikut gagal *di-compile*. Jelaskan *message*-nya, lalu perbaiki:
+4. Kode berikut gagal di-compile. Jelaskan *message*-nya, lalu perbaiki:
    ```{.nim}
    proc readValue(): int =
      raise newException(ValueError, "missing")
@@ -241,7 +241,7 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 - `raise` melempar, `try` menangkap, `as e` memberi akses *message* lewat `e.msg`.
 - Beberapa `except` dicek berurutan; `finally` selalu jalan.
 - *Exception* saling mewarisi; buat *type* sendiri dari `CatchableError`, bukan `Defect`.
-- *Effect* `raises` memeriksa saat *compile*; `raises: []` berarti tidak ada `CatchableError`.
+- *Effect* `raises` memeriksa saat compile; `raises: []` berarti tidak ada `CatchableError`.
 - `defer` menjalankan pembersihan di akhir blok, apa pun yang terjadi.
 
 ## Selanjutnya

@@ -5,7 +5,7 @@ di `examples/` di-compile dengan Nim 2.2.12 pada setiap perubahan, dan *output*-
 dengan *file* harapan yang tersimpan di repositori.
 
 Teks buku dilisensikan CC BY-SA 4.0 dan kode contoh MIT. Rincian lisensi ada di halaman hak cipta,
-yang juga memuat sumber dan cara melaporkan *error*.
+yang juga memuat sumber dan cara melaporkan error.
 
 Kalau ada yang salah, laporkan lewat [issues](https://github.com/nferdazel/nim-id/issues). Buku ini
 hidup: versi berikutnya memperbaiki apa yang pembaca temukan.

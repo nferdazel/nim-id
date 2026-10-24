@@ -9,7 +9,7 @@ toolchain C yang tersedia di mesin pengembang.
 ## Tujuan bab
 
 Setelah bab ini, pembaca bisa memilih target dengan `--os` dan `--cpu`, menyalakan fitur dari
-*command line* lewat `-d:` dan `{.strdefine.}`, membedakan `-d:release`, `--opt:speed`, dan `-d:danger`,
+command line lewat `-d:` dan `{.strdefine.}`, membedakan `-d:release`, `--opt:speed`, dan `-d:danger`,
 membuat biner statis, serta tahu kapan cross-compile akan gagal karena toolchain-nya tidak ada.
 :::
 
@@ -55,7 +55,7 @@ mesin pengembang dan mesin pemeriksa, sehingga blok *output*-nya tidak akan pern
 di-print adalah *comparison* yang sama di semua mesin unix-like: apakah cabang `when` sesuai dengan
 `hostOS`, dan apakah `hostCPU` terisi.
 
-## Menyalakan fitur dari *command line*
+## Menyalakan fitur dari command line
 
 Selain `--os` dan `--cpu`, ada `-d:nama` untuk mendefinisikan simbol. Simbol itu di-read `when`, jadi
 pilihan build tidak perlu mengubah kode.
@@ -92,7 +92,7 @@ pola yang dipakai banyak program: satu biner, beberapa konfigurasi, tanpa menyen
 ## `-d:release`, `--opt:speed`, dan `-d:danger`
 
 Kode yang sama, *result* yang berbeda. *File* contoh di repositori buku ini menyimpan *flag*
-*compile*-nya di *file* `.mode`, sehingga pemeriksaan otomatis memakai cara yang sama dengan yang
+compile-nya di *file* `.mode`, sehingga pemeriksaan otomatis memakai cara yang sama dengan yang
 di-write di sini.
 
 ```{.nim}
@@ -140,14 +140,14 @@ biner yang sudah terbukti benar, bukan untuk tahap menulis kode.
 
 ## Biner statis
 
-Biner yang *di-compile* di satu distribusi kadang menolak berjalan di distribusi lain karena versi
-*library* C-nya berbeda. Penaut bisa diminta memasukkan seluruh *library* ke dalam biner:
+Biner yang di-compile di satu distribusi kadang menolak berjalan di distribusi lain karena versi
+library C-nya berbeda. Penaut bisa diminta memasukkan seluruh library ke dalam biner:
 
 ```bash
 nim c -d:release --passL:-static --out:app app.nim
 ```
 
-*Result*-nya biner statis: tidak mencari *library* C saat dijalankan, jadi lebih aman dipindahkan.
+*Result*-nya biner statis: tidak mencari library C saat dijalankan, jadi lebih aman dipindahkan.
 *Flag* ini untuk target Linux. Penaut macOS tidak mengenalnya, dan percobaan di Nim 2.2.12 berhenti
 dengan `ld: library 'crt0.o' not found`.
 
@@ -163,7 +163,7 @@ Pakai keduanya seperlunya. *Option* yang tidak dipahami compiler C akan menggaga
 
 ## Error sengaja: `when` butuh *value* compile-time
 
-`when` berbeda dari `if`. Cabangnya dipilih saat *compile*, jadi syaratnya harus bisa dihitung saat
+`when` berbeda dari `if`. Cabangnya dipilih saat compile, jadi syaratnya harus bisa dihitung saat
 itu juga.
 
 ```{.nim}
@@ -181,9 +181,9 @@ main.nim(6, 6) Error: cannot evaluate at compile time: requested
 ```
 
 *Message*-nya menunjuk *line* 6 kolom 6, tepat di awal nama `requested`, lalu menjelaskan sebabnya:
-*value itu* baru diketahui saat program berjalan. `paramStr(0)` read *argument* dari sistem operasi,
+*value* itu baru diketahui saat program berjalan. `paramStr(0)` read *argument* dari sistem operasi,
 dan itu terjadi setelah biner berjalan. Perbaikannya mengganti `when` dengan `if`, atau memindahkan
-syaratnya ke `const` yang bisa dihitung saat *compile*.
+syaratnya ke `const` yang bisa dihitung saat compile.
 
 ## Keterbatasan: toolchain C untuk target
 
@@ -203,11 +203,11 @@ Tanpa toolchain tersebut, build berhenti di compiler C dengan
 Perilaku yang lebih halus: mengubah `--os` saja tidak selalu gagal. Di macOS,
 `--os:linux --cpu:amd64` berjalan sampai selesai dan meninggalkan *file* Mach-O, bukan ELF. Nim percaya dirinya
 membuat biner Linux, sementara compiler C tetap menghasilkan biner host. Biner seperti itu tidak
-berguna; *error* barunya muncul jauh kemudian, saat dijalankan di mesin tujuan.
+berguna; error barunya muncul jauh kemudian, saat dijalankan di mesin tujuan.
 
-## *Command* per target
+## Command per target
 
-Beberapa *command* yang sering dipakai, lengkap dengan catatannya:
+Beberapa command yang sering dipakai, lengkap dengan catatannya:
 
 ```bash
 # Native release build for the machine doing the compiling.
@@ -232,11 +232,11 @@ nimble build --os:windows --cpu:amd64 -d:release
 
 1. Sebutkan *value* `--os` dan `--cpu` untuk mesin tempat pembaca write kode, lalu bandingkan dengan
    *output* contoh pertama.
-2. Tanpa menjalankan, prediksi *output*-nya kalau contoh kedua *di-compile* dengan
+2. Tanpa menjalankan, prediksi *output*-nya kalau contoh kedua di-compile dengan
    `-d:release -d:workers=8`.
 3. Tulis program yang print `"windows target"` atau `"unix target"` memakai `when defined`, lalu
    sebutkan apa yang terjadi pada cabang yang tidak dipilih.
-4. Kode berikut gagal *di-compile*. Perbaiki, lalu jelaskan *message*-nya:
+4. Kode berikut gagal di-compile. Perbaiki, lalu jelaskan *message*-nya:
    `let mode = paramStr(1)` diikuti `when mode == "--debug": echo "debug"`.
 5. Sebutkan dua hal yang harus tersedia sebelum cross-compile ke Windows benar-benar menghasilkan
    biner, dan apa yang terjadi kalau salah satunya tidak ada.
@@ -247,7 +247,7 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
 - `--os` dan `--cpu` memilih target; `when defined(...)`, `hostOS`, dan `hostCPU` membacanya dari
   dalam kode.
-- `-d:nama` menyalakan simbol compile-time; `{.strdefine.}` dan `{.intdefine.}` menerima *value itu*.
+- `-d:nama` menyalakan simbol compile-time; `{.strdefine.}` dan `{.intdefine.}` menerima *value* itu.
 - `-d:release` menyalakan optimasi, `--opt:speed` mengurus optimasi sendiri, dan `-d:danger`
   mematikan semua pemeriksaan.
 - `--passC` dan `--passL` meneruskan *option* ke compiler C dan penaut; `--passL:-static` menghasilkan
@@ -258,5 +258,5 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 ## Selanjutnya
 
 Perkakas sudah lengkap: mengukur, mengoptimasi, dan mengirim biner. Empat bab berikutnya menutup
-Bagian C: [*regex*](regex.qmd), *time* dan *random*, *thread* dan `Channel`, lalu
+Bagian C: [*regex*](regex.qmd), time dan random, *thread* dan `Channel`, lalu
 [proyek akhir](final-project.qmd) yang merangkai semuanya.

@@ -67,7 +67,7 @@ score: 42
 
 `echo` memakai `$` untuk mengubah *value* menjadi string, jadi `"Nim"` di-print sebagai `Nim` tanpa
 tanda kutip. `repr` sebaliknya menampilkan bentuk yang bisa dibaca mesin: tanda kutip muncul, dan
-*character* khusus seperti *newline* ditampilkan sebagai `\n`. Karena itu `repr` berguna saat *value*
+character khusus seperti *newline* ditampilkan sebagai `\n`. Karena itu `repr` berguna saat *value*
 sulit dibedakan di layar; string kosong tampil sebagai `""`, bukan ruang kosong tanpa jejak. Saat
 menggabung dengan `&`, `$` harus di-call manual karena `&` hanya menerima string di kedua
 sisinya.
@@ -129,8 +129,8 @@ total:    12.50
 `>6` meratakan ke kanan dalam lebar 6, `<6` ke kiri, dan `^6` ke tengah. Untuk bilangan,
 `04d` mengisi dengan nol sampai empat digit, sedangkan `8.2f` memakai lebar 8 dengan dua angka di
 belakang koma. `fmt"..."` sama dengan `&"..."`; `fmt` hanya menegaskan bahwa string itu memang
-untuk diformat. Aturan format selalu mengikuti pola `{ekspresi:aturan}`, dan aturannya boleh
-dihilangkan kalau *value itu* cukup ditampilkan apa adanya.
+untuk diformat. Aturan format selalu mengikuti pola `{expression:rule}`, dan aturannya boleh
+dihilangkan kalau *value* itu cukup ditampilkan apa adanya.
 
 ## `echo` versus `write`
 
@@ -168,7 +168,7 @@ missing_import.nim(1, 6) Error: undeclared identifier: 'fmt'
 ```
 
 *Message* menunjukkan kolom 6, tepat di huruf pertama `fmt`. Compiler tidak menemukan simbol bernama
-`fmt` di *scope* mana pun. Solusinya satu *line* di atas kode: `import std/strformat`. *Error* yang
+`fmt` di *scope* mana pun. Solusinya satu *line* di atas kode: `import std/strformat`. Error yang
 sama bisa muncul untuk `&"..."`, hanya saja *message*-nya berbentuk `type mismatch` karena compiler
 mengira `&` adalah operator penggabung string biasa. *Message* `undeclared identifier` selalu berarti
 hal yang sama: nama itu belum diperkenalkan ke *file*, biasanya lewat `import` yang terlupa.
@@ -184,7 +184,7 @@ hal yang sama: nama itu belum diperkenalkan ke *file*, biasanya lewat `import` y
    ```
 3. Tulis interpolasi yang print `3 + 4` sebagai *result* penjumlahan, bukan sebagai teks.
 4. Print bilangan `7` rata kanan dalam lebar 4, memakai `fmt` dan aturan `:>4`.
-5. Print `"loading"` tanpa *newline*, lalu print `"..."` di *line* yang sama.
+5. Tampilkan `"loading"` tanpa *newline*, lalu tampilkan `"..."` di *line* yang sama.
 
 Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 

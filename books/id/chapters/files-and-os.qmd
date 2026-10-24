@@ -1,14 +1,14 @@
 # *File*, *directory*, dan OS
 
 Hampir setiap program akhirnya menyentuh *file*: membaca konfigurasi, menulis log, atau melihat isi
-*directory*. Di banyak bahasa, urusan ini tersebar di beberapa *library*. Nim mengumpulkannya di satu
+*directory*. Di banyak bahasa, urusan ini tersebar di beberapa library. Nim mengumpulkannya di satu
 *module*: `std/os`. Bab ini memakai *module* itu untuk hal yang paling sering dibutuhkan, sekaligus
 menunjukkan kenapa `import std/os` tidak boleh terlupa.
 
 ::: {.callout-note}
 ## Tujuan bab
 
-Setelah bab ini, pembaca bisa membongkar dan menyusun *path* *file*, write lalu read *file*,
+Setelah bab ini, pembaca bisa membongkar dan menyusun *path* *file*, menulis lalu membaca *file*,
 menelusuri *directory* dengan *output* yang stabil, read *argument* dan *variable* lingkungan, serta
 membaca *message* `undeclared identifier` saat sebuah *module* lupa diimpor.
 :::
@@ -79,17 +79,17 @@ return seluruh isi sebagai satu string; *line*-nya dipecah dengan `splitLines` d
 
 Contoh ini write ke `getTempDir()`, bukan ke *directory* kerja. Alasannya praktis: contoh harus
 berjalan di mesin siapa pun tanpa meninggalkan *file* di tempat yang tidak terduga. Setelah selesai,
-`removeFile` menghapusnya dan `fileExists` membuktikan *file itu* sudah tidak ada. Untuk membuat
+`removeFile` menghapusnya dan `fileExists` membuktikan *file* itu sudah tidak ada. Untuk membuat
 *directory*, pakai `createDir`; untuk memeriksa keberadaannya, `dirExists`.
 
-Kalau *file itu* tidak ada, `readFile` tidak return penanda error seperti di C. Ia melempar
-`IOError`, dan *message*-nya memuat *path* yang dicari. Pola Nim konsisten di sini: *error* yang tidak
+Kalau *file* itu tidak ada, `readFile` tidak return penanda error seperti di C. Ia melempar
+`IOError`, dan *message*-nya memuat *path* yang dicari. Pola Nim konsisten di sini: error yang tidak
 bisa diabaikan menjadi *exception*, lalu ditangani dengan `try` dan `except` di tempat yang tahu
 cara menanganinya.
 
 ## Menelusuri *directory*
 
-Untuk melihat isi *directory*, pakai `walkDir`. Ia menghasilkan pasangan: jenis entri dan *path itu*.
+Untuk melihat isi *directory*, pakai `walkDir`. Ia menghasilkan pasangan: jenis entri dan *path* itu.
 
 ```{.nim}
 import std/[os, algorithm]
@@ -119,17 +119,17 @@ Urutan `walkDir` mengikuti urutan sistem *file* dan tidak dijamin. Karena itu na
 baru diurutkan dengan `sort` dari `std/algorithm`. Tanpa langkah ini, *output* bisa berbeda setiap
 kali program dijalankan, dan contoh yang *output*-nya berubah tidak bisa dipakai untuk menguji.
 
-`kind` bertipe `PathComponent`. *Value itu* antara lain `pcFile`, `pcDir`, dan dua varian tautan
-simbolik. Contoh di atas mengabaikan `kind`, tetapi `case` atas *value itu* adalah cara lazim
+`kind` bertipe `PathComponent`. *Value* itu antara lain `pcFile`, `pcDir`, dan dua varian tautan
+simbolik. Contoh di atas mengabaikan `kind`, tetapi `case` atas *value* itu adalah cara lazim
 memisahkan *file* dari subdirektori.
 
 `walkDir` tidak masuk ke subdirektori; ia membaca satu tingkat saja. Untuk menelusuri seluruh pohon
 *directory*, ada `walkDirRec`, yang mengeluarkan setiap *file* di bawah *directory* awal beserta
-*path itu*.
+*path* itu.
 
 ## *Argument* dan *variable* lingkungan
 
-Banyak *tool* kecil mengambil konfigurasi dari *argument* dan *variable* lingkungan. Keduanya ada di
+Banyak tool kecil mengambil konfigurasi dari *argument* dan *variable* lingkungan. Keduanya ada di
 `std/os`.
 
 ```{.nim}
@@ -147,7 +147,7 @@ arguments: 0
 
 `paramCount()` menghitung *argument* setelah nama program, dan `paramStr(i)` mengambil *argument* ke-`i`
 mulai dari nol. Saat contoh di atas dijalankan tanpa *argument*, *result*-nya nol. Jalankan biner *result*-nya
-dengan dua *argument* tambahan, dan *loop* itu akan print keduanya.
+dengan dua *argument* tambahan, dan *loop* itu akan menampilkan keduanya.
 
 ```{.nim}
 import std/os
@@ -177,7 +177,7 @@ echo getCurrentDir()
 main.nim(1, 6) Error: undeclared identifier: 'getCurrentDir'
 ```
 
-Baca dari kiri. `main.nim` adalah *file itu*. `(1, 6)` berarti *line* 1, kolom 6: posisi awal nama
+Baca dari kiri. `main.nim` adalah *file* itu. `(1, 6)` berarti *line* 1, kolom 6: posisi awal nama
 yang tidak dikenal, tepat setelah `echo `. `undeclared identifier` berarti nama itu dipakai tanpa
 pernah dideklarasikan atau diimpor. *Line* `candidates` tepat di bawahnya menawarkan nama terdekat
 yang mungkin dimaksud.
@@ -195,7 +195,7 @@ compiler menyebut nama yang menurut kita seharusnya ada, periksa daftar `import`
    echo splitFile("notes.txt").name
    ```
 3. Tulis program yang write dua *line* ke sebuah *file* di `getTempDir()`, membacanya kembali,
-   lalu print jumlah *line*-nya. Bersihkan *file* di akhir.
+   lalu tampilkan jumlah *line*-nya. Bersihkan *file* di akhir.
 4. Kode berikut gagal. Perbaiki, lalu jelaskan kenapa:
    ```{.nim}
    import std/os
@@ -212,7 +212,7 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 - Susun *path* dengan `joinPath` atau `/`, bukan dengan `&`, supaya pemisahnya benar di setiap sistem.
 - `readFile` dan `writeFile` cukup untuk *file* biasa; bersihkan *file* sementara setelah dipakai.
 - Urutan `walkDir` tidak dijamin; urutkan sendiri kalau *output* harus stabil.
-- Lupa `import std/os` menghasilkan `undeclared identifier` di *compile*, bukan crash saat runtime.
+- Lupa `import std/os` menghasilkan `undeclared identifier` di compile, bukan crash saat runtime.
 
 ## Selanjutnya
 

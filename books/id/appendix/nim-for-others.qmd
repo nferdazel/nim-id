@@ -18,7 +18,7 @@ dari tabel padanan, lalu dijelaskan singkat apa yang sama dan apa yang perlu dis
 Ketiganya menyimpulkan *type* dari *value* awal, dan Nim mengikuti kebiasaan yang sama. Kebiasaan
 Python menulis `x = 1` tanpa *type* tetap jalan, sedangkan pemeriksaan *type* tetap ketat seperti di Go
 dan Rust. Yang berbeda: Nim memberi tiga tingkat, dari `var` yang bebas berubah sampai `const` yang
-dihitung saat *compile*.
+dihitung saat compile.
 
 ## Fungsi
 
@@ -30,7 +30,7 @@ dihitung saat *compile*.
 | Nim | `proc f(a, b: int): int = a + b` |
 
 *Type* *parameter* di-write seperti Go dan Rust, dan *default value* seperti Python. *Expression* terakhir
-badan *procedure* menjadi **return value**, jadi `return` jarang perlu. Overloading diizinkan, jadi
+badan *procedure* menjadi *return value*, jadi `return` jarang perlu. Overloading diizinkan, jadi
 beberapa *procedure* boleh bernama sama asalkan daftar *parameter*-nya berbeda; ini tidak ada di Python
 dan Rust, tetapi terasa akrab bagi penulis Java.
 
@@ -57,24 +57,24 @@ dan konsep untuk menyusun *type*.
 | Rust | `trait Shape { fn area(&self) -> f64; }` |
 | Nim | `concept`, batasan generic, atau `interface` nim lama |
 
-Konsep Nim tidak dikenali saat program berjalan; ia diperiksa saat overloading di *compile*. Ini
+Konsep Nim tidak dikenali saat program berjalan; ia diperiksa saat overloading di compile. Ini
 lebih dekat ke `interface` Go daripada ke `trait` Rust: keduanya struktural, jadi *type* yang
 kebetulan punya *procedure* yang cocok otomatis memenuhi, tanpa `impl` eksplisit seperti di Rust. Konsep memeriksa bentuk *type*,
 misalnya keberadaan field atau *procedure*, tanpa menuntut deklarasi pewarisan. Karena itu *type* dari
-*library* lain bisa memenuhinya tanpa diubah sedikit pun.
+library lain bisa memenuhinya tanpa diubah sedikit pun.
 
 ## Penanganan error
 
 | Bahasa | Bentuk |
 |---|---|
-| Python | `try`/`except`/`raise` untuk semua *error* |
-| Go | `if err != nil` dengan **return value** ganda |
+| Python | `try`/`except`/`raise` untuk semua error |
+| Go | `if err != nil` dengan *return value* ganda |
 | Rust | `Result[T, E]` dan operator `?` |
 | Nim | `try`/`except`/`raise`, *effect* `raises` diperiksa compiler |
 
-Nim memakai *exception* seperti Python, tetapi menaikkan pemeriksaannya ke *compile*. *Procedure*
+Nim memakai *exception* seperti Python, tetapi menaikkan pemeriksaannya ke compile. *Procedure*
 bisa menyatakan jenis *exception* yang mungkin keluar, dan compiler menolak janji yang dipatahkan.
-*Error* yang tidak tertangani menghentikan program dengan *stack trace*, mirip Python. Bedanya,
+Error yang tidak tertangani menghentikan program dengan *stack trace*, mirip Python. Bedanya,
 tanda tangan *procedure* bisa membatasi jenis yang mungkin keluar, sehingga penanganan error menjadi
 bagian dari kontrak yang bisa dibaca.
 
@@ -100,7 +100,7 @@ sebagai *index* *package* publik.
 | Rust | `cargo build`, `cargo run` |
 | Nim | `nim c`, `nim r`, `nimble build` |
 
-Nim menerjemahkan kode ke C atau C++ lalu call compiler C. Karena itu biner yang dihasilkan
+Nim menerjemahkan kode ke C atau C++ lalu memanggil compiler C. Karena itu biner yang dihasilkan
 berdiri sendiri, tanpa runtime bahasa yang perlu ikut dipasang. Target lain dipilih dengan `nim cpp`
 atau `nim js`. Untuk pengembangan, `nim r` melewati penamaan biner dan langsung menjalankan
 *result*-nya.
@@ -147,13 +147,13 @@ Overloading dan *default value* *parameter* terasa alami bagi penulis Python; pe
 tangan akrab bagi penulis Go dan Rust. Nim mengenal *range*, irisan, dan
 penyisipan *value* ke dalam teks seperti f-string Python, walau sintaksnya berbeda. Iterasi dengan
 `for` dan penghitungan dengan `len` ada di semua bahasa, jadi tidak ada yang benar-benar perlu
-dipelajari ulang. Yang juga melegakan, *error* umum seperti salah *index* atau lupa menutup blok
+dipelajari ulang. Yang juga melegakan, error umum seperti salah *index* atau lupa menutup blok
 terasa mirip, sehingga refleks lama tetap berguna. Operator aritmetika dan *comparison* hampir
 sama, jadi *expression* lama sering bisa disalin dengan sedikit penyesuaian saja.
 
 ## Yang berbeda
 
-Nim *di-compile* menjadi biner lewat C, C++, atau JavaScript; tidak ada mesin virtual yang menafsir
+Nim di-compile menjadi biner lewat C, C++, atau JavaScript; tidak ada mesin virtual yang menafsir
 kode saat berjalan. Indentasi menentukan blok, seperti Python, tanpa kurung kurawal. Manajemen
 *memory* memakai ARC atau ORC dengan *destructor* deterministik, bukan garbage collector berhenti-dunia.
 `nil` berlaku untuk `ref`, `ptr`, `cstring`, `pointer`, dan *procedure*; object *value* tidak
@@ -183,13 +183,13 @@ huruf pertama, jadi `get_name` sama dengan `getName`, tetapi `GetName` berbeda. 
 `ref object` berisi `nil`, sehingga perlu `new(n)` sebelum dipakai. Menyalin `ref` menyalin
 *pointer*-nya, bukan isinya, jadi dua nama bisa menunjuk object yang sama. `case` pada enum harus
 lengkap, dan compiler menolak cabang yang kurang. Tidak ada konversi otomatis dari *variable* `int` ke
-`float`; literal seperti `1` masih diterima. `if` berjalan saat program berjalan, sedangkan `when` diselesaikan saat *compile*;
+`float`; literal seperti `1` masih diterima. `if` berjalan saat program berjalan, sedangkan `when` diselesaikan saat compile;
 tertukar keduanya berarti artinya berubah. String bukan *seq* `char`, dan `s[0]` bertipe `char`.
 Terakhir, `echo` tidak menambahkan pemisah antar *argument*.
 
 Bila compiler mengeluh soal *effect* `raises`, jangan buru-buru mematikannya; biasanya ada *exception*
 yang memang perlu ditangani. `discard` juga bukan basa-basi: call *procedure* yang return
-*value* tanpa memakainya akan ditolak, dan itu justru menangkap *error* yang mudah luput di bahasa
+*value* tanpa memakainya akan ditolak, dan itu justru menangkap error yang mudah luput di bahasa
 dinamis. Pada object varian, field yang sama tidak boleh muncul di dua cabang `case`, jadi nama
 field perlu dipilih dengan hati-hati sejak awal.
 

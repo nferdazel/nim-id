@@ -2,20 +2,20 @@
 
 Bab *object* berhenti tepat sebelum pertanyaan yang paling sering muncul: di mana datanya sebenarnya
 disimpan? `Person(name: "Ada")` pada `ref object` menaruh data di heap dan menyimpan *pointer* ke
-sana. Pada `object` biasa, data menempel langsung di *variable itu*. Bab ini membuka kotak itu:
+sana. Pada `object` biasa, data menempel langsung di *variable* itu. Bab ini membuka kotak itu:
 `ref`, `ptr`, dan `nil`.
 
 ::: {.callout-note}
 ## Tujuan bab
 
-Setelah bab ini, pembaca bisa mengalokasikan `ref` dengan `new`, read field lewat dereferensi
+Setelah bab ini, pembaca bisa mengalokasikan `ref` dengan `new`, membaca field lewat dereferensi
 otomatis, memakai `ptr` bersama `addr`, menguji `nil` dengan `isNil`, dan tahu kapan `ptr` perlu
 beserta risikonya.
 :::
 
 ## `ref`: data disimpan di heap
 
-`ref object` menyimpan datanya di heap. *Variable itu* hanya memegang *pointer* ke sana.
+`ref object` menyimpan datanya di heap. *Variable* itu hanya memegang *pointer* ke sana.
 
 ```{.nim}
 type Person = ref object
@@ -33,7 +33,7 @@ echo p.name, " is ", p.age
 Ada is 36
 ```
 
-`var p: Person` belum menunjuk ke *object* apa pun; *value itu* `nil`. `new(p)` meminta *memory* di heap,
+`var p: Person` belum menunjuk ke *object* apa pun; *value* itu `nil`. `new(p)` meminta *memory* di heap,
 membentuk *object* dengan default setiap field, lalu menyimpan alamatnya di `p`. Setelah itu field
 bisa diisi seperti *object* biasa.
 
@@ -88,7 +88,7 @@ false
 
 `isNil` return `true` selama referensinya kosong. Setelah diisi, *result*-nya `false`. Uji
 `isNil` sebelum memakai referensi yang mungkin belum diisi. Mendereferensi `nil` menghentikan
-program saat berjalan, bukan saat *compile*: di macOS dan Linux prosesnya mati dengan `SIGSEGV`,
+program saat berjalan, bukan saat compile: di macOS dan Linux prosesnya mati dengan `SIGSEGV`,
 bukan exception Nim yang bisa ditangkap `try`.
 
 ## `ptr`: alamat, bukan pemilik
@@ -187,7 +187,7 @@ main.nim(1, 14) Error: expression has no address
 ```
 
 Posisi `(1, 14)` menunjuk literal `42` di `addr 42`, bukan token `addr` itu sendiri; *message*-nya lalu
-menyebut masalahnya: *expression* itu tidak punya alamat. Perbaikannya, simpan dulu *value itu* ke sebuah
+menyebut masalahnya: *expression* itu tidak punya alamat. Perbaikannya, simpan dulu *value* itu ke sebuah
 *variable*, lalu ambil alamat *variable* itu.
 
 ## `ref object` vs `object`
@@ -223,7 +223,7 @@ Aturannya sederhana: pakai `ref` kalau bisa, pakai `ptr` hanya saat tidak ada pi
 
 ## Latihan
 
-1. Alokasikan `ref object` `Book` berisi field `title`, buat dua instance dengan `new`, lalu print
+1. Alokasikan `ref object` `Book` berisi field `title`, buat dua instance dengan `new`, lalu tampilkan
    kedua judulnya.
 2. Tanpa menjalankan, prediksi *output*-nya:
    ```{.nim}
@@ -237,7 +237,7 @@ Aturannya sederhana: pakai `ref` kalau bisa, pakai `ptr` hanya saat tidak ada pi
    ```
 3. Tulis *procedure* `incr(p: ptr int)` yang menaikkan *value* yang ditunjuk `p` sebesar satu.
 4. Kenapa `var p: Person` harus melewati `new(p)` dulu sebelum `p.name` diisi?
-5. Kode berikut gagal *di-compile*. Perbaiki, lalu jelaskan *error message*-nya:
+5. Kode berikut gagal di-compile. Perbaiki, lalu jelaskan *error message*-nya:
    ```{.nim}
    var x = 5
    var p: ptr int = x
