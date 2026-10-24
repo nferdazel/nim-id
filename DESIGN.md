@@ -87,7 +87,7 @@ Aturan:
   `assets/typst/typst-show.typ` lewat `#show par: set par(justify: false, spacing: 1.3em)`.
   Pemecah barisnya `linebreaks: "optimized"`, bukan greedy bawaan Typst: diukur pada 0.7.3,
   widow turun dari 9 ke 1 (ID) dan 8 ke 0 (EN), jumlah halaman dan potongan panel tidak berubah.
-  Typst tidak punya pola pemenggalan untuk `id` (0 soft hyphen di 408 halaman, versus 9 di EN),
+  Typst tidak punya pola penggalan untuk `id` (0 soft hyphen di 409 halaman, versus 9 di EN),
   jadi tepi kanan yang tidak rata sepenuhnya ditangani pemecah ini. Konsekuensinya: edisi ID tidak
   boleh dipindah ke `justify: true`, karena tanpa pola `id` hasilnya sungai spasi.
 - Pembuka bab: nomor bab besar, judul, garis horizontal tipis di bawahnya.
