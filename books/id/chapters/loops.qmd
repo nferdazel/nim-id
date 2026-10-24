@@ -179,6 +179,8 @@ yang sama di posisi serupa.
 
 ## Latihan
 
+Jawaban ada di [Lampiran A](../appendix/answers.qmd).
+
 1. Print bilangan genap dari `2` sampai `10` dengan `for` dan *range* yang tepat.
 2. Tanpa menjalankan, prediksi *output*-nya:
    ```{.nim}
@@ -198,8 +200,6 @@ yang sama di posisi serupa.
    while n > 0:
      echo n
    ```
-
-Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
 ## Ringkasan
 

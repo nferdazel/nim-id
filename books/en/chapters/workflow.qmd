@@ -170,6 +170,8 @@ terminal can stand in.
 
 ## Exercises
 
+Answers are in [Appendix A](../appendix/answers.qmd).
+
 1. Run `hello.nim` with `nim r`, then with `nim c` and `./hello`. Compare: which files appear in the
    working directory in each case?
 2. After `nim c join.nim`, where does the binary appear, and what is it called on Linux, macOS, and
@@ -178,8 +180,6 @@ terminal can stand in.
    `nim c data.txt` runs? Explain.
 4. Run `nim check square.nim` and `nim c square.nim`. Compare their output and their exit codes.
 5. Create a new project with `nimble init`, then name the commands to build and run it.
-
-Answers are in [Appendix A](../appendix/answers.qmd).
 
 ## Summary
 

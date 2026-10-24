@@ -208,6 +208,8 @@ operator logika di bab operator.
 
 ## Latihan
 
+Jawaban ada di [Lampiran A](../appendix/answers.qmd).
+
 1. Tulis tiga literal, yaitu `0xFF`, `0b1010`, dan `1_000`. Prediksi *output* `echo` untuk masing-masing
    sebelum menjalankannya.
 2. Apa yang terjadi pada kode ini, dan mengapa *message*-nya muncul saat runtime, bukan saat compile?
@@ -220,8 +222,6 @@ operator logika di bab operator.
 4. Konversi `2.99` menjadi `int`. *Result*-nya 2 atau 3? Jelaskan mengapa.
 5. Kode `const Big: int8 = 200` gagal di-compile. Perbaiki tanpa menambah *value* lain, lalu
    jelaskan mengapa *type* sebelumnya salah.
-
-Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
 ## Ringkasan
 

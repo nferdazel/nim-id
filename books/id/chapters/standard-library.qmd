@@ -205,6 +205,8 @@ dan *file*. `std/random` dan `std/times` dibahas di bab [time dan random](times-
 
 ## Latihan
 
+Jawaban ada di [Lampiran A](../appendix/answers.qmd).
+
 1. Baca kalimat, pecah dengan `split`, ubah tiap kata menjadi huruf kapital dengan `toUpperAscii`,
    lalu gabungkan kembali dengan `join("-")`.
 2. Tanpa menjalankan, prediksi *output*-nya:
@@ -225,8 +227,6 @@ dan *file*. `std/random` dan `std/times` dibahas di bab [time dan random](times-
    let t = {"a": 1}.toTable
    echo t["b"]
    ```
-
-Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
 ## Ringkasan
 

@@ -160,6 +160,8 @@ the program can stop with an unhandled exception. When the error really should b
 
 ## Exercises
 
+Answers are in [Appendix A](../appendix/answers.qmd).
+
 1. Change the sequential example so the two tasks run together. Explain the difference in time.
 2. Without running it, predict the output:
    ```{.nim}
@@ -177,8 +179,6 @@ the program can stop with an unhandled exception. When the error really should b
 3. Write an async procedure that takes two `Future[int]` values, adds their results, then call it
    with `waitFor`.
 4. Fix code that uses `await` inside an ordinary procedure, without changing what it is meant to do.
-
-Answers are in [Appendix A](../appendix/answers.qmd).
 
 ## Summary
 

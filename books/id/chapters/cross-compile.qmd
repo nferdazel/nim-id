@@ -230,6 +230,8 @@ nimble build --os:windows --cpu:amd64 -d:release
 
 ## Latihan
 
+Jawaban ada di [Lampiran A](../appendix/answers.qmd).
+
 1. Sebutkan *value* `--os` dan `--cpu` untuk mesin tempat pembaca write kode, lalu bandingkan dengan
    *output* contoh pertama.
 2. Tanpa menjalankan, prediksi *output*-nya kalau contoh kedua di-compile dengan
@@ -240,8 +242,6 @@ nimble build --os:windows --cpu:amd64 -d:release
    `let mode = paramStr(1)` diikuti `when mode == "--debug": echo "debug"`.
 5. Sebutkan dua hal yang harus tersedia sebelum cross-compile ke Windows benar-benar menghasilkan
    biner, dan apa yang terjadi kalau salah satunya tidak ada.
-
-Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
 ## Ringkasan
 

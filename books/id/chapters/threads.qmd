@@ -225,6 +225,8 @@ ubah *type* *channel* menjadi `Channel[int]` dan kirim angka sejak awal.
 
 ## Latihan
 
+Jawaban ada di [Lampiran A](../appendix/answers.qmd).
+
 1. Ubah contoh pertama supaya pekerja mengirim dua *result*, lalu baca keduanya dengan `recv`.
 2. Tanpa menjalankan, prediksi *output*-nya:
    ```{.nim}
@@ -250,8 +252,6 @@ ubah *type* *channel* menjadi `Channel[int]` dan kirim angka sejak awal.
 4. Kapan *thread* lebih tepat daripada `async`? Sebutkan satu beban kerja.
 5. Kode pada bagian error gagal di-compile. Perbaiki dengan mengubah *type* *channel*, lalu
    jelaskan *message*-nya.
-
-Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
 ## Ringkasan
 

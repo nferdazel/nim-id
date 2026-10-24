@@ -203,6 +203,8 @@ standard library.
 
 ## Exercises
 
+Answers are in [Appendix A](../appendix/answers.qmd).
+
 1. Create `shout.nim` with `proc shout*(text: string): string` marked with a star, then call it from
    `main.nim`.
 2. A file `mathx.nim` exports `double*`. A second file writes `from mathx import double` and then
@@ -214,8 +216,6 @@ standard library.
    echo textutils/format.upper("hi")
    ```
 4. Rewrite the `include` example from this chapter using `import`, and name the advantage.
-
-Answers are in [Appendix A](../appendix/answers.qmd).
 
 ## Summary
 

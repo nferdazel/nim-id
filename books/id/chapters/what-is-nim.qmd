@@ -32,6 +32,9 @@ mahal daripada bug yang tertangkap sebelum program jalan.
 
 ## Program pertama
 
+Contoh di bab ini dijalankan dengan `nim`. Kalau Nim belum terpasang, cara memasangnya ada di
+[Instalasi Nim](installation.qmd); contohnya tetap bisa dibaca tanpa menjalankan apa pun.
+
 Simpan kode berikut sebagai `hello.nim`, lalu jalankan `nim r hello.nim`.
 
 ```{.nim}
@@ -139,14 +142,14 @@ aman. Jujur soal ini lebih berguna daripada menjual satu bahasa sebagai jawaban 
 
 ## Latihan
 
+Jawaban ada di [Lampiran A](../appendix/answers.qmd).
+
 1. Ubah program `hello` di atas supaya menampilkan nama pembaca, bukan `Nim`.
 2. Pada contoh penjumlahan, ganti `1..5` menjadi `1..10`. Prediksi *output*-nya sebelum menjalankan.
 3. Tulis program yang print `7 * 6` beserta *result*-nya. Simpan sebagai `kali.nim`.
 4. Kode `var age: int = "twenty"` gagal di-compile. Jelaskan mengapa compiler menunjuk kolom 16, dan
    bukan kolom 5 tempat nama `age` berada.
 5. Tanpa menjalankan, tentukan apakah `echo greet(42)` pada contoh `greet` valid. Jelaskan alasanmu.
-
-Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
 ## Ringkasan
 

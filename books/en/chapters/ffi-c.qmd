@@ -156,6 +156,8 @@ into Nim types, so the rest of the code stays ordinary Nim.
 
 ## Exercises
 
+Answers are in [Appendix A](../appendix/answers.qmd).
+
 1. Add a `half` function to `helper.c` that divides by two, then call it from Nim.
 2. Without running it, predict the output:
    ```{.nim}
@@ -170,8 +172,6 @@ into Nim types, so the rest of the code stays ordinary Nim.
 
    echo triple(2)
    ```
-
-Answers are in [Appendix A](../appendix/answers.qmd).
 
 ## Summary
 

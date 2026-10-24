@@ -222,6 +222,8 @@ So the rule is simple: use `ref` when you can, and reach for `ptr` only when the
 
 ## Exercises
 
+Answers are in [Appendix A](../appendix/answers.qmd).
+
 1. Allocate a `ref object` `Book` with a `title` field, create two instances with `new`, then print
    both titles.
 2. Without running it, predict the output:
@@ -242,8 +244,6 @@ So the rule is simple: use `ref` when you can, and reach for `ptr` only when the
    var p: ptr int = x
    echo p[]
    ```
-
-Answers are in [Appendix A](../appendix/answers.qmd).
 
 ## Summary
 

@@ -246,6 +246,8 @@ because mistakes only show up once someone uses the code.
 
 ## Exercises
 
+Answers are in [Appendix A](../appendix/answers.qmd).
+
 1. Name four things that must be in place before a package deserves to be published.
 2. Without running it, predict the output:
    ```{.nim}
@@ -263,8 +265,6 @@ because mistakes only show up once someone uses the code.
    ```
 5. Pick the next version for these changes: (a) adding a new procedure, (b) fixing a typo in an
    error message, (c) renaming a procedure users already call.
-
-Answers are in [Appendix A](../appendix/answers.qmd).
 
 ## Summary
 

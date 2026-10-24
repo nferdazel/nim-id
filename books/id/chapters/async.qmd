@@ -161,6 +161,8 @@ error itu penting.
 
 ## Latihan
 
+Jawaban ada di [Lampiran A](../appendix/answers.qmd).
+
 1. Ubah contoh berurutan supaya dua tugas berjalan bersamaan. Jelaskan perbedaan waktunya.
 2. Tanpa menjalankan, prediksi *output*-nya:
    ```{.nim}
@@ -178,8 +180,6 @@ error itu penting.
 3. Tulis *procedure* async yang menerima dua `Future[int]`, menjumlahkan *result*-nya, lalu panggil dengan
    `waitFor`.
 4. Perbaiki kode yang memakai `await` di dalam *procedure* biasa, tanpa mengubah maksudnya.
-
-Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
 ## Ringkasan
 

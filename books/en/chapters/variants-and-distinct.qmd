@@ -272,6 +272,8 @@ for the fix. This is the guard a type alias does not have.
 
 ## Exercises
 
+Answers are in [Appendix A](../appendix/answers.qmd).
+
 1. Add a third variant `triangle` with `base` and `altitude` to `Shape`, then extend `area`.
 2. Without running it, predict the output when `Shape(kind: circle, width: 3.0)` becomes
    `Shape(kind: circle, radius: 3.0)`. Explain.
@@ -280,8 +282,6 @@ for the fix. This is the guard a type alias does not have.
    it matter?
 5. Explain why `echo Shape(kind: rect, width: 3.0, height: 4.0).radius` fails while the program runs
    instead of at compile time.
-
-Answers are in [Appendix A](../appendix/answers.qmd).
 
 ## Summary
 

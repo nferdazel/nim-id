@@ -215,6 +215,8 @@ given explicitly at declaration.
 
 ## Exercises
 
+Answers are in [Appendix A](../appendix/answers.qmd).
+
 1. Declare `const Year = 2026` and `var message = ""`. Fill `message` with the interpolation
    `&"released in {Year}"`, then print it.
 2. Without running it, predict the output:
@@ -231,8 +233,6 @@ given explicitly at declaration.
    Name = "Nim 2"
    echo name
    ```
-
-Answers are in [Appendix A](../appendix/answers.qmd).
 
 ## Summary
 

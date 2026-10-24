@@ -254,14 +254,14 @@ that truly must be listed explicitly, inheritance or `distinct` is a better fit 
 
 ## Exercises
 
+Answers are in [Appendix A](../appendix/answers.qmd).
+
 1. Write a concept `Sized` that requires `x.size is int`, then a procedure that prints the size for a
    type `Box`.
 2. Does `type Num = object` with a `name: int` field match `Named`? Run it to prove your answer.
 3. Combine two concepts with `and`, then use the result as the constraint of one procedure.
 4. Explain why `var value: Named` is rejected by the compiler, then write the equivalent declaration
    using a concrete type that has a `name` field.
-
-Answers are in [Appendix A](../appendix/answers.qmd).
 
 ## Summary
 

@@ -211,6 +211,8 @@ brackets so that the spaces do not silently disappear.
 
 ## Exercises
 
+Answers are in [Appendix A](../appendix/answers.qmd).
+
 1. Print a single string that contains a double quote and a backslash, using the right escapes.
 2. Without running it, predict the output:
    ```{.nim}
@@ -225,8 +227,6 @@ brackets so that the spaces do not silently disappear.
    echo s
    ```
 5. Take the last three characters of `"programming"` with slicing, then print the result.
-
-Answers are in [Appendix A](../appendix/answers.qmd).
 
 ## Summary
 

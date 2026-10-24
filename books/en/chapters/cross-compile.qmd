@@ -229,6 +229,8 @@ nimble build --os:windows --cpu:amd64 -d:release
 
 ## Exercises
 
+Answers are in [Appendix A](../appendix/answers.qmd).
+
 1. Name the `--os` and `--cpu` values for the machine you write code on, then compare them with the
    output of the first example.
 2. Without running it, predict the output if the second example is compiled with
@@ -239,8 +241,6 @@ nimble build --os:windows --cpu:amd64 -d:release
    followed by `when mode == "--debug": echo "debug"`.
 5. Name two things that must be present before cross-compiling to Windows really produces a binary,
    and say what happens when one of them is missing.
-
-Answers are in [Appendix A](../appendix/answers.qmd).
 
 ## Summary
 

@@ -223,6 +223,8 @@ Aturannya sederhana: pakai `ref` kalau bisa, pakai `ptr` hanya saat tidak ada pi
 
 ## Latihan
 
+Jawaban ada di [Lampiran A](../appendix/answers.qmd).
+
 1. Alokasikan `ref object` `Book` berisi field `title`, buat dua instance dengan `new`, lalu tampilkan
    kedua judulnya.
 2. Tanpa menjalankan, prediksi *output*-nya:
@@ -243,8 +245,6 @@ Aturannya sederhana: pakai `ref` kalau bisa, pakai `ptr` hanya saat tidak ada pi
    var p: ptr int = x
    echo p[]
    ```
-
-Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
 ## Ringkasan
 

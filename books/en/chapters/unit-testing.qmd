@@ -157,6 +157,8 @@ held. That is what turns a test suite into a gate rather than a report.
 
 ## Exercises
 
+Answers are in [Appendix A](../appendix/answers.qmd).
+
 1. Write a `suite` for a procedure that computes factorials, with three cases: zero, one, and five.
 2. Without running it, predict the output:
    ```{.nim}
@@ -177,8 +179,6 @@ held. That is what turns a test suite into a gate rather than a report.
        check 1 + 1
    ```
 4. Run a `test` that uses `expect` for an exception that is never raised. Explain why the test fails.
-
-Answers are in [Appendix A](../appendix/answers.qmd).
 
 ## Summary
 

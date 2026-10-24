@@ -187,6 +187,8 @@ compiler menyebut nama yang menurut kita seharusnya ada, periksa daftar `import`
 
 ## Latihan
 
+Jawaban ada di [Lampiran A](../appendix/answers.qmd).
+
 1. Print nama *file* dan ekstensinya dari *path* `/etc/nim/nim.cfg` memakai `splitFile`.
 2. Tanpa menjalankan, prediksi *output*-nya:
    ```{.nim}
@@ -203,8 +205,6 @@ compiler menyebut nama yang menurut kita seharusnya ada, periksa daftar `import`
    if fileExists("/tmp") == "yes":
      echo "found"
    ```
-
-Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
 ## Ringkasan
 

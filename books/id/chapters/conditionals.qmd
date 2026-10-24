@@ -170,6 +170,8 @@ tanpa `else`.
 
 ## Latihan
 
+Jawaban ada di [Lampiran A](../appendix/answers.qmd).
+
 1. Ubah `temperature` di contoh pertama menjadi `5`, lalu prediksi *output*-nya sebelum menjalankan.
 2. Tulis *expression* `if` yang mengubah *value* `age` menjadi `"anak"` (di bawah 13), `"remaja"` (13–19),
    atau `"dewasa"` (20 ke atas), lalu tampilkan *result*-nya.
@@ -182,8 +184,6 @@ tanpa `else`.
    if name:
      echo name
    ```
-
-Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
 ## Ringkasan
 

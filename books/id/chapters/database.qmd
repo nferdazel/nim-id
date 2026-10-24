@@ -264,6 +264,8 @@ menerima nama basis data `:memory:` sehingga seluruh data hidup di *memory* dan 
 
 ## Latihan
 
+Jawaban ada di [Lampiran A](../appendix/answers.qmd).
+
 1. Tambahkan satu buku lagi ke contoh pertama, lalu pastikan *output*-nya tetap menaik menurut tahun.
 2. Tanpa menjalankan, prediksi *output*-nya:
    ```{.nim}
@@ -286,8 +288,6 @@ menerima nama basis data `:memory:` sehingga seluruh data hidup di *memory* dan 
    echo row["year"].getInt
    ```
 5. Sebutkan dua alasan *file* JSON tidak lagi cukup, dan pekerjaan apa yang harus pindah ke SQLite.
-
-Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
 ## Ringkasan
 

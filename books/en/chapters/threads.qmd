@@ -226,6 +226,8 @@ or change the channel type to `Channel[int]` and send a number from the start.
 
 ## Exercises
 
+Answers are in [Appendix A](../appendix/answers.qmd).
+
 1. Change the first example so the worker sends two results, then read both with `recv`.
 2. Without running it, predict the output:
    ```{.nim}
@@ -251,8 +253,6 @@ or change the channel type to `Channel[int]` and send a number from the start.
 4. When is a thread a better fit than `async`? Name one workload.
 5. The code in the error section fails to compile. Fix it by changing the channel type, then explain
    its message.
-
-Answers are in [Appendix A](../appendix/answers.qmd).
 
 ## Summary
 

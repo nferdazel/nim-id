@@ -205,6 +205,8 @@ turns it off; after that the example above prints a random value from outside th
 
 ## Exercises
 
+Answers are in [Appendix A](../appendix/answers.qmd).
+
 1. Create a `seq` holding three names, then insert a new name at the front without overwriting the
    first element.
 2. Without running it, predict the output:
@@ -223,8 +225,6 @@ turns it off; after that the example above prints a random value from outside th
    var values = [10, 20, 30]
    values.add(40)
    ```
-
-Answers are in [Appendix A](../appendix/answers.qmd).
 
 ## Summary
 

@@ -144,6 +144,8 @@ With the three forms in hand, the question is when to comment. Three guidelines 
 
 ## Exercises
 
+Answers are in [Appendix A](../appendix/answers.qmd).
+
 1. Add a one-line comment to the first `echo` example that explains a reason, not a repetition of the
    code.
 2. In the block comment of the second example, remove the nested block `#[ Nested blocks work too. ]#`.
@@ -154,8 +156,6 @@ With the three forms in hand, the question is when to comment. Three guidelines 
    `htmldocs/`? Explain.
 5. Write an exported procedure with a doc comment and one `runnableExamples` block, then prove that
    `nim doc` fails when the block's contents are wrong.
-
-Answers are in [Appendix A](../appendix/answers.qmd).
 
 ## Summary
 

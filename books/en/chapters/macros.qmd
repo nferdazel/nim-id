@@ -296,14 +296,14 @@ not yet valid, such as a list of names it will declare itself.
 
 ## Exercises
 
+Answers are in [Appendix A](../appendix/answers.qmd).
+
 1. Write a template `minOf(a, b)` that returns the smaller value, then print `minOf(3, 7)`.
 2. Without running it, predict `doubler(bump() + bump())` with the template above and the final value
    of `calls`.
 3. Write a macro `triple(x)` that returns `x * 3` using `quote do`, then print `triple(4)`.
 4. Macro `echoType` uses `$x.getType`. Explain why that fails if the parameter becomes `untyped`.
 5. Write a macro `dumpAst(x)` that prints its argument's `treeRepr`, then call it with `2 * 3`.
-
-Answers are in [Appendix A](../appendix/answers.qmd).
 
 ## Summary
 

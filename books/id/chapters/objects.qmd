@@ -325,6 +325,8 @@ hanya kalau perilaku memang berbeda per *type*; selain itu `proc` lebih murah da
 
 ## Latihan
 
+Jawaban ada di [Lampiran A](../appendix/answers.qmd).
+
 1. Tambahkan field `email: string` pada `Person`, isi lewat *constructor*, lalu tampilkan.
 2. Tanpa menjalankan, prediksi *output*-nya:
    ```{.nim}
@@ -346,8 +348,6 @@ hanya kalau perilaku memang berbeda per *type*; selain itu `proc` lebih murah da
    p.x = 2
    echo p.x
    ```
-
-Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
 ## Ringkasan
 

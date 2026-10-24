@@ -260,6 +260,8 @@ memakainya.
 
 ## Latihan
 
+Jawaban ada di [Lampiran A](../appendix/answers.qmd).
+
 1. Sebutkan empat hal yang harus ada sebelum sebuah *package* layak diterbitkan.
 2. Tanpa menjalankan, prediksi *output*-nya:
    ```{.nim}
@@ -278,8 +280,6 @@ memakainya.
 5. Tentukan nomor versi berikutnya untuk tiga perubahan ini: (a) menambah *procedure* baru tanpa
    mengubah yang lama, (b) memperbaiki salah ketik di *error message*, (c) mengganti nama *procedure* yang
    sudah dipakai pemakai.
-
-Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
 ## Ringkasan
 

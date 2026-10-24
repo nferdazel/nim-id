@@ -253,6 +253,8 @@ and fits `IntFn`.
 
 ## Exercises
 
+Answers are in [Appendix A](../appendix/answers.qmd).
+
 1. Write `proc compose(f, g: proc(x: int): int): proc(x: int): int` that returns a procedure
    computing `g(f(x))`, then call the result with one value.
 2. Without running it, predict the output:
@@ -274,8 +276,6 @@ and fits `IntFn`.
    let addBase: proc(x: int): int {.nimcall.} = makeAdder(10)
    echo addBase(5)
    ```
-
-Answers are in [Appendix A](../appendix/answers.qmd).
 
 ## Summary
 

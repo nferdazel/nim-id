@@ -256,14 +256,14 @@ Untuk *type* yang benar-benar harus terdaftar, warisan atau `distinct` lebih tep
 
 ## Latihan
 
+Jawaban ada di [Lampiran A](../appendix/answers.qmd).
+
 1. Tulis konsep `Sized` yang menuntut `x.size is int`, lalu *procedure* yang print ukurannya untuk
    *type* `Box`.
 2. Apakah `type Num = object` dengan field `name: int` cocok dengan `Named`? Jalankan untuk membuktikan.
 3. Gabungkan dua konsep dengan `and`, lalu pakai sebagai batasan satu *procedure*.
 4. Jelaskan kenapa `var value: Named` ditolak compiler, lalu tulis deklarasi setara yang memakai
    *type* konkret dengan field `name`.
-
-Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
 ## Ringkasan
 

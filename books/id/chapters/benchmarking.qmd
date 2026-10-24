@@ -262,6 +262,8 @@ dengan profiler, baru ubah algoritmanya: mengganti algoritma yang salah hampir s
 
 ## Latihan
 
+Jawaban ada di [Lampiran A](../appendix/answers.qmd).
+
 1. Ubah `Iterations` pada contoh pertama menjadi 100.000, lalu prediksi `checksum` sebelum
    menjalankannya.
 2. Kenapa durasi tidak pernah di-print oleh contoh di bab ini? Jawab dengan kata "*output* yang
@@ -271,8 +273,6 @@ dengan profiler, baru ubah algoritmanya: mengganti algoritma yang salah hampir s
 4. Hapus `import std/times` dari contoh pertama, lalu perbaiki error yang muncul dan jelaskan
    *message*-nya.
 5. Sebutkan dua keadaan di mana mengoptimasi kode pada bab ini tidak sepadan, beserta alasannya.
-
-Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
 ## Ringkasan
 

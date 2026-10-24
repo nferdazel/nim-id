@@ -187,6 +187,8 @@ a sequence that is only walked once.
 
 ## Exercises
 
+Answers are in [Appendix A](../appendix/answers.qmd).
+
 1. Write `iterator multiples(n: int, step: int): int` that yields multiples of `step` up to `n`, then
    use it inside `for`.
 2. Without running it, predict the output:
@@ -202,8 +204,6 @@ a sequence that is only walked once.
    ```
 3. Write `proc countdown(n: int): iterator (): int` that yields from `n` down to 1.
 4. Explain when to choose an iterator and when to choose a sequence for the same data.
-
-Answers are in [Appendix A](../appendix/answers.qmd).
 
 ## Summary
 

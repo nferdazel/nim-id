@@ -238,6 +238,8 @@ language constructs out of existing pieces.
 
 ## Exercises
 
+Answers are in [Appendix A](../appendix/answers.qmd).
+
 1. Write `template twice(body: untyped)` that runs `body` twice, then use it to print `"ping"` two
    times.
 2. Without running it, predict the output:
@@ -264,8 +266,6 @@ language constructs out of existing pieces.
    sumUp:
      total += 4
    ```
-
-Answers are in [Appendix A](../appendix/answers.qmd).
 
 ## Summary
 

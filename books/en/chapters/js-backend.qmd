@@ -144,6 +144,8 @@ runs, and not every place offers the same tools.
 
 ## Exercises
 
+Answers are in [Appendix A](../appendix/answers.qmd).
+
 1. Compile the arithmetic example with `nim js`, run it with `node`, then compare with `nim c -r`.
    Is the output the same?
 2. Without running it, predict the output:
@@ -164,8 +166,6 @@ runs, and not every place offers the same tools.
 
    echo "start"
    ```
-
-Answers are in [Appendix A](../appendix/answers.qmd).
 
 ## Summary
 

@@ -173,6 +173,8 @@ means the same thing: the name was never introduced to the file, usually through
 
 ## Exercises
 
+Answers are in [Appendix A](../appendix/answers.qmd).
+
 1. Print `"total: "` and an integer in one `echo`, with no interpolation, using several arguments.
 2. Predict the output:
    ```{.nim}
@@ -182,8 +184,6 @@ means the same thing: the name was never introduced to the file, usually through
 3. Write an interpolation that prints `3 + 4` as the sum, not as text.
 4. Print the number `7` right-aligned in width 4, using `fmt` and the `:>4` rule.
 5. Print `"loading"` without a new line, then print `"..."` on the same line.
-
-Answers are in [Appendix A](../appendix/answers.qmd).
 
 ## Summary
 

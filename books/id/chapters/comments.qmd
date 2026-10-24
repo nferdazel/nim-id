@@ -27,9 +27,9 @@ comments do not run
 ```
 
 *Line comment* boleh berdiri sendiri di awal *line*, atau menempel di ujung kode. Compiler membuang
-keduanya sebelum menghasilkan kode mesin, jadi tidak ada biaya di runtime. Yang perlu diperhatikan:
-*comment* menjelaskan *kenapa*, bukan *apa*. `# tambah satu` di atas `total += 1` tidak memberi
-informasi apa pun.
+keduanya sebelum kode mesin dibuat, jadi tidak ada biaya di runtime. Yang penting: *comment*
+menjelaskan *kenapa*, bukan *apa*. `# tambah satu` di atas `total += 1` tidak memberi informasi apa
+pun.
 
 ## *Block comment*: `#[ ... ]#`
 
@@ -146,6 +146,8 @@ Setelah ketiga bentuk ini, pertanyaannya kapan menulis *comment*. Tiga patokan y
 
 ## Latihan
 
+Jawaban ada di [Lampiran A](../appendix/answers.qmd).
+
 1. Tambahkan satu *line comment* pada contoh `echo` pertama yang menjelaskan alasan, bukan mengulang
    kodenya.
 2. Pada *block comment* contoh kedua, hapus blok bersarang `#[ Nested blocks work too. ]#`. Apakah
@@ -156,8 +158,6 @@ Setelah ketiga bentuk ini, pertanyaannya kapan menulis *comment*. Tiga patokan y
    itu muncul di `htmldocs/`? Jelaskan.
 5. Tulis *procedure* yang diekspor dengan doc comment dan satu blok `runnableExamples`, lalu
    buktikan `nim doc` gagal kalau isi blok itu salah.
-
-Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
 ## Ringkasan
 

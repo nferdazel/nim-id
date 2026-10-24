@@ -210,6 +210,8 @@ blok `finally`. Untuk satu atau dua *line* pembersihan, bentuk ini lebih mudah d
 
 ## Latihan
 
+Jawaban ada di [Lampiran A](../appendix/answers.qmd).
+
 1. Tangkap `ValueError` dari `parseInt("x")` dan tampilkan *message*-nya memakai `e.msg`.
 2. Tanpa menjalankan, prediksi *output*-nya:
    ```{.nim}
@@ -233,8 +235,6 @@ blok `finally`. Untuk satu atau dua *line* pembersihan, bentuk ini lebih mudah d
    ```
 5. Tulis `proc openLog()` yang print `open` dan `close` dengan `defer`, lalu satu *line* di
    antaranya.
-
-Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
 ## Ringkasan
 

@@ -228,6 +228,8 @@ memuat jejak stack. Perbaikannya adalah memeriksa teks lebih dulu, atau membungk
 
 ## Latihan
 
+Jawaban ada di [Lampiran A](../appendix/answers.qmd).
+
 1. Ubah contoh pertama supaya hanya menampilkan nama hari dalam seminggu, seperti `Friday`.
 2. Tanpa menjalankan, prediksi *output*-nya:
    ```{.nim}
@@ -246,8 +248,6 @@ memuat jejak stack. Perbaikannya adalah memeriksa teks lebih dulu, atau membungk
    echo created
    ```
 5. Kenapa *procedure* yang memanggil `now()` langsung sulit diuji? Sebutkan satu cara menghindarinya.
-
-Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
 ## Ringkasan
 

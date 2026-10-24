@@ -264,6 +264,8 @@ more than patching small details.
 
 ## Exercises
 
+Answers are in [Appendix A](../appendix/answers.qmd).
+
 1. Change `Iterations` in the first example to 100,000, then predict `checksum` before running it.
 2. Why does no example in this chapter print a duration? Answer using the words "stable output".
 3. Write a program that compares `add` at the end of a `seq` with `insert` at its front, then print a
@@ -271,8 +273,6 @@ more than patching small details.
 4. Remove `import std/times` from the first example, fix the error that appears, and explain the
    message.
 5. Name two situations where optimizing the code in this chapter is not worth it, with your reasons.
-
-Answers are in [Appendix A](../appendix/answers.qmd).
 
 ## Summary
 

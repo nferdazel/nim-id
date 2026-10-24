@@ -342,6 +342,8 @@ sesungguhnya: `note["text"]`, lalu diterjemahkan dengan `getStr` menjadi `string
 
 ## Latihan
 
+Jawaban ada di [Lampiran A](../appendix/answers.qmd).
+
 1. Tambahkan *subcommand* `done <index>` yang menandai catatan sebagai selesai, lalu tampilkan `[x]` atau
    `[ ]` di *subcommand* `list`.
 2. Tanpa menjalankan, prediksi *output*-nya: `./notes list` pada *file* yang belum ada, lalu
@@ -352,8 +354,6 @@ sesungguhnya: `note["text"]`, lalu diterjemahkan dengan `getStr` menjadi `string
    diikuti `notes.add("buy milk")`.
 5. Sebutkan satu keuntungan menyimpan fungsi penyimpanan di *module* terpisah, dan satu pekerjaan yang
    harus ditambahkan sebelum tool ini dipakai di dua komputer sekaligus.
-
-Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
 ## Ringkasan
 

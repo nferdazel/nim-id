@@ -215,6 +215,8 @@ that actually understands it, such as `std/json`.
 
 ## Exercises
 
+Answers are in [Appendix A](../appendix/answers.qmd).
+
 1. Change the first example so the pattern also captures the city in `Ada, 36, London`, then print
    that city.
 2. Without running it, predict the output:
@@ -236,8 +238,6 @@ that actually understands it, such as `std/json`.
    echo matches[1]
    ```
 5. Name one text task that `strutils` handles better than a regular expression.
-
-Answers are in [Appendix A](../appendix/answers.qmd).
 
 ## Summary
 

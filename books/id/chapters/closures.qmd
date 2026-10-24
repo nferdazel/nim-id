@@ -252,6 +252,8 @@ menuntut `{.nimcall.}`. `g` menjadi closure karena menangkap `base`. Ada dua per
 
 ## Latihan
 
+Jawaban ada di [Lampiran A](../appendix/answers.qmd).
+
 1. Tulis `proc compose(f, g: proc(x: int): int): proc(x: int): int` yang return *procedure*
    `g(f(x))`, lalu panggil *result*-nya dengan satu *value*.
 2. Tanpa menjalankan, prediksi *output*-nya:
@@ -274,8 +276,6 @@ menuntut `{.nimcall.}`. `g` menjadi closure karena menangkap `base`. Ada dua per
    let addBase: proc(x: int): int {.nimcall.} = makeAdder(10)
    echo addBase(5)
    ```
-
-Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
 ## Ringkasan
 

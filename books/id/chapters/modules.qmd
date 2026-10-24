@@ -205,6 +205,8 @@ bahwa *module* itu bagian dari *standard library*.
 
 ## Latihan
 
+Jawaban ada di [Lampiran A](../appendix/answers.qmd).
+
 1. Buat `shout.nim` berisi `proc shout*(text: string): string` bertanda bintang, lalu panggil dari
    `main.nim`.
 2. *File* `mathx.nim` mengekspor `double*`. *File* kedua write `from mathx import double` lalu
@@ -216,8 +218,6 @@ bahwa *module* itu bagian dari *standard library*.
    echo textutils/format.upper("hi")
    ```
 4. Tulis ulang contoh `include` pada bab ini memakai `import`, dan sebutkan keuntungannya.
-
-Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
 ## Ringkasan
 

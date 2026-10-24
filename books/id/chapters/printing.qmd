@@ -175,6 +175,8 @@ hal yang sama: nama itu belum diperkenalkan ke *file*, biasanya lewat `import` y
 
 ## Latihan
 
+Jawaban ada di [Lampiran A](../appendix/answers.qmd).
+
 1. Print `"total: "` dan sebuah *integer* dalam satu `echo` tanpa interpolasi, memakai
    beberapa *argument*.
 2. Prediksi *output*-nya:
@@ -185,8 +187,6 @@ hal yang sama: nama itu belum diperkenalkan ke *file*, biasanya lewat `import` y
 3. Tulis interpolasi yang print `3 + 4` sebagai *result* penjumlahan, bukan sebagai teks.
 4. Print bilangan `7` rata kanan dalam lebar 4, memakai `fmt` dan aturan `:>4`.
 5. Tampilkan `"loading"` tanpa *newline*, lalu tampilkan `"..."` di *line* yang sama.
-
-Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
 ## Ringkasan
 

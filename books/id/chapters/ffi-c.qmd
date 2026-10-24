@@ -156,6 +156,8 @@ mengubah *type* C kembali menjadi *type* Nim, sehingga sisanya tetap kode Nim bi
 
 ## Latihan
 
+Jawaban ada di [Lampiran A](../appendix/answers.qmd).
+
 1. Tambahkan fungsi `half` di `helper.c` yang membagi dua, lalu panggil dari Nim.
 2. Tanpa menjalankan, prediksi *output*-nya:
    ```{.nim}
@@ -171,8 +173,6 @@ mengubah *type* C kembali menjadi *type* Nim, sehingga sisanya tetap kode Nim bi
 
    echo triple(2)
    ```
-
-Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
 ## Ringkasan
 

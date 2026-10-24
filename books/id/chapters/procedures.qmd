@@ -257,6 +257,8 @@ echo hits
 
 ## Latihan
 
+Jawaban ada di [Lampiran A](../appendix/answers.qmd).
+
 1. Tambahkan *parameter* `punctuation = "!"` pada `greet`, lalu panggil dengan dan tanpa mengisinya.
 2. Tanpa menjalankan, prediksi *output*-nya:
    ```{.nim}
@@ -276,8 +278,6 @@ echo hits
    var n = 5
    echo double(n)
    ```
-
-Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
 ## Ringkasan
 

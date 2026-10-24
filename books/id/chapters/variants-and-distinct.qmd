@@ -274,6 +274,8 @@ perbaikannya. Inilah pengaman yang tidak dimiliki alias *type*.
 
 ## Latihan
 
+Jawaban ada di [Lampiran A](../appendix/answers.qmd).
+
 1. Tambahkan varian ketiga `triangle` dengan field `base` dan `altitude` pada `Shape`, lalu perluas
    `area`.
 2. Tanpa menjalankan, prediksi *output* bila `Shape(kind: circle, width: 3.0)` diganti menjadi
@@ -283,8 +285,6 @@ perbaikannya. Inilah pengaman yang tidak dimiliki alias *type*.
    itu penting?
 5. Jelaskan kenapa `echo Shape(kind: rect, width: 3.0, height: 4.0).radius` gagal saat berjalan,
    bukan saat compile.
-
-Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
 ## Ringkasan
 

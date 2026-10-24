@@ -212,6 +212,8 @@ kurung siku dibuat agar spasi tidak terlihat sekilas hilang.
 
 ## Latihan
 
+Jawaban ada di [Lampiran A](../appendix/answers.qmd).
+
 1. Print satu string yang berisi tanda kutip ganda dan satu garis miring terbalik dengan escape
    yang benar.
 2. Tanpa menjalankan, prediksi *output*:
@@ -227,8 +229,6 @@ kurung siku dibuat agar spasi tidak terlihat sekilas hilang.
    echo s
    ```
 5. Ambil tiga character terakhir dari `"programming"` dengan slicing, lalu tampilkan *result*-nya.
-
-Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
 ## Ringkasan
 

@@ -203,6 +203,8 @@ adalah menyamakan *type* lebih dulu, misalnya `a == parseInt(b)`.
 
 ## Latihan
 
+Jawaban ada di [Lampiran A](../appendix/answers.qmd).
+
 1. Hitung `17 div 5` dan `17 mod 5`. Berapa *result*-nya masing-masing?
 2. Prediksi *output*-nya:
    ```{.nim}
@@ -218,8 +220,6 @@ adalah menyamakan *type* lebih dulu, misalnya `a == parseInt(b)`.
    if n in "4":
      echo "yes"
    ```
-
-Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
 ## Ringkasan
 

@@ -147,6 +147,8 @@ Setelah berpindah, jalankan `nim --version` lagi untuk memastikan versinya benar
 
 ## Latihan
 
+Jawaban ada di [Lampiran A](../appendix/answers.qmd).
+
 1. Pasang Nim, lalu salin *output* `nim --version` di mesin pembaca.
 2. Jalankan `nim` di terminal yang PATH-nya belum diatur. Tulis *message* yang muncul, dan jelaskan
    arti setiap bagiannya.
@@ -156,8 +158,6 @@ Setelah berpindah, jalankan `nim --version` lagi untuk memastikan versinya benar
    dijalankan? Jelaskan.
 5. Dengan `choosenim`, tulis urutan command untuk berpindah dari versi stabil terbaru ke 2.2.12,
    lalu kembali lagi.
-
-Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
 ## Ringkasan
 

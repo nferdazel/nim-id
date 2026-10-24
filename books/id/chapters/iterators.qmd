@@ -188,6 +188,8 @@ membangun *seq* yang hanya dilewati sekali.
 
 ## Latihan
 
+Jawaban ada di [Lampiran A](../appendix/answers.qmd).
+
 1. Tulis `iterator multiples(n: int, step: int): int` yang mengeluarkan kelipatan `step` sampai `n`,
    lalu pakai di dalam `for`.
 2. Tanpa menjalankan, prediksi *output*-nya:
@@ -203,8 +205,6 @@ membangun *seq* yang hanya dilewati sekali.
    ```
 3. Tulis `proc countdown(n: int): iterator (): int` yang mengeluarkan *value* dari `n` turun sampai 1.
 4. Jelaskan kapan memilih iterator dan kapan memilih *seq* untuk data yang sama.
-
-Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
 ## Ringkasan
 

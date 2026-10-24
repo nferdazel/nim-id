@@ -171,6 +171,8 @@ menggantikannya.
 
 ## Latihan
 
+Jawaban ada di [Lampiran A](../appendix/answers.qmd).
+
 1. Jalankan `hello.nim` dengan `nim r`, lalu dengan `nim c` dan `./hello`. Bandingkan: *file* apa
    yang muncul di *directory* kerja pada masing-masing cara?
 2. Pada `nim c join.nim`, di mana biner muncul, dan apa namanya di Linux, macOS, dan Windows?
@@ -178,8 +180,6 @@ menggantikannya.
    waktu `nim c data.txt` dijalankan? Jelaskan.
 4. Jalankan `nim check square.nim` dan `nim c square.nim`. Bandingkan *output* dan exit code-nya.
 5. Buat proyek baru dengan `nimble init`, lalu sebutkan command untuk membangun dan menjalankannya.
-
-Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
 ## Ringkasan
 

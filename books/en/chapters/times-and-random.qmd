@@ -229,6 +229,8 @@ and `except TimeParseError`.
 
 ## Exercises
 
+Answers are in [Appendix A](../appendix/answers.qmd).
+
 1. Change the first example so it prints only the weekday name, such as `Friday`.
 2. Without running it, predict the output:
    ```{.nim}
@@ -247,8 +249,6 @@ and `except TimeParseError`.
    echo created
    ```
 5. Why is a procedure that calls `now()` directly hard to test? Name one way to avoid it.
-
-Answers are in [Appendix A](../appendix/answers.qmd).
 
 ## Summary
 

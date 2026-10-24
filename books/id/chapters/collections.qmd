@@ -205,6 +205,8 @@ Pemeriksaan ini menyala sejak awal, termasuk saat program di-compile dengan `-d:
 
 ## Latihan
 
+Jawaban ada di [Lampiran A](../appendix/answers.qmd).
+
 1. Buat `seq` berisi tiga nama, lalu sisipkan satu nama baru di awal tanpa menimpa *element* pertama.
 2. Tanpa menjalankan, prediksi *output*-nya:
    ```{.nim}
@@ -222,8 +224,6 @@ Pemeriksaan ini menyala sejak awal, termasuk saat program di-compile dengan `-d:
    var values = [10, 20, 30]
    values.add(40)
    ```
-
-Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
 ## Ringkasan
 

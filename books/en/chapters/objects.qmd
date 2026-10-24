@@ -322,6 +322,8 @@ Both objects are a `Dog` and a `Cat`, yet the proc that runs is always the `Anim
 
 ## Exercises
 
+Answers are in [Appendix A](../appendix/answers.qmd).
+
 1. Add an `email: string` field to `Person`, fill it with the constructor, then print it.
 2. Without running it, predict the output:
    ```{.nim}
@@ -343,8 +345,6 @@ Both objects are a `Dog` and a `Cat`, yet the proc that runs is always the `Anim
    p.x = 2
    echo p.x
    ```
-
-Answers are in [Appendix A](../appendix/answers.qmd).
 
 ## Summary
 

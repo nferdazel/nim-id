@@ -209,6 +209,8 @@ close config
 
 ## Exercises
 
+Answers are in [Appendix A](../appendix/answers.qmd).
+
 1. Catch the `ValueError` from `parseInt("x")` and print its message with `e.msg`.
 2. Without running it, predict the output:
    ```{.nim}
@@ -231,8 +233,6 @@ close config
      readValue()
    ```
 5. Write `proc openLog()` that prints `open` and `close` with `defer`, plus one line in between.
-
-Answers are in [Appendix A](../appendix/answers.qmd).
 
 ## Summary
 

@@ -223,6 +223,8 @@ eksplisit lewat `Color(1)`, dan penulisan itulah tempat pembaca melihat niatnya.
 
 ## Latihan
 
+Jawaban ada di [Lampiran A](../appendix/answers.qmd).
+
 1. Tambahkan anggota `yellow` pada `Color`, lalu tampilkan `ord(yellow)`.
 2. Tanpa menjalankan, prediksi *output*-nya:
    ```{.nim}
@@ -243,8 +245,6 @@ eksplisit lewat `Color(1)`, dan penulisan itulah tempat pembaca melihat niatnya.
    let c: Color = "red"
    echo c
    ```
-
-Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
 ## Ringkasan
 

@@ -32,6 +32,9 @@ more than one caught before the program runs.
 
 ## The first program
 
+The examples in this chapter run with `nim`. If it is not installed yet,
+[Installing Nim](installation.qmd) shows how; the examples are readable without running anything.
+
 Save the following as `hello.nim`, then run `nim r hello.nim`.
 
 ```{.nim}
@@ -136,6 +139,8 @@ honest about this is more useful than selling one language as the answer to ever
 
 ## Exercises
 
+Answers are in [Appendix A](../appendix/answers.qmd).
+
 1. Change the `hello` program above so it prints your name instead of `Nim`.
 2. In the addition example, change `1..5` to `1..10`. Predict the output before running it.
 3. Write a program that prints `7 * 6` together with its result. Save it as `multiply.nim`.
@@ -143,8 +148,6 @@ honest about this is more useful than selling one language as the answer to ever
    16, and not at column 5 where the name `age` sits.
 5. Without running it, decide whether `echo greet(42)` on the `greet` example is valid. Explain your
    reasoning.
-
-Answers are in [Appendix A](../appendix/answers.qmd).
 
 ## Summary
 

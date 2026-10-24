@@ -195,6 +195,8 @@ dipotong.
 
 ## Latihan
 
+Jawaban ada di [Lampiran A](../appendix/answers.qmd).
+
 1. Buat `type Range = tuple[low, high: int]`, isi dengan `(low: 0, high: 10)`, lalu tampilkan kedua
    fieldnya.
 2. Tanpa menjalankan, prediksi *output*-nya:
@@ -210,8 +212,6 @@ dipotong.
    let pair = (1, 2)
    echo pair.x
    ```
-
-Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
 ## Ringkasan
 

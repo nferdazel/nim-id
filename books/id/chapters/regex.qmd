@@ -219,6 +219,8 @@ memang memahaminya, seperti `std/json`.
 
 ## Latihan
 
+Jawaban ada di [Lampiran A](../appendix/answers.qmd).
+
 1. Ubah contoh pertama supaya pola juga menangkap kota pada `Ada, 36, London`, lalu tampilkan kota
    itu.
 2. Tanpa menjalankan, prediksi *output*-nya:
@@ -240,8 +242,6 @@ memang memahaminya, seperti `std/json`.
    echo matches[1]
    ```
 5. Sebutkan satu tugas teks yang lebih baik dikerjakan `strutils` daripada *regex*.
-
-Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
 ## Ringkasan
 

@@ -265,6 +265,8 @@ always available with the compiler.
 
 ## Exercises
 
+Answers are in [Appendix A](../appendix/answers.qmd).
+
 1. Add a `--quiet` option to the first example so the loop stops printing tokens and prints only
    `quiet mode` at the end.
 2. Without running it, predict the output: which tokens come out of this sequence, and what do
@@ -287,8 +289,6 @@ always available with the compiler.
        echo key
    ```
 5. When is `--` needed? Give one file name that makes it necessary.
-
-Answers are in [Appendix A](../appendix/answers.qmd).
 
 ## Summary
 

@@ -196,6 +196,8 @@ here.
 
 ## Exercises
 
+Answers are in [Appendix A](../appendix/answers.qmd).
+
 1. Create `type Range = tuple[low, high: int]`, fill it with `(low: 0, high: 10)`, and print both
    fields.
 2. Without running it, predict the output:
@@ -211,8 +213,6 @@ here.
    let pair = (1, 2)
    echo pair.x
    ```
-
-Answers are in [Appendix A](../appendix/answers.qmd).
 
 ## Summary
 

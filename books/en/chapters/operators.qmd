@@ -200,6 +200,8 @@ see that none accepts the pair `int` and `string`. The fix is to match the types
 
 ## Exercises
 
+Answers are in [Appendix A](../appendix/answers.qmd).
+
 1. Compute `17 div 5` and `17 mod 5`. What is each result?
 2. Predict the output:
    ```{.nim}
@@ -215,8 +217,6 @@ see that none accepts the pair `int` and `string`. The fix is to match the types
    if n in "4":
      echo "yes"
    ```
-
-Answers are in [Appendix A](../appendix/answers.qmd).
 
 ## Summary
 

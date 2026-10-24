@@ -237,6 +237,8 @@ Menjaga lapisan itu setipis mungkin adalah kebiasaan yang dibawa terus saat API 
 
 ## Latihan
 
+Jawaban ada di [Lampiran A](../appendix/answers.qmd).
+
 1. Tambahkan *route* `/version` pada `dispatch` yang return `{"version":"1"}` dengan `Http200`,
    lalu tampilkan balasannya.
 2. Tanpa menjalankan, prediksi *output*-nya:
@@ -262,8 +264,6 @@ Menjaga lapisan itu setipis mungkin adalah kebiasaan yang dibawa terus saat API 
    ```
 5. Kapan sebuah permintaan dijawab `Http400`, dan kapan `Http404`? Beri satu contoh untuk
    masing-masing.
-
-Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
 ## Ringkasan
 

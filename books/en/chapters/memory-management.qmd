@@ -218,6 +218,8 @@ outside managed memory, such as a file, a socket, or manually allocated memory.
 
 ## Exercises
 
+Answers are in [Appendix A](../appendix/answers.qmd).
+
 1. Write a type `Handle` with a `=destroy` that prints `close`; allocate one inside a block and
    note when the message appears.
 2. Without running it, predict the output:
@@ -246,8 +248,6 @@ outside managed memory, such as a file, a socket, or manually allocated memory.
    var x = Person(name: "a")
    echo x.name
    ```
-
-Answers are in [Appendix A](../appendix/answers.qmd).
 
 ## Summary
 

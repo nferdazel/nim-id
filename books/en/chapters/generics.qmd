@@ -184,6 +184,8 @@ part of the result type, so `fill[int, 2](9)` produces `array[2, int]`, a differ
 
 ## Exercises
 
+Answers are in [Appendix A](../appendix/answers.qmd).
+
 1. Write `proc largest[T](items: openArray[T]): T` that returns the largest value, then call it with
    an `int` array and with a `string` sequence.
 2. Without running it, predict the output:
@@ -202,8 +204,6 @@ part of the result type, so `fill[int, 2](9)` produces `array[2, int]`, a differ
 
    echo double(2.5)
    ```
-
-Answers are in [Appendix A](../appendix/answers.qmd).
 
 ## Summary
 

@@ -160,6 +160,8 @@ penggabungan ditahan. Karena itu *test* berfungsi sebagai gerbang, bukan sekadar
 
 ## Latihan
 
+Jawaban ada di [Lampiran A](../appendix/answers.qmd).
+
 1. Tulis `suite` untuk *procedure* yang menghitung faktorial, dengan tiga kasus: nol, satu, dan lima.
 2. Tanpa menjalankan, prediksi *output*-nya:
    ```{.nim}
@@ -181,8 +183,6 @@ penggabungan ditahan. Karena itu *test* berfungsi sebagai gerbang, bukan sekadar
    ```
 4. Jalankan `test` yang memakai `expect` untuk *exception* yang tidak dilempar. Jelaskan kenapa
    *test*-nya gagal.
-
-Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
 ## Ringkasan
 

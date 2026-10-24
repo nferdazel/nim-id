@@ -235,6 +235,8 @@ as possible is a habit worth carrying as the API grows.
 
 ## Exercises
 
+Answers are in [Appendix A](../appendix/answers.qmd).
+
 1. Add a `/version` route to `dispatch` that returns `{"version":"1"}` with `Http200`, then print
    the reply.
 2. Without running it, predict the output:
@@ -259,8 +261,6 @@ as possible is a habit worth carrying as the API grows.
      await req.respond("ok", Http200)
    ```
 5. When is a request answered with `Http400`, and when with `Http404`? Give one example of each.
-
-Answers are in [Appendix A](../appendix/answers.qmd).
 
 ## Summary
 

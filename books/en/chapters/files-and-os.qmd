@@ -183,6 +183,8 @@ something you were sure existed, is to check the `import` list first.
 
 ## Exercises
 
+Answers are in [Appendix A](../appendix/answers.qmd).
+
 1. Print the file name and extension of the path `/etc/nim/nim.cfg` using `splitFile`.
 2. Without running it, predict the output:
    ```{.nim}
@@ -199,8 +201,6 @@ something you were sure existed, is to check the `import` list first.
    if fileExists("/tmp") == "yes":
      echo "found"
    ```
-
-Answers are in [Appendix A](../appendix/answers.qmd).
 
 ## Summary
 

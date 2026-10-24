@@ -304,6 +304,8 @@ sendiri di dalam macro.
 
 ## Latihan
 
+Jawaban ada di [Lampiran A](../appendix/answers.qmd).
+
 1. Tulis template `minOf(a, b)` yang return *value* terkecil, lalu tampilkan `minOf(3, 7)`.
 2. Tanpa menjalankan, prediksi *output* `doubler(bump() + bump())` dengan template dari bagian
    batas template. Sebutkan *value* `calls` di akhir.
@@ -311,8 +313,6 @@ sendiri di dalam macro.
 4. Macro `echoType` memakai `$x.getType`. Jelaskan kenapa versi itu gagal kalau *parameter*-nya diubah
    menjadi `untyped`.
 5. Tulis macro `dumpAst(x)` yang print `treeRepr` dari *argument*-nya, lalu panggil dengan `2 * 3`.
-
-Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
 ## Ringkasan
 

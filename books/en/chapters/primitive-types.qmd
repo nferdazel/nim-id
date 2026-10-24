@@ -207,6 +207,8 @@ logic operators in the operators chapter.
 
 ## Exercises
 
+Answers are in [Appendix A](../appendix/answers.qmd).
+
 1. Write the three literals `0xFF`, `0b1010`, and `1_000`. Predict the `echo` output for each
    before running them.
 2. What happens in the code below, and why does the message appear at runtime rather than at
@@ -220,8 +222,6 @@ logic operators in the operators chapter.
 4. Convert `2.99` to `int`. Is the result 2 or 3? Explain why.
 5. The line `const Big: int8 = 200` fails to compile. Fix it without adding another value, then
    explain why the original type was wrong.
-
-Answers are in [Appendix A](../appendix/answers.qmd).
 
 ## Summary
 

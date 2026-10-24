@@ -169,6 +169,8 @@ without an `else`.
 
 ## Exercises
 
+Answers are in [Appendix A](../appendix/answers.qmd).
+
 1. Change `temperature` in the first example to `5`, then predict the output before running it.
 2. Write an `if` expression that maps `age` to `"child"` (below 13), `"teen"` (13–19), or `"adult"`
    (20 and up), then print the result.
@@ -181,8 +183,6 @@ without an `else`.
    if name:
      echo name
    ```
-
-Answers are in [Appendix A](../appendix/answers.qmd).
 
 ## Summary
 

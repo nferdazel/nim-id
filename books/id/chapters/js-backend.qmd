@@ -144,6 +144,8 @@ tempat program berjalan, dan tidak semua tempat menyediakan hal yang sama.
 
 ## Latihan
 
+Jawaban ada di [Lampiran A](../appendix/answers.qmd).
+
 1. Compile contoh aritmetika dengan `nim js`, jalankan pakai `node`, lalu bandingkan dengan
    *result* `nim c -r`. Apakah *output*-nya sama?
 2. Tanpa menjalankan, prediksi *output*-nya:
@@ -164,8 +166,6 @@ tempat program berjalan, dan tidak semua tempat menyediakan hal yang sama.
 
    echo "start"
    ```
-
-Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
 ## Ringkasan
 

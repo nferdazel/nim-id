@@ -146,6 +146,8 @@ After switching, run `nim --version` again to confirm the version really changed
 
 ## Exercises
 
+Answers are in [Appendix A](../appendix/answers.qmd).
+
 1. Install Nim, then copy the output of `nim --version` from your machine.
 2. Run `nim` in a terminal whose PATH is not configured yet. Write the message that appears, and
    explain each part of it.
@@ -153,8 +155,6 @@ After switching, run `nim --version` again to confirm the version really changed
 4. Nim is installed, but the C compiler is not. What happens when `nim c hello.nim` runs? Explain.
 5. With `choosenim`, write the sequence of commands to move from the latest stable release to
    2.2.12, then back again.
-
-Answers are in [Appendix A](../appendix/answers.qmd).
 
 ## Summary
 

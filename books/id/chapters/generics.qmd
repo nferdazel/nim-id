@@ -182,6 +182,8 @@ dari *type* *result*, jadi `fill[int, 2](9)` menghasilkan `array[2, int]`, *type
 
 ## Latihan
 
+Jawaban ada di [Lampiran A](../appendix/answers.qmd).
+
 1. Tulis `proc largest[T](items: openArray[T]): T` yang return *value* terbesar, lalu panggil
    dengan *array* `int` dan dengan *seq* `string`.
 2. Tanpa menjalankan, prediksi *output*-nya:
@@ -201,8 +203,6 @@ dari *type* *result*, jadi `fill[int, 2](9)` menghasilkan `array[2, int]`, *type
 
    echo double(2.5)
    ```
-
-Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
 ## Ringkasan
 

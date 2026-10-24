@@ -219,6 +219,8 @@ kode lebih mudah dibaca kalau *value* itu diisi eksplisit saat deklarasi.
 
 ## Latihan
 
+Jawaban ada di [Lampiran A](../appendix/answers.qmd).
+
 1. Deklarasikan `const Tahun = 2026` dan `var pesan = ""`. Isi `pesan` dengan interpolasi
    `&"terbit {Tahun}"`, lalu tampilkan.
 2. Tanpa menjalankan, prediksi *output*-nya:
@@ -235,8 +237,6 @@ kode lebih mudah dibaca kalau *value* itu diisi eksplisit saat deklarasi.
    Name = "Nim 2"
    echo name
    ```
-
-Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
 ## Ringkasan
 

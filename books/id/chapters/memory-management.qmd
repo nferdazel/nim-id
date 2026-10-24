@@ -222,6 +222,8 @@ Biarkan hook bawaan kalau *type* hanya berisi data biasa; compiler sudah menyedi
 
 ## Latihan
 
+Jawaban ada di [Lampiran A](../appendix/answers.qmd).
+
 1. Tulis *type* `Handle` dengan `=destroy` yang print `close`; alokasikan di dalam sebuah blok dan
    amati kapan *message*-nya muncul.
 2. Tanpa menjalankan, prediksi *output*-nya:
@@ -250,8 +252,6 @@ Biarkan hook bawaan kalau *type* hanya berisi data biasa; compiler sudah menyedi
    var x = Person(name: "a")
    echo x.name
    ```
-
-Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
 ## Ringkasan
 

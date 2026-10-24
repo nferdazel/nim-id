@@ -339,6 +339,8 @@ is, `note["text"]`, and convert the result to a `string` with `getStr`.
 
 ## Exercises
 
+Answers are in [Appendix A](../appendix/answers.qmd).
+
 1. Add a `done <index>` subcommand that marks a note as done, then print `[x]` or `[ ]` in the `list`
    subcommand.
 2. Without running it, predict the output: `./notes list` on a file that does not exist yet, then
@@ -348,8 +350,6 @@ is, `note["text"]`, and convert the result to a `string` with `getStr`.
    followed by `notes.add("buy milk")`.
 5. Name one advantage of keeping the storage procedures in a separate module, and one piece of work
    that must be added before this tool is used from two computers at once.
-
-Answers are in [Appendix A](../appendix/answers.qmd).
 
 ## Summary
 

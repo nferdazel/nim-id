@@ -206,6 +206,8 @@ always the same: `import std/name`.
 
 ## Exercises
 
+Answers are in [Appendix A](../appendix/answers.qmd).
+
 1. Read a sentence, split it, uppercase each word with `toUpperAscii`, then join them back with
    `join("-")`.
 2. Without running it, predict the output:
@@ -226,8 +228,6 @@ always the same: `import std/name`.
    let t = {"a": 1}.toTable
    echo t["b"]
    ```
-
-Answers are in [Appendix A](../appendix/answers.qmd).
 
 ## Summary
 

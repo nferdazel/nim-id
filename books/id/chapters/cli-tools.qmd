@@ -266,6 +266,8 @@ standar selalu tersedia bersama compiler.
 
 ## Latihan
 
+Jawaban ada di [Lampiran A](../appendix/answers.qmd).
+
 1. Tambahkan *option* `--quiet` pada contoh pertama supaya *loop* itu berhenti print token dan
    hanya print `quiet mode` di akhir.
 2. Tanpa menjalankan, prediksi *output*-nya: token apa saja yang muncul dari *seq* ini, dan apa
@@ -288,8 +290,6 @@ standar selalu tersedia bersama compiler.
        echo key
    ```
 5. Kapan `--` perlu dipakai? Sebutkan satu nama *file* yang membuatnya wajib.
-
-Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
 ## Ringkasan
 

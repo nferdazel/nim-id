@@ -255,6 +255,8 @@ output is printed, for the same reason we called `sort` here.
 
 ## Exercises
 
+Answers are in [Appendix A](../appendix/answers.qmd).
+
 1. Add one more book to the first example and confirm the output is still ascending by year.
 2. Without running it, predict the output:
    ```{.nim}
@@ -277,8 +279,6 @@ output is printed, for the same reason we called `sort` here.
    echo row["year"].getInt
    ```
 5. Name two reasons a JSON file stops being enough, and say what work should move to SQLite.
-
-Answers are in [Appendix A](../appendix/answers.qmd).
 
 ## Summary
 

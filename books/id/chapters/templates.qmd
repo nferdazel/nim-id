@@ -238,6 +238,8 @@ konstruksi bahasa baru dari potongan yang ada.
 
 ## Latihan
 
+Jawaban ada di [Lampiran A](../appendix/answers.qmd).
+
 1. Tulis `template twice(body: untyped)` yang menjalankan `body` dua kali, lalu pakai untuk
    print "ping" dua kali.
 2. Tanpa menjalankan, prediksi *output*-nya:
@@ -264,8 +266,6 @@ konstruksi bahasa baru dari potongan yang ada.
    sumUp:
      total += 4
    ```
-
-Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
 ## Ringkasan
 
