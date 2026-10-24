@@ -5,7 +5,7 @@
 | ABI | aturan tata letak dan calling di tingkat biner | [FFI ke C](../chapters/ffi-c.qmd) |
 | alamat | lokasi value di memory, diperoleh lewat `addr` | [`ref`, `ptr`, dan `nil`](../chapters/refs-and-pointers.qmd) |
 | anonymous procedure | procedure tanpa nama yang dipakai sebagai value | [Closure dan *variable* yang ditangkap](../chapters/closures.qmd) |
-| argument | value yang dikirim saat procedure di-call | [*Procedure*, parameter, dan **return value**](../chapters/procedures.qmd) |
+| argument | value yang dikirim saat procedure di-call | [*Procedure*, parameter, dan *return value*](../chapters/procedures.qmd) |
 | array | kumpulan element bertipe sama, ukuran tetap | [`array`, `seq`, dan `openArray`](../chapters/collections.qmd) |
 | assignment | penulisan value ke variable atau field | [*Variable*: `var`, `let`, `const`](../chapters/variables.qmd) |
 | backend | target output compiler (C, C++, JavaScript) | [Apa itu Nim dan kenapa](../chapters/what-is-nim.qmd) |
@@ -14,7 +14,7 @@
 | bitwise | operasi per bit (`and`, `or`, `xor`, `shl`, `shr`) | [Operator aritmetika, *comparison*, logika](../chapters/operators.qmd) |
 | block comment | comment `#[ ... ]#` yang bisa bersarang | [*Comment* dan doc comment](../chapters/comments.qmd) |
 | branching | pemilihan path eksekusi (`if`, `case`, `when`) | [*Branching*: `if`, `case`, `when`](../chapters/conditionals.qmd) |
-| browser | program yang menjalankan JavaScript dari compile | [*Compile* ke JavaScript](../chapters/js-backend.qmd) |
+| browser | program yang menjalankan JavaScript dari compile | [Compile ke JavaScript](../chapters/js-backend.qmd) |
 | caller | kode yang memanggil procedure | [Closure dan *variable* yang ditangkap](../chapters/closures.qmd) |
 | calling | tindakan menjalankan procedure | [Closure dan *variable* yang ditangkap](../chapters/closures.qmd) |
 | calling convention | aturan cara procedure di-call (`nimcall`, `closure`) | [Closure dan *variable* yang ditangkap](../chapters/closures.qmd) |
@@ -29,7 +29,7 @@
 | constructor | expression yang membentuk value object (`Person(name: ...)`) | [*Object* dan *constructor*](../chapters/objects.qmd) |
 | data type | jenis value; menentukan operasi yang sah dan ukuran di memory | [*Variable*: `var`, `let`, `const`](../chapters/variables.qmd) |
 | debug build | build dengan pemeriksaan penuh, dipakai saat mengembangkan | [Alur kerja: `nim r`, `nimble`, editor](../chapters/workflow.qmd) |
-| default value | value yang dipakai kalau argument tidak diberikan | [*Procedure*, parameter, dan **return value**](../chapters/procedures.qmd) |
+| default value | value yang dipakai kalau argument tidak diberikan | [*Procedure*, parameter, dan *return value*](../chapters/procedures.qmd) |
 | deklarasi | statement yang memperkenalkan nama baru | [*Variable*: `var`, `let`, `const`](../chapters/variables.qmd) |
 | dereferensi | mengambil value yang ditunjuk sebuah pointer | [`ref`, `ptr`, dan `nil`](../chapters/refs-and-pointers.qmd) |
 | destructor | procedure `=destroy` yang dipanggil saat value dibuang | [Apa itu Nim dan kenapa](../chapters/what-is-nim.qmd) |
@@ -46,7 +46,7 @@
 | enum | type dengan daftar value bernama yang sudah pasti | [Enum dan set](../chapters/enums-and-sets.qmd) |
 | environment variable | value konfigurasi dari proses induk | [*File*, *directory*, dan OS](../chapters/files-and-os.qmd) |
 | error message | output compiler yang menjelaskan masalah | [*Variable*: `var`, `let`, `const`](../chapters/variables.qmd) |
-| escape sequence | pasangan `\` + huruf yang mewakili character khusus (`\n`, `\t`) | [String, raw string, dan *character*](../chapters/strings.qmd) |
+| escape sequence | pasangan `\` + huruf yang mewakili character khusus (`\n`, `\t`) | [String, raw string, dan character](../chapters/strings.qmd) |
 | event loop | pengatur tugas async dalam satu thread | [`async`/`await` dan IO](../chapters/async.qmd) |
 | exception | kondisi error yang bisa ditangkap | [*Exception* dan *effect* `raises`](../chapters/exceptions.qmd) |
 | exit code | angka yang dikembalikan proses ke caller-nya | [CLI dengan `parseopt`](../chapters/cli-tools.qmd) |
@@ -56,7 +56,7 @@
 | file | satuan penyimpanan di sistem file | [*File*, *directory*, dan OS](../chapters/files-and-os.qmd) |
 | flag | value boolean yang menandai keadaan | [CLI dengan `parseopt`](../chapters/cli-tools.qmd) |
 | float | type angka berpecahan | [*Data type* primitif dan literal](../chapters/primitive-types.qmd) |
-| fungsi | rutin tanpa side effect (`func`) | [*Procedure*, parameter, dan **return value**](../chapters/procedures.qmd) |
+| fungsi | rutin tanpa side effect (`func`) | [*Procedure*, parameter, dan *return value*](../chapters/procedures.qmd) |
 | garbage collector | pengelola memory otomatis pada mode GC klasik | [Apa itu Nim dan kenapa](../chapters/what-is-nim.qmd) |
 | handler | fungsi yang menangani satu permintaan atau peristiwa | [HTTP API dengan `asynchttpserver`](../chapters/http-api.qmd) |
 | higienis | makro atau template yang tidak membocorkan nama ke caller | [Template: kode yang diperluas compiler](../chapters/templates.qmd) |
@@ -85,8 +85,8 @@
 | mesin virtual | lapisan perangkat lunak yang menjalankan kode di atas CPU | [Apa itu Nim dan kenapa](../chapters/what-is-nim.qmd) |
 | message | teks yang disampaikan program ke pembaca atau sistem | [Alur kerja: `nim r`, `nimble`, editor](../chapters/workflow.qmd) |
 | module | file atau folder yang berisi kode dan bisa diimpor | [*Module*, `import`, dan `export`](../chapters/modules.qmd) |
-| multiline string | string `"""..."""` yang mempertahankan line baru | [String, raw string, dan *character*](../chapters/strings.qmd) |
-| named argument | argument yang ditulis bersama nama parameter-nya | [*Procedure*, parameter, dan **return value**](../chapters/procedures.qmd) |
+| multiline string | string `"""..."""` yang mempertahankan line baru | [String, raw string, dan character](../chapters/strings.qmd) |
+| named argument | argument yang ditulis bersama nama parameter-nya | [*Procedure*, parameter, dan *return value*](../chapters/procedures.qmd) |
 | newline | character `\n` yang memindahkan output ke line berikutnya | [`echo` dan format *output*](../chapters/printing.qmd) |
 | object | type gabungan dengan field bernama | [*Object* dan *constructor*](../chapters/objects.qmd) |
 | option | named argument yang mengubah perilaku command (`--count=4`) | [CLI dengan `parseopt`](../chapters/cli-tools.qmd) |
@@ -94,39 +94,39 @@
 | ordinal value | posisi angka sebuah value enum (`ord(green)`) | [Enum dan set](../chapters/enums-and-sets.qmd) |
 | output | data yang dikirim program ke luar | [`echo` dan format *output*](../chapters/printing.qmd) |
 | overflow | value yang melewati batas type dan berakhir `OverflowDefect` | [*Data type* primitif dan literal](../chapters/primitive-types.qmd) |
-| overloading | beberapa procedure bernama sama dengan daftar parameter berbeda | [*Procedure*, parameter, dan **return value**](../chapters/procedures.qmd) |
+| overloading | beberapa procedure bernama sama dengan daftar parameter berbeda | [*Procedure*, parameter, dan *return value*](../chapters/procedures.qmd) |
 | package | satuan distribusi kode yang bisa dipasang | [Membuat dan menerbitkan *package* nimble](../chapters/nimble-packages.qmd) |
 | package manager | tool yang memasang dan mengelola dependensi (`nimble`) | [Instalasi Nim](../chapters/installation.qmd) |
-| parameter | nama value yang diterima procedure | [*Procedure*, parameter, dan **return value**](../chapters/procedures.qmd) |
+| parameter | nama value yang diterima procedure | [*Procedure*, parameter, dan *return value*](../chapters/procedures.qmd) |
 | path | lokasi file dalam sistem file | [*File*, *directory*, dan OS](../chapters/files-and-os.qmd) |
 | penghitungan referensi | menghitung pemakai sebuah value untuk tahu kapan dibebaskan | [Manajemen *memory*: ARC, ORC, dan `=destroy`](../chapters/memory-management.qmd) |
 | pohon sintaksis | struktur pohon yang mewakili kode sumber | [Macro: kode yang membangun kode](../chapters/macros.qmd) |
 | pointer | value yang menyimpan alamat memory (`ptr`) | [`ref`, `ptr`, dan `nil`](../chapters/refs-and-pointers.qmd) |
 | presisi | jumlah digit signifikan yang dijamin type float | [*Data type* primitif dan literal](../chapters/primitive-types.qmd) |
 | print | mengirim teks ke output | [`echo` dan format *output*](../chapters/printing.qmd) |
-| procedure | rutin yang bisa punya side effect (`proc`) | [*Procedure*, parameter, dan **return value**](../chapters/procedures.qmd) |
+| procedure | rutin yang bisa punya side effect (`proc`) | [*Procedure*, parameter, dan *return value*](../chapters/procedures.qmd) |
 | query | permintaan data ke basis data | [Menyimpan data: `Table`, JSON, dan SQLite](../chapters/database.qmd) |
 | `quote do` | blok macro yang menulis kode seperti biasa | [Macro: kode yang membangun kode](../chapters/macros.qmd) |
 | range | batas value dari awal sampai akhir (`a..b`, `a..<b`) | [*Loop*: `for`, `while`, `break`, `continue`](../chapters/loops.qmd) |
-| raw string | string `r"..."` yang tidak memproses escape | [String, raw string, dan *character*](../chapters/strings.qmd) |
+| raw string | string `r"..."` yang tidak memproses escape | [String, raw string, dan character](../chapters/strings.qmd) |
 | referensi | value yang menunjuk object di heap (`ref object`) | [*Object* dan *constructor*](../chapters/objects.qmd) |
 | regex | pola teks yang dipakai `std/re` | [*Regex* dengan `std/re`](../chapters/regex.qmd) |
 | release | versi yang diterbitkan dan diberi tag | [Alur kerja: `nim r`, `nimble`, editor](../chapters/workflow.qmd) |
 | release build | build teroptimasi, dipakai saat mengirim program | [Alur kerja: `nim r`, `nimble`, editor](../chapters/workflow.qmd) |
-| result | value yang dihasilkan operasi atau procedure | [*Procedure*, parameter, dan **return value**](../chapters/procedures.qmd) |
-| return value | value yang dikembalikan procedure | [*Procedure*, parameter, dan **return value**](../chapters/procedures.qmd) |
+| result | value yang dihasilkan operasi atau procedure | [*Procedure*, parameter, dan *return value*](../chapters/procedures.qmd) |
+| return value | value yang dikembalikan procedure | [*Procedure*, parameter, dan *return value*](../chapters/procedures.qmd) |
 | route | pemetaan path dan metode HTTP ke handler | [HTTP API dengan `asynchttpserver`](../chapters/http-api.qmd) |
 | row | satu catatan di dalam tabel atau result query | [Menyimpan data: `Table`, JSON, dan SQLite](../chapters/database.qmd) |
 | ruang nama | wilayah nama yang dipisahkan module | [*Module*, `import`, dan `export`](../chapters/modules.qmd) |
 | runtime | saat program berjalan | [*Variable*: `var`, `let`, `const`](../chapters/variables.qmd) |
 | scaffold | kerangka file yang dibuat `nimble init` | [Instalasi Nim](../chapters/installation.qmd) |
 | scope | wilayah kode tempat sebuah nama bisa dipakai | [*Comment* dan doc comment](../chapters/comments.qmd) |
-| seed | value awal *generator* acak | [*Time* dan *random*](../chapters/times-and-random.qmd) |
+| seed | value awal *generator* acak | [Time dan random](../chapters/times-and-random.qmd) |
 | seq | kumpulan element bertipe sama, ukuran dinamis (`seq`) | [`array`, `seq`, dan `openArray`](../chapters/collections.qmd) |
 | set | kumpulan value berbeda dari type ordinal (`set[Color]`) | [Enum dan set](../chapters/enums-and-sets.qmd) |
 | short-circuit | `and`/`or` berhenti begitu result-nya pasti | [Operator aritmetika, *comparison*, logika](../chapters/operators.qmd) |
-| side effect | perubahan di luar return value (`echo`, menulis file, mengubah `var`) | [*Procedure*, parameter, dan **return value**](../chapters/procedures.qmd) |
-| slicing | mengambil potongan string/koleksi dengan range index | [String, raw string, dan *character*](../chapters/strings.qmd) |
+| side effect | perubahan di luar return value (`echo`, menulis file, mengubah `var`) | [*Procedure*, parameter, dan *return value*](../chapters/procedures.qmd) |
+| slicing | mengambil potongan string/koleksi dengan range index | [String, raw string, dan character](../chapters/strings.qmd) |
 | socket | ujung koneksi jaringan yang dipakai server dan klien | [HTTP API dengan `asynchttpserver`](../chapters/http-api.qmd) |
 | stack trace | daftar calling yang ditampilkan saat program berhenti karena defect atau exception yang tidak tertangani | [`array`, `seq`, dan `openArray`](../chapters/collections.qmd) |
 | standard library | kumpulan module bawaan compiler | [Instalasi Nim](../chapters/installation.qmd) |
@@ -137,7 +137,7 @@
 | test | pemeriksaan otomatis terhadap perilaku kode | [`unittest` dan disiplin pengujian](../chapters/unit-testing.qmd) |
 | test case | satu pemeriksaan di dalam suite | [`unittest` dan disiplin pengujian](../chapters/unit-testing.qmd) |
 | thread | path eksekusi di dalam satu proses | [`async`/`await` dan IO](../chapters/async.qmd) |
-| timestamp | jumlah detik sejak 1970 | [*Time* dan *random*](../chapters/times-and-random.qmd) |
+| timestamp | jumlah detik sejak 1970 | [Time dan random](../chapters/times-and-random.qmd) |
 | transaction | rangkaian perubahan yang harus berhasil semua atau tidak sama sekali | [Menyimpan data: `Table`, JSON, dan SQLite](../chapters/database.qmd) |
 | tuple | kumpulan value bertipe berbeda dengan urutan tetap | [Tuple dan destructuring](../chapters/tuples.qmd) |
 | type | bentuk pendek dari data type; dipakai di prosa dan kode | [*Variable*: `var`, `let`, `const`](../chapters/variables.qmd) |
