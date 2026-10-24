@@ -11,4 +11,5 @@ for b in id en; do
   mkdir -p "$root/books/$b/assets/typst"
   cp "$root/assets/ku.css" "$root/books/$b/assets/ku.css"
   cp "$root/assets/typst/typst-show.typ" "$root/books/$b/assets/typst/typst-show.typ"
+  cp "$root/assets/skip-link-$b.html" "$root/books/$b/assets/skip-link.html"
 done

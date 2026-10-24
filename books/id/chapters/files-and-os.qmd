@@ -218,4 +218,4 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
 Bab berikutnya membahas `unittest`: menulis *test* yang duduk di samping kode, membaca *output*-nya, dan
 menjadikan *test* sebagai kebiasaan, bukan tambahan di akhir proyek. Lanjut ke
-[`unittest` dan disiplin *test*](unit-testing.qmd).
+[`unittest` dan disiplin pengujian](unit-testing.qmd).

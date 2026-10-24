@@ -11,6 +11,7 @@ _pdf/
 books/*/assets/
 # Artefak render satu berkas (`quarto render chapters/x.qmd` menulis HTML di sebelah sumber).
 books/*/*.html
+!books/id/404.html
 books/*/chapters/*.html
 books/*/appendix/*.html
 books/*/site_libs/

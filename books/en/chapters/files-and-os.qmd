@@ -214,4 +214,4 @@ Answers are in [Appendix A](../appendix/answers.qmd).
 
 The next chapter covers `unittest`: writing tests that sit next to the code, reading their output,
 and making testing a habit rather than something bolted on at the end. Continue to
-[`unittest` and test discipline](unit-testing.qmd).
+[`unittest` and testing discipline](unit-testing.qmd).

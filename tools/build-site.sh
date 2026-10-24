@@ -37,5 +37,8 @@ done
 versi="$(tr -d '[:space:]' < VERSION)"
 find public -name '*.html' -exec perl -pi -e "s|assets/ku\.css|assets/ku.css?v=${versi}|g; s|\.pdf\"|.pdf?v=${versi}\"|g" {} +
 
+# Skip-link: Quarto menaruhnya di dalam <main>, setelah sidebar. Pindahkan ke awal <body>.
+python3 tools/fix-skip-link.py
+
 printf 'public/: %s berkas\n' "$(find public -type f | wc -l | tr -d ' ')"
 find public -name '*.pdf' | sed 's|^|  |'

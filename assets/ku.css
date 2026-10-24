@@ -994,3 +994,25 @@ html[lang="en"] .sidebar-tools-main a::after {
     text-decoration-color: currentColor;
   }
 }
+
+/* Skip-link: elemen fokus pertama, tak terlihat sampai dipakai Tab.
+   Tanpa ini, pembaca keyboard harus melewati seluruh sidebar sebelum mencapai isi. */
+.quarto-skip-link {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  z-index: 2000;
+  padding: 0.5rem 0.9rem;
+  background: var(--aksen);
+  color: var(--kertas);
+  font-family: var(--sans);
+  font-size: 0.95rem;
+  text-decoration: none;
+  border-radius: 0 0 4px 0;
+}
+
+.quarto-skip-link:focus {
+  left: 0;
+  outline: 2px solid var(--tinta);
+  outline-offset: 2px;
+}

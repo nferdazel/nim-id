@@ -87,8 +87,11 @@ format:
     toc-title: "On this page"
     code-copy: true
     code-overflow: wrap
+    include-before-body: assets/skip-link.html
     fig-cap-location: bottom
   typst:
+    filters:
+      - ../../tools/typst-links.lua
     toc-depth: 1
     lang: en
     template-partials:

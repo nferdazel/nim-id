@@ -293,5 +293,5 @@ Answers are in [Appendix A](../appendix/answers.qmd).
 
 ## Next
 
-The next chapter covers [references and pointers](refs-and-pointers.qmd): values that point at other
+The next chapter covers [`ref`, `ptr`, and `nil`](refs-and-pointers.qmd): values that point at other
 values, when to copy and when to share, and the difference between `ref`, `ptr`, and `nil`.
