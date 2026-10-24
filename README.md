@@ -16,19 +16,26 @@ code.
 - **Indonesian PDF:** [Dasar-Pemrograman-Nim.pdf](https://nim.qouver.com/Dasar-Pemrograman-Nim.pdf)
 - **English PDF:** [Learning-Nim.pdf](https://nim.qouver.com/en/Learning-Nim.pdf)
 
-One Markdown source produces the web and PDF editions. Every example in `examples/` is compiled,
-run, and its output compared automatically; one set of examples serves both languages, so a stale
-snippet fails the build instead of slipping through.
+One Markdown source produces the web and PDF editions. Every file in `examples/` is compiled, run,
+and its output compared with the expected file, in both editions, on every change.
 
 ## Contents
 
-**Part 0, getting started:** what Nim is and why, installation, the `nim r` workflow, comments and
-doc comments.
+43 chapters in three parts, plus four appendices in both editions.
 
-**Part A, fundamentals:** variables, primitive types and literals, strings, `echo` and formatting,
-operators, branching, loops, `array`/`seq`/`openArray`, procedures, tuples, objects, enums and sets.
+**Part A, fundamentals (16):** what Nim is and why, installation, the `nim r` workflow, comments,
+variables, primitive types, strings, printing, operators, branching, loops, collections,
+procedures, tuples, objects, enums and sets.
 
-Exercise answers are in the appendix, on the same page for both languages.
+**Part B, intermediate (17):** modules, exceptions, iterators, closures, generics, templates, macros,
+concepts, object variants, `ref`/`ptr`, memory management, the standard library, files and the OS,
+testing, `async`/`await`, the C FFI, and compiling to JavaScript.
+
+**Part C, practice (10):** a CLI tool, an HTTP API, a database, packages, benchmarking,
+cross-compilation, regular expressions, time and random numbers, threads, and a final project.
+
+**Appendices:** A exercise answers, B glossary (147 terms), C cheat sheet, D Nim for Python, Go, and
+Rust programmers.
 
 ## Running
 
@@ -61,10 +68,11 @@ books/
   id/                  Indonesian Quarto project (site root)
   en/                  English Quarto project (/en/), same file names
     _quarto.yml        chapter list and formats
-    index.qmd          front page
+    index.qmd          preface
     copyright.qmd      copyright and license
     chapters/*.qmd     43 chapters, English file names
-    appendix/answers.qmd
+    appendix/answers.qmd, glossary.qmd, cheatsheet.qmd, nim-for-others.qmd
+    colophon.qmd       production notes, last page
 examples/
   variables/           one folder per chapter, used by both languages
     a01_declaration.nim
@@ -73,7 +81,7 @@ examples/
 assets/                shared CSS and typst partials (copied during build)
 tools/                 verify-examples, build-site, sync-assets, gen-version, release
 ops/                   Caddy blocks, VPS setup, static deploy
-docs/                  plan, writing guide, glossary, release
+docs/                  plan, writing guide, glossary, publishing standards, release
 ```
 
 Files and folders are named in English. Example file names are **required** to follow
