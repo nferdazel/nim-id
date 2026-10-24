@@ -55,7 +55,7 @@ badge, atau latar section.
 Aturan:
 
 - Lebar baca maksimum **68 karakter** (`~34rem` pada 18px). Tidak ada paragraf selebar layar.
-- Ukuran badan 18px di layar, 10pt di PDF, tinggi baris 1.65.
+- Ukuran badan 18px di layar, 11pt di PDF, tinggi baris 1.65.
 - Judul bab memakai ukuran besar tapi tidak ekstrem: 2rem di layar.
 - Huruf miring untuk istilah asing, konsisten dengan `docs/glossary.md`.
 - Tidak ada uppercase dengan letter-spacing lebar kecuali label kecil di sidebar.
@@ -80,8 +80,10 @@ Aturan:
   `assets/typst/typst-show.typ`). Tidak ada margin cermin: buku ini digital-only, dan margin
   bercermin membuat kolom teks bergeser 5 mm antara halaman ganjil dan genap, yang terbaca sebagai
   indentasi tidak seragam saat halaman dibalik. Lebar kolom tetap 119 mm, jadi tidak ada reflow.
-- Badan 10pt, rata kiri (tidak justify, karena justify pada kolom sempit menghasilkan sungai
-  spasi), jarak antarparagraf 1.3em, tanpa indentasi baris pertama. Diterapkan di
+- Badan 11pt, rata kiri (tidak justify, karena justify pada kolom sempit menghasilkan sungai
+  spasi), jarak antarparagraf 1.3em, tanpa indentasi baris pertama. Ukurannya datang dari
+  `font-size: 11pt` di konfigurasi orange-book dan menghasilkan 68 karakter per baris pada kolom
+  119 mm, sama dengan batas baca 68 karakter di web. Diterapkan di
   `assets/typst/typst-show.typ` lewat `#show par: set par(justify: false, spacing: 1.3em)`.
   Pemecah barisnya `linebreaks: "optimized"`, bukan greedy bawaan Typst: diukur pada 0.7.3,
   widow turun dari 9 ke 1 (ID) dan 8 ke 0 (EN), jumlah halaman dan potongan panel tidak berubah.
@@ -89,8 +91,8 @@ Aturan:
   jadi tepi kanan yang tidak rata sepenuhnya ditangani pemecah ini. Konsekuensinya: edisi ID tidak
   boleh dipindah ke `justify: true`, karena tanpa pola `id` hasilnya sungai spasi.
 - Pembuka bab: nomor bab besar, judul, garis horizontal tipis di bawahnya.
-- Blok kode: latar abu hangat, ukuran 8.5pt, tidak pernah terpotong ke halaman berikutnya tanpa
-  pemisah.
+- Blok kode: latar abu hangat, ukuran 9pt (`#let code-size`), tidak pernah terpotong ke halaman
+  berikutnya tanpa pemisah.
 - Running head: judul buku di halaman kiri, judul bab di halaman kanan. Nomor halaman di bawah.
 - Tanpa warna aksen di badan teks; aksen hanya untuk garis judul bab dan tautan.
 
