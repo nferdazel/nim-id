@@ -19,17 +19,18 @@ Setelah mengubah tabel ini, jalankan `python3 tools/gen-glossary.py` untuk memba
 | variable | variable | nama untuk sebuah value | a name for a value | variable, peubah | variables |
 | constant | constant | value yang tidak berubah | a value that does not change | konstanta | variables |
 | data type | data type | jenis value; menentukan operasi yang sah dan ukuran di memory | the kind of a value; it decides which operations are valid and how much memory it uses | type data | variables |
+| type | type | bentuk pendek dari data type; dipakai di prosa dan kode | short for data type; used in prose and code | tipe | variables |
 | deklarasi | declaration | statement yang memperkenalkan nama baru | a statement that introduces a new name | pendeklarasian (kata benda) | variables |
 | inisialisasi | initialization | pengisian value pertama | filling in the first value | penginitialisasian | variables |
 | interpolasi string | string interpolation | menyisipkan value ke dalam teks | inserting values into text | — | variables |
 | identifier | identifier | nama untuk variable, type, procedure, atau module | a name for a variable, type, procedure, or module | pengenal | variables |
-| error message | error message | output compiler yang menjelaskan masalah | compiler output that explains a problem | pesan error, pesan kesalahan | variables |
+| error message | error message | output compiler yang menjelaskan masalah | compiler output that explains a problem | pesan error, pesan kesalahan, compiler message | variables |
 | procedure | procedure | rutin yang bisa punya side effect (`proc`) | a routine that may have side effects (`proc`) | prosedur | procedures |
 | fungsi | function | rutin tanpa side effect (`func`) | a routine with no side effects (`func`) | function | procedures |
 | loop | loop | konstruksi untuk mengulang blok kode | a construct that repeats a block of code | looping, perulangan | loops |
 | branching | branching | pemilihan path eksekusi (`if`, `case`, `when`) | choosing which path to execute (`if`, `case`, `when`) | percabangan | conditionals |
 | array | array | kumpulan element bertipe sama, ukuran tetap | a fixed-size collection of elements of the same type | larik | collections |
-| seq | sequence | kumpulan element bertipe sama, ukuran dinamis (`seq`) | a dynamically sized collection of elements of the same type (`seq`) | sequence (kecuali penjelasan awal) | collections |
+| seq | seq | kumpulan element bertipe sama, ukuran dinamis (`seq`) | a dynamically sized collection of elements of the same type (`seq`) | sequence (kecuali penjelasan awal) | collections |
 | object | object | type gabungan dengan field bernama | a composite type with named fields | objek | objects |
 | exception | exception | kondisi error yang bisa ditangkap | an error condition that can be caught | pengecualian | exceptions |
 | iterator | iterator | konstruksi yang menghasilkan value satu per satu (`yield`) | an object that yields values one at a time (`yield`) | — | loops |

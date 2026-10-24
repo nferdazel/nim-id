@@ -140,6 +140,7 @@
 | timestamp | jumlah detik sejak 1970 | [*Time* dan *random*](../chapters/times-and-random.qmd) |
 | transaction | rangkaian perubahan yang harus berhasil semua atau tidak sama sekali | [Menyimpan data: `Table`, JSON, dan SQLite](../chapters/database.qmd) |
 | tuple | kumpulan value bertipe berbeda dengan urutan tetap | [Tuple dan destructuring](../chapters/tuples.qmd) |
+| type | bentuk pendek dari data type; dipakai di prosa dan kode | [*Variable*: `var`, `let`, `const`](../chapters/variables.qmd) |
 | type alias | nama lain untuk type yang sudah ada, tanpa type baru | [Object varian dan `distinct`](../chapters/variants-and-distinct.qmd) |
 | type conversion | mengubah value ke type lain (`int()`, `float()`, `$`) | [*Data type* primitif dan literal](../chapters/primitive-types.qmd) |
 | typedesc | type sebagai value, dipakai untuk overloading berbasis type | [Generic: *type* dan *procedure*](../chapters/generics.qmd) |

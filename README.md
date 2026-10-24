@@ -34,7 +34,7 @@ testing, `async`/`await`, the C FFI, and compiling to JavaScript.
 **Part C, practice (10):** a CLI tool, an HTTP API, a database, packages, benchmarking,
 cross-compilation, regular expressions, time and random numbers, threads, and a final project.
 
-**Appendices:** A exercise answers, B glossary (147 terms), C cheat sheet, D Nim for Python, Go, and
+**Appendices:** A exercise answers, B glossary (148 terms), C cheat sheet, D Nim for Python, Go, and
 Rust programmers.
 
 ## Running

@@ -120,7 +120,7 @@
 | runtime | while the program is running | [Variables: `var`, `let`, `const`](../chapters/variables.qmd) |
 | scope | the region of code where a name can be used | [Comments and doc comments](../chapters/comments.qmd) |
 | seed | the starting value of a random generator | [Time and random numbers](../chapters/times-and-random.qmd) |
-| sequence | a dynamically sized collection of elements of the same type (`seq`) | [`array`, `seq`, and `openArray`](../chapters/collections.qmd) |
+| seq | a dynamically sized collection of elements of the same type (`seq`) | [`array`, `seq`, and `openArray`](../chapters/collections.qmd) |
 | set | a collection of distinct values of an ordinal type (`set[Color]`) | [Enums and sets](../chapters/enums-and-sets.qmd) |
 | short-circuit evaluation | `and`/`or` stop as soon as the result is settled | [Arithmetic, comparison, and logic operators](../chapters/operators.qmd) |
 | side effect | a change beyond the return value (`echo`, writing a file, mutating a `var`) | [Procedures, parameters, and return values](../chapters/procedures.qmd) |
@@ -139,6 +139,7 @@
 | timestamp | seconds since 1970 | [Time and random numbers](../chapters/times-and-random.qmd) |
 | transaction | a group of changes that must all succeed or none at all | [Storing data: `Table`, JSON, and SQLite](../chapters/database.qmd) |
 | tuple | a fixed-order collection of values of different types | [Tuples and destructuring](../chapters/tuples.qmd) |
+| type | short for data type; used in prose and code | [Variables: `var`, `let`, `const`](../chapters/variables.qmd) |
 | type alias | another name for an existing type, with no new type | [Variant objects and `distinct`](../chapters/variants-and-distinct.qmd) |
 | type conversion | changing a value into another type (`int()`, `float()`, `$`) | [Primitive types and literals](../chapters/primitive-types.qmd) |
 | typedesc | a type as a value, used for type-based overloading | [Generics: types and procedures](../chapters/generics.qmd) |

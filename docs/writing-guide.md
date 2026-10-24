@@ -54,6 +54,28 @@ Contoh:
 - Penulisan istilah yang dipakai dan yang dilarang ada di [`glossary.md`](glossary.md).
   Tambahkan istilah baru di sana **sebelum** dipakai di bab.
 
+### Keputusan yang mengikat
+
+Keputusan berikut diambil pemilik buku, dan menggantikan kebiasaan yang bertentangan dengannya.
+
+- **Kata kerja.** Enam verba inti boleh bentuk dasar Inggris (`call`, `return`, `read`, `write`,
+  `print`, `compile`) **hanya pada posisi predikat**, termasuk pasifnya (`di-call`). Di posisi lain
+  (setelah "bisa", "lalu", "untuk", atau sebagai imperatif) pakai verba Indonesia. Satu aksi satu
+  verba: jangan bergantian antara `di-call` dan "dipanggil" dalam satu bab. Nomina tetap Indonesia:
+  "pemanggilan", "kembalian", "penulisan".
+- **Miring.** Hanya istilah yang ada di glosarium. Kata Inggris di luar glosarium ditulis tegak.
+  Di awal kalimat istilah tetap miring dengan huruf kapital: `*Output*`.
+- **Judul.** Istilah glosarium di judul dicetak miring, tidak pernah tebal.
+- ***seq***, bukan *sequence*: itu nama tipe yang dipakai kode.
+- ***type*** sah sebagai bentuk pendek *data type*.
+- ***error message*** untuk keluaran compiler; *message* untuk pesan lain.
+- **`print`** untuk keluaran program; "mencetak" hanya untuk cetak fisik.
+- **Label di dalam kode berbahasa Inggris** (`(line, column)`, `{expression:rule}`), karena seluruh
+  kode di buku ini berbahasa Inggris.
+- ***standard library*** dicetak miring seperti istilah lain; "library standar" dilarang.
+- **Angka.** Prosa memakai format Indonesia (0,1 dan 100.000); blok kode memakai format sumber
+  (0.1). Tanda hubung hanya untuk kata majemuk: "8-bit", bukan "2-byte".
+
 ## Bentuk bab
 
 1. **Hook** 2–4 kalimat: masalah nyata atau miskonsepsi yang dibongkar. Bukan "Bab ini akan
