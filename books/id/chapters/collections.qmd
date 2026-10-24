@@ -12,7 +12,7 @@ tempatnya; `seq` berukuran dinamis dan bisa tumbuh. Bab ini memakai keduanya, la
 ## Tujuan bab
 
 Setelah bab ini, pembaca bisa menulis `array` berukuran tetap, menumbuhkan `seq` dengan `add`,
-`insert`, dan `delete`, memakai *index* `[^1]` untuk *element* terakhir, write *parameter* `openArray`
+`insert`, dan `delete`, memakai *index* `[^1]` untuk *element* terakhir, menulis *parameter* `openArray`
 yang menerima `array` maupun `seq`, serta mengenali error *index* di luar batas.
 :::
 

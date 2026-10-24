@@ -150,7 +150,7 @@ Pola `^\s+|\s+$` berisi dua aturan yang dipisah `|`: satu menempel di awal, satu
 Karena `replace` mengganti semua kecocokan, keduanya terpotong dalam satu panggilan, sementara
 spasi di tengah kalimat tetap utuh. Tanda `\D` adalah kebalikan `\d`, yaitu apa pun selain digit.
 
-## Flag dan character escape
+## *Flag* dan character escape
 
 Flag kecil seperti `(?i)` disisipkan di awal pola dan berlaku sampai akhir. Supaya satu
 character dianggap huruf biasa, beri `\` di depannya.

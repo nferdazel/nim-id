@@ -9,7 +9,7 @@ sisanya punya bab sendiri.
 ## Tujuan bab
 
 Setelah bab ini, pembaca bisa mengolah teks dengan `std/strutils`, mengubah *seq* dengan
-`std/sequtils`, menyimpan *value* berkunci di `Table`, read dan membangun JSON, serta memilih
+`std/sequtils`, menyimpan *value* berkunci di `Table`, membaca dan membangun JSON, serta memilih
 antara `Table` dan `seq` dengan alasan yang jelas.
 :::
 
@@ -216,9 +216,9 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
    let xs = @[3, 1, 2]
    echo xs.filterIt(it > 1).mapIt(it * 2)
    ```
-3. Buat `Table[string, int]` berisi tiga *value*, print satu *value* yang ada, dan satu *value* lewat
+3. Buat `Table[string, int]` berisi tiga *value*, tampilkan satu *value* yang ada, dan satu *value* lewat
    `getOrDefault` untuk kunci yang tidak ada.
-4. Tulis dari nol: parse `{"city": "Bandung"}` lalu tampilkan isi `city`.
+4. Tulis dari nol: baca `{"city": "Bandung"}` dengan JSON lalu tampilkan isi `city`.
 5. Kode berikut gagal saat dijalankan. Perbaiki tanpa mengubah isi `t`, lalu jelaskan *message*
    error-nya:
    ```{.nim}

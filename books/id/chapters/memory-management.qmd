@@ -9,7 +9,7 @@ pada saat yang tepat: `=destroy`, `=copy`, dan `=sink`.
 ## Tujuan bab
 
 Setelah bab ini, pembaca bisa menjelaskan perbedaan ARC dan ORC, memverifikasi mode *memory* yang
-aktif, memakai `--mm:arc` dan `--mm:orc`, write `=destroy` untuk *type* yang memegang sumber daya,
+aktif, memakai `--mm:arc` dan `--mm:orc`, menulis `=destroy` untuk *type* yang memegang sumber daya,
 serta membaca error tanda tangan hook yang salah.
 :::
 
@@ -96,7 +96,7 @@ Bacalah urutannya. `make()` print `make`, lalu mengembalikan sebuah `Box`; *valu
 `destroy temp` muncul sebelum `after block`. `x` baru dibuang di akhir `main()`, jadi
 `destroy outer` paling akhir.
 
-## Kapan *destructor* dipanggil
+## Kapan *destructor* di-call
 
 Dari urutan di atas, aturannya jelas:
 

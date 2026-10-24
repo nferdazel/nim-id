@@ -278,7 +278,7 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
        years.add row["year"].getInt
    echo years
    ```
-3. Simpan tiga *row* ke sebuah *file* JSON di `getTempDir()`, baca kembali, print jumlah *row*-nya,
+3. Simpan tiga *row* ke sebuah *file* JSON di `getTempDir()`, baca kembali, tampilkan jumlah *row*-nya,
    lalu hapus *file* itu.
 4. Kode berikut berhenti saat dijalankan. Perbaiki, lalu jelaskan *exception* yang muncul:
    ```{.nim}

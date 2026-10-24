@@ -11,7 +11,7 @@ membahas `echo`, `repr`, interpolasi, dan format angka.
 ## Tujuan bab
 
 Setelah bab ini, pembaca bisa menampilkan beberapa *value* dalam satu `echo`, menjelaskan bedanya
-`echo` dengan `repr`, write interpolasi `&"..."`, mengatur lebar dan presisi angka, serta tahu
+`echo` dengan `repr`, menulis interpolasi `&"..."`, mengatur lebar dan presisi angka, serta tahu
 kenapa `echo` dan `stdout.write` berperilaku berbeda soal *newline*.
 :::
 
@@ -177,15 +177,15 @@ hal yang sama: nama itu belum diperkenalkan ke *file*, biasanya lewat `import` y
 
 Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
-1. Print `"total: "` dan sebuah *integer* dalam satu `echo` tanpa interpolasi, memakai
+1. Tampilkan `"total: "` dan sebuah *integer* dalam satu `echo` tanpa interpolasi, memakai
    beberapa *argument*.
 2. Prediksi *output*-nya:
    ```{.nim}
    echo "a", "b"
    echo "a" & "b"
    ```
-3. Tulis interpolasi yang print `3 + 4` sebagai *result* penjumlahan, bukan sebagai teks.
-4. Print bilangan `7` rata kanan dalam lebar 4, memakai `fmt` dan aturan `:>4`.
+3. Tulis interpolasi yang menampilkan `3 + 4` sebagai *result* penjumlahan, bukan sebagai teks.
+4. Tampilkan bilangan `7` rata kanan dalam lebar 4, memakai `fmt` dan aturan `:>4`.
 5. Tampilkan `"loading"` tanpa *newline*, lalu tampilkan `"..."` di *line* yang sama.
 
 ## Ringkasan

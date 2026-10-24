@@ -1,7 +1,7 @@
 # `unittest` dan disiplin pengujian
 
-*Test* yang tidak pernah dijalankan tidak membuktikan apa pun. Nim menyertakan `unittest` di library
-standar, jadi tidak ada *package* yang perlu dipasang. Bab ini write *test* yang benar-benar berjalan,
+*Test* yang tidak pernah dijalankan tidak membuktikan apa pun. Nim menyertakan `unittest` di *standard library*,
+jadi tidak ada *package* yang perlu dipasang. Bab ini menulis *test* yang benar-benar berjalan,
 lalu membaca *output*-nya. Yang dibawa pulang bukan kerangkanya, melainkan kebiasaan menjalankannya
 setiap kali kode berubah.
 
@@ -9,7 +9,7 @@ setiap kali kode berubah.
 ## Tujuan bab
 
 Setelah bab ini, pembaca bisa menulis `suite` dan `test`, memakai `check`, `require`, dan `expect`,
-read *output* lulus dan gagal, serta mengenali `undeclared identifier` saat lupa mengimpor
+membaca *output* lulus dan gagal, serta mengenali `undeclared identifier` saat lupa mengimpor
 `std/unittest`.
 :::
 
@@ -146,12 +146,12 @@ pertama.
 
 Ini pola yang sama dengan *module* lain. Nama dari *standard library* tidak pernah masuk sendiri; ia
 harus diimpor dulu. Kebiasaan yang menghemat waktu: tulis `import` di *line* pertama, sebelum
-write *test*-nya. Dalam proyek nimble, *file* *test* diletakkan di *directory* `tests/`, dan `nimble test`
+menulis *test*-nya. Dalam proyek nimble, *file* *test* diletakkan di *directory* `tests/`, dan `nimble test`
 menjalankan semuanya. Isinya tetap sama: `unittest`, dan *exit code* bukan nol kalau ada yang gagal.
 
 ## Saat *test* gagal
 
-*Test* yang gagal print *line* `[FAILED]`, dan di atasnya *line* `Check failed:` yang memuat *file*,
+*Test* yang gagal menampilkan *line* `[FAILED]`, dan di atasnya *line* `Check failed:` yang memuat *file*,
 *line*, kolom, serta *value* yang dibandingkan. Prosesnya juga keluar dengan kode bukan nol.
 
 *Exit code* itu yang penting untuk otomatisasi. CI tidak read teks *output*-nya; ia hanya

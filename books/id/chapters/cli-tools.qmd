@@ -261,8 +261,8 @@ pertama.
 dan tidak mendukung *subcommand* bawaan. Untuk tool yang menerima sepuluh *option* atau kurang, itu justru
 kelebihannya: tidak ada konfigurasi, tidak ada *file* tambahan, dan perilakunya jelas. Kalau
 kebutuhan tumbuh menjadi banyak *subcommand* dengan bantuan otomatis, ada *package* `cligen` di luar
-*standard library*. Bab ini tidak memakainya karena kumpulan contoh dipakai kedua buku, dan library
-standar selalu tersedia bersama compiler.
+*standard library*. Bab ini tidak memakainya karena kumpulan contoh dipakai kedua buku, dan
+*standard library* selalu tersedia bersama compiler.
 
 ## Latihan
 

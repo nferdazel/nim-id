@@ -9,11 +9,11 @@ jawaban Bab 5.
 **1.** Ganti string-nya:
 
 ```{.nim}
-echo "Hello, Sari"
+echo "Hello, Ada"
 ```
 
 ```{.txt}
-Hello, Sari
+Hello, Ada
 ```
 
 **2.** *Output*-nya `55`. Jumlah `1..10` adalah 55. *Range* itu inklusif, jadi 10 ikut dihitung.
@@ -234,7 +234,7 @@ echo name
 
 ## String, raw string, dan character
 
-**1.** Kutip ganda dan garis miring perlu di-escape:
+**1.** Kutip ganda dan garis miring perlu diberi tanda escape:
    ```{.nim}
    echo "quote: \" and slash: \\"
    ```
@@ -1870,9 +1870,9 @@ for book in shelf:
 ```
 
 **2.** `@[1999, 2001]`. Kedua *row* bertahun 1999 dan 2001 lolos syarat `> 1990`; *row* 1980 tidak.
-`echo` print `seq[int]` dengan tanda `@` di depan.
+`echo` menampilkan `seq[int]` dengan tanda `@` di depan.
 
-**3.** Tulis, baca kembali, print jumlah *row*-nya, lalu bersihkan:
+**3.** Tulis, baca kembali, tampilkan jumlah *row*-nya, lalu bersihkan:
 
 ```{.nim}
 import std/[json, os]

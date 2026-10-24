@@ -9,7 +9,7 @@ menunjukkan kenapa `import std/os` tidak boleh terlupa.
 ## Tujuan bab
 
 Setelah bab ini, pembaca bisa membongkar dan menyusun *path* *file*, menulis lalu membaca *file*,
-menelusuri *directory* dengan *output* yang stabil, read *argument* dan *variable* lingkungan, serta
+menelusuri *directory* dengan *output* yang stabil, membaca *argument* dan *variable* lingkungan, serta
 membaca *message* `undeclared identifier` saat sebuah *module* lupa diimpor.
 :::
 
@@ -189,14 +189,14 @@ compiler menyebut nama yang menurut kita seharusnya ada, periksa daftar `import`
 
 Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
-1. Print nama *file* dan ekstensinya dari *path* `/etc/nim/nim.cfg` memakai `splitFile`.
+1. Tampilkan nama *file* dan ekstensinya dari *path* `/etc/nim/nim.cfg` memakai `splitFile`.
 2. Tanpa menjalankan, prediksi *output*-nya:
    ```{.nim}
    import std/os
 
    echo splitFile("notes.txt").name
    ```
-3. Tulis program yang write dua *line* ke sebuah *file* di `getTempDir()`, membacanya kembali,
+3. Tulis program yang menulis dua *line* ke sebuah *file* di `getTempDir()`, membacanya kembali,
    lalu tampilkan jumlah *line*-nya. Bersihkan *file* di akhir.
 4. Kode berikut gagal. Perbaiki, lalu jelaskan kenapa:
    ```{.nim}

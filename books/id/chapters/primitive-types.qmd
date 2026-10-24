@@ -11,7 +11,7 @@ dan cara berpindah antar *type* tanpa kehilangan data.
 ## Tujuan bab
 
 Setelah bab ini, pembaca bisa memilih *type* integer sesuai *range* yang dibutuhkan, membaca error
-overflow, write literal heksadesimal dan biner, serta mengonversi *value* antar *type* dengan sadar
+overflow, menulis literal heksadesimal dan biner, serta mengonversi *value* antar *type* dengan sadar
 apa yang terjadi pada *value* itu.
 :::
 

@@ -70,7 +70,7 @@ requires "nim >= 2.0.0"
 | `version` | versi *package*, dipakai nimble untuk memilih versi yang cocok |
 | `author` | nama *maintainer*, muncul di daftar *package* |
 | `description` | satu *line* penjelasan *package* |
-| `license` | pengenal SPDX, misalnya `MIT` |
+| `license` | identifier SPDX, misalnya `MIT` |
 | `srcDir` | *directory* berisi kode; wajib kalau kodenya tidak sejajar dengan `.nimble` |
 | `requires` | dependensi, termasuk versi Nim terendah yang didukung |
 

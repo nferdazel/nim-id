@@ -13,7 +13,7 @@ error penghitungan *index*.
 
 Setelah bab ini, pembaca bisa membedakan *range* inklusif `..` dan eksklusif `..<`, memakai
 `countdown` dan `countup`, mengiterasi *element* dengan `items` dan pasangan *index*-*element* dengan
-`pairs`, write `while` yang berhenti, serta memakai `break` dan `continue`.
+`pairs`, menulis `while` yang berhenti, serta memakai `break` dan `continue`.
 :::
 
 ## `for` dengan *range*: `..` dan `..<`
@@ -181,7 +181,7 @@ yang sama di posisi serupa.
 
 Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
-1. Print bilangan genap dari `2` sampai `10` dengan `for` dan *range* yang tepat.
+1. Tampilkan bilangan genap dari `2` sampai `10` dengan `for` dan *range* yang tepat.
 2. Tanpa menjalankan, prediksi *output*-nya:
    ```{.nim}
    var total = 0

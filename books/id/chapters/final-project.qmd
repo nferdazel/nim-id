@@ -9,7 +9,7 @@ command line untuk mencatat hal-hal pendek.
 ## Tujuan bab
 
 Setelah bab ini, pembaca bisa memecah satu tool kecil menjadi *module* terpisah, menyimpan data ke
-*file* JSON, read *subcommand* dengan `std/parseopt`, write *test*-nya dengan `std/unittest`, dan
+*file* JSON, membaca *subcommand* dengan `std/parseopt`, menulis *test*-nya dengan `std/unittest`, dan
 membaca *error message* ketika JSON diperlakukan seperti object biasa.
 :::
 
