@@ -126,7 +126,10 @@ left: 1
 *Module* ini adalah seluruh aturan penyimpanan dalam satu tempat. `loadNotes` return *seq*
 kosong kalau *file* itu belum ada, sehingga *caller* pertama tidak perlu menanganinya sendiri.
 `removeNote` return `bool` sebagai laporan, bukan menghentikan program dengan *exception*,
-karena *index* di luar *range* adalah error pemakaian yang wajar.
+karena *index* di luar *range* adalah error pemakaian yang wajar. `writeFile` menulis langsung ke
+*file* tujuan: kalau proses berhenti di tengah, isinya bisa tinggal separuh. Pola yang lebih aman
+adalah menulis ke *file* sementara lalu memindahkannya dengan `moveFile`; bab ini memakai bentuk
+sederhana dan meninggalkan penggantian itu sebagai latihan.
 
 Blok `when isMainModule` adalah bagian yang hanya berjalan saat *file* ini dijalankan langsung.
 Ketika *module* lain mengimpornya, blok itu dilewati. Karena itu *module* bisa diuji sendiri, tanpa CLI.
@@ -177,7 +180,12 @@ proc handle(command: string, operands: seq[string]): int =
     if operands.len != 1:
       echo "remove needs exactly one index"
       return 1
-    let index = parseInt(operands[0]) - 1
+    var index = 0
+    try:
+      index = parseInt(operands[0]) - 1
+    except ValueError:
+      echo "index must be a number: ", operands[0]
+      return 1
     if not removeNote(storePath, index):
       echo "no note at index ", operands[0]
       return 1
@@ -229,7 +237,9 @@ options:
 Dijalankan tanpa *argument*, program print teks bantuan. *Argument* pertama menjadi nama *subcommand*,
 sisanya menjadi operand; *option* dikenali dari tanda hubung, dan `std/parseopt` sudah membedakan
 keduanya. *Exit code* di-return sebagai `int`, lalu diteruskan ke `quit`, sehingga skrip lain
-bisa memeriksa keberhasilannya.
+bisa memeriksa keberhasilannya. Satu tempat masih memeriksa *input*: *index* untuk `remove` lewat
+`parseInt`, dan *input* yang bukan angka ditangkap `except ValueError` sebelum sempat menghentikan
+program. Tanpa itu, satu salah ketik menghasilkan *stack trace*, bukan *message*.
 
 Pemakaian sesungguhnya seperti ini:
 

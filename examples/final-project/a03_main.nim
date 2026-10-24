@@ -37,7 +37,12 @@ proc handle(command: string, operands: seq[string]): int =
     if operands.len != 1:
       echo "remove needs exactly one index"
       return 1
-    let index = parseInt(operands[0]) - 1
+    var index = 0
+    try:
+      index = parseInt(operands[0]) - 1
+    except ValueError:
+      echo "index must be a number: ", operands[0]
+      return 1
     if not removeNote(storePath, index):
       echo "no note at index ", operands[0]
       return 1

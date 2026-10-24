@@ -124,7 +124,9 @@ left: 1
 This module holds the entire storage rule in one place. `loadNotes` returns an empty sequence when the
 file does not exist yet, so the first caller does not have to handle that case itself. `removeNote`
 returns a `bool` as a report instead of stopping the program with an exception, because an index out
-of range is ordinary misuse.
+of range is ordinary misuse. `writeFile` writes straight to the destination: if the process stops
+halfway, the file can be left half written. The safer pattern writes a temporary file and moves it
+into place with `moveFile`; this chapter keeps the simple form and leaves that swap as an exercise.
 
 The `when isMainModule` block runs only when this file is executed directly. When another module
 imports it, the block is skipped. That is why the module can be tested on its own, without the CLI.
@@ -175,7 +177,12 @@ proc handle(command: string, operands: seq[string]): int =
     if operands.len != 1:
       echo "remove needs exactly one index"
       return 1
-    let index = parseInt(operands[0]) - 1
+    var index = 0
+    try:
+      index = parseInt(operands[0]) - 1
+    except ValueError:
+      echo "index must be a number: ", operands[0]
+      return 1
     if not removeNote(storePath, index):
       echo "no note at index ", operands[0]
       return 1
@@ -227,7 +234,9 @@ options:
 Run without arguments, the program prints the help text. The first argument becomes the subcommand
 name and the rest become operands; options are recognized by their leading dash, and `std/parseopt`
 already tells the two apart. The exit code is returned as an `int` and passed to `quit`, so other
-scripts can check whether the run succeeded.
+scripts can check whether the run succeeded. One place checks its input: the `remove` index goes
+through `parseInt`, and a value that is not a number is caught by `except ValueError` before it can
+stop the program. Without that, one typo produces a stack trace instead of a message.
 
 A real session looks like this:
 
