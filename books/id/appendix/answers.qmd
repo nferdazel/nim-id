@@ -1232,7 +1232,7 @@ adalah membaca lewat `case` pada penanda, sehingga cabang yang salah tidak perna
 
 **1.** Dua instance, keduanya lewat `new` lalu diisi:
 
-```nim
+```{.nim}
 type Book = ref object
   title: string
 
@@ -1250,20 +1250,20 @@ echo b.title
 
 *Output*-nya:
 
-```txt
+```{.txt}
 Nim in Action
 Programming Nim
 ```
 
 **2.** `q` menunjuk *object* yang sama dengan `p`, jadi mengubah `q.x` ikut mengubah `p.x`:
 
-```txt
+```{.txt}
 10 10
 ```
 
 **3.**
 
-```nim
+```{.nim}
 proc incr(p: ptr int) =
   p[] = p[] + 1
 
@@ -1280,14 +1280,14 @@ mengalokasikan *object* dengan default setiap field lalu menyimpan alamatnya di 
 
 **5.** *Error message*-nya:
 
-```txt
+```{.txt}
 main.nim(2, 18) Error: type mismatch: got 'int' for 'x' but expected 'ptr int'
 ```
 
 *Variable* `p` bertipe `ptr int`, yaitu alamat, sementara `x` adalah *value* `int`. Perbaikannya ambil
 alamatnya dulu:
 
-```nim
+```{.nim}
 var x = 5
 var p: ptr int = addr x
 echo p[]
@@ -1298,7 +1298,7 @@ echo p[]
 **1.** `=destroy` di-call saat *variable* keluar dari *scope*-nya, jadi *message*-nya muncul di
 akhir blok, bukan saat alokasi:
 
-```nim
+```{.nim}
 type Handle = object
   name: string
 
@@ -1313,7 +1313,7 @@ echo "done"
 
 *Output*-nya:
 
-```txt
+```{.txt}
 open
 close f
 done
@@ -1321,7 +1321,7 @@ done
 
 **2.** `a` dibuang di akhir blok, lalu `end` di-print:
 
-```txt
+```{.txt}
 in block
 drop a
 end
@@ -1337,7 +1337,7 @@ menambahkan pendeteksi siklus yang menemukan pasangan seperti itu dan membebaska
 
 **5.** *Error message*-nya:
 
-```txt
+```{.txt}
 main.nim(4, 1) Error: signature for '=destroy' must be proc[T: object](x: var T) or proc[T: object](x: T)
 ```
 
@@ -1350,7 +1350,7 @@ hapus *procedure* itu dan serahkan pembebasan ke ARC/ORC, atau pindahkan sumber 
 
 **1.** Pisahkan, ubah setiap kata, lalu gabungkan kembali:
 
-```nim
+```{.nim}
 import std/strutils
 
 var upper: seq[string] = @[]
@@ -1363,13 +1363,13 @@ echo upper.join("-")
 
 **2.** `filterIt` menyisakan `3` dan `2`, lalu `mapIt` mengalikannya dengan dua:
 
-```txt
+```{.txt}
 @[6, 4]
 ```
 
 **3.**
 
-```nim
+```{.nim}
 import std/tables
 
 var scores = initTable[string, int]()
@@ -1383,14 +1383,14 @@ echo scores.getOrDefault("z", 0)
 
 *Output*-nya:
 
-```txt
+```{.txt}
 2
 0
 ```
 
 **4.**
 
-```nim
+```{.nim}
 import std/json
 
 let data = """{"city": "Bandung"}""".parseJson
@@ -1401,14 +1401,14 @@ echo data["city"].getStr
 
 **5.** *Error message*-nya:
 
-```txt
+```{.txt}
 Error: unhandled exception: key not found: b [KeyError]
 ```
 
 `t["b"]` meminta kunci yang tidak ada, dan `Table` melempar `KeyError` saat berjalan. Perbaikannya
 pakai `getOrDefault` (atau uji dulu dengan `hasKey`) tanpa mengubah isi `t`:
 
-```nim
+```{.nim}
 import std/tables
 
 let t = {"a": 1}.toTable
@@ -1662,7 +1662,7 @@ total: 27
 
 **3.** Contoh yang mengubah isi `<div>`, dijalankan dari halaman HTML yang punya *element* itu:
 
-```nim
+```{.nim .fragment}
 import std/dom
 
 document.getElementById("out").textContent = "from Nim"

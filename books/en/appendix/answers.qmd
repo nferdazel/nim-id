@@ -1227,7 +1227,7 @@ on the tag, so the wrong branch is never executed.
 
 **1.** Two instances, both through `new` and then filled in:
 
-```nim
+```{.nim}
 type Book = ref object
   title: string
 
@@ -1245,20 +1245,20 @@ echo b.title
 
 The output:
 
-```txt
+```{.txt}
 Nim in Action
 Programming Nim
 ```
 
 **2.** `q` points at the same object as `p`, so changing `q.x` also changes `p.x`:
 
-```txt
+```{.txt}
 10 10
 ```
 
 **3.**
 
-```nim
+```{.nim}
 proc incr(p: ptr int) =
   p[] = p[] + 1
 
@@ -1275,14 +1275,14 @@ dereferences `nil` and the program stops while running.
 
 **5.** The error message:
 
-```txt
+```{.txt}
 main.nim(2, 18) Error: type mismatch: got 'int' for 'x' but expected 'ptr int'
 ```
 
 The variable `p` has type `ptr int`, an address, while `x` is an `int` value. The fix is to take
 its address first:
 
-```nim
+```{.nim}
 var x = 5
 var p: ptr int = addr x
 echo p[]
@@ -1293,7 +1293,7 @@ echo p[]
 **1.** `=destroy` is called when a variable leaves its scope, so the message appears at the end of
 the block, not at allocation:
 
-```nim
+```{.nim}
 type Handle = object
   name: string
 
@@ -1308,7 +1308,7 @@ echo "done"
 
 The output:
 
-```txt
+```{.txt}
 open
 close f
 done
@@ -1316,7 +1316,7 @@ done
 
 **2.** `a` is dropped at the end of the block, then `end` is printed:
 
-```txt
+```{.txt}
 in block
 drop a
 end
@@ -1332,7 +1332,7 @@ detector that finds such pairs and frees them.
 
 **5.** The error message:
 
-```txt
+```{.txt}
 main.nim(4, 1) Error: signature for '=destroy' must be proc[T: object](x: var T) or proc[T: object](x: T)
 ```
 
@@ -1345,7 +1345,7 @@ reference holds.
 
 **1.** Split, transform each word, then join back:
 
-```nim
+```{.nim}
 import std/strutils
 
 var upper: seq[string] = @[]
@@ -1358,13 +1358,13 @@ The output is `ONE-TWO-THREE`.
 
 **2.** `filterIt` keeps `3` and `2`, then `mapIt` doubles them:
 
-```txt
+```{.txt}
 @[6, 4]
 ```
 
 **3.**
 
-```nim
+```{.nim}
 import std/tables
 
 var scores = initTable[string, int]()
@@ -1378,14 +1378,14 @@ echo scores.getOrDefault("z", 0)
 
 The output:
 
-```txt
+```{.txt}
 2
 0
 ```
 
 **4.**
 
-```nim
+```{.nim}
 import std/json
 
 let data = """{"city": "Bandung"}""".parseJson
@@ -1396,14 +1396,14 @@ The output is `Bandung`.
 
 **5.** The error message:
 
-```txt
+```{.txt}
 Error: unhandled exception: key not found: b [KeyError]
 ```
 
 `t["b"]` asks for a key that does not exist, and `Table` raises `KeyError` while running. The fix
 is `getOrDefault` (or a `hasKey` test first), without changing the contents of `t`:
 
-```nim
+```{.nim}
 import std/tables
 
 let t = {"a": 1}.toTable
@@ -1656,7 +1656,7 @@ total: 27
 **3.** An example that changes the contents of a `<div>`, loaded from an HTML page that has the
 element:
 
-```nim
+```{.nim .fragment}
 import std/dom
 
 document.getElementById("out").textContent = "from Nim"
