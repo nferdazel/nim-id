@@ -233,8 +233,8 @@ Choose by need, not by habit.
 | Argument side effects | may repeat | once | once |
 
 The short rule: use a procedure for ordinary work, a generic when the algorithm is the same for many
-types, and a template only when we need to work at the level of code text, for example to build new
-language constructs out of existing pieces.
+types, and a template when we need to reshape syntax patterns at compile time, for example to build
+new language constructs out of existing pieces.
 
 ## Exercises
 

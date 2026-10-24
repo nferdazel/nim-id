@@ -233,8 +233,8 @@ Pilih berdasarkan kebutuhan, bukan kebiasaan.
 | *Side effect* *argument* | bisa berulang | sekali | sekali |
 
 Aturan singkatnya: pakai *procedure* untuk pekerjaan biasa, generic kalau algoritmanya sama untuk
-banyak *type*, dan template hanya saat kita butuh bekerja pada level teks kode, misalnya membuat
-konstruksi bahasa baru dari potongan yang ada.
+banyak *type*, dan template saat kita butuh menyusun ulang pola sintaksis kode saat compile, misalnya
+membuat konstruksi bahasa baru dari potongan yang ada.
 
 ## Latihan
 
