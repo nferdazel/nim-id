@@ -1,0 +1,66 @@
+# References and further reading
+
+This book quotes no one, so this page is not a bibliography. It is a way out: where to read further
+on topics the book only introduces. Official Nim documentation comes first because it follows the
+language version, while this book follows its own release. Every link was checked alive in October
+2026.
+
+## Official Nim documentation
+
+- **[Nim Manual](https://nim-lang.org/docs/manual.html)** — the full language rules: `type`, `effect`,
+  `{.pragma.}`, and the details this book compresses.
+- **[Standard Library](https://nim-lang.org/docs/lib.html)** — every bundled module; start here when
+  something is missing from chapter 28.
+- **[Tutorial part 1](https://nim-lang.org/docs/tut1.html)** and
+  **[part 2](https://nim-lang.org/docs/tut2.html)** — a fast path for readers who already write code
+  in another language.
+- **[Compiler User Guide](https://nim-lang.org/docs/nimc.html)** — every `nim c` flag, including
+  `-d:release`, `--mm`, and `--filenames` from chapters 1 and 33.
+- **[NEP-1: Nim style guide](https://nim-lang.org/docs/nep1.html)** — the naming rules behind chapter 3.
+- **[Nim tools](https://nim-lang.org/docs/tools.html)** — `nimpretty`, `nimble`, and the rest of what
+  sits around the compiler.
+- **[Nimble](https://nim-lang.github.io/nimble/)** — documentation for the package manager used in
+  chapter 37.
+
+## Memory and ownership
+
+- **[Memory management](https://nim-lang.org/docs/mm.html)** — ARC, ORC, and the `--mm` choices; the
+  long version of chapter 27.
+- **[Destructors and move semantics](https://nim-lang.org/docs/destructors.html)** — `=destroy`,
+  `=copy`, `=sink`, and `move`.
+- **[Introduction to ARC/ORC in Nim](https://nim-lang.org/blog/2020/10/15/introduction-to-arc-orc-in-nim.html)**
+  — background that explains the design reasoning, not just the rules.
+- **[Introducing ORC](https://nim-lang.org/blog/2020/12/08/introducing-orc.html)** — the cycle
+  collector, written by the compiler's author.
+- **[Nim 2.0 released](https://nim-lang.org/blog/2023/08/01/nim-v20-released.html)** — why ORC became
+  the default memory manager.
+
+## Async, HTTP, and threads
+
+- **[std/asyncdispatch](https://nim-lang.org/docs/asyncdispatch.html)** — `async`, `await`, and
+  `Future`; the basis of chapter 31.
+- **[std/asynchttpserver](https://nim-lang.org/docs/asynchttpserver.html)** — the HTTP server used in
+  chapter 35.
+- **[std/httpclient](https://nim-lang.org/docs/httpclient.html)** — the client side of the same chapter.
+- **[std/typedthreads](https://nim-lang.org/docs/typedthreads.html)** — typed threads, chapter 42.
+
+## Backends, FFI, and data
+
+- **[Backend integration](https://nim-lang.org/docs/backends.html)** — what to prepare when calling C,
+  the long version of chapter 32.
+- **[std/db_common](https://nim-lang.org/docs/db_common.html)** — the interface behind `db_sqlite` in
+  chapter 36.
+- **[std/json](https://nim-lang.org/docs/json.html)** — parsing and serialising, used in chapter 28.
+
+## Books and examples
+
+- **[Nim in Action](https://www.manning.com/books/nim-in-action)** — Dominik Picheta, Manning, 2017.
+  The most complete printed book on Nim; some examples predate the current language, so compare with
+  the manual.
+- **[nim-in-action-code](https://github.com/dom96/nim-in-action-code)** — the example code for that book.
+
+## When a link dies
+
+Almost every address above lives on `nim-lang.org` and `github.com`, the two most stable names in this
+ecosystem. If one of them moves, search the title on the
+[official documentation](https://nim-lang.org/documentation.html) page, which is the main index.

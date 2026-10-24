@@ -1,0 +1,65 @@
+# Referensi dan bacaan lanjutan
+
+Buku ini tidak mengutip karya orang lain, jadi halaman ini bukan daftar rujukan formal. Isinya jalan keluar:
+tempat membaca lebih dalam untuk topik yang di sini baru diperkenalkan. Dokumentasi resmi Nim
+didahulukan karena ia mengikuti versi bahasa, sedangkan buku ini mengikuti versi cetaknya sendiri.
+Semua tautan diperiksa hidup pada Oktober 2026.
+
+## Dokumentasi resmi Nim
+
+- **[Nim Manual](https://nim-lang.org/docs/manual.html)** — aturan bahasa secara lengkap: `type`,
+  `effect`, `{.pragma.}`, dan detail yang di buku ini diringkas.
+- **[Standard Library](https://nim-lang.org/docs/lib.html)** — daftar seluruh *module* bawaan; mulai
+  dari sini kalau butuh sesuatu yang belum muncul di bab 28.
+- **[Tutorial bagian 1](https://nim-lang.org/docs/tut1.html)** dan
+  **[bagian 2](https://nim-lang.org/docs/tut2.html)** — jalan pintas bagi pembaca yang sudah menulis
+  program di bahasa lain.
+- **[Compiler User Guide](https://nim-lang.org/docs/nimc.html)** — semua *flag* `nim c`, termasuk
+  `-d:release`, `--mm`, dan `--filenames` yang dipakai bab 1 dan bab 33.
+- **[NEP-1: Nim style guide](https://nim-lang.org/docs/nep1.html)** — dasar aturan penamaan di bab 3.
+- **[Nim tools](https://nim-lang.org/docs/tools.html)** — `nimpretty`, `nimble`, dan yang lain di
+  sekitar compiler.
+- **[Nimble](https://nim-lang.github.io/nimble/)** — dokumentasi *package manager* yang dipakai bab 37.
+
+## Memory dan kepemilikan
+
+- **[Memory management](https://nim-lang.org/docs/mm.html)** — ARC, ORC, dan pilihan `--mm`; versi
+  panjang dari bab 27.
+- **[Destructors and move semantics](https://nim-lang.org/docs/destructors.html)** — `=destroy`,
+  `=copy`, `=sink`, dan `move`.
+- **[Introduction to ARC/ORC in Nim](https://nim-lang.org/blog/2020/10/15/introduction-to-arc-orc-in-nim.html)**
+  — tulisan latar yang menjelaskan alasan desainnya, bukan hanya aturannya.
+- **[Introducing ORC](https://nim-lang.org/blog/2020/12/08/introducing-orc.html)** — pengumpul siklus,
+  ditulis oleh penulis compiler-nya sendiri.
+- **[Nim 2.0 released](https://nim-lang.org/blog/2023/08/01/nim-v20-released.html)** — kenapa ORC
+  menjadi pengelola *memory* bawaan.
+
+## Async, HTTP, dan thread
+
+- **[std/asyncdispatch](https://nim-lang.org/docs/asyncdispatch.html)** — `async`, `await`, dan
+  `Future`; dasar bab 31.
+- **[std/asynchttpserver](https://nim-lang.org/docs/asynchttpserver.html)** — server HTTP yang dipakai
+  bab 35.
+- **[std/httpclient](https://nim-lang.org/docs/httpclient.html)** — sisi klien untuk bab yang sama.
+- **[std/typedthreads](https://nim-lang.org/docs/typedthreads.html)** — thread bertipe, bab 42.
+
+## Backend, FFI, dan data
+
+- **[Backend integration](https://nim-lang.org/docs/backends.html)** — apa yang perlu disiapkan saat
+  memanggil C, versi panjang bab 32.
+- **[std/db_common](https://nim-lang.org/docs/db_common.html)** — antarmuka yang dipakai `db_sqlite` di
+  bab 36.
+- **[std/json](https://nim-lang.org/docs/json.html)** — parser dan serialisasi yang dipakai bab 28.
+
+## Buku dan contoh
+
+- **[Nim in Action](https://www.manning.com/books/nim-in-action)** — Dominik Picheta, Manning, 2017.
+  Buku cetak paling lengkap tentang Nim; sebagian contohnya mendahului versi bahasa sekarang, jadi
+  bandingkan dengan manual.
+- **[nim-in-action-code](https://github.com/dom96/nim-in-action-code)** — kode contoh buku itu.
+
+## Kalau tautan mati
+
+Hampir semua alamat di atas berada di `nim-lang.org` dan `github.com`, dua nama paling stabil di
+ekosistem ini. Kalau satu di antaranya pindah, cari judulnya di
+[dokumentasi resmi](https://nim-lang.org/documentation.html); halaman itu yang memuat daftarnya.

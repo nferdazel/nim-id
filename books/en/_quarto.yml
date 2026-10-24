@@ -66,6 +66,7 @@ book:
     - appendix/glossary.qmd
     - appendix/cheatsheet.qmd
     - appendix/nim-for-others.qmd
+    - appendix/references.qmd
     - colophon.qmd
   search: true
   sidebar:
