@@ -78,8 +78,9 @@ names as in C. Because the C header is included, Nim uses the same layout as the
 
 ## Nim strings and `cstring`
 
-A Nim string and a C string are not the same thing. A Nim string stores its own length and is not
-always terminated by a zero byte.
+A Nim string and a C string are not the same thing. A Nim string stores its own length, but its
+buffer is always terminated by a zero byte, so a C function can use it directly. What differs is the
+middle: a Nim string may hold a zero byte anywhere, and the length Nim records is what counts.
 
 ```{.nim}
 proc strlen(s: cstring): csize_t {.importc, header: "<string.h>".}
@@ -99,9 +100,10 @@ echo strlen(text.cstring)
 `strlen` counts up to the first zero byte, so it returns 2. That is the difference: a `cstring` is a
 pointer to bytes, while a Nim string is a value that knows its length.
 
-When Nim converts a string to a `cstring`, it appends a zero terminator. That is why `text.cstring`
-is safe to hand to a C function. What still needs remembering: the C function stops at the first
-zero, whatever follows it.
+Converting a string to a `cstring` copies nothing. Nim hands over a pointer to the buffer that
+already exists, and the zero byte at its end has been there all along. That is why `text.cstring` is
+safe to hand to a C function. What still needs remembering: the C function stops at the first zero,
+whatever follows it.
 
 ## Variadic functions
 

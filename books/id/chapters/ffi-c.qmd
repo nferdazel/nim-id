@@ -80,8 +80,9 @@ dengan yang dipakai compiler C.
 
 ## String Nim dan `cstring`
 
-String Nim dan string C tidak sama. String Nim menyimpan panjangnya sendiri dan tidak selalu
-diakhiri byte nol.
+String Nim dan string C tidak sama. String Nim menyimpan panjangnya sendiri, tetapi *buffer*-nya
+tetap selalu diakhiri byte nol, supaya bisa langsung dipakai fungsi C. Yang membedakan justru bagian
+tengahnya: string Nim boleh memuat byte nol di mana saja, dan panjang yang dicatat Nim yang berlaku.
 
 ```{.nim}
 proc strlen(s: cstring): csize_t {.importc, header: "<string.h>".}
@@ -101,9 +102,9 @@ echo strlen(text.cstring)
 `strlen` dari C menghitung sampai byte nol pertama, jadi *result*-nya 2. Inilah bedanya: `cstring`
 adalah *pointer* ke byte, sedangkan string Nim adalah *value* yang tahu panjangnya.
 
-Saat Nim mengubah string menjadi `cstring`, ia menambahkan penanda nol di akhir. Karena itu
-`text.cstring` aman dipakai oleh fungsi C. Yang tetap berlaku: fungsi C berhenti di nol
-pertama, apa pun isi sesudahnya.
+Mengubah string menjadi `cstring` tidak menyalin apa pun. Nim menyerahkan *pointer* ke *buffer* yang
+sudah ada, dan byte nol di ujungnya sudah di sana sejak awal. Karena itu `text.cstring` aman dipakai
+oleh fungsi C. Yang tetap berlaku: fungsi C berhenti di nol pertama, apa pun isi sesudahnya.
 
 ## Fungsi variadik
 
