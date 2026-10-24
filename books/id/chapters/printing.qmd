@@ -37,7 +37,7 @@ version 2.2
 abc
 ```
 
-`echo` menerima berapa pun *argument* dan mencetaknya berurutan tanpa pemisah. Perhatikan *line*
+`echo` menerima berapa pun *argument* dan menampilkannya berurutan tanpa pemisah. Perhatikan *line*
 terakhir: `"a", "b", "c"` di-print `abc` tanpa spasi. Semua spasi pada *output* di atas datang dari
 string yang kita tulis sendiri. Setelah semua *argument*, `echo` menambahkan tepat satu *newline*.
 

@@ -2,7 +2,7 @@
 
 A template replaces one piece of code with another, but it only pastes text. It cannot take an
 argument as AST data to take apart, and it cannot loop over data to build new code. Types can still
-be checked with `when typeof(x) is ...`, but that only picks a branch, it does not build a new shape.
+be checked with `when typeof(x) is ...`, but that only picks a branch; it does not build a new shape.
 At that point `macro` takes over: a procedure that runs at compile time and takes code as data.
 
 This chapter starts from templates, shows the point where they run out, then builds a macro step by

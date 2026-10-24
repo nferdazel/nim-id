@@ -23,8 +23,8 @@ They differ in one thing: ORC adds cycle detection. Two objects pointing at each
 to zero under plain counting; ORC finds such pairs and frees them. ARC does not, so cycles become
 a memory leak.
 
-That detection does not run all the time. ORC only sweeps for cycles after the number of allocated
-objects crosses a default threshold (128), or when `GC_fullCollect()` is called. In a small
+That detection does not run all the time. ORC only sweeps for cycles after its internal list of roots
+crosses a default threshold (128), or when `GC_fullCollect()` is called. In a small
 program, cycles may still be alive when the program ends, so do not conclude from one short run
 that ORC failed.
 

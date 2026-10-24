@@ -180,7 +180,7 @@ true
 produce the same backslash. Without `\`, the dot character means "any letter", so `a.b` also matches
 `axb`.
 
-## Intentional error: forgetting to import `std/re`
+## Deliberate error: forgetting to import `std/re`
 
 The names from `std/re` do not appear out of nowhere. Drop the `import`, and the compiler stops at
 the first token.

@@ -264,7 +264,7 @@ let doc = """{"city": "Bandung"}""".parseJson
 echo doc["city"].getStr
 ```
 
-| Module | Frequently used functions |
+| Module | Frequently used procedures |
 |---|---|
 | `strutils` | `strip`, `split`, `join`, `toUpperAscii`, `startsWith`, `replace`, `parseInt` |
 | `sequtils` | `mapIt`, `filterIt`, `foldl` |

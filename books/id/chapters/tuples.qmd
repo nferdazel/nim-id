@@ -155,7 +155,7 @@ localhost
 8080
 ```
 
-Fungsi ini berguna saat semua field diolah berurutan, misalnya untuk validasi atau pencetakan.
+Fungsi ini berguna saat semua field diolah berurutan, misalnya untuk validasi atau penampilan.
 Urutannya mengikuti urutan deklarasi.
 
 ## Membaca error: pola yang tidak cocok

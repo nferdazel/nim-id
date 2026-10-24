@@ -239,7 +239,7 @@ berarti *file itu* rusak, tetapi *module itu* memang tidak ada di *search path*.
 hal muncul bersamaan: datanya besar, *query* harus cepat pada sebagian kecil *row*, dan beberapa
 program write ke *file* yang sama. Di titik itu pergantian ke SQLite masuk akal.
 
-Untuk memakainya, pasang `db_connector`, lalu impor `db_connector/db_sqlite`. *Module* itu memerlukan
+Untuk memakainya, pasang `db_connector`, lalu mengimpor `db_connector/db_sqlite`. *Module* itu memerlukan
 `libsqlite3` pada sistem. Bentuk pemakaiannya sama, hanya lebih banyak:
 
 | Kebutuhan | Di bab ini | Di `db_sqlite` |

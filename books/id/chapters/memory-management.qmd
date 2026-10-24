@@ -23,8 +23,8 @@ Bedanya satu: ORC menambahkan pendeteksi siklus. Dua *object* yang saling menunj
 turun ke nol dengan penghitungan biasa; ORC menemukan pasangan seperti itu dan membebaskannya.
 ARC tidak, sehingga siklus menjadi kebocoran *memory*.
 
-Pendeteksian itu tidak berjalan setiap saat. ORC baru menyisir siklus setelah jumlah *object* yang
-dialokasikan melewati ambang bawaan (128), atau saat `GC_fullCollect()` di-call. Pada program
+Pendeteksian itu tidak berjalan setiap saat. ORC baru menyisir siklus setelah daftar akar internalnya
+melewati ambang bawaan (128), atau saat `GC_fullCollect()` di-call. Pada program
 kecil, siklus bisa belum terkumpul waktu program selesai, jadi jangan menyimpulkan ORC gagal hanya
 dari satu percobaan singkat.
 

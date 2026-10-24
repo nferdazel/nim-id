@@ -251,7 +251,7 @@ Answers are in [Appendix A](../appendix/answers.qmd).
 - `new(p)` allocates a `ref` that was still `nil`; `isNil` tests whether the reference is empty.
 - `ptr T` holds an address, taken with `addr` and read with `p[]`; `unsafeAddr` is its deprecated
   alias.
-- `cast` reinterprets bits, it does not convert the value; use it only in low-level code.
+- `cast` reinterprets bits; it does not convert the value. Use it only in low-level code.
 - A `ptr` owns no memory and is unchecked, so prefer `ref` whenever you can.
 
 ## Next

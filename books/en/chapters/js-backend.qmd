@@ -1,6 +1,6 @@
 # Compiling to JavaScript
 
-Nim does not only produce binaries. With one change of command, the compiler emits JavaScript that
+A binary is not the only output of Nim. With one change of command, the compiler emits JavaScript that
 runs in Node.js or in the browser. This chapter points the JavaScript backend at programs we already
 write, shows what stays the same and what differs, then reads one error that is typical of this
 target. It also closes Part B.

@@ -88,7 +88,7 @@
 | namespace | a region of names kept apart by module | [Modules, `import`, and `export`](../chapters/modules.qmd) |
 | newline | the `\n` character that moves output to the next line | [Printing and formatting output](../chapters/printing.qmd) |
 | object | a composite type with named fields | [Objects and constructors](../chapters/objects.qmd) |
-| option | a named argument that changes a command's behaviour (`--count=4`) | [CLI tools with `parseopt`](../chapters/cli-tools.qmd) |
+| option | a named argument that changes a command's behavior (`--count=4`) | [CLI tools with `parseopt`](../chapters/cli-tools.qmd) |
 | ordinal type | a type whose values can be ordered and counted (`int`, `char`, `enum`) | [Enums and sets](../chapters/enums-and-sets.qmd) |
 | ordinal value | the numeric position of an enum value (`ord(green)`) | [Enums and sets](../chapters/enums-and-sets.qmd) |
 | output | data a program sends out | [Printing and formatting output](../chapters/printing.qmd) |
@@ -133,7 +133,7 @@
 | subcommand | a second command inside a CLI tool (`tool add`) | [CLI tools with `parseopt`](../chapters/cli-tools.qmd) |
 | suite | a group of tests in `unittest` | [`unittest` and test discipline](../chapters/unit-testing.qmd) |
 | template expansion | template code copied by the compiler to the call site | [Templates: code expanded by the compiler](../chapters/templates.qmd) |
-| test | an automated check of code behaviour | [`unittest` and test discipline](../chapters/unit-testing.qmd) |
+| test | an automated check of code behavior | [`unittest` and test discipline](../chapters/unit-testing.qmd) |
 | test case | one check inside a suite | [`unittest` and test discipline](../chapters/unit-testing.qmd) |
 | thread | a path of execution inside one process | [`async`/`await` and IO](../chapters/async.qmd) |
 | timestamp | seconds since 1970 | [Time and random numbers](../chapters/times-and-random.qmd) |

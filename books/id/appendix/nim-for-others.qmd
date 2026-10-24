@@ -16,7 +16,7 @@ dari tabel padanan, lalu dijelaskan singkat apa yang sama dan apa yang perlu dis
 | Nim | `var x = 1`, `let y = 2`, `const Z = 3` |
 
 Ketiganya menyimpulkan *type* dari *value* awal, dan Nim mengikuti kebiasaan yang sama. Kebiasaan
-Python write `x = 1` tanpa *type* tetap jalan, sedangkan pemeriksaan *type* tetap ketat seperti di Go
+Python menulis `x = 1` tanpa *type* tetap jalan, sedangkan pemeriksaan *type* tetap ketat seperti di Go
 dan Rust. Yang berbeda: Nim memberi tiga tingkat, dari `var` yang bebas berubah sampai `const` yang
 dihitung saat *compile*.
 
@@ -133,7 +133,7 @@ Nim 2.x, *thread* aktif secara bawaan (`compileOption("threads")` bernilai `true
 `--threads:on` tidak lagi diperlukan. Model async memakai satu *event loop*, dan tugas menunggu
 tanpa memblokir *thread*. Untuk komunikasi antar-*thread* ada `Channel[T]`; `std/threadpool` dan
 `spawn` masih ada tetapi sudah ditandai usang. Yang tidak ada adalah model goroutine Go, yaitu
-goroutine ringan dengan `select` di atas banyak saluran.
+goroutine ringan dengan `select` di atas banyak *channel*.
 
 ## Yang mirip
 
@@ -160,9 +160,9 @@ kode saat berjalan. Indentasi menentukan blok, seperti Python, tanpa kurung kura
 pernah `nil`. *Effect*
 `raises` diperiksa compiler. *Range* `0 .. 5` inklusif, sedangkan `range` Python eksklusif. `and`,
 `or`, dan `not` menggantikan `&&`, `||`, dan `!`. Tidak ada kata kunci `async`/`await` bawaan; async
-dibangun lewat makro `{.async.}`. Integer punya lebar tetap, bukan presisi sembarang seperti di Python. Luapan bertipe signed
-memicu `OverflowDefect` bahkan di `-d:release`; integer unsigned membungkus; baru `-d:danger`
-mematikan pemeriksaan itu.
+dibangun lewat makro `{.async.}`. *Integer* punya lebar tetap, bukan presisi sembarang seperti di
+Python. *Overflow* pada *type* signed memicu `OverflowDefect` bahkan di `-d:release`; *integer*
+unsigned membungkus; baru `-d:danger` mematikan pemeriksaan itu.
 
 Object *value* disalin saat ditugaskan, bukan dibagi lewat referensi seperti `class` Python. Untuk
 berbagi, pakai `ref object`. Tidak ada dekorator seperti di Python; peran serupa diambil pragma

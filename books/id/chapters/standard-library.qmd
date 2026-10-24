@@ -16,7 +16,7 @@ antara `Table` dan `seq` dengan alasan yang jelas.
 ## Mengimpor *module* **standard library**
 
 *Module* **standard library** diimpor dengan awalan `std/`, misalnya `import std/strutils` atau
-`import std/sequtils`. Awalan itu memisahkan *module* resmi dari *file* lokal. Tanpa impor, nama
+`import std/sequtils`. Awalan itu memisahkan *module* resmi dari *file* lokal. Tanpa `import`, nama
 seperti `strip` atau `hasKey` tidak dikenal compiler.
 
 ## `std/strutils`: mengolah teks
@@ -201,7 +201,7 @@ saat kuncinya hilang.
 
 **Standard library** jauh lebih luas dari empat *module* ini. `std/os` dibahas di bab *file* dan operasi
 sistem, `std/strformat` di bab *variable*, dan `std/math` serta `std/algorithm` muncul di bab operasi
-dan *file*. `std/random` dan `std/times` dibahas di bab [*time* dan *random*](times-and-random.qmd). Pola impornya sama: `import std/nama`.
+dan *file*. `std/random` dan `std/times` dibahas di bab [*time* dan *random*](times-and-random.qmd). Pola mengimpornya sama: `import std/nama`.
 
 ## Latihan
 

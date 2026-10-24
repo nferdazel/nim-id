@@ -187,7 +187,7 @@ candidates (edit distance, scope distance); see '--spellSuggest':
  (1, 2): 'user_name'
 ```
 
-Note the `candidates` line: the compiler does not just say "not found", it offers the closest
+Note the `candidates` line: the compiler does not just say "not found"; it offers the closest
 match. This is one reason Nim errors feel helpful once you are used to them.
 
 Practical advice: pick one spelling style and stay consistent. Nim's official style is `camelCase`

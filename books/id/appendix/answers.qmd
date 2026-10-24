@@ -1684,7 +1684,7 @@ urusan data, lalu membangun ulang dengan `nim js`.
 ## CLI dengan `parseopt`
 
 **1.** Tandai `--quiet` sebagai *option* tanpa *value* lewat `longNoVal`, lalu pakai bendera itu untuk
-melewati pencetakan token:
+melewati penampilan token:
 
 ```{.nim}
 import std/parseopt
@@ -1965,9 +1965,9 @@ Nama *file* *test* boleh apa saja selama diawali huruf `t`, karena `nimble test`
 main.nim(1, 8) Error: cannot open file: notes_helpers
 ```
 
-`(1, 8)` adalah kolom 8, tepat di awal nama *module* setelah `import `. Perbaikannya menyesuaikan impor
-dengan nama *file* yang benar, misalnya `import notes`, atau memberi *file* *module itu* nama
-`notes_helpers.nim`.
+`(1, 8)` adalah kolom 8, tepat di awal nama *module* setelah `import `. Perbaikannya
+menyesuaikan cara mengimpor dengan nama *file* yang benar, misalnya `import notes`, atau memberi
+*file* *module itu* nama `notes_helpers.nim`.
 
 **5.** (a) `0.2.0`, karena ada tambahan dan belum ada yang rusak; (b) `0.1.1`, karena hanya memperbaiki
 *message* tanpa mengubah cara pakai; (c) `2.0.0` kalau *package* sudah mencapai `1.0.0`, karena mengganti
@@ -2112,7 +2112,7 @@ tidak diberikan, yang dihasilkan adalah biner host yang tidak bisa dijalankan di
 
 ## *Regex* dengan `std/re`
 
-**1.** Tambahkan grup ketiga, lalu print `matches[2]`:
+**1.** Tambahkan *capture group* ketiga, lalu print `matches[2]`:
 
 ```{.nim}
 import std/re
@@ -2131,7 +2131,7 @@ age: 36
 city: London
 ```
 
-Setiap pasangan tanda kurung menambah satu grup, dan urutannya mengikuti posisi di pola.
+Setiap pasangan tanda kurung menambah satu *capture group*, dan urutannya mengikuti posisi di pola.
 
 **2.** *Output*-nya tiga *line*: `1`, `22`, lalu `333`. Pola `\d+` bersifat rakus, jadi setiap deret
 digit diambil utuh.
@@ -2160,7 +2160,7 @@ echo domains(@["ada@example.com", "grace@navy.mil"])
 @["example.com", "navy.mil"]
 ```
 
-`find` mengisi *array* dengan grup tangkapan; grup pertama sudah berisi bagian setelah `@`.
+`find` mengisi *array* dengan *capture group*; yang pertama sudah berisi bagian setelah `@`.
 
 **4.** `=~` mendeklarasikan *array* `matches` di dalam `if`, jadi namanya tidak terlihat setelah blok
 itu. Compiler menunjuk *line* 6, tempat `matches[1]` dipakai di luar *scope*. Pindahkan kedua `echo`

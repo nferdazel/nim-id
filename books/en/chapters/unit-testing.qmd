@@ -121,7 +121,7 @@ Those three tools cover most tests. Their output is the same: `[OK]` for a passi
 
 When every case needs the same starting state, `unittest` provides `setup` and `teardown`. The
 `setup` block runs before each `test`, and `teardown` after it. Both are written inside the `suite`
-block; at the top level the names are not recognised. Use them when each test needs fresh data, such as a temporary file that must be
+block; at the top level the names are not recognized. Use them when each test needs fresh data, such as a temporary file that must be
 created and removed again.
 
 ## Deliberate error: forgetting to import `std/unittest`

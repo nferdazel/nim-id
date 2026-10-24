@@ -92,7 +92,7 @@ kadang memperjelas mana yang sedang dipakai.
 ## Closure iterator dan `finished`
 
 Iterator inline menempel di dalam `for`, jadi ia tidak bisa dipisahkan dari *loop*. Iterator yang perlu
-disimpan atau dioper ditandai `{.closure.}`.
+disimpan atau dioper ditandai `{.closure.}`. Closure dibahas di bab berikutnya; di sini cukup tahu bahwa iterator seperti ini bisa disimpan.
 
 ```{.nim}
 iterator countBetween(a, b: int): int {.closure.} =

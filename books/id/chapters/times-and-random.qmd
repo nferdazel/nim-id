@@ -74,7 +74,7 @@ echo dateOnly.hour, ":", dateOnly.minute
 0:0
 ```
 
-Selama polanya cocok, hasilnya pasti. Teks tanpa jam, seperti `"2024-03-01"`, menjadi tengah malam,
+Selama polanya cocok, *result*-nya pasti. Teks tanpa jam, seperti `"2024-03-01"`, menjadi tengah malam,
 yaitu jam `0` dan menit `0`. Kalau teksnya tidak cocok, `parse` melempar `exception`, bukan
 mengembalikan *value* kosong. Kasus itu dibahas di bagian *error*.
 
@@ -143,12 +143,12 @@ awal. Sifat inilah yang membuat *test* berguna. Tanpa *seed* tetap, `randomize()
 dari sistem, dan *test* yang bergantung padanya akan gagal sesekali tanpa pola.
 
 Angka dari `rand(100)` ada di *range* `0` sampai `99`; batas atasnya eksklusif. Untuk
-*range* pecahan, serahkan `HSlice` seperti `1.0 .. 10.0`.
+*range* *float*, serahkan `HSlice` seperti `1.0 .. 10.0`.
 
 ## Memilih dan mengocok
 
 Dua *procedure* yang menghemat kode: `sample` memilih satu *element*, `shuffle` mengocok urutan di
-tempat. Keduanya menerima *generator* sebagai *argument* pertama, jadi hasilnya bisa diulang.
+tempat. Keduanya menerima *generator* sebagai *argument* pertama, jadi *result*-nya bisa diulang.
 
 ```{.nim}
 import std/random
@@ -176,7 +176,7 @@ sering terjadi.
 
 ## Bahaya `now()` di dalam *test*
 
-`now()` mengembalikan waktu saat *procedure* itu dipanggil. Di dalam *test*, itu berarti hasilnya
+`now()` mengembalikan waktu saat *procedure* itu dipanggil. Di dalam *test*, itu berarti *result*-nya
 bergantung pada kapan *test* dijalankan, dan kegagalannya muncul sesekali tanpa bisa diulang.
 
 Jalan keluarnya sederhana: jangan panggil `now()` di dalam *procedure* yang diuji. Terima `DateTime`
@@ -228,7 +228,7 @@ memuat jejak *stack*. Perbaikannya adalah memeriksa teks lebih dulu, atau membun
 
 ## Latihan
 
-1. Ubah contoh pertama supaya hanya mencetak nama hari dalam seminggu, seperti `Friday`.
+1. Ubah contoh pertama supaya hanya menampilkan nama hari dalam seminggu, seperti `Friday`.
 2. Tanpa menjalankan, prediksi *output*-nya:
    ```{.nim}
    import std/times

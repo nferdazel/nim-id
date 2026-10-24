@@ -234,7 +234,7 @@ The `--` marker shows up as a `cmdLongOption` with an empty `key`. As soon as it
 stops and `remainingArgs` returns the rest of the sequence. The `cmdLineRest` variant returns that
 rest as a single string instead of a sequence.
 
-## Intentional error: forgetting to import `std/parseopt`
+## Deliberate error: forgetting to import `std/parseopt`
 
 The names from `parseopt` do not appear out of nowhere. Drop the `import`, and the compiler stops at
 the first token.

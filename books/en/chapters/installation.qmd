@@ -130,7 +130,7 @@ nim --version && nimble --version && gcc --version
 ```
 
 If the output stops after `Nim Compiler Version`, `nimble` is missing; if it stops after the `nimble`
-line, the C compiler is gone. This is faster than checking them one by one.
+line, the C compiler is missing. This is faster than checking them one by one.
 
 ## If the version differs
 

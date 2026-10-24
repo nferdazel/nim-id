@@ -144,7 +144,7 @@ With the three forms in hand, the question is when to comment. Three guidelines 
 
 ## Exercises
 
-1. Add one line comment to the first `echo` example that explains a reason, not a repetition of the
+1. Add a one-line comment to the first `echo` example that explains a reason, not a repetition of the
    code.
 2. In the block comment of the second example, remove the nested block `#[ Nested blocks work too. ]#`.
    Does the program's output change? Why?

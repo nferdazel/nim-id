@@ -130,7 +130,7 @@ main.nim(11, 14) Error: a case selecting discriminator 'kind' with value 'circle
 ```
 
 The message is long, but it makes one point: `kind` is `circle` while `width` exists only in the
-`rect` branch. The fix follows from it, drop `width` and set `radius`, or change `kind` to `rect`.
+`rect` branch. The fix follows from it: drop `width` and set `radius`, or change `kind` to `rect`.
 
 ## Runtime error: `FieldDefect`
 

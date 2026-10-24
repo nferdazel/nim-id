@@ -1,8 +1,8 @@
 # Final project: notes from the terminal
 
 A small useful tool almost always has the same shape: a few modules, one data file, a handful of
-subcommands, and some tests. Part C has closed each piece one by one. Now the pieces are put together
-into one program that can genuinely be used: `notes`, a command line tool for writing short things
+subcommands, and some tests. Part C has closed the pieces this tool needs. Now they are put together into
+one program that can genuinely be used: `notes`, a command line tool for writing short things
 down.
 
 ::: {.callout-note}
@@ -300,7 +300,7 @@ suite "store":
   [OK] rejects an index that is out of range
 ```
 
-Each case is named after a behaviour, not after a procedure. `setup` and `teardown` delete the file
+Each case is named after a behavior, not after a procedure. `setup` and `teardown` delete the file
 before and after every case, so the execution order no longer matters and one test does not inherit
 leftovers from the previous one. Tests like these are what keep a small program editable months
 later.
@@ -336,7 +336,7 @@ is, `note["text"]`, and convert the result to a `string` with `getStr`.
 3. Write a test for `saveNotes` that checks the written content can be read back and keeps its length.
 4. The code below fails to compile. Fix it, then explain the message: `let notes = parseJson("[]")`
    followed by `notes.add("buy milk")`.
-5. Name one advantage of keeping the storage functions in a separate module, and one piece of work
+5. Name one advantage of keeping the storage procedures in a separate module, and one piece of work
    that must be added before this tool is used from two computers at once.
 
 Answers are in [Appendix A](../appendix/answers.qmd).

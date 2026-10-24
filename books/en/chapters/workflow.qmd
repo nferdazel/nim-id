@@ -44,6 +44,14 @@ echo words.join(", ")
 nim, is, fast
 ```
 
+::: {.callout-note title="import and std/"}
+`import std/strutils` pulls procedures from a module that ships with the compiler, and every such
+module lives under `std/`. Every example in this book that uses `import` assumes `nim c` or `nim r`
+runs from the same directory as the file; modules themselves are covered in
+[chapter 17](modules.qmd).
+:::
+
+
 `nim c` leaves a binary named `join` in the same directory. Run it with `./join`. On Windows the name
 is `join.exe`. The binary name follows the source file name; change it with `-o:program`. Add `-r`
 to `nim c` to run it right away: `nim c -r join.nim`.

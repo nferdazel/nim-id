@@ -65,14 +65,14 @@ requires "nim >= 2.0.0"
 |---|---|
 | `version` | the package version, used by nimble to pick a compatible release |
 | `author` | the maintainer name, shown in the package list |
-| `description` | a one line summary of the package |
+| `description` | a one-line summary of the package |
 | `license` | an SPDX identifier, such as `MIT` |
 | `srcDir` | the directory holding the code; required when it is not next to the `.nimble` file |
 | `requires` | dependencies, including the lowest supported Nim version |
 
-`requires` accepts version ranges: `>=`, `<`, `==`, `^=` (latest compatible release), and `~=`
-(latest release bumping the last digit). So `requires "nim ^= 2.0.0"` means Nim 2.0.0 up to but
-excluding 3.0.0. This book needs only the lowest Nim version.
+`requires` accepts version ranges: `>=`, `<`, `==`, `^=` for the latest compatible release under
+semver, and `~=` for updates within the same minor. So `requires "nim ^= 2.0.0"` means Nim 2.0.0 up
+to but excluding 3.0.0, while `requires "nim ~= 2.0.0"` means Nim 2.0.0 up to but excluding 2.1.0. This book needs only the lowest Nim version.
 
 A `.nimble` file may also declare `task` entries, for example one that builds documentation:
 
@@ -162,7 +162,7 @@ main.nim(1, 8) Error: cannot open file: textstats_helpers
 means the compiler walked its module search path, starting from the calling file's directory, and
 found no `textstats_helpers.nim`.
 
-## Day to day nimble commands
+## Day-to-day nimble commands
 
 Two commands carry most of the work while developing:
 

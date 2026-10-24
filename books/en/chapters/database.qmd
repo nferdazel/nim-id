@@ -223,7 +223,7 @@ main.nim(1, 11) Error: cannot open file: std/db_sqlite
 ```
 
 `main.nim` is the file, `(1, 11)` is line 1 column 11, and `Error` means compilation stopped. Column
-11 points at the slash after `std`; the module name itself starts at column 8. `cannot open file` does not mean the file is corrupt, it means the
+11 points at the slash after `std`; the module name itself starts at column 8. `cannot open file` does not mean the file is corrupt; it means the
 module is not on the search path.
 
 ## When SQLite is the right choice

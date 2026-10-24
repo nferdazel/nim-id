@@ -129,7 +129,7 @@ Setelah mengubah tabel ini, jalankan `python3 tools/gen-glossary.py` untuk memba
 | ABI | application binary interface | aturan tata letak dan calling di tingkat biner | the rules for layout and calls at the binary level | — | ffi-c |
 | browser | browser | program yang menjalankan JavaScript dari compile | the program that runs the output of a JavaScript build | browser (kecuali di kode) | js-backend |
 | subcommand | subcommand | command kedua di dalam satu tool CLI (`tool add`) | a second command inside a CLI tool (`tool add`) | subperintah | cli-tools |
-| option | option | named argument yang mengubah perilaku command (`--count=4`) | a named argument that changes a command's behaviour (`--count=4`) | opsi | cli-tools |
+| option | option | named argument yang mengubah perilaku command (`--count=4`) | a named argument that changes a command's behavior (`--count=4`) | opsi | cli-tools |
 | exit code | exit code | angka yang dikembalikan proses ke caller-nya | the number a process returns to its caller | exit status | cli-tools |
 | entry point | entry point | file atau procedure pertama yang dijalankan | the first file or procedure that runs | pintu masuk | cli-tools |
 | route | route | pemetaan path dan metode HTTP ke handler | the mapping from an HTTP path and method to a handler | rute | http-api |
@@ -152,7 +152,7 @@ Setelah mengubah tabel ini, jalankan `python3 tools/gen-glossary.py` untuk memba
 | float | float | type angka berpecahan | a fractional-number type | bilangan pecahan, pecahan | primitive-types |
 | message | message | teks yang disampaikan program ke pembaca atau sistem | text a program sends to the reader or the system | pesan | workflow |
 | warning | warning | compiler message tentang kode yang patut diperiksa | a compiler message about code worth checking | peringatan | workflow |
-| test | test | pemeriksaan otomatis terhadap perilaku kode | an automated check of code behaviour | tes | unit-testing |
+| test | test | pemeriksaan otomatis terhadap perilaku kode | an automated check of code behavior | tes | unit-testing |
 | release | release | versi yang diterbitkan dan diberi tag | a version that is published and tagged | rilis | workflow |
 | regex | regular expression | pola teks yang dipakai `std/re` | a text pattern used by `std/re` | regexp | regex |
 | capture group | capture group | bagian pola di dalam kurung yang ditangkap `matches` | the parenthesised part of a pattern captured by `matches` | grup tangkapan | regex |

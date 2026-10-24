@@ -207,7 +207,7 @@ suite "isWeekend":
 That procedure is pure: its output depends only on its argument. In a real program, the top-level
 caller gets `now()` once and passes the value down.
 
-## Intentional error: a format that does not match
+## Deliberate error: a format that does not match
 
 `parse` checks every piece of the text against the pattern. One number outside the range is enough
 to stop the program.

@@ -241,12 +241,12 @@ for e in evens(6):
 
 | Konsep | Kode |
 |---|---|
-| impor *module* | `import std/strutils` |
+| mengimpor *module* | `import std/strutils` |
 | beberapa sekaligus | `import std/[strutils, sequtils]` |
-| impor sebagian | `from std/math import sqrt` |
+| mengimpor sebagian | `from std/math import sqrt` |
 | alias | `import std/strutils as str` |
 | pakai kualifikasi | `str.strip(s)` |
-| ekspor ulang | `export mymodule` |
+| mengekspor ulang | `export mymodule` |
 
 ## `strutils`, `sequtils`, `tables`, `json`
 

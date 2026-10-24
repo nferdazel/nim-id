@@ -53,7 +53,7 @@ anggota enum juga bisa dibandingkan: `red < blue` bernilai `true`.
 
 ## Mengubah integer menjadi enum
 
-*Value* ordinal bisa di-return menjadi anggota. Bentuk `Color(1)` disebut konversi *type*.
+*Value* ordinal bisa diubah kembali menjadi anggota. Bentuk `Color(1)` disebut konversi *type*.
 
 ```{.nim}
 type Color = enum

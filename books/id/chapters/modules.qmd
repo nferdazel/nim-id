@@ -36,8 +36,9 @@ Hello, Nim
 
 Dua hal menentukan apakah `greet` dan `version` terlihat dari *module* lain.
 
-- Tanda bintang setelah nama, `greet*`, menandai simbol sebagai ekspor. Tanpa bintang, simbol hanya
-  hidup di dalam *module itu*. Ini kebalikan dari bahasa yang mengekspor semua nama secara default.
+- Tanda bintang setelah nama, `greet*`, menandai simbol supaya bisa dipakai *module* lain.
+  Tanpa bintang, simbol hanya hidup di dalam *module itu*. Ini kebalikan dari bahasa yang
+  mengekspor semua nama secara default.
 - `when isMainModule` menandai blok yang hanya berjalan saat *file* ini dijalankan langsung. Ketika
   *module* lain mengimpornya, blok itu dilewati. *Module* bisa sekaligus menjadi program kecil yang bisa
   diuji sendiri.
@@ -222,7 +223,7 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
 - Satu *file* Nim adalah satu *module*; nama *file* menjadi nama *module*, dan harus identifier yang sah.
 - Tanpa tanda `*`, simbol tidak keluar dari *module itu*.
-- `import` membuka semua ekspor, `from ... import` membuka sebagian, `export` meneruskan.
+- `import` membuka semua nama yang diekspor, `from ... import` membuka sebagian, `export` meneruskan.
 - *Module* di *directory* tetap bernama *file itu*, bukan *path itu*.
 - `include` menyalin teks dan tidak membuat *module*; pakai `import` untuk memisahkan kode.
 

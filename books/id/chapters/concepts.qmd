@@ -100,8 +100,8 @@ Ada is 36
 
 ## Konsep menentukan overloading mana yang dipakai
 
-Karena konsep menyaring *type*, beberapa *procedure* bernama sama bisa hidup berdampingan dan masing
-masing menangkap kelompok *type* yang berbeda.
+Karena konsep menyaring *type*, beberapa *procedure* bernama sama bisa hidup berdampingan dan masing-masing
+menangkap kelompok *type* yang berbeda.
 
 ```{.nim}
 type

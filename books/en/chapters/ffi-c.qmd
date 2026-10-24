@@ -73,7 +73,7 @@ result type is `csize_t`, C's size type, not `int`. Using the right type avoids 
 and keeps the program portable. If the result feeds a Nim computation, convert it explicitly with
 `int(strlen(s))` instead of letting the compiler guess.
 
-For a combined type, declare an `object` with `{.importc, header: "<time.h>".}` and the same field
+For a composite type, declare an `object` with `{.importc, header: "<time.h>".}` and the same field
 names as in C. Because the C header is included, Nim uses the same layout as the C compiler does.
 
 ## Nim strings and `cstring`

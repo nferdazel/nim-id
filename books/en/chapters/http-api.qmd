@@ -2,7 +2,7 @@
 
 Building an HTTP server sounds like a large project. With `std/asynchttpserver`, a small server is
 about a dozen lines, and every part comes from the standard library. What makes server code hard to
-test is not the socket, it is the handler tangled up with the socket.
+test is not the socket but the handler tangled up with the socket.
 
 ::: {.callout-note}
 ## What you will be able to do
@@ -204,7 +204,7 @@ $ curl -s http://localhost:8080/nope
 {"error":"not found"}
 ```
 
-## Intentional error: forgetting `await` on `respond`
+## Deliberate error: forgetting `await` on `respond`
 
 The first mistake almost everyone makes: calling `respond` without `await`.
 

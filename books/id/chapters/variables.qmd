@@ -190,7 +190,7 @@ candidates (edit distance, scope distance); see '--spellSuggest':
  (1, 2): 'user_name'
 ```
 
-Perhatikan *line* `candidates`: compiler tidak sekadar bilang "tidak ada"; ia menawarkan kandidat
+Perhatikan *line* `candidates`: compiler tidak sekadar mengatakan "tidak ada"; ia menawarkan kandidat
 terdekat. Ini salah satu alasan *error message* Nim terasa membantu begitu dibiasakan.
 
 Saran praktis: pilih satu gaya penulisan dan pakai konsisten. Gaya resmi Nim untuk *variable*

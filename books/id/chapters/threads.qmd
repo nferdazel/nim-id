@@ -16,7 +16,7 @@ antara *thread* dan `async`.
 ## Membuat *thread* pertama
 
 *Procedure* yang berjalan di *thread* sendiri ditandai pragma `{.thread.}`. *Argument*-nya satu *value*
-saja, yang diberikan saat pembuatan. Hasilnya tidak kembali lewat `return value`, melainkan dikirim
+saja, yang diberikan saat pembuatan. *Result*-nya tidak kembali lewat `return value`, melainkan dikirim
 lewat `Channel`.
 
 ```{.nim}
@@ -57,9 +57,9 @@ pada contoh berikutnya.
 
 ## `Channel` untuk urutan yang pasti
 
-*Thread* kedua berjalan kapan saja, jadi mencetak langsung dari dalamnya membuat *output*
+*Thread* kedua berjalan kapan saja, jadi menampilkan langsung dari dalamnya membuat *output*
 bergantung pada penjadwalan. `Channel` memperbaiki itu: pekerja hanya mengirim *message*, dan *thread* utama yang
-mencetak sesuai urutan antrean.
+menampilkan sesuai urutan antrean.
 
 ```{.nim}
 import std/typedthreads

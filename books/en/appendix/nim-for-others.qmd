@@ -128,7 +128,7 @@ exception is actually raised. Both report failure with a non-zero exit code, so 
 | Nim | `{.async.}` in `std/asyncdispatch`, threads, and `spawn` |
 
 Nim has two tracks: `async`/`await` for IO in one thread, and real threads. Since Nim 2.x threads are
-on by default (`compileOption("threads")` is `true`), so `--threads:on` is no longer needed. The
+on by default (`compileOption("threads")` is `true`), `--threads:on` is no longer needed. The
 async model uses a single event loop, and tasks wait without blocking the thread. For communication
 between threads there is `Channel[T]`; `std/threadpool` and `spawn` still exist but are marked
 deprecated. What Nim does not have is Go's goroutine model, lightweight goroutines with `select`
@@ -191,7 +191,7 @@ returns a value without using it is rejected, and that catches mistakes easily m
 language. In a variant object, the same field may not appear in two `case` branches, so field names
 need careful choosing from the start.
 
-One more thing, type and variable names are told apart by the first letter only; the official Nim
+One more thing: type and variable names are told apart by the first letter only; the official Nim
 style is `PascalCase` for types and `camelCase` for other names. Keeping one style from the start
 avoids a surprise when the compiler treats two different names as the same identifier.
 

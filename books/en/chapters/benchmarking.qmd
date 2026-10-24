@@ -45,7 +45,7 @@ elapsed is not negative: true
 ```
 
 Subtracting two `MonoTime` values yields a `Duration`. That number is read in other units through
-`inMilliseconds`, `inMicroseconds`, or `inSeconds`, and those functions live in `std/times`, not in
+`inMilliseconds`, `inMicroseconds`, or `inSeconds`, and those procedures live in `std/times`, not in
 `std/monotimes`. Both modules are therefore imported together: one supplies the clock, the other the
 way to read it.
 

@@ -9,14 +9,14 @@ susah dibaca. *Regex* menulis aturan itu sekali sebagai satu pola. Nim mengirim 
 ## Tujuan bab
 
 Setelah bab ini, pembaca bisa menulis pola dengan `re"..."`, memakai `match`, `find`, dan
-`findAll`, mengganti serta memecah teks dengan `replace`, `replacef`, dan `split`, membaca grup
-tangkapan, menyalakan `(?i)`, dan tahu kapan *regex* berlebihan sehingga `strutils` sudah cukup.
+`findAll`, mengganti serta memecah teks dengan `replace`, `replacef`, dan `split`, membaca
+*capture group*, menyalakan `(?i)`, dan tahu kapan *regex* berlebihan sehingga `strutils` sudah cukup.
 :::
 
-## Satu pola, dua grup
+## Satu pola, dua *capture group*
 
 `re"..."` mengubah teks pola menjadi *value* `Regex`. Bentuk paling ringkas memakai template `=~`,
-yang mengisi *array* `matches` dengan grup tangkapan. Simpan sebagai `main.nim`, lalu jalankan
+yang mengisi *array* `matches` dengan *capture group*. Simpan sebagai `main.nim`, lalu jalankan
 `nim c -r main.nim`.
 
 ```{.nim}
@@ -37,8 +37,9 @@ name: Ada
 age: 36
 ```
 
-`matches[0]` bukan kecocokan utuh, melainkan grup pertama, isi tanda kurung pertama. Grup kedua
-mendarat di `matches[1]`. Nim tidak menyediakan slot khusus untuk kecocokan utuh pada *array* ini;
+`matches[0]` bukan kecocokan utuh, melainkan *capture group* pertama, isi tanda kurung pertama.
+*Capture group* kedua mendarat di `matches[1]`. Nim tidak menyediakan slot khusus untuk kecocokan
+utuh pada *array* ini;
 kalau *value* itu dibutuhkan, bungkus seluruh pola dengan tanda kurung.
 
 Simbol pola yang paling sering dipakai: `\w` cocok dengan satu huruf atau angka, `\d` dengan satu
@@ -76,9 +77,9 @@ name: Lovelace
 age: 36
 ```
 
-Untuk ikut mengambil grup tangkapan, siapkan *array* lebih dulu, lalu serahkan ke varian `find`
+Untuk ikut mengambil *capture group*, siapkan *array* lebih dulu, lalu serahkan ke varian `find`
 yang menerima `openArray[string]`. Versi itu mengembalikan *index* dan mengisi *array*; `-1`
-berarti tidak ada kecocokan, jadi hasilnya diuji dengan `>= 0`.
+berarti tidak ada kecocokan, jadi *result*-nya diuji dengan `>= 0`.
 
 ## Semua kecocokan dengan `findAll`
 
@@ -113,7 +114,7 @@ Satu perangkap: pola hampa seperti `re"a*"` cocok dengan string kosong di mana s
 
 ## Mengganti dan memecah
 
-`replace` menukar setiap kecocokan dengan teks baru. Untuk menyisipkan ulang grup tangkapan, pakai
+`replace` menukar setiap kecocokan dengan teks baru. Untuk menyisipkan ulang *capture group*, pakai
 `replacef` dengan `$1`, `$2`, dan seterusnya. `split` memotong string pada setiap kecocokan dan
 mengembalikan *seq* bagiannya.
 
@@ -210,7 +211,7 @@ tanda kurung yang tidak ditutup, baru melempar `exception` ketika program berjal
 tetap, `strutils` lebih singkat. Contoh di atas memakai `endsWith(".txt")`, bukan pola.
 
 - Pakai `strutils` kalau yang dicari satu potongan harfiah: `startsWith`, `endsWith`, `contains`.
-- Pakai *regex* kalau bentuknya berulang, bercabang, atau butuh grup tangkapan.
+- Pakai *regex* kalau bentuknya berulang, bercabang, atau butuh *capture group*.
 - Pecah pola panjang menjadi potongan bernama, jangan biarkan satu *line* menampung semuanya.
 
 *Regex* juga bukan parser. Untuk struktur bersarang seperti JSON atau HTML, pakai *module* yang
@@ -244,8 +245,8 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
 ## Ringkasan
 
-- `re"..."` mengubah teks menjadi `Regex`; template `=~` mengisi *array* `matches` dengan grup
-  tangkapan.
+- `re"..."` mengubah teks menjadi `Regex`; template `=~` mengisi *array* `matches` dengan
+  *capture group*.
 - `match` berlabuh di awal string, `find` menyisir seluruh string dan mengembalikan *index*.
 - `findAll` mengumpulkan semua kecocokan; `replace`, `replacef`, dan `split` mengubah serta memecah
   teks.

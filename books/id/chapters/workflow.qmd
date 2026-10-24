@@ -45,6 +45,14 @@ echo words.join(", ")
 nim, is, fast
 ```
 
+::: {.callout-note title="import dan std/"}
+`import std/strutils` mengambil *procedure* dari *module* yang dikirim bersama compiler, dan *module*
+seperti itu selalu berada di bawah `std/`. Setiap contoh di buku ini yang memakai `import`
+mengasumsikan `nim c` atau `nim r` dijalankan dari *directory* yang sama dengan *file*-nya; *module*
+sendiri dibahas di [bab 17](modules.qmd).
+:::
+
+
 `nim c` meninggalkan *file* biner bernama `join` di *directory* yang sama. Jalankan dengan `./join`.
 Di Windows namanya `join.exe`. Nama biner mengikuti nama *file* sumber; ubah dengan `-o:program`.
 Tambahkan `-r` pada `nim c` untuk sekaligus menjalankannya: `nim c -r join.nim`.

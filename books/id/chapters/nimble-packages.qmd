@@ -74,9 +74,9 @@ requires "nim >= 2.0.0"
 | `srcDir` | *directory* berisi kode; wajib kalau kodenya tidak sejajar dengan `.nimble` |
 | `requires` | dependensi, termasuk versi Nim terendah yang didukung |
 
-`requires` menerima *range* versi: `>=`, `<`, `==`, `^=` untuk versi kompatibel terbaru, dan `~=`
-untuk versi terbaru yang masih menaikkan angka terakhir. Contohnya `requires "nim ^= 2.0.0"` berarti
-Nim 2.0.0 sampai di bawah 3.0.0. Karena buku ini hanya memakai **standard library**, *line* wajibnya
+`requires` menerima *range* versi: `>=`, `<`, `==`, `^=` untuk versi kompatibel menurut semver, dan
+`~=` untuk pembaruan di dalam minor yang sama. Contohnya `requires "nim ^= 2.0.0"` berarti Nim 2.0.0
+sampai di bawah 3.0.0, sedangkan `requires "nim ~= 2.0.0"` berarti Nim 2.0.0 sampai di bawah 2.1.0. Karena buku ini hanya memakai **standard library**, *line* wajibnya
 cukup satu: versi Nim terendah.
 
 *File* `.nimble` juga bisa memuat `task`. Contohnya tugas yang membangun dokumentasi:
@@ -123,9 +123,9 @@ Nim Is A Small Language
 Tanda bintang pada nama *procedure*, `wordCount*`, berarti *procedure* itu diekspor. Tanpa bintang, ia
 tetap pribadi bagi *module itu*. Blok `when isMainModule` hanya berjalan kalau *file itu* *di-compile*
 sebagai program utama. Jadi satu *file* bisa dipakai sebagai *library* dan sekaligus sebagai contoh
-yang bisa dijalankan, dan impor dari pemakai tidak print apa pun.
+yang bisa dijalankan, dan saat pemakai mengimpornya, tidak ada yang di-print.
 
-Pemakainya cukup satu *line* impor:
+Pemakainya cukup menulis satu *line* `import`:
 
 ```{.nim}
 import a01_textstats
@@ -139,10 +139,10 @@ echo titleCase("hello brave new world")
 Hello Brave New World
 ```
 
-Di dalam *package*, *file* itu tinggal di `src/textstats.nim` dan impornya `import textstats`. Contoh di
-buku memakai nama `a01_textstats.nim` supaya setiap *file* punya nomor urut, jadi impornya mengikuti
-nama itu. Nama *module* selalu mengikuti nama *file*. Kalau nama impor bentrok dengan *module* lain, beri
-alias:
+Di dalam *package*, *file* itu tinggal di `src/textstats.nim` dan cara mengimpornya
+`import textstats`. Contoh di buku memakai nama `a01_textstats.nim` supaya setiap *file* punya
+nomor urut, jadi cara mengimpornya mengikuti nama itu. Nama *module* selalu mengikuti nama *file*.
+Kalau nama yang diimpor bentrok dengan *module* lain, beri alias:
 
 ```{.nim}
 import a01_textstats as ts
@@ -156,7 +156,7 @@ echo ts.titleCase("packages are just boxes")
 Packages Are Just Boxes
 ```
 
-Impor dengan nama yang salah gagal saat *compile*, bukan saat program berjalan:
+Mengimpor dengan nama yang salah gagal saat *compile*, bukan saat program berjalan:
 
 ```{.nim}
 import textstats_helpers
@@ -249,7 +249,7 @@ Tidak semua kode perlu jadi *package*. Kalau ia hanya dipakai satu program, simp
 di proyek itu. *Package* mulai layak ketika:
 
 - kode yang sama dipakai di dua proyek atau lebih;
-- ada cara pakai di `README.md`, cukup tiga *line*: pasang, impor, panggil;
+- ada cara pakai di `README.md`, cukup tiga *line*: memasang, mengimpor, memanggil;
 - ada *test* yang hijau lewat `nimble test`, sehingga pemakai berani memperbarui;
 - lisensinya jelas, karena tanpa lisensi orang lain tidak boleh memakainya;
 - namanya belum dipakai *package* lain di daftar resmi.

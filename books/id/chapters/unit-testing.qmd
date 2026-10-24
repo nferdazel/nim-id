@@ -41,7 +41,7 @@ suite "add":
 Tiga hal yang perlu diperhatikan.
 
 - `suite` mengelompokkan *test*. Namanya muncul di *output* dengan awalan `[Suite]`.
-- `test` adalah satu kasus uji. Setiap kasus yang lulus di-print `[OK]`, menjorok dua spasi.
+- `test` adalah satu *test case*. Setiap kasus yang lulus di-print `[OK]`, menjorok dua spasi.
 - *Line* pertama *output* memang kosong. Itu bawaan `unittest`, bukan salah tulis di buku ini.
 
 `check` menerima *expression* `bool`; kalau bernilai `false`, *test*-nya ditandai gagal. Karena itu

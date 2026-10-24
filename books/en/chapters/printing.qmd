@@ -73,7 +73,7 @@ screen; an empty string shows as `""` rather than blank space with no trace. Whe
 
 ## Interpolation with `&"..."`
 
-Glueing values together with commas gets tiring quickly. `std/strformat` offers a tidier form.
+Gluing values together with commas gets tiring quickly. `std/strformat` offers a tidier form.
 
 ```{.nim}
 import std/strformat

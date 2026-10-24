@@ -188,7 +188,7 @@ One old note: `std/threadpool` with `spawn`, `^`, and `sync` still exists, but i
 or `weave`. This chapter uses the standard library only, so `Thread` and `Channel` are what it
 reaches for.
 
-## Intentional error: the wrong `Channel` type
+## Deliberate error: the wrong `Channel` type
 
 A `Channel` checks the type of its messages at compile time. Taking a message as a different type is
 rejected before the program runs.

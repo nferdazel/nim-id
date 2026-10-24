@@ -13,7 +13,7 @@ Versi: {{< var version >}}
 Teks buku dilisensikan di bawah [Creative Commons Attribution-ShareAlike 4.0
 International (CC BY-SA 4.0)](https://creativecommons.org/licenses/by-sa/4.0/deed.id). Ringkasnya:
 pembaca boleh menyalin, mencetak, mengubah, dan menjual kembali teks, asalkan penulis dan sumbernya
-disebut dan hasil ubahan disebarkan dengan lisensi yang sama. Teks lisensi lengkap ada di tautan itu,
+disebut dan karya ubahan disebarkan dengan lisensi yang sama. Teks lisensi lengkap ada di tautan itu,
 jadi tidak perlu mengunduh repositori untuk membacanya.
 
 ## Kode contoh

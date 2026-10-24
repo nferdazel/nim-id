@@ -134,7 +134,7 @@ release is implied by danger
 
 That output comes from `nim c -r -d:danger`, and two things are visible at once. `danger` is indeed
 set, and it brings `release` along. The consequence is real: an array index past its bounds is no
-longer reported as a defect, it silently reads memory outside its data. Keep `-d:danger` for binaries
+longer reported as a defect but silently reads memory outside its data. Keep `-d:danger` for binaries
 already proven correct, not for the stage where you are still writing code.
 
 ## Static binaries
@@ -146,7 +146,7 @@ version differs. The linker can be asked to fold every library into the binary:
 nim c -d:release --passL:-static --out:app app.nim
 ```
 
-The result is a static binary: it does not look for C libraries at run time, so it is safer to move
+The result is a static binary: it does not look for C libraries at runtime, so it is safer to move
 around. This switch is for Linux targets. The macOS linker does not know it, and on Nim 2.2.12 the
 attempt stops with `ld: library 'crt0.o' not found`.
 
@@ -199,7 +199,7 @@ Without that toolchain the build stops in the C compiler with
 `x86_64-w64-mingw32-gcc`, and Nim already ships the mapping for it in `config/nim.cfg` under
 `@if unix and mingw`.
 
-A subtler behaviour: changing `--os` alone does not always fail. On macOS, `--os:linux --cpu:amd64`
+A subtler behavior: changing `--os` alone does not always fail. On macOS, `--os:linux --cpu:amd64`
 runs to completion and leaves a Mach-O file behind, not an ELF one. Nim believes it built a Linux
 binary, while the C compiler kept producing a host binary. Such a file is useless; the mistake only
 shows up much later, when it is started on the destination machine.

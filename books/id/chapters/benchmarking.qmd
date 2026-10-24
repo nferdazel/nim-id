@@ -153,7 +153,7 @@ mengubah kesimpulan.
 
 Ada dua cara menjawab "berapa lama". `cpuTime` dari `std/times` menghitung waktu prosesor yang dipakai
 proses: bagian yang dihitung, bukan yang menunggu. `epochTime` menghitung waktu dinding sebagai detik
-sejak 1970, berguna sebagai cap waktu.
+sejak 1970, berguna sebagai *timestamp*.
 
 ```{.nim}
 import std/times
@@ -183,7 +183,7 @@ untuk selang, karena jam sistem bisa disesuaikan dan *result* pengurangannya bis
 
 ## Error sengaja: `inMilliseconds` menerima `Duration`
 
-Nama `inMilliseconds` mudah diingat sampai *calling*-nya salah. Kode berikut mengirim cap waktu,
+Nama `inMilliseconds` mudah diingat sampai *calling*-nya salah. Kode berikut mengirim *timestamp*,
 bukan selang.
 
 ```{.nim}

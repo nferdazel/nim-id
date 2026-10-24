@@ -1,7 +1,7 @@
 # Proyek akhir: catatan dari terminal
 
 *Tool* kecil yang berguna hampir selalu punya bentuk yang sama: beberapa *module*, satu *file* data,
-beberapa *subcommand*, dan beberapa *test*. Bagian C sudah menutup setiap potongannya satu per satu.
+beberapa *subcommand*, dan beberapa *test*. Bagian C sudah menutup potongan yang dibutuhkan *tool* ini.
 Sekarang potongan itu disatukan menjadi satu program yang benar-benar bisa dipakai: `notes`, *tool*
 *command line* untuk mencatat hal-hal pendek.
 
@@ -47,8 +47,9 @@ Tiga hal sudah terlihat di sini. `%*` membangun *object* JSON dari pasangan nama
 `JsonNode` menghasilkan teks JSON, bukan penjelasan *type*. Dan pasangan `toJson` serta `fromJson`
 membuat konversi hanya di-write sekali, lalu dipakai di mana saja.
 
-Tanda bintang pada `Note` dan kedua *procedure*-nya adalah ekspor. Tanpa tanda itu, *module* lain tidak
-bisa memakainya, dan itulah yang kita butuhkan di langkah berikut.
+Tanda bintang pada `Note` dan kedua *procedure*-nya membuat keduanya bisa dipakai *module*
+lain. Tanpa tanda itu, *module* lain tidak bisa memakainya, dan itulah yang kita butuhkan di
+langkah berikut.
 
 ## Langkah 2: *module* penyimpanan
 

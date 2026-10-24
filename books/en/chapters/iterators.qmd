@@ -91,7 +91,7 @@ explicitly sometimes makes clear which one is in use.
 ## Closure iterators and `finished`
 
 An inline iterator sticks inside its `for`, so it cannot be separated from the loop. An iterator that
-must be stored or passed around is marked `{.closure.}`.
+must be stored or passed around is marked `{.closure.}`. Closures get their own chapter next; here it is enough to know that such an iterator can be stored.
 
 ```{.nim}
 iterator countBetween(a, b: int): int {.closure.} =
@@ -173,7 +173,7 @@ value.
 An iterator stores no elements, so it saves memory and can stop early. The price: one element can be
 walked only once. There is no random index, no `.len`, and no sorting.
 
-A sequence reveals every element in memory. It fits when elements must be indexed, sorted, or used
+A sequence keeps every element in memory. It fits when elements must be indexed, sorted, or used
 several times.
 
 The rule of thumb: choose an iterator for a large or unbounded stream, and when a search often stops

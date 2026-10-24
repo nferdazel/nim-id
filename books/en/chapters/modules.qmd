@@ -198,7 +198,7 @@ The position `(1, 8)` points at the module name on the `import` line. The compil
 whether the file truly does not exist or was just misspelled, so the message is literal: the file
 cannot be opened. Check the file name and its location. For standard library modules, the `std/`
 prefix is a convention that makes the module's origin clear: `import std/strutils`. The form without
-the prefix is still recognised by the compiler, it just does not show that the module belongs to the
+the prefix is still recognized by the compiler, but it does not show that the module belongs to the
 standard library.
 
 ## Exercises

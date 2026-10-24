@@ -2,7 +2,7 @@
 
 A good language without a library is exhausting. Nim ships its standard library with the compiler,
 and its modules are imported with the `std/` prefix. This chapter tours the four modules you reach
-for most days: `strutils`, `sequtils`, `tables`, and `json`. Each gets enough coverage to be
+for most often: `strutils`, `sequtils`, `tables`, and `json`. Each gets enough coverage to be
 useful; the rest have their own chapters.
 
 ::: {.callout-note}
