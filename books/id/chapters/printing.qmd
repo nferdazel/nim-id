@@ -190,12 +190,11 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
 ## Ringkasan
 
-- `echo` tidak menambahkan pemisah antar *argument* dan menutup dengan satu *newline*.
+- `echo` tidak menambah pemisah antar *argument* dan menutup dengan satu *newline*; `stdout.write` tidak
+menambah apa pun, jadi `"\n"` ditulis sendiri bila perlu.
 - `echo` memakai `$`; `repr` menampilkan bentuk yang bisa dibaca mesin, lengkap dengan tanda kutip.
 - `&"..."` dan `fmt"..."` menyisipkan *expression* ke dalam teks dan butuh `import std/strformat`.
 - Aturan format (`>6`, `04d`, `8.2f`) mengatur lebar, pengisian nol, dan presisi.
-- `stdout.write` print tanpa *newline*; tambahkan `"\n"` sendiri bila perlu.
-
 ## Selanjutnya
 
 Bab berikutnya membahas operator: aritmetika dasar dan `div`/`mod`, *comparison*, logika dengan

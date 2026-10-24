@@ -173,8 +173,8 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 ## Ringkasan
 
 - `nim js` mengeluarkan JavaScript dari kode Nim yang sama; `node` menjalankannya.
-- *Type*, *procedure*, `seq`, dan interpolasi string tetap bekerja di target ini.
-- Sebagian *module*, misalnya `marshal`, tidak tersedia untuk JavaScript dan ditolak saat compile.
+- *Type*, *procedure*, `seq`, dan interpolasi string tetap bekerja di target ini; sebagian *module*,
+misalnya `marshal`, tidak tersedia dan ditolak saat compile.
 - Kode yang memakai `std/dom` hanya berjalan di *browser*, bukan di `node`.
 - *Error message* bisa menyebut *file* di dalam *standard library*, bukan hanya *file* kita.
 

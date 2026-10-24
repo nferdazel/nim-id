@@ -182,12 +182,11 @@ Answers are in [Appendix A](../appendix/answers.qmd).
 
 ## Summary
 
-- `unittest` is in the standard library; no package to install.
+- `unittest` is in the standard library; a missing `import std/unittest` ends in `undeclared
+identifier` at compile time.
 - `suite` groups, `test` marks one case, and `check` compares a `bool` expression.
 - `require` stops the whole run early; `expect` makes sure an exception is raised.
 - A passing test prints `[OK]`, a failing one `[FAILED]`, and a failing run exits non-zero.
-- A missing `import std/unittest` gives an `undeclared identifier` at compile time.
-
 ## Next
 
 The next chapter moves to `async`/`await`: running several tasks while the program waits on IO,

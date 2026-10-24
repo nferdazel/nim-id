@@ -173,8 +173,8 @@ Answers are in [Appendix A](../appendix/answers.qmd).
 ## Summary
 
 - `nim js` emits JavaScript from the same Nim code; `node` runs it.
-- Types, procedures, `seq`, and string interpolation keep working on this target.
-- Some modules, such as `marshal`, are unavailable for JavaScript and are rejected at compile time.
+- Types, procedures, `seq`, and string interpolation keep working on this target; some modules, such
+as `marshal`, are unavailable and rejected at compile time.
 - Code that uses `std/dom` runs only in a browser, not under `node`.
 - An error message can name a file inside the standard library, not only your own.
 

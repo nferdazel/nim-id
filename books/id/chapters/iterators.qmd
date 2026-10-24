@@ -208,8 +208,8 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
 ## Ringkasan
 
-- `iterator` dan `yield` menghasilkan *value* satu per satu, hanya saat diminta.
-- Iterator inline (default) tidak menyimpan *value* dan dipakai langsung di dalam `for`.
+- `iterator` dan `yield` menghasilkan *value* satu per satu saat diminta; iterator inline (default)
+tidak menyimpannya dan dipakai langsung di dalam `for`.
 - `items` mengeluarkan *element*, `pairs` mengeluarkan *index* dan *element*.
 - Iterator closure bisa disimpan dan dilanjutkan; `finished` menandai akhirnya.
 - Pilih iterator untuk aliran besar atau berhenti awal, *seq* untuk koleksi utuh.

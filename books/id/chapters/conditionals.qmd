@@ -187,13 +187,12 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
 ## Ringkasan
 
-- `if` memakai `elif`, tidak butuh tanda kurung, dan bloknya ditentukan indentasi.
+- `if` memakai `elif`, tidak butuh tanda kurung, bloknya ditentukan indentasi, dan kondisinya harus
+`bool`; Nim tidak menganggap `0` atau `""` sebagai salah.
 - `if` adalah *expression*; kalau dipakai sebagai *value*, semua cabang harus bertipe sama dan `else` wajib.
 - `case` mendukung daftar *value* (`12, 1, 2`) dan *range* (`3 .. 5`); `of` yang tidak lengkap tanpa
   `else` ditolak compiler.
 - `when` memilih cabang saat compile; hanya cabang terpilih yang di-compile.
-- Kondisi `if` harus bertipe `bool`; Nim tidak menganggap `0` atau `""` sebagai salah.
-
 ## Selanjutnya
 
 Bab berikutnya membahas [*loop*](loops.qmd): `for` dengan *range*, `while`, `countdown`, serta

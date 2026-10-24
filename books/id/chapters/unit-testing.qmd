@@ -186,14 +186,13 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
 ## Ringkasan
 
-- `unittest` ada di *standard library*; tidak ada *package* yang perlu dipasang.
+- `unittest` ada di *standard library*; lupa `import std/unittest` berakhir `undeclared identifier`
+saat compile, bukan kegagalan saat berjalan.
 - `suite` mengelompokkan, `test` menandai satu kasus, dan `check` membandingkan *expression* `bool`.
 - `require` menghentikan seluruh proses *test* lebih awal; `expect` memastikan sebuah *exception*
   dilempar.
 - *Test* yang lulus di-print `[OK]`, yang gagal `[FAILED]`, dan proses gagal itu keluar dengan kode
   bukan nol.
-- Lupa `import std/unittest` menghasilkan `undeclared identifier` di compile.
-
 ## Selanjutnya
 
 Bab berikutnya masuk ke `async`/`await`: menjalankan beberapa tugas sekaligus saat program menunggu

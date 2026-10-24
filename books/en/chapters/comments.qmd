@@ -161,8 +161,8 @@ Answers are in [Appendix A](../appendix/answers.qmd).
 
 - `#` ignores the rest of the line; `#[ ... ]#` ignores a range and may nest.
 - An unclosed block comment is reported at the end of the file, not where `#[` was.
-- `##` is a doc comment; only this form reaches the `nim doc` output under `htmldocs/`.
-- `runnableExamples` inside a doc comment is compiled and run by `nim doc`.
+- `##` is a doc comment and the only form that reaches the `nim doc` output; `runnableExamples` inside
+it is compiled and run.
 - A good comment explains a reason; dead code is not kept inside comments.
 
 ## Next

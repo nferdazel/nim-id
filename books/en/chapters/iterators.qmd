@@ -207,8 +207,8 @@ Answers are in [Appendix A](../appendix/answers.qmd).
 
 ## Summary
 
-- `iterator` and `yield` produce values one at a time, only when asked.
-- An inline iterator (the default) stores no values and is used directly inside `for`.
+- `iterator` and `yield` produce values one at a time, only when asked; an inline iterator (the
+default) stores nothing and is used directly inside `for`.
 - `items` yields elements, `pairs` yields an index and an element.
 - A closure iterator can be stored and resumed; `finished` marks its end.
 - Pick an iterator for a large stream or an early stop, a sequence for a whole collection.

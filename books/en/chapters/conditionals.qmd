@@ -186,13 +186,12 @@ Answers are in [Appendix A](../appendix/answers.qmd).
 
 ## Summary
 
-- `if` uses `elif`, needs no parentheses, and gets its blocks from indentation.
+- `if` uses `elif`, needs no parentheses, gets its blocks from indentation, and requires a `bool`
+condition; Nim does not treat `0` or `""` as false.
 - `if` is an expression; used as a value, all branches must share a type and `else` is required.
 - `case` supports value lists (`12, 1, 2`) and ranges (`3 .. 5`); an incomplete `of` set without
   `else` is rejected by the compiler.
 - `when` picks a branch at compile time; only the chosen branch is compiled.
-- An `if` condition must be a `bool`; Nim does not treat `0` or `""` as false.
-
 ## Next
 
 The next chapter covers [loops](loops.qmd): `for` with ranges, `while`, `countdown`, and how to use

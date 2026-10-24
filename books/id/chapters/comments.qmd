@@ -163,8 +163,8 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
 - `#` mengabaikan sisa *line*; `#[ ... ]#` mengabaikan *range* dan boleh bersarang.
 - *Block comment* yang tidak ditutup dilaporkan di posisi akhir *file*, bukan di tempat `#[`.
-- `##` adalah doc comment; hanya bentuk ini yang masuk *output* `nim doc` ke `htmldocs/`.
-- `runnableExamples` di dalam doc comment di-compile dan dijalankan `nim doc`.
+- `##` adalah doc comment dan satu-satunya bentuk yang masuk *output* `nim doc`; `runnableExamples` di
+dalamnya ikut di-compile dan dijalankan.
 - *Comment* yang baik menjelaskan alasan; kode mati tidak disimpan di dalam *comment*.
 
 ## Selanjutnya

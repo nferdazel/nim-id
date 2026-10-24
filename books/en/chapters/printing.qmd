@@ -187,12 +187,11 @@ Answers are in [Appendix A](../appendix/answers.qmd).
 
 ## Summary
 
-- `echo` adds no separator between arguments and closes with a single new line.
+- `echo` adds no separator between arguments and closes with a single new line; `stdout.write` adds
+nothing, so you write `"\n"` yourself.
 - `echo` uses `$`; `repr` shows the machine-readable form, quotes included.
 - `&"..."` and `fmt"..."` drop expressions into text and need `import std/strformat`.
 - Format rules (`>6`, `04d`, `8.2f`) control width, zero padding, and precision.
-- `stdout.write` prints without a new line; add `"\n"` yourself when needed.
-
 ## Next
 
 The next chapter covers operators: basic arithmetic and `div`/`mod`, comparisons, short-circuit
