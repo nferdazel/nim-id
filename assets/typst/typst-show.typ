@@ -368,12 +368,21 @@
 
 #set page(numbering: none)
 
+// Page geometry in one place. The code panel rule further down asks whether a
+// listing fits on a page before it decides whether the listing may break, and
+// that answer has to use the same numbers the page itself was set with.
+#let page-w = 178mm
+#let page-h = 233mm
+#let m-top = 21mm
+#let m-bottom = 25mm
+#let text-height = page-h - m-top - m-bottom
+
 #show: book.with(
-  width: 178mm,
-  height: 233mm,
+  width: page-w,
+  height: page-h,
   // Inner margin carries the binding, the outer one stays smaller; the top is
   // tight so the running head sits close to the text block.
-  margin: (inside: 32mm, outside: 27mm, top: 21mm, bottom: 25mm),
+  margin: (inside: 32mm, outside: 27mm, top: m-top, bottom: m-bottom),
   font-size: 11pt,
   // Space between paragraphs, no first-line indent (DESIGN.md): with an indent
   // and this spacing together the start of a paragraph becomes ambiguous.
@@ -646,22 +655,34 @@ $endif$
 // this size.
 // ---------------------------------------------------------------------------
 #let code-size = 9pt
+#let panel-inset-y = 7pt
+#let panel-keep = 220pt
 // `raw` prints at 0.8 em of the text around it, so the ambient size is raised
 // until the token glyphs themselves land on `code-size`.
 #let code-panel-size = code-size * 1.25
 
 #show block: it => {
   if it.fill == panel-fill {
-    block(
-      fill: code-paper,
-      stroke: 0.4pt + rule,
-      radius: 2pt,
-      inset: (x: g-box-inset, y: 7pt),
-      above: 0.85em,
-      below: 0.85em,
-      width: 100%,
-      text(size: code-panel-size, it.body),
-    )
+    let body = text(size: code-panel-size, it.body)
+    context {
+      // A listing up to about twenty lines is never split: it stands where it is
+      // or moves whole to the next page, so a sample cannot turn into a stray line
+      // at the top of a page. Longer listings stay breakable, because holding them
+      // whole would leave most of a page empty. The limit is a height rather than a
+      // line count, because a long line wraps.
+      let utuh = measure(body).height + 2 * panel-inset-y <= panel-keep
+      block(
+        fill: code-paper,
+        stroke: 0.4pt + rule,
+        radius: 2pt,
+        inset: (x: g-box-inset, y: panel-inset-y),
+        above: 0.85em,
+        below: 0.85em,
+        width: 100%,
+        breakable: not utuh,
+        body,
+      )
+    }
   } else {
     it
   }
