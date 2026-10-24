@@ -17,7 +17,9 @@ ROOT = pathlib.Path(__file__).resolve().parent.parent
 BERKAS = sorted((ROOT / "books/id").rglob("*.qmd"))
 
 TERLARANG = {
-    # ejaan dan varian yang salah arah
+    "library standar": "standard library",
+    "pengenal": "identifier",
+    "unhandled exception": "exception yang tidak tertangani",
     "peubah": "variable",
     "looping": "loop",
     "kompiler": "compiler",

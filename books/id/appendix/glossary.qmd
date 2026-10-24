@@ -149,6 +149,6 @@
 | value copy | penyalinan isi value, bukan alamatnya | [*Object* dan *constructor*](../chapters/objects.qmd) |
 | variable | nama untuk sebuah value | [*Variable*: `var`, `let`, `const`](../chapters/variables.qmd) |
 | variant object | object yang field-nya bergantung pada satu penanda | [Object varian dan `distinct`](../chapters/variants-and-distinct.qmd) |
-| warning | compiler message tentang kode yang patut diperiksa | [Alur kerja: `nim r`, `nimble`, editor](../chapters/workflow.qmd) |
+| warning | output compiler tentang kode yang patut diperiksa | [Alur kerja: `nim r`, `nimble`, editor](../chapters/workflow.qmd) |
 
 Istilah baru ditambahkan ke daftar induk lebih dulu, baru dipakai di bab.

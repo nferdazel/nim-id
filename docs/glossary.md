@@ -16,7 +16,7 @@ Setelah mengubah tabel ini, jalankan `python3 tools/gen-glossary.py` untuk memba
 | compile-time | compile time | saat compile berlangsung; sebelum program berjalan | while compilation runs; before the program starts | waktu kompilasi (kecuali penjelasan) | variables |
 | runtime | runtime | saat program berjalan | while the program is running | waktu jalan | variables |
 | value | value | isi yang disimpan variable | the content stored in a variable | nilai | variables |
-| variable | variable | nama untuk sebuah value | a name for a value | variable, peubah | variables |
+| variable | variable | nama untuk sebuah value | a name for a value | variabel, peubah | variables |
 | constant | constant | value yang tidak berubah | a value that does not change | konstanta | variables |
 | data type | data type | jenis value; menentukan operasi yang sah dan ukuran di memory | the kind of a value; it decides which operations are valid and how much memory it uses | type data | variables |
 | type | type | bentuk pendek dari data type; dipakai di prosa dan kode | short for data type; used in prose and code | tipe | variables |
@@ -34,7 +34,7 @@ Setelah mengubah tabel ini, jalankan `python3 tools/gen-glossary.py` untuk memba
 | object | object | type gabungan dengan field bernama | a composite type with named fields | objek | objects |
 | exception | exception | kondisi error yang bisa ditangkap | an error condition that can be caught | pengecualian | exceptions |
 | iterator | iterator | konstruksi yang menghasilkan value satu per satu (`yield`) | an object that yields values one at a time (`yield`) | — | loops |
-| range | range | batas value dari awal sampai akhir (`a..b`, `a..<b`) | the bounds from start to end (`a..b`, `a..<b`) | range (kecuali di kode) | loops |
+| range | range | batas value dari awal sampai akhir (`a..b`, `a..<b`) | the bounds from start to end (`a..b`, `a..<b`) | rentang | loops |
 | index | index | posisi element di dalam koleksi, mulai dari 0 | the position of an element in a collection, starting at 0 | indeks | collections |
 | element | element | satu value di dalam koleksi | a single value inside a collection | elemen | collections |
 | literal | literal | value yang ditulis langsung di kode (`42`, `"teks"`, `@[1, 2]`) | a value written directly in code (`42`, `"text"`, `@[1, 2]`) | — | primitive-types |
@@ -52,8 +52,8 @@ Setelah mengubah tabel ini, jalankan `python3 tools/gen-glossary.py` untuk memba
 | debug build | debug build | build dengan pemeriksaan penuh, dipakai saat mengembangkan | a build with all checks on, used while developing | build debug | workflow |
 | release build | release build | build teroptimasi, dipakai saat mengirim program | an optimized build, used when shipping the program | build rilis | workflow |
 | garbage collector | garbage collector | pengelola memory otomatis pada mode GC klasik | the automatic memory manager in the classic GC mode | pemungut sampah | what-is-nim |
-| destructor | destructor | procedure `=destroy` yang dipanggil saat value dibuang | a `=destroy` procedure called when a value is dropped | destructor (kecuali penjelasan) | what-is-nim |
-| scope | scope | wilayah kode tempat sebuah nama bisa dipakai | the region of code where a name can be used | scope (kecuali penjelasan) | comments |
+| destructor | destructor | procedure `=destroy` yang dipanggil saat value dibuang | a `=destroy` procedure called when a value is dropped | destruktor | what-is-nim |
+| scope | scope | wilayah kode tempat sebuah nama bisa dipakai | the region of code where a name can be used | ruang lingkup | comments |
 | comment | comment | catatan di kode yang diabaikan compiler | a note in code that the compiler ignores | komentar | comments |
 | line comment | line comment | comment `#` sampai akhir line | a `#` comment to the end of the line | komentar baris, komentar satu baris | comments |
 | block comment | block comment | comment `#[ ... ]#` yang bisa bersarang | a `#[ ... ]#` comment that can nest | komentar blok, komentar multi-baris | comments |
@@ -61,13 +61,13 @@ Setelah mengubah tabel ini, jalankan `python3 tools/gen-glossary.py` untuk memba
 | package manager | package manager | tool yang memasang dan mengelola dependensi (`nimble`) | a tool that installs and manages dependencies (`nimble`) | pengelola paket | installation |
 | standard library | standard library | kumpulan module bawaan compiler | the set of modules that ship with the compiler | library standar | installation |
 | scaffold | project scaffold | kerangka file yang dibuat `nimble init` | the file skeleton that `nimble init` creates | scaffolding | installation |
-| escape sequence | escape sequence | pasangan `\` + huruf yang mewakili character khusus (`\n`, `\t`) | a `\` plus a letter that stands for a special character (`\n`, `\t`) | escape sequence | strings |
+| escape sequence | escape sequence | pasangan `\` + huruf yang mewakili character khusus (`\n`, `\t`) | a `\` plus a letter that stands for a special character (`\n`, `\t`) | urutan escape | strings |
 | raw string | raw string | string `r"..."` yang tidak memproses escape | an `r"..."` string that does not process escapes | string mentah | strings |
 | multiline string | multiline string | string `"""..."""` yang mempertahankan line baru | a `"""..."""` string that keeps line breaks | string multi-baris, string multiline | strings |
 | slicing | slicing | mengambil potongan string/koleksi dengan range index | taking a piece of a string or collection by an index range | — | strings |
 | overflow | overflow | value yang melewati batas type dan berakhir `OverflowDefect` | a value that crosses a type bound and ends in `OverflowDefect` | luapan | primitive-types |
 | short-circuit | short-circuit evaluation | `and`/`or` berhenti begitu result-nya pasti | `and`/`or` stop as soon as the result is settled | evaluasi singkat | operators |
-| bitwise | bitwise | operasi per bit (`and`, `or`, `xor`, `shl`, `shr`) | a per-bit operation (`and`, `or`, `xor`, `shl`, `shr`) | bitwise | operators |
+| bitwise | bitwise | operasi per bit (`and`, `or`, `xor`, `shl`, `shr`) | a per-bit operation (`and`, `or`, `xor`, `shl`, `shr`) | operasi bit | operators |
 | keanggotaan | membership | uji `in`/`notin` pada koleksi atau range | an `in`/`notin` test on a collection or a range | — | operators |
 | presisi | precision | jumlah digit signifikan yang dijamin type float | the number of significant digits a float type guarantees | — | primitive-types |
 | type conversion | type conversion | mengubah value ke type lain (`int()`, `float()`, `$`) | changing a value into another type (`int()`, `float()`, `$`) | casting (hindari) | primitive-types |
@@ -78,7 +78,7 @@ Setelah mengubah tabel ini, jalankan `python3 tools/gen-glossary.py` untuk memba
 | set | set | kumpulan value berbeda dari type ordinal (`set[Color]`) | a collection of distinct values of an ordinal type (`set[Color]`) | himpunan | enums-and-sets |
 | ordinal value | ordinal value | posisi angka sebuah value enum (`ord(green)`) | the numeric position of an enum value (`ord(green)`) | nilai ordinal | enums-and-sets |
 | bitset | bitset | set yang disimpan sebagai bit, dipakai untuk flag | a set stored as bits, used for flags | himpunan bit | enums-and-sets |
-| constructor | constructor | expression yang membentuk value object (`Person(name: ...)`) | the expression that builds an object value (`Person(name: ...)`) | constructor (kecuali di kode) | objects |
+| constructor | constructor | expression yang membentuk value object (`Person(name: ...)`) | the expression that builds an object value (`Person(name: ...)`) | konstruktor | objects |
 | overloading | overloading | beberapa procedure bernama sama dengan daftar parameter berbeda | several same-named procedures with different parameter lists | overload | procedures |
 | return value | return value | value yang dikembalikan procedure | the value a procedure returns | nilai kembalian, nilai balik | procedures |
 | side effect | side effect | perubahan di luar return value (`echo`, menulis file, mengubah `var`) | a change beyond the return value (`echo`, writing a file, mutating a `var`) | efek samping | procedures |
@@ -92,7 +92,7 @@ Setelah mengubah tabel ini, jalankan `python3 tools/gen-glossary.py` untuk memba
 | calling convention | calling convention | aturan cara procedure di-call (`nimcall`, `closure`) | the rules for how a procedure is called (`nimcall`, `closure`) | konvensi pemanggilan | closures |
 | calling | calling | tindakan menjalankan procedure | the act of running a procedure | pemanggilan | closures |
 | caller | caller | kode yang memanggil procedure | the code that calls a procedure | pemanggil | closures |
-| higienis | hygienic | makro atau template yang tidak membocorkan nama ke caller | a macro or template that does not leak names to the caller | higienis (kecuali sebagai sifat) | templates |
+| higienis | hygienic | makro atau template yang tidak membocorkan nama ke caller | a macro or template that does not leak names to the caller | — | templates |
 | ekspansi template | template expansion | kode template yang disalin compiler ke tempat calling | template code copied by the compiler to the call site | — | templates |
 | instansiasi generic | generic instantiation | pembentukan type konkret dari generic pada pemakaian | forming a concrete type from a generic at the point of use | — | generics |
 | typedesc | typedesc | type sebagai value, dipakai untuk overloading berbasis type | a type as a value, used for type-based overloading | — | generics |
@@ -127,7 +127,7 @@ Setelah mengubah tabel ini, jalankan `python3 tools/gen-glossary.py` untuk memba
 | test case | test case | satu pemeriksaan di dalam suite | one check inside a suite | kasus uji | unit-testing |
 | FFI | foreign function interface | cara memanggil kode bahasa lain, di sini C | a way to call code from another language, here C | — | ffi-c |
 | ABI | application binary interface | aturan tata letak dan calling di tingkat biner | the rules for layout and calls at the binary level | — | ffi-c |
-| browser | browser | program yang menjalankan JavaScript dari compile | the program that runs the output of a JavaScript build | browser (kecuali di kode) | js-backend |
+| browser | browser | program yang menjalankan JavaScript dari compile | the program that runs the output of a JavaScript build | peramban | js-backend |
 | subcommand | subcommand | command kedua di dalam satu tool CLI (`tool add`) | a second command inside a CLI tool (`tool add`) | subperintah | cli-tools |
 | option | option | named argument yang mengubah perilaku command (`--count=4`) | a named argument that changes a command's behavior (`--count=4`) | opsi | cli-tools |
 | exit code | exit code | angka yang dikembalikan proses ke caller-nya | the number a process returns to its caller | exit status | cli-tools |
@@ -151,7 +151,7 @@ Setelah mengubah tabel ini, jalankan `python3 tools/gen-glossary.py` untuk memba
 | integer | integer | type angka cacah bertanda | a whole-number type | bilangan bulat | primitive-types |
 | float | float | type angka berpecahan | a fractional-number type | bilangan pecahan, pecahan | primitive-types |
 | message | message | teks yang disampaikan program ke pembaca atau sistem | text a program sends to the reader or the system | pesan | workflow |
-| warning | warning | compiler message tentang kode yang patut diperiksa | a compiler message about code worth checking | peringatan | workflow |
+| warning | warning | output compiler tentang kode yang patut diperiksa | a compiler message about code worth checking | peringatan | workflow |
 | test | test | pemeriksaan otomatis terhadap perilaku kode | an automated check of code behavior | tes | unit-testing |
 | release | release | versi yang diterbitkan dan diberi tag | a version that is published and tagged | rilis | workflow |
 | regex | regular expression | pola teks yang dipakai `std/re` | a text pattern used by `std/re` | regexp | regex |
