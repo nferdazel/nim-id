@@ -5,34 +5,11 @@ can explain why. The section number matches the chapter number: A.5 holds the an
 
 ## What Nim is and why
 
-**1.** Change the string:
-
-```{.nim}
-echo "Hello, Ada"
-```
-
-```{.txt}
-Hello, Ada
-```
-
-**2.** The output is `55`. The sum of `1..10` is 55. The range is inclusive, so 10 counts.
-
-**3.** `echo` accepts several arguments but adds no separator. So the space is written into the
-string itself:
-
-```{.nim}
-echo "7 * 6 = ", 7 * 6
-```
-
-```{.txt}
-7 * 6 = 42
-```
-
-**4.** The declaration `var age: int` is fine by itself. What does not fit is the initial value. The
+**1.** The declaration `var age: int` is fine by itself. What does not fit is the initial value. The
 compiler points at column 16, the start of the `"twenty"` literal; that is where a `string` appears
 where an `int` is required. Column 5 is the name `age`, and a name is never the problem.
 
-**5.** Not valid. `greet` requires a `string` parameter, while `42` is an `int`. The compiler rejects
+**2.** Not valid. `greet` requires a `string` parameter, while `42` is an `int`. The compiler rejects
 it without running the program:
 
 ```{.txt}
@@ -87,6 +64,29 @@ choosenim stable
 
 `choosenim 2.2.12` installs and activates that version; `choosenim stable` returns to the latest
 stable release.
+
+**6.** Change the string:
+
+```{.nim}
+echo "Hello, Ada"
+```
+
+```{.txt}
+Hello, Ada
+```
+
+**7.** `echo` accepts several arguments but adds no separator. So the space is written into the
+string itself:
+
+```{.nim}
+echo "7 * 6 = ", 7 * 6
+```
+
+```{.txt}
+7 * 6 = 42
+```
+
+**8.** The output is `55`. The sum of `1..10` is 55. The range is inclusive, so 10 counts.
 
 ## Workflow: `nim r`, `nimble`, editor
 

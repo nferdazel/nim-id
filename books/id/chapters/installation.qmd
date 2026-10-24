@@ -145,6 +145,23 @@ choosenim 2.2.12
 
 Setelah berpindah, jalankan `nim --version` lagi untuk memastikan versinya benar-benar berganti.
 
+## Program pertama
+
+Sekarang ketiga syarat sudah terpenuhi, dan program pertama bisa dijalankan. Simpan kode berikut
+sebagai `hello.nim`, lalu jalankan `nim r hello.nim`.
+
+```{.nim}
+echo "Hello, Nim"
+```
+
+```{.txt}
+Hello, Nim
+```
+
+`echo` menulis *argument*-nya ke stdout dan menutup dengan *newline*. Tidak ada `main`, tidak ada
+titik koma, dan indentasi yang menentukan blok. Satu *file* boleh berisi *statement* di tingkat atas
+seperti ini.
+
 ## Latihan
 
 Jawaban ada di [Lampiran A](../appendix/answers.qmd).
@@ -158,6 +175,10 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
    dijalankan? Jelaskan.
 5. Dengan `choosenim`, tulis urutan command untuk berpindah dari versi stabil terbaru ke 2.2.12,
    lalu kembali lagi.
+6. Ubah program `hello` di atas supaya menampilkan nama pembaca, bukan `Nim`.
+7. Tulis program yang menampilkan `7 * 6` beserta *result*-nya. Simpan sebagai `kali.nim`.
+8. Pada [contoh penjumlahan di bab sebelumnya](what-is-nim.qmd), ganti `1..5` menjadi `1..10`.
+   Prediksi *output*-nya, lalu jalankan untuk memeriksa prediksimu.
 
 ## Ringkasan
 

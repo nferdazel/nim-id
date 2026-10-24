@@ -144,6 +144,22 @@ choosenim 2.2.12
 
 After switching, run `nim --version` again to confirm the version really changed.
 
+## The first program
+
+All three requirements are in place, so the first program can run. Save the following as `hello.nim`,
+then run `nim r hello.nim`.
+
+```{.nim}
+echo "Hello, Nim"
+```
+
+```{.txt}
+Hello, Nim
+```
+
+`echo` writes its arguments to stdout and ends the line. There is no `main`, no semicolons, and
+indentation defines the blocks. A single file may hold top-level statements like this one.
+
 ## Exercises
 
 Answers are in [Appendix A](../appendix/answers.qmd).
@@ -155,6 +171,10 @@ Answers are in [Appendix A](../appendix/answers.qmd).
 4. Nim is installed, but the C compiler is not. What happens when `nim c hello.nim` runs? Explain.
 5. With `choosenim`, write the sequence of commands to move from the latest stable release to
    2.2.12, then back again.
+6. Change the `hello` program above so it prints your name instead of `Nim`.
+7. Write a program that prints `7 * 6` together with its result. Save it as `multiply.nim`.
+8. In the [addition example from the previous chapter](what-is-nim.qmd), change `1..5` to `1..10`.
+   Predict the output, then run it to check your prediction.
 
 ## Summary
 

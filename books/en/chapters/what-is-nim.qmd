@@ -4,14 +4,15 @@ Nim is often pitched in one line: it reads like Python and runs like C. That lin
 explains nothing. A more useful description: Nim is a compiled, statically typed language, and the
 result is a single binary that runs without a virtual machine.
 
-This chapter shows what those two properties mean in practice. We start with the smallest program,
-watch what happens when the code is wrong, and then weigh when Nim is worth choosing.
+This chapter shows what those two properties mean in practice. We look at the smallest program and
+at what happens when the code is wrong, then weigh when Nim is worth choosing. The code here is read,
+not run; the next chapter installs the toolchain.
 
 ::: {.callout-note}
 ## What you will be able to do
 
-After this chapter you can explain what "compiled" and "statically typed" mean, run your first Nim
-program, and read the type error the compiler prints.
+After this chapter you can explain what "compiled" and "statically typed" mean, read the type error
+the compiler prints, and weigh when Nim is worth choosing.
 :::
 
 ## Compiled, not interpreted
@@ -30,28 +31,10 @@ The cost: every change needs a recompile. For small programs, that is a matter o
 program grows, the difference gets more expensive: a bug that only appears in production costs far
 more than one caught before the program runs.
 
-## The first program
-
-The examples in this chapter run with `nim`. If it is not installed yet,
-[Installing Nim](installation.qmd) shows how; the examples are readable without running anything.
-
-Save the following as `hello.nim`, then run `nim r hello.nim`.
-
-```{.nim}
-echo "Hello, Nim"
-```
-
-```{.txt}
-Hello, Nim
-```
-
-`echo` writes its arguments to stdout and ends the line. There is no `main`, no semicolons, and
-indentation defines the blocks. A single file may hold top-level statements like this one.
-
 ## Types are checked before the program runs
 
 This is the difference from Python. In Nim, every value has a type the compiler already knows. When
-the types do not match, the program never runs. Try this.
+the types do not match, the program never runs. This code never runs:
 
 ```{.nim}
 var age: int = "twenty"
@@ -61,17 +44,19 @@ echo age
 The compiler rejects it:
 
 ```{.txt}
-main.nim(1, 16) Error: type mismatch: got 'string' for '"twenty"' but expected 'int'
+(1, 16) Error: type mismatch: got 'string' for '"twenty"' but expected 'int'
 ```
 
 Read it from left to right:
 
 | Part | Meaning |
 |---|---|
-| `main.nim` | the file with the problem |
 | `(1, 16)` | line 1, column 16 |
 | `Error` | severity; the build stops here |
 | `got 'string' ... but expected 'int'` | the value is a `string`, but an `int` is required |
+
+Ahead of that position Nim writes the file name, sometimes as a full path
+(`/home/.../hello.nim(1, 16)`) depending on version and system. The position is what you read.
 
 There is no output, because no program runs. To a beginner this feels like an obstacle. Over time it
 becomes an advantage: the same mistake in Python surfaces only when that line executes, perhaps
@@ -115,9 +100,9 @@ between `var`, `let`, and `const` in full.
 
 ## One codebase, many targets
 
-The default backend is C. C++, Objective-C, and JavaScript backends are also available. The command
-`nim c --backend:js hello.nim` produces a JavaScript file from the same code. For most programs we
-rarely pick a backend by hand.
+The default backend is C. C++, Objective-C, and JavaScript backends are also available; the
+JavaScript backend produces a `.js` file from the same code. For most programs we rarely pick a
+backend by hand, and [Compiling to JavaScript](js-backend.qmd) covers that on its own.
 
 Nim 2.x uses ORC as its default memory management. ORC counts references and collects cycles, and
 destructors run when a value leaves its scope. No garbage collector stops the whole program to
@@ -141,12 +126,9 @@ honest about this is more useful than selling one language as the answer to ever
 
 Answers are in [Appendix A](../appendix/answers.qmd).
 
-1. Change the `hello` program above so it prints your name instead of `Nim`.
-2. In the addition example, change `1..5` to `1..10`. Predict the output before running it.
-3. Write a program that prints `7 * 6` together with its result. Save it as `multiply.nim`.
-4. The code `var age: int = "twenty"` fails to compile. Explain why the compiler points at column
+1. The code `var age: int = "twenty"` fails to compile. Explain why the compiler points at column
    16, and not at column 5 where the name `age` sits.
-5. Without running it, decide whether `echo greet(42)` on the `greet` example is valid. Explain your
+2. Without running it, decide whether `echo greet(42)` on the `greet` example is valid. Explain your
    reasoning.
 
 ## Summary

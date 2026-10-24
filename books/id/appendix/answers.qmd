@@ -6,34 +6,11 @@ jawaban Bab 5.
 
 ## Apa itu Nim dan kenapa
 
-**1.** Ganti string-nya:
-
-```{.nim}
-echo "Hello, Ada"
-```
-
-```{.txt}
-Hello, Ada
-```
-
-**2.** *Output*-nya `55`. Jumlah `1..10` adalah 55. *Range* itu inklusif, jadi 10 ikut dihitung.
-
-**3.** `echo` menerima beberapa *argument*, tapi tidak menambahkan pemisah. Karena itu spasi di-write
-sendiri di dalam string:
-
-```{.nim}
-echo "7 * 6 = ", 7 * 6
-```
-
-```{.txt}
-7 * 6 = 42
-```
-
-**4.** Deklarasi `var age: int` sendiri sah. Yang tidak cocok adalah *value* awalnya. Compiler
+**1.** Deklarasi `var age: int` sendiri sah. Yang tidak cocok adalah *value* awalnya. Compiler
 menunjuk kolom 16, yaitu awal literal `"twenty"`; di situlah *type* `string` muncul padahal `int` yang
 dibutuhkan. Kolom 5 adalah nama `age`, dan nama tidak salah.
 
-**5.** Tidak valid. `greet` menuntut *parameter* `string`, sedangkan `42` bertipe `int`. Compiler
+**2.** Tidak valid. `greet` menuntut *parameter* `string`, sedangkan `42` bertipe `int`. Compiler
 langsung menolaknya tanpa menjalankan program:
 
 ```{.txt}
@@ -88,6 +65,29 @@ choosenim stable
 
 `choosenim 2.2.12` memasang dan mengaktifkan versi itu; `choosenim stable` kembali ke versi
 stabil terbaru.
+
+**6.** Ganti string-nya:
+
+```{.nim}
+echo "Hello, Ada"
+```
+
+```{.txt}
+Hello, Ada
+```
+
+**7.** `echo` menerima beberapa *argument*, tapi tidak menambahkan pemisah. Karena itu spasi ditulis
+sendiri di dalam string:
+
+```{.nim}
+echo "7 * 6 = ", 7 * 6
+```
+
+```{.txt}
+7 * 6 = 42
+```
+
+**8.** *Output*-nya `55`. Jumlah `1..10` adalah 55. *Range* itu inklusif, jadi 10 ikut dihitung.
 
 ## Alur kerja: `nim r`, `nimble`, editor
 

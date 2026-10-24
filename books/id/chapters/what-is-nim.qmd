@@ -4,14 +4,15 @@ Nim sering dipromosikan dengan satu kalimat: sintaksnya rapi seperti Python, cep
 Kalimat itu benar, tapi belum menjelaskan apa pun. Yang lebih berguna: Nim adalah bahasa yang
 di-compile dan bertipe statis, dan *result*-nya satu *file* biner yang berjalan tanpa mesin virtual.
 
-Bab ini menunjukkan arti kedua sifat itu dalam praktik. Kita mulai dari program terkecil, melihat
-apa yang terjadi waktu kode salah, lalu menimbang kapan Nim layak dipilih.
+Bab ini menunjukkan arti kedua sifat itu dalam praktik. Kita lihat program terkecil dan apa yang
+terjadi waktu kode salah, lalu menimbang kapan Nim layak dipilih. Semua contoh di sini dibaca, bukan
+dijalankan; bab berikutnya yang memasang toolchain-nya.
 
 ::: {.callout-note}
 ## Tujuan bab
 
-Setelah bab ini, pembaca bisa menjelaskan arti "di-compile" dan "bertipe statis", menjalankan
-program Nim pertama, dan membaca *error message* *type* yang dikeluarkan compiler.
+Setelah bab ini, pembaca bisa menjelaskan arti "di-compile" dan "bertipe statis", membaca
+*error message* *type* yang dikeluarkan compiler, dan menimbang kapan Nim layak dipilih.
 :::
 
 ## Di-compile, bukan diinterpretasi
@@ -30,29 +31,10 @@ Harganya: setiap perubahan perlu di-compile ulang. Untuk program kecil, itu hitu
 programnya tumbuh, perbedaan ini terasa makin mahal: bug yang hanya muncul di produksi jauh lebih
 mahal daripada bug yang tertangkap sebelum program jalan.
 
-## Program pertama
-
-Contoh di bab ini dijalankan dengan `nim`. Kalau Nim belum terpasang, cara memasangnya ada di
-[Instalasi Nim](installation.qmd); contohnya tetap bisa dibaca tanpa menjalankan apa pun.
-
-Simpan kode berikut sebagai `hello.nim`, lalu jalankan `nim r hello.nim`.
-
-```{.nim}
-echo "Hello, Nim"
-```
-
-```{.txt}
-Hello, Nim
-```
-
-`echo` write *argument*-nya ke stdout dan menutup dengan *newline*. Tidak ada `main`, tidak ada titik
-koma, dan indentasi yang menentukan blok. Satu *file* boleh berisi *statement* di tingkat atas
-seperti ini.
-
 ## *Type* diperiksa sebelum program berjalan
 
 Inilah bedanya dengan Python. Di Nim, setiap *value* punya *type* yang sudah diketahui compiler. Kalau
-*type* tidak cocok, program tidak pernah dijalankan. Coba kode berikut.
+*type* tidak cocok, program tidak pernah dijalankan. Kode berikut tidak akan pernah berjalan.
 
 ```{.nim}
 var age: int = "twenty"
@@ -62,17 +44,19 @@ echo age
 Compiler menolaknya:
 
 ```{.txt}
-main.nim(1, 16) Error: type mismatch: got 'string' for '"twenty"' but expected 'int'
+(1, 16) Error: type mismatch: got 'string' for '"twenty"' but expected 'int'
 ```
 
 Bacalah dari kiri ke kanan:
 
 | Bagian | Arti |
 |---|---|
-| `main.nim` | *file* yang bermasalah |
 | `(1, 16)` | *line* 1, kolom 16 |
 | `Error` | tingkat keparahan; build berhenti di sini |
 | `got 'string' ... but expected 'int'` | yang diberikan bertipe `string`, yang dibutuhkan `int` |
+
+Di depan posisi itu Nim menulis nama *file*-nya, kadang sebagai path lengkap
+(`/home/.../hello.nim(1, 16)`) tergantung versi dan sistem. Yang dibaca tetap posisinya.
 
 Tidak ada *output*, karena tidak ada program yang berjalan. Bagi pemula ini terasa seperti halangan.
 Lama-lama ini jadi keuntungan: error yang sama di Python baru muncul ketika *line* itu
@@ -116,9 +100,9 @@ pilihan `var`, `let`, dan `const` sampai tuntas.
 
 ## Satu kode, banyak target
 
-Backend bawaan Nim adalah C. Tersedia juga backend C++, Objective-C, dan JavaScript. Command
-`nim c --backend:js hello.nim` menghasilkan *file* JavaScript dari kode yang sama. Untuk sebagian
-besar program, kita jarang perlu memilih backend secara manual.
+Backend bawaan Nim adalah C. Tersedia juga backend C++, Objective-C, dan JavaScript; backend
+JavaScript menghasilkan *file* `.js` dari kode yang sama. Untuk sebagian besar program, kita jarang
+perlu memilih backend secara manual, dan [Compile ke JavaScript](js-backend.qmd) membahasnya sendiri.
 
 Nim 2.x memakai ORC sebagai pengelola *memory* bawaan. ORC menghitung referensi dan mengumpulkan
 siklus, dan *destructor* berjalan saat *value* keluar dari *scope*-nya. Tidak ada garbage
@@ -144,12 +128,9 @@ aman. Jujur soal ini lebih berguna daripada menjual satu bahasa sebagai jawaban 
 
 Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
-1. Ubah program `hello` di atas supaya menampilkan nama pembaca, bukan `Nim`.
-2. Pada contoh penjumlahan, ganti `1..5` menjadi `1..10`. Prediksi *output*-nya sebelum menjalankan.
-3. Tulis program yang print `7 * 6` beserta *result*-nya. Simpan sebagai `kali.nim`.
-4. Kode `var age: int = "twenty"` gagal di-compile. Jelaskan mengapa compiler menunjuk kolom 16, dan
+1. Kode `var age: int = "twenty"` gagal di-compile. Jelaskan mengapa compiler menunjuk kolom 16, dan
    bukan kolom 5 tempat nama `age` berada.
-5. Tanpa menjalankan, tentukan apakah `echo greet(42)` pada contoh `greet` valid. Jelaskan alasanmu.
+2. Tanpa menjalankan, tentukan apakah `echo greet(42)` pada contoh `greet` valid. Jelaskan alasanmu.
 
 ## Ringkasan
 
