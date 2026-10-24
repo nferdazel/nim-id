@@ -97,7 +97,7 @@ recover from, not the ones that signal a flawed program.
 
 ## `raise` with more useful context
 
-An exception often rises from a lower layer, then needs a note before it is passed on.
+An exception often comes from a lower layer, then needs a note before it is passed on.
 
 ```{.nim}
 import std/strutils

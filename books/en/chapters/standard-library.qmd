@@ -200,8 +200,8 @@ the key is gone.
 
 The standard library is far larger than these four modules. `std/os` is covered in the files and
 operating system chapter, `std/strformat` in the variables chapter, and `std/math` and
-`std/algorithm` appear in the operators and files chapters. `std/random` and `std/times` have no
-dedicated chapter here; the official documentation is the next reference. The import pattern is
+`std/algorithm` appear in the operators and files chapters. `std/random` and `std/times` are covered in the
+[time and random](times-and-random.qmd) chapter. The import pattern is
 always the same: `import std/name`.
 
 ## Exercises

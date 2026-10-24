@@ -76,7 +76,8 @@ Aturan:
 
 ## PDF
 
-- Trim 178 × 233 mm, margin 16 × 18 mm (sudah terpasang lewat `assets/typst/typst-show.typ`).
+- Trim 178 × 233 mm, margin cermin dalam 32 / luar 27 / atas 21 / bawah 25 mm (sudah terpasang lewat
+  `assets/typst/typst-show.typ`).
 - Badan 10pt, rata kiri (tidak justify, karena justify pada kolom sempit menghasilkan sungai
   spasi), jarak antarparagraf 1.3em, tanpa indentasi baris pertama. Diterapkan di
   `assets/typst/typst-show.typ` lewat `#show par: set par(justify: false, spacing: 1.3em)`.
@@ -119,7 +120,8 @@ ENERGY 2 / RHYTHM 2 / MOTION 1
 
 ### Sidebar dan bagian buku
 
-- Sidebar memakai `book: parts`: "Bagian 0: Mulai", "Bagian A: Dasar", "Lampiran".
+- Sidebar memakai `book: parts`: "Bagian A: Dasar", "Bagian B: Menengah", "Bagian C: Praktik", dan
+  lampiran A sampai D.
 - Label bagian kecil, uppercase, letter-spacing 0.08em, dengan garis atas tipis.
 - Bab aktif: garis navy 2px di kiri, teks tinta, tanpa latar.
 - Nomor bab di sidebar tabular, lebar tetap, rata kanan supaya judul sejajar.

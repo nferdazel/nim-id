@@ -93,7 +93,7 @@ Panjang: 900–1.400 kata. Satu bab = satu sesi baca 10–15 menit. Lebih dari i
 
 ## PDF
 
-- Ukuran trim 178 × 233 mm, margin 16 × 18 mm, diatur di `assets/typst/typst-show.typ`
+- Ukuran trim 178 × 233 mm, margin cermin 32/27/21/25 mm, diatur di `assets/typst/typst-show.typ`
   (partial Quarto, disalin ke tiap buku saat build).
 - **Jangan** memakai `papersize` di `_quarto.yml`: template `orange-book` mengabaikannya dan
   memakai `paper-size`/`width`/`height`. Kalau trim berubah, ubah partial, bukan YAML.

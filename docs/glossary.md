@@ -24,14 +24,14 @@ Setelah mengubah tabel ini, jalankan `python3 tools/gen-glossary.py` untuk memba
 | interpolasi string | string interpolation | menyisipkan value ke dalam teks | inserting values into text | — | variables |
 | identifier | identifier | nama untuk variable, type, procedure, atau module | a name for a variable, type, procedure, or module | pengenal | variables |
 | error message | error message | output compiler yang menjelaskan masalah | compiler output that explains a problem | pesan error, pesan kesalahan | variables |
-| procedure | procedure | rutin yang bisa punya side effect (`proc`) | a routine that may have side effects (`proc`) | prosedur | — |
-| fungsi | function | rutin tanpa side effect (`func`) | a routine with no side effects (`func`) | function | — |
-| loop | loop | konstruksi untuk mengulang blok kode | a construct that repeats a block of code | looping, perulangan | — |
-| branching | branching | pemilihan path eksekusi (`if`, `case`, `when`) | choosing which path to execute (`if`, `case`, `when`) | percabangan | — |
-| array | array | kumpulan element bertipe sama, ukuran tetap | a fixed-size collection of elements of the same type | larik | — |
-| seq | sequence | kumpulan element bertipe sama, ukuran dinamis (`seq`) | a dynamically sized collection of elements of the same type (`seq`) | sequence (kecuali penjelasan awal) | — |
-| object | object | type gabungan dengan field bernama | a composite type with named fields | objek | — |
-| exception | exception | kondisi error yang bisa ditangkap | an error condition that can be caught | pengecualian | — |
+| procedure | procedure | rutin yang bisa punya side effect (`proc`) | a routine that may have side effects (`proc`) | prosedur | procedures |
+| fungsi | function | rutin tanpa side effect (`func`) | a routine with no side effects (`func`) | function | procedures |
+| loop | loop | konstruksi untuk mengulang blok kode | a construct that repeats a block of code | looping, perulangan | loops |
+| branching | branching | pemilihan path eksekusi (`if`, `case`, `when`) | choosing which path to execute (`if`, `case`, `when`) | percabangan | conditionals |
+| array | array | kumpulan element bertipe sama, ukuran tetap | a fixed-size collection of elements of the same type | larik | collections |
+| seq | sequence | kumpulan element bertipe sama, ukuran dinamis (`seq`) | a dynamically sized collection of elements of the same type (`seq`) | sequence (kecuali penjelasan awal) | collections |
+| object | object | type gabungan dengan field bernama | a composite type with named fields | objek | objects |
+| exception | exception | kondisi error yang bisa ditangkap | an error condition that can be caught | pengecualian | exceptions |
 | iterator | iterator | konstruksi yang menghasilkan value satu per satu (`yield`) | an object that yields values one at a time (`yield`) | — | loops |
 | range | range | batas value dari awal sampai akhir (`a..b`, `a..<b`) | the bounds from start to end (`a..b`, `a..<b`) | range (kecuali di kode) | loops |
 | index | index | posisi element di dalam koleksi, mulai dari 0 | the position of an element in a collection, starting at 0 | indeks | collections |
@@ -139,25 +139,25 @@ Setelah mengubah tabel ini, jalankan `python3 tools/gen-glossary.py` untuk memba
 | transaction | transaction | rangkaian perubahan yang harus berhasil semua atau tidak sama sekali | a group of changes that must all succeed or none at all | transaksi | database |
 | package | package | satuan distribusi kode yang bisa dipasang | a distributable unit of code that can be installed | paket | nimble-packages |
 | maintainer | maintainer | orang yang bertanggung jawab merawat sebuah package | the person responsible for looking after a package | pemelihara | nimble-packages |
-| output | output | data yang dikirim program ke luar | data a program sends out | keluaran | — |
-| input | input | data yang masuk ke program | data that goes into a program | masukan | — |
-| result | result | value yang dihasilkan operasi atau procedure | a value produced by an operation or procedure | hasil | — |
-| line | line | satu line kode atau teks | one line of code or text | baris | — |
-| print | print | mengirim teks ke output | sending text to the output | mencetak (output program) | — |
-| assignment | assignment | penulisan value ke variable atau field | writing a value into a variable or field | penugasan | — |
-| comparison | comparison | operasi yang membandingkan dua value dan menghasilkan `bool` | an operation that compares two values and yields a `bool` | perbandingan | — |
-| flag | flag | value boolean yang menandai keadaan | a boolean value that marks a state | saklar (kecuali saklar listrik) | — |
-| integer | integer | type angka cacah bertanda | a whole-number type | bilangan bulat | — |
-| float | float | type angka berpecahan | a fractional-number type | bilangan pecahan, pecahan | — |
-| message | message | teks yang disampaikan program ke pembaca atau sistem | text a program sends to the reader or the system | pesan | — |
+| output | output | data yang dikirim program ke luar | data a program sends out | keluaran | printing |
+| input | input | data yang masuk ke program | data that goes into a program | masukan | cli-tools |
+| result | result | value yang dihasilkan operasi atau procedure | a value produced by an operation or procedure | hasil | procedures |
+| line | line | satu line kode atau teks | one line of code or text | baris | printing |
+| print | print | mengirim teks ke output | sending text to the output | mencetak (output program) | printing |
+| assignment | assignment | penulisan value ke variable atau field | writing a value into a variable or field | penugasan | variables |
+| comparison | comparison | operasi yang membandingkan dua value dan menghasilkan `bool` | an operation that compares two values and yields a `bool` | perbandingan | operators |
+| flag | flag | value boolean yang menandai keadaan | a boolean value that marks a state | saklar (kecuali saklar listrik) | cli-tools |
+| integer | integer | type angka cacah bertanda | a whole-number type | bilangan bulat | primitive-types |
+| float | float | type angka berpecahan | a fractional-number type | bilangan pecahan, pecahan | primitive-types |
+| message | message | teks yang disampaikan program ke pembaca atau sistem | text a program sends to the reader or the system | pesan | workflow |
 | warning | warning | compiler message tentang kode yang patut diperiksa | a compiler message about code worth checking | peringatan | workflow |
 | test | test | pemeriksaan otomatis terhadap perilaku kode | an automated check of code behaviour | tes | unit-testing |
 | release | release | versi yang diterbitkan dan diberi tag | a version that is published and tagged | rilis | workflow |
-| regex | regular expression | pola teks yang dipakai `std/re` | a text pattern used by `std/re` | regexp | — |
-| capture group | capture group | bagian pola di dalam kurung yang ditangkap `matches` | the parenthesised part of a pattern captured by `matches` | grup tangkapan | — |
-| seed | seed | value awal *generator* acak | the starting value of a random generator | benih | — |
-| timestamp | timestamp | jumlah detik sejak 1970 | seconds since 1970 | cap waktu | — |
-| channel | channel | antrean *message* antar-*thread* di Nim | a message queue between threads in Nim | saluran | — |
+| regex | regular expression | pola teks yang dipakai `std/re` | a text pattern used by `std/re` | regexp | regex |
+| capture group | capture group | bagian pola di dalam kurung yang ditangkap `matches` | the parenthesised part of a pattern captured by `matches` | grup tangkapan | regex |
+| seed | seed | value awal *generator* acak | the starting value of a random generator | benih | times-and-random |
+| timestamp | timestamp | jumlah detik sejak 1970 | seconds since 1970 | cap waktu | times-and-random |
+| channel | channel | antrean *message* antar-*thread* di Nim | a message queue between threads in Nim | saluran | threads |
 | endpoint | endpoint | alamat dan metode yang dilayani sebuah API | an address and method served by an API | titik akhir | http-api |
 Aturan singkat:
 

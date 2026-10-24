@@ -18,6 +18,9 @@ PASANGAN = [
     ("books/id/index.qmd", "books/en/index.qmd"),
     ("books/id/copyright.qmd", "books/en/copyright.qmd"),
     ("books/id/appendix/answers.qmd", "books/en/appendix/answers.qmd"),
+    ("books/id/appendix/cheatsheet.qmd", "books/en/appendix/cheatsheet.qmd"),
+    ("books/id/appendix/nim-for-others.qmd", "books/en/appendix/nim-for-others.qmd"),
+    ("books/id/colophon.qmd", "books/en/colophon.qmd"),
 ]
 
 

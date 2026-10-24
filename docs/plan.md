@@ -66,7 +66,8 @@ Elemen yang menentukan kesan "buku", bukan "print website":
 - **Running header** judul bab, nomor halaman bawah tengah, TOC 2 level dengan dot leader, daftar istilah di belakang.
 - **Cover** dari template Typst 1 halaman, bukan gambar 3 MB.
 - **Target ukuran file < 8 MB.** Audiens Indonesia banyak membaca dan membagikan buku lewat WhatsApp/Telegram; PDF 40 MB tidak akan dibaca.
-- **PDF/A-2b + tagged** (Quarto: `pdf-standard: [a-2b, ua-1]`) untuk arsip dan pembaca layar.
+- **Tagged PDF** (terpasang). PDF/A-2b tidak dipakai: Typst belum menghasilkan PDF/A dari Quarto,
+  jadi klaim itu dicabut.
 - Nama file rilis: `Dasar-Pemrograman-Nim-v1.0.0.pdf`, metadata judul/penulis/versi Nim terisi.
 
 ---

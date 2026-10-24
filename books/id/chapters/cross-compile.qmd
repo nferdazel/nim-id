@@ -257,6 +257,6 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
 ## Selanjutnya
 
-Perkakas sudah lengkap: mengukur, mengoptimasi, dan mengirim biner. Tiga bab berikutnya menutup
-Bagian C dengan topik yang sering dicari: [*regex*](regex.qmd), lalu *time* dan *random*, lalu
-*thread* dan `Channel`.
+Perkakas sudah lengkap: mengukur, mengoptimasi, dan mengirim biner. Empat bab berikutnya menutup
+Bagian C: [*regex*](regex.qmd), *time* dan *random*, *thread* dan `Channel`, lalu
+[proyek akhir](final-project.qmd) yang merangkai semuanya.

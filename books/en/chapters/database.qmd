@@ -239,11 +239,11 @@ To use it, install `db_connector`, then import `db_connector/db_sqlite`. That mo
 |---|---|---|
 | open | `readFile(path)` | `open("data.db", "", "", "")` |
 | close | file closes automatically | `db.close()` |
-| run a statement | `writeFile` | `db.exec(sql"CREATE TABLE ...")` |
+| run a statement | `writeFile` | `db.exec(sql…)` |
 | affected row count | none | `db.execAffectedRows` |
-| all results | `parseJson` then `for` | `db.getAllRows(sql"SELECT ...")` |
-| one row | `rows[0]` | `db.getRow(sql"SELECT ...")` |
-| insert a value | `%*{...}` | `db.exec(sql"INSERT ...", value)` |
+| all results | `parseJson` then `for` | `db.getAllRows(sql…)` |
+| one row | `rows[0]` | `db.getRow(sql…)` |
+| insert a value | `%*{...}` | `db.exec(sql…)` |
 | transaction | temp file then `moveFile` | `BEGIN`, `COMMIT`, `ROLLBACK` |
 
 Statements are written as `sql"SELECT ..."`, which yields a `SqlQuery`. Its `?` parameters matter:

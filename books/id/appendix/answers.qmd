@@ -1,9 +1,10 @@
 # Jawaban Latihan
 
 Jawaban di bawah ini adalah yang paling langsung, bukan satu-satunya yang benar. Yang penting: kodenya
-jalan, dan alasannya bisa dijelaskan.
+jalan, dan alasannya bisa dijelaskan. Nomor bagian di sini sama dengan nomor babnya: A.5 berisi
+jawaban Bab 5.
 
-## Bab: Apa itu Nim dan kenapa
+## Apa itu Nim dan kenapa
 
 **1.** Ganti string-nya:
 
@@ -41,7 +42,7 @@ greet42.nim(3, 11) Error: type mismatch
 
 Perbaikan yang wajar: kirim string, misalnya `echo greet("42")`, atau ubah *type* *parameter*.
 
-## Bab: Instalasi Nim
+## Instalasi Nim
 
 **1.** *Output* `nim --version` di mesin yang dipakai menulis bab ini:
 
@@ -88,7 +89,7 @@ choosenim stable
 `choosenim 2.2.12` memasang dan mengaktifkan versi itu; `choosenim stable` kembali ke versi
 stabil terbaru.
 
-## Bab: Alur kerja: `nim r`, `nimble`, editor
+## Alur kerja: `nim r`, `nimble`, editor
 
 **1.** Dengan `nim r hello.nim`, tidak ada biner baru di samping *file* sumber; *result* antara masuk ke
 *directory* cache. Dengan `nim c hello.nim`, muncul biner bernama `hello` di *directory* kerja, lalu
@@ -118,7 +119,7 @@ nimble run
 `nimble init notes` membuat *directory* proyek lengkap dengan *file* `.nimble`, `nimble build`
 membangunnya, dan `nimble run` membangun sekaligus menjalankannya.
 
-## Bab: *Comment* dan doc comment
+## *Comment* dan doc comment
 
 **1.** *Comment* yang menjelaskan alasan, bukan mengulang kode:
 
@@ -168,7 +169,7 @@ Jalankan `nim doc double.nim`; exit code-nya bukan nol karena `doAssert` gagal. 
 benar adalah menulis `doAssert double(2) == 4`. Karena `nim doc` ikut menjalankan blok ini, contoh
 di dokumentasi tidak bisa diam-diam basi.
 
-## Bab: *Variable*: `var`, `let`, `const`
+## *Variable*: `var`, `let`, `const`
 
 **1.** `const` untuk *value* yang tetap, `var` untuk yang diisi belakangan.
 
@@ -206,7 +207,7 @@ name = "Nim 2"
 echo name
 ```
 
-## Bab: *Data type* primitif dan literal
+## *Data type* primitif dan literal
 
 **1.** `echo 0xFF` print `255`, `echo 0b1010` print `10`, dan `echo 1_000` print `1000`.
    Awalan menentukan basis; garis bawah diabaikan.
@@ -231,7 +232,7 @@ echo name
    const Big: int16 = 200
    ```
 
-## Bab: String, raw string, dan *character*
+## String, raw string, dan *character*
 
 **1.** Kutip ganda dan garis miring perlu di-escape:
    ```{.nim}
@@ -269,7 +270,7 @@ echo name
    ```
    *Output*: `ing`.
 
-## Bab: `echo` dan format *output*
+## `echo` dan format *output*
 
 **1.** `echo "total: ", 42` print `total: 42`. Jarak setelah titik dua datang dari string, bukan
    dari `echo`.
@@ -296,7 +297,7 @@ echo name
    ```
    *Output*: `loading...`.
 
-## Bab: Operator aritmetika, *comparison*, logika
+## Operator aritmetika, *comparison*, logika
 
 **1.** `17 div 5` bernilai `3` (pembagian bulat, dipotong), dan `17 mod 5` bernilai `2` (sisanya).
 
@@ -320,7 +321,7 @@ echo name
    ```
    Alternatif yang lebih idiomatis: `if n in 4..4:` atau `if n == 4:`.
 
-## Bab: *Branching*: `if`, `case`, `when`
+## *Branching*: `if`, `case`, `when`
 
 **1.** *Output*-nya `cold`. *Value* `5` lebih kecil dari `10`, jadi cabang `if` pertama yang jalan;
 `elif` dan `else` dilewati.
@@ -378,7 +379,7 @@ if name.len > 0:
 Nim
 ```
 
-## Bab: *Loop*: `for`, `while`, `break`, `continue`
+## *Loop*: `for`, `while`, `break`, `continue`
 
 **1.** `countup(2, 10, 2)` mulai dari `2` dan melangkah dua, jadi hanya bilangan genap yang di-print.
 
@@ -438,7 +439,7 @@ while n > 0:
 1
 ```
 
-## Bab: `array`, `seq`, dan `openArray`
+## `array`, `seq`, dan `openArray`
 
 **1.** *Index* `0` menyisipkan di depan; *element* lama bergeser, tidak ada yang hilang.
 
@@ -492,7 +493,7 @@ echo values
 @[10, 20, 30, 40]
 ```
 
-## Bab: *Procedure*, parameter, dan **return value**
+## *Procedure*, parameter, dan **return value**
 
 **1.** Tambahkan *parameter* dengan *default value*, lalu panggil dengan dan tanpa mengisinya.
 
@@ -548,7 +549,7 @@ echo double(n)
 10
 ```
 
-## Bab: Tuple dan destructuring
+## Tuple dan destructuring
 
 **1.** *Type* `Range` dideklarasikan sebagai tuple bernama, lalu diisi dengan literal.
 
@@ -594,7 +595,7 @@ echo pair[0]
 1
 ```
 
-## Bab: *Object* dan *constructor*
+## *Object* dan *constructor*
 
 **1.** Field baru cukup ditambahkan di deklarasi `object`, lalu diisi lewat *constructor*.
 
@@ -648,7 +649,7 @@ echo p.x
 2
 ```
 
-## Bab: Enum dan set
+## Enum dan set
 
 **1.** Anggota baru menerima ordinal berikutnya, yaitu 3.
 
@@ -702,7 +703,7 @@ echo c
 red
 ```
 
-## Bab: *Module*, `import`, dan `export`
+## *Module*, `import`, dan `export`
 
 **1.** Simpan `shout.nim` dan `main.nim` di *directory* yang sama.
 
@@ -760,7 +761,7 @@ echo config_module.appName
 Keuntungannya: nama `appName` berada di ruang nama *module itu*, jadi tidak bertabrakan dengan nama di
 *file* induk, dan *module itu* bisa dipakai *file* lain tanpa menyalin isinya.
 
-## Bab: *Exception* dan *effect* `raises`
+## *Exception* dan *effect* `raises`
 
 **1.**
 
@@ -831,7 +832,7 @@ log line
 close
 ```
 
-## Bab: Iterator dan `yield`
+## Iterator dan `yield`
 
 **1.**
 
@@ -883,7 +884,7 @@ dan pencarian sering berhenti di tengah. Iterator tidak menyimpan *element*, jad
 *seq* kalau *element itu* perlu diindeks, diurutkan, atau dipakai berkali-kali, karena *seq*
 menyimpan semuanya sekaligus.
 
-## Bab: Closure dan *variable* yang ditangkap
+## Closure dan *variable* yang ditangkap
 
 **1.** *Procedure* yang di-return memakai `f` dan `g` dari *parameter*, jadi keduanya ikut ditangkap:
 
@@ -930,7 +931,7 @@ echo addBase(5)
 konvensi *calling* *type*: closure memakai `{.closure.}`, sedangkan *type* yang diminta memakai
 `{.nimcall.}`.
 
-## Bab: Generic: *type* dan *procedure*
+## Generic: *type* dan *procedure*
 
 **1.** *Parameter* `openArray[T]` menerima *array* maupun *seq*, dan `T` disimpulkan dari isinya:
 
@@ -974,7 +975,7 @@ echo double(2.5)
 
 `SomeNumber` mencakup *integer* dan *float*, jadi `float64` sekarang diterima.
 
-## Bab: Template: kode yang diperluas compiler
+## Template: kode yang diperluas compiler
 
 **1.** Badan template disalin ke tempat *calling*, jadi `body` disalin dua kali:
 
@@ -1020,7 +1021,7 @@ sumUp:
 Mengganti `{.inject.}` dengan `{.dirty.}` juga berjalan, tapi mematikan hygiene untuk seluruh
 template, jadi lebih luas dari yang dibutuhkan.
 
-## Bab: Macro: kode yang membangun kode
+## Macro: kode yang membangun kode
 
 **1.** Template cukup, karena syaratnya hanya mengganti *expression*.
 
@@ -1092,7 +1093,7 @@ Infix
 Simpul luar adalah `Infix` karena `2 * 3` adalah operasi dua operand. Anaknya: operator, lalu kedua
 operand.
 
-## Bab: Konsep dan pencocokan *type*
+## Konsep dan pencocokan *type*
 
 **1.** Konsep `Sized` beserta *procedure* yang memakainya.
 
@@ -1161,7 +1162,7 @@ echo value.name
 Ada
 ```
 
-## Bab: Object varian dan `distinct`
+## Object varian dan `distinct`
 
 **1.** Tambahkan `triangle` pada enum dan cabang `case` barunya. Fieldnya harus berbeda dari nama yang
 sudah dipakai, jadi `height` milik `rect` tidak bisa dipakai lagi; di sini dipakai `altitude`.
@@ -1227,7 +1228,7 @@ yang read `kind` lalu memastikan fieldnya sesuai, dan pemeriksaan itu berjalan s
 berjalan, baik *object itu* *value* sementara maupun disimpan di `let` atau `var`. Cara menghindarinya
 adalah membaca lewat `case` pada penanda, sehingga cabang yang salah tidak pernah dieksekusi.
 
-## Bab: `ref`, `ptr`, dan `nil`
+## `ref`, `ptr`, dan `nil`
 
 **1.** Dua instance, keduanya lewat `new` lalu diisi:
 
@@ -1292,7 +1293,7 @@ var p: ptr int = addr x
 echo p[]
 ```
 
-## Bab: Manajemen *memory*: ARC, ORC, dan `=destroy`
+## Manajemen *memory*: ARC, ORC, dan `=destroy`
 
 **1.** `=destroy` di-call saat *variable* keluar dari *scope*-nya, jadi *message*-nya muncul di
 akhir blok, bukan saat alokasi:
@@ -1345,7 +1346,7 @@ ARC/ORC, jadi hooknya justru tidak diterima. `Person` di sini adalah `ref object
 hapus *procedure* itu dan serahkan pembebasan ke ARC/ORC, atau pindahkan sumber dayanya ke *type*
 `object` *value* yang dipegang oleh referensi tersebut.
 
-## Bab: Tur **standard library**
+## Tur **standard library**
 
 **1.** Pisahkan, ubah setiap kata, lalu gabungkan kembali:
 
@@ -1414,7 +1415,7 @@ let t = {"a": 1}.toTable
 echo t.getOrDefault("b", -1)
 ```
 
-## Bab: *File*, *directory*, dan OS
+## *File*, *directory*, dan OS
 
 **1.** `splitFile` sudah memisahkan nama dan ekstensi; tidak perlu memotong string manual.
 
@@ -1470,7 +1471,7 @@ if dirExists(getTempDir()):
 found
 ```
 
-## Bab: `unittest` dan disiplin pengujian
+## `unittest` dan disiplin pengujian
 
 **1.** Satu `suite`, dua `test`.
 
@@ -1535,7 +1536,7 @@ suite "math":
 Prosesnya keluar dengan kode bukan nol. Ini memang tujuannya: menguji *path* error hanya bermakna
 kalau error-nya benar-benar terjadi.
 
-## Bab: `async`/`await` dan IO
+## `async`/`await` dan IO
 
 **1.** Bungkus dua `Future` dengan `all`, lalu tunggu bersama.
 
@@ -1588,7 +1589,7 @@ proc main(): int =
 Alternatifnya, ubah `main` menjadi *procedure* async dan panggil dengan `waitFor main()` di tingkat
 teratas.
 
-## Bab: FFI ke C
+## FFI ke C
 
 **1.** Tambahkan fungsi di `helper.c`, lalu deklarasikan pasangannya di Nim.
 
@@ -1640,7 +1641,7 @@ echo triple(2)
 6
 ```
 
-## Bab: *Compile* ke JavaScript
+## *Compile* ke JavaScript
 
 **1.** *Output*-nya sama persis. Backend JavaScript memetakan aturan *type* dan pembagian Nim ke
 operator JavaScript yang setara.
@@ -1680,7 +1681,7 @@ marshal.nim(52, 10) Error: marshal module is not supported in javascript.
 Perbaikannya mengganti *module itu* dengan yang didukung semua backend, misalnya `std/json` untuk
 urusan data, lalu membangun ulang dengan `nim js`.
 
-## Bab: CLI dengan `parseopt`
+## CLI dengan `parseopt`
 
 **1.** Tandai `--quiet` sebagai *option* tanpa *value* lewat `longNoVal`, lalu pakai bendera itu untuk
 melewati pencetakan token:
@@ -1773,7 +1774,7 @@ one
 *option*. Contohnya nama *file* `-draft.txt`: tulis `tool -- -draft.txt` supaya `-draft.txt` sampai
 sebagai *argument* biasa.
 
-## Bab: HTTP API dengan `asynchttpserver`
+## HTTP API dengan `asynchttpserver`
 
 **1.** Tambahkan satu cabang pada `dispatch`, lalu print balasannya:
 
@@ -1838,7 +1839,7 @@ proc handle(req: Request) {.async.} =
 sah, atau metode yang salah untuk *route* itu. `Http404` dipakai saat *route itu* tidak ada sama sekali,
 misalnya GET ke `/missing`.
 
-## Bab: Menyimpan data: `Table`, JSON, dan SQLite
+## Menyimpan data: `Table`, JSON, dan SQLite
 
 **1.** Tambahkan satu buku, lalu urutkan seperti semula:
 
@@ -1918,7 +1919,7 @@ Yang pindah ke SQLite: penyaringan dan pengurutan (`WHERE`, `ORDER BY`), *index*
 penulisan bersamaan dari beberapa proses. Kode di bab ini tidak salah; ia hanya berhenti memadai
 begitu data tumbuh.
 
-## Bab: Membuat dan menerbitkan *package* nimble
+## Membuat dan menerbitkan *package* nimble
 
 **1.** Empat di antaranya: (a) kode yang sama dipakai lebih dari satu proyek, (b) ada `README.md` yang
 menunjukkan cara memasang, mengimpor, dan memanggilnya, (c) ada *test* yang lulus lewat `nimble test`,
@@ -1974,7 +1975,7 @@ nama *procedure* memutus kode pemakai dan perubahan yang memutus wajib menaikkan
 *package* masih di bawah `1.0.0`, perubahan ketiga itu cukup ditandai `0.2.0` dengan catatan di
 riwayat perubahan.
 
-## Bab: Benchmark dan profiling
+## Benchmark dan profiling
 
 **1.** Dengan 100.000 iterasi, `checksum` menjumlahkan 0 sampai 99.999, jadi *value itu* separuh dari
 100.000 kali 99.999:
@@ -2041,7 +2042,7 @@ main.nim(17, 42) Error: undeclared field: 'inMilliseconds' for type times.Durati
 - Waktu habis di *input*/*output* atau menunggu jaringan. Mempercepat perhitungan tidak mengubah apa pun
   kalau prosesornya memang menganggur menunggu jawaban.
 
-## Bab: Cross-compile dan deploy biner
+## Cross-compile dan deploy biner
 
 **1.** *Value* itu mengikuti mesin yang dipakai. Cara cepat membacanya:
 
@@ -2109,7 +2110,7 @@ Kalau toolchain-nya tidak ada, build berhenti di compiler C dengan
 `fatal error: 'windows.h' file not found`, karena header Windows tidak tersedia. Kalau targetnya
 tidak diberikan, yang dihasilkan adalah biner host yang tidak bisa dijalankan di Windows.
 
-## Bab: *Regex* dengan `std/re`
+## *Regex* dengan `std/re`
 
 **1.** Tambahkan grup ketiga, lalu print `matches[2]`:
 
@@ -2181,7 +2182,7 @@ Ada
 **5.** Memeriksa akhiran tetap, misalnya `endsWith(".txt")`, atau awalan tetap dengan `startsWith`.
 Tidak ada pola yang perlu di-write, dan `strutils` lebih mudah dibaca.
 
-## Bab: *Time* dan *random*
+## *Time* dan *random*
 
 **1.** Pola `dddd` print nama hari penuh:
 
@@ -2239,7 +2240,7 @@ echo created
 kegagalan sulit diulang. Cara menghindarinya: terima `DateTime` sebagai *parameter*, lalu kirim
 *value* tetap dari *test*.
 
-## Bab: *Thread* dan `Channel`
+## *Thread* dan `Channel`
 
 **1.** Kirim dua *value*, lalu call `recv` dua kali:
 
@@ -2346,7 +2347,7 @@ main()
 *Message* `type mismatch` muncul karena `Channel[string]` tidak bisa mengeluarkan `int`; menyeragamkan
 *type* *channel* menghilangkan error itu.
 
-## Bab: Proyek akhir: catatan dari terminal
+## Proyek akhir: catatan dari terminal
 
 **1.** Tambahkan satu *procedure* di `a02_store.nim`, sejajar dengan `removeNote`:
 

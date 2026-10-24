@@ -256,6 +256,6 @@ Answers are in [Appendix A](../appendix/answers.qmd).
 
 ## Next
 
-The tools are complete: measure, optimize, and ship a binary. The next three chapters close Part C
-with topics readers keep asking for: [regular expressions](regex.qmd), then time and random
-numbers, then threads and channels.
+The tools are complete: measure, optimize, and ship a binary. The next four chapters close Part C:
+[regular expressions](regex.qmd), time and random numbers, threads and channels, then the
+[final project](final-project.qmd) that ties them together.

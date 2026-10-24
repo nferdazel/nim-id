@@ -4,25 +4,28 @@
 From zero to working programs
 
 Author: Fredianto\
-Version: {{< var version >}}\
-Date: 23 October 2026
+Version: {{< var version >}}
 
 © 2026 Fredianto. This book is self-published, with no publisher and no ISBN.
 
 ## Book text
 
 The book text is licensed under [Creative Commons Attribution-ShareAlike 4.0
-International (CC BY-SA 4.0)](https://creativecommons.org/licenses/by-sa/4.0/).
-
-You may copy, print, and modify the text, including commercially, on two conditions: credit the
-author and the source, and release any adaptation under the same license. The full license text
-sits at the repository root in `LICENSE`.
+International (CC BY-SA 4.0)](https://creativecommons.org/licenses/by-sa/4.0/). In short: you may
+copy, print, modify, and resell the text, as long as you credit the author and the source and release
+any adaptation under the same license. The full license text is at that link, so you do not need to
+download the repository to read it.
 
 ## Code samples
 
 All code in `examples/` and every code block inside the book is licensed under
 [MIT](https://opensource.org/license/mit). You may use, modify, and sell the code with no
-attribution requirement. The full text is in `LICENSE-CODE`.
+attribution requirement. The full license text is at that link.
+
+## Production
+
+Tested with Nim 2.2.12. The PDF is built from Markdown sources with Quarto 1.10.19 and Typst. This
+book has no ISBN and is not issued by any publisher.
 
 ## Source and contact
 

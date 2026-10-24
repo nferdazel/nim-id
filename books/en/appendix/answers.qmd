@@ -1,9 +1,9 @@
 # Exercise Answers
 
 These are the most direct answers, not the only correct ones. What matters: the code runs, and you
-can explain why.
+can explain why. The section number matches the chapter number: A.5 holds the answers to Chapter 5.
 
-## Chapter: What Nim is and why
+## What Nim is and why
 
 **1.** Change the string:
 
@@ -41,7 +41,7 @@ greet42.nim(3, 11) Error: type mismatch
 
 A reasonable fix: pass a string, such as `echo greet("42")`, or change the parameter type.
 
-## Chapter: Installing Nim
+## Installing Nim
 
 **1.** The output of `nim --version` on the machine used to write this chapter:
 
@@ -88,7 +88,7 @@ choosenim stable
 `choosenim 2.2.12` installs and activates that version; `choosenim stable` returns to the latest
 stable release.
 
-## Chapter: Workflow: `nim r`, `nimble`, editor
+## Workflow: `nim r`, `nimble`, editor
 
 **1.** With `nim r hello.nim`, no new binary appears next to the source; intermediates go to the cache
 directory. With `nim c hello.nim`, a binary named `hello` appears in the working directory, then runs
@@ -117,7 +117,7 @@ nimble run
 `nimble init notes` creates a project directory with a `.nimble` file, `nimble build` builds it, and
 `nimble run` builds and runs it in one step.
 
-## Chapter: Comments and doc comments
+## Comments and doc comments
 
 **1.** A comment that explains a reason, not a repetition of the code:
 
@@ -167,7 +167,7 @@ Run `nim doc double.nim`; the exit code is non-zero because `doAssert` fails. Th
 `doAssert double(2) == 4`. Because `nim doc` runs this block, documentation examples cannot quietly
 go stale.
 
-## Chapter: Variables: `var`, `let`, `const`
+## Variables: `var`, `let`, `const`
 
 **1.** `const` for a fixed value, `var` for one filled in later.
 
@@ -205,7 +205,7 @@ name = "Nim 2"
 echo name
 ```
 
-## Chapter: Primitive types and literals
+## Primitive types and literals
 
 **1.** `echo 0xFF` prints `255`, `echo 0b1010` prints `10`, and `echo 1_000` prints `1000`. The prefix
    sets the base; the underscore is ignored.
@@ -229,7 +229,7 @@ echo name
    const Big: int16 = 200
    ```
 
-## Chapter: Strings, raw strings, and characters
+## Strings, raw strings, and characters
 
 **1.** The double quote and the backslash have to be escaped:
    ```{.nim}
@@ -267,7 +267,7 @@ echo name
    ```
    Output: `ing`.
 
-## Chapter: Printing and formatting output
+## Printing and formatting output
 
 **1.** `echo "total: ", 42` prints `total: 42`. The gap after the colon comes from the string, not from
    `echo`.
@@ -294,7 +294,7 @@ echo name
    ```
    Output: `loading...`.
 
-## Chapter: Arithmetic, comparison, and logic operators
+## Arithmetic, comparison, and logic operators
 
 **1.** `17 div 5` is `3` (integer division, truncated), and `17 mod 5` is `2` (the remainder).
 
@@ -318,7 +318,7 @@ echo name
    ```
    A more idiomatic alternative: `if n in 4..4:` or `if n == 4:`.
 
-## Chapter: Branching: `if`, `case`, `when`
+## Branching: `if`, `case`, `when`
 
 **1.** The output is `cold`. The value `5` is less than `10`, so the first `if` branch runs;
 `elif` and `else` are skipped.
@@ -376,7 +376,7 @@ if name.len > 0:
 Nim
 ```
 
-## Chapter: Loops: `for`, `while`, `break`, `continue`
+## Loops: `for`, `while`, `break`, `continue`
 
 **1.** `countup(2, 10, 2)` starts at `2` and steps by two, so only even numbers are printed.
 
@@ -435,7 +435,7 @@ while n > 0:
 1
 ```
 
-## Chapter: `array`, `seq`, and `openArray`
+## `array`, `seq`, and `openArray`
 
 **1.** Index `0` inserts at the front; the old elements shift along, none is lost.
 
@@ -490,7 +490,7 @@ echo values
 @[10, 20, 30, 40]
 ```
 
-## Chapter: Procedures, parameters, and return values
+## Procedures, parameters, and return values
 
 **1.** Add a parameter with a default value, then call it with and without one.
 
@@ -546,7 +546,7 @@ echo double(n)
 10
 ```
 
-## Chapter: Tuples and destructuring
+## Tuples and destructuring
 
 **1.** The `Range` type is declared as a named tuple, then filled with a literal.
 
@@ -592,7 +592,7 @@ echo pair[0]
 1
 ```
 
-## Chapter: Objects and constructors
+## Objects and constructors
 
 **1.** A new field is added to the `object` declaration, then filled through the constructor.
 
@@ -646,7 +646,7 @@ echo p.x
 2
 ```
 
-## Chapter: Enums and sets
+## Enums and sets
 
 **1.** The new member takes the next ordinal, which is 3.
 
@@ -701,7 +701,7 @@ echo c
 red
 ```
 
-## Chapter: Modules, `import`, and `export`
+## Modules, `import`, and `export`
 
 **1.** Save `shout.nim` and `main.nim` in the same folder.
 
@@ -760,7 +760,7 @@ echo config_module.appName
 The advantage: the name `appName` lives in its module's namespace, so it cannot collide with a name
 in the parent file, and other files can use the module without copying its contents.
 
-## Chapter: Exceptions and the `raises` effect
+## Exceptions and the `raises` effect
 
 **1.**
 
@@ -830,7 +830,7 @@ log line
 close
 ```
 
-## Chapter: Iterators and `yield`
+## Iterators and `yield`
 
 **1.**
 
@@ -881,7 +881,7 @@ a search often stops early. An iterator stores no elements, so it saves memory. 
 when elements must be indexed, sorted, or used several times, because a sequence keeps them all at
 once.
 
-## Chapter: Closures and captured variables
+## Closures and captured variables
 
 **1.** The returned procedure uses `f` and `g` from its parameters, so both are captured:
 
@@ -926,7 +926,7 @@ The compiler message mentions a *calling convention* because the problem is not 
 but the type's calling convention: a closure uses `{.closure.}`, while the requested type uses
 `{.nimcall.}`.
 
-## Chapter: Generics: types and procedures
+## Generics: types and procedures
 
 **1.** The `openArray[T]` parameter accepts an array or a sequence, and `T` is inferred from the
 contents:
@@ -971,7 +971,7 @@ echo double(2.5)
 
 `SomeNumber` covers both integers and floats, so `float64` is now accepted.
 
-## Chapter: Templates: code expanded by the compiler
+## Templates: code expanded by the compiler
 
 **1.** The template body is copied into the call site, so `body` is copied twice:
 
@@ -1016,7 +1016,7 @@ sumUp:
 Replacing `{.inject.}` with `{.dirty.}` also works, but turns hygiene off for the whole template, so
 it is wider than needed.
 
-## Chapter: Macros: code that builds code
+## Macros: code that builds code
 
 **1.** A template is enough, since the task is only to substitute an expression.
 
@@ -1088,7 +1088,7 @@ Infix
 The outer node is `Infix` because `2 * 3` is an operation on two operands. Its children are the
 operator, then the two operands.
 
-## Chapter: Concepts and type matching
+## Concepts and type matching
 
 **1.** The `Sized` concept and a procedure that uses it.
 
@@ -1156,7 +1156,7 @@ echo value.name
 Ada
 ```
 
-## Chapter: Variant objects and `distinct`
+## Variant objects and `distinct`
 
 **1.** Add `triangle` to the enum and a new `case` branch. Its fields must differ from names already in
 use, so the `height` of `rect` cannot be reused; `altitude` stands in here.
@@ -1223,7 +1223,7 @@ reads `kind` and confirms the field belongs to it, and that check runs while the
 the object is a temporary or stored in a `let` or `var`. The way around it is to read through a `case`
 on the tag, so the wrong branch is never executed.
 
-## Chapter: `ref`, `ptr`, and `nil`
+## `ref`, `ptr`, and `nil`
 
 **1.** Two instances, both through `new` and then filled in:
 
@@ -1288,7 +1288,7 @@ var p: ptr int = addr x
 echo p[]
 ```
 
-## Chapter: Memory management: ARC, ORC, and `=destroy`
+## Memory management: ARC, ORC, and `=destroy`
 
 **1.** `=destroy` is called when a variable leaves its scope, so the message appears at the end of
 the block, not at allocation:
@@ -1341,7 +1341,7 @@ ARC/ORC, so the hook is rejected. `Person` here is a `ref object`. The fix is to
 the procedure and let ARC/ORC free it, or to move the resource into a value `object` that the
 reference holds.
 
-## Chapter: A tour of the standard library
+## A tour of the standard library
 
 **1.** Split, transform each word, then join back:
 
@@ -1410,7 +1410,7 @@ let t = {"a": 1}.toTable
 echo t.getOrDefault("b", -1)
 ```
 
-## Chapter: Files, directories, and OS
+## Files, directories, and OS
 
 **1.** `splitFile` already separates the name and the extension; no manual slicing needed.
 
@@ -1466,7 +1466,7 @@ if dirExists(getTempDir()):
 found
 ```
 
-## Chapter: `unittest` and test discipline
+## `unittest` and test discipline
 
 **1.** One `suite`, two `test` blocks.
 
@@ -1530,7 +1530,7 @@ error, the test fails with `Expect Failed, no exception was thrown.` and is mark
 process exits with a non-zero code. That is the point: testing an error path is meaningful only when
 the error really happens.
 
-## Chapter: `async`/`await` and IO
+## `async`/`await` and IO
 
 **1.** Wrap both `Future` values with `all`, then wait for them together.
 
@@ -1582,7 +1582,7 @@ proc main(): int =
 Alternatively, turn `main` into an async procedure and call it with `waitFor main()` at the top
 level.
 
-## Chapter: FFI to C
+## FFI to C
 
 **1.** Add the function to `helper.c`, then declare its counterpart in Nim.
 
@@ -1634,7 +1634,7 @@ echo triple(2)
 6
 ```
 
-## Chapter: Compiling to JavaScript
+## Compiling to JavaScript
 
 **1.** The output is exactly the same. The JavaScript backend maps Nim's type and division rules to
 the matching JavaScript operators.
@@ -1674,7 +1674,7 @@ marshal.nim(52, 10) Error: marshal module is not supported in javascript.
 The fix is to use a module every backend supports, such as `std/json` for data, and rebuild with
 `nim js`.
 
-## Chapter: CLI tools with `parseopt`
+## CLI tools with `parseopt`
 
 **1.** Mark `--quiet` as an option with no value through `longNoVal`, then use the flag to skip
 printing tokens:
@@ -1767,7 +1767,7 @@ one
 option. Take the file name `-draft.txt`: write `tool -- -draft.txt` so `-draft.txt` arrives as a
 plain argument.
 
-## Chapter: An HTTP API with `asynchttpserver`
+## An HTTP API with `asynchttpserver`
 
 **1.** Add one branch to `dispatch`, then print the reply:
 
@@ -1832,7 +1832,7 @@ proc handle(req: Request) {.async.} =
 JSON, or the wrong method for that route. `Http404` is used when the route does not exist at all,
 for example a GET to `/missing`.
 
-## Chapter: Storing data: `Table`, JSON, and SQLite
+## Storing data: `Table`, JSON, and SQLite
 
 **1.** Add one book, then sort as before:
 
@@ -1912,7 +1912,7 @@ moves to SQLite: filtering and sorting (`WHERE`, `ORDER BY`), indexes, transacti
 writes from several processes. Nothing in this chapter was wrong; it simply stops being enough once
 the data grows.
 
-## Chapter: Building and publishing a nimble package
+## Building and publishing a nimble package
 
 **1.** Four of them: (a) the same code is used by more than one project, (b) a `README.md` shows how
 to install, import, and call it, (c) tests pass with `nimble test`, and (d) the license is explicit.
@@ -1966,7 +1966,7 @@ message changed; (c) `2.0.0` if the package had already reached `1.0.0`, because
 breaks user code and a breaking change must raise the major number. While the package is below `1.0.0`, the third change may simply be marked `0.2.0`
 with a note in the changelog.
 
-## Chapter: Benchmarks and profiling
+## Benchmarks and profiling
 
 **1.** With 100,000 iterations, `checksum` adds up 0 through 99,999, so it is half of 100,000 times
 99,999:
@@ -2032,7 +2032,7 @@ procedure that reads it, and that lives in `std/times`. The fix is to add `impor
 - The time goes into input/output or waiting for a network reply. Making the arithmetic faster
   changes nothing when the processor is idle waiting for an answer.
 
-## Chapter: Cross-compiling and deploying binaries
+## Cross-compiling and deploying binaries
 
 **1.** The values follow the machine you use. The quick way to read them:
 
@@ -2100,7 +2100,7 @@ If the toolchain is missing, the build stops in the C compiler with
 `fatal error: 'windows.h' file not found`, because the Windows headers are not available. If the
 target is not given, what comes out is a host binary that cannot run on Windows.
 
-## Chapter: Regular expressions with `std/re`
+## Regular expressions with `std/re`
 
 **1.** Add a third group, then print `matches[2]`:
 
@@ -2172,7 +2172,7 @@ Ada
 **5.** Checking a fixed suffix, for example `endsWith(".txt")`, or a fixed prefix with `startsWith`.
 No pattern has to be written, and `strutils` is easier to read.
 
-## Chapter: Time and random numbers
+## Time and random numbers
 
 **1.** The pattern `dddd` prints the full weekday name:
 
@@ -2230,7 +2230,7 @@ echo created
 failure is hard to repeat. The way out: take a `DateTime` as a parameter and pass a fixed value from
 the test.
 
-## Chapter: Threads and channels
+## Threads and channels
 
 **1.** Send two values, then call `recv` twice:
 
@@ -2337,7 +2337,7 @@ main()
 The `type mismatch` message appears because `Channel[string]` cannot hand out an `int`; matching the
 channel type removes the error.
 
-## Chapter: Final project: notes from the terminal
+## Final project: notes from the terminal
 
 **1.** Add one procedure to `a02_store.nim`, alongside `removeNote`:
 

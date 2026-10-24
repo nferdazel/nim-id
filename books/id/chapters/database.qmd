@@ -246,11 +246,11 @@ Untuk memakainya, pasang `db_connector`, lalu impor `db_connector/db_sqlite`. *M
 |---|---|---|
 | membuka | `readFile(path)` | `open("data.db", "", "", "")` |
 | menutup | *file* ditutup otomatis | `db.close()` |
-| menjalankan *command* | `writeFile` | `db.exec(sql"CREATE TABLE ...")` |
+| menjalankan *command* | `writeFile` | `db.exec(sql…)` |
 | jumlah *row* terpengaruh | tidak ada | `db.execAffectedRows` |
-| semua *result* | `parseJson` lalu `for` | `db.getAllRows(sql"SELECT ...")` |
-| satu *row* | `rows[0]` | `db.getRow(sql"SELECT ...")` |
-| menyisipkan *value* | `%*{...}` | `db.exec(sql"INSERT ...", value)` |
+| semua *result* | `parseJson` lalu `for` | `db.getAllRows(sql…)` |
+| satu *row* | `rows[0]` | `db.getRow(sql…)` |
+| menyisipkan *value* | `%*{...}` | `db.exec(sql…)` |
 | *transaction* | *file* sementara lalu `moveFile` | `BEGIN`, `COMMIT`, `ROLLBACK` |
 
 *Command itu* di-write sebagai `sql"SELECT ..."`, yang menghasilkan *value* `SqlQuery`. *Parameter* `?` di

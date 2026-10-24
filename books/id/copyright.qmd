@@ -1,28 +1,31 @@
 # Hak Cipta dan Lisensi {.unnumbered}
 
 **Dasar Pemrograman Nim**\
-Belajar bahasa Nim dari nol, dalam bahasa Indonesia
+Belajar bahasa Nim dari nol, dalam Bahasa Indonesia
 
 Penulis: Fredianto\
-Versi: {{< var version >}}\
-Tanggal: 23 Oktober 2026
+Versi: {{< var version >}}
 
 © 2026 Fredianto. Buku ini diterbitkan sendiri, tanpa penerbit dan tanpa ISBN.
 
 ## Teks buku
 
 Teks buku dilisensikan di bawah [Creative Commons Attribution-ShareAlike 4.0
-International (CC BY-SA 4.0)](https://creativecommons.org/licenses/by-sa/4.0/deed.id).
-
-Artinya pembaca boleh menyalin, mencetak, dan mengubah teks buku, termasuk untuk keperluan
-komersial. Syaratnya dua: sebutkan penulis dan sumbernya, dan sebarkan hasil ubahan dengan
-lisensi yang sama. Teks lengkap lisensi ada di akar repositori pada *file* `LICENSE`.
+International (CC BY-SA 4.0)](https://creativecommons.org/licenses/by-sa/4.0/deed.id). Ringkasnya:
+pembaca boleh menyalin, mencetak, mengubah, dan menjual kembali teks, asalkan penulis dan sumbernya
+disebut dan hasil ubahan disebarkan dengan lisensi yang sama. Teks lisensi lengkap ada di tautan itu,
+jadi tidak perlu mengunduh repositori untuk membacanya.
 
 ## Kode contoh
 
-Semua kode di `examples/` dan potongan kode di dalam buku dilisensikan di bawah
-[MIT](https://opensource.org/license/mit). Pembaca boleh memakai, mengubah, dan menjual kode
-tanpa syarat atribusi. Teks lengkapnya ada di *file* `LICENSE-CODE`.
+Semua kode di `examples/` dan setiap potongan kode di dalam buku dilisensikan di bawah
+[MIT](https://opensource.org/license/mit). Pembaca boleh memakai, mengubah, dan menjual kode tanpa
+syarat atribusi. Teks lisensi lengkap ada di tautan itu.
+
+## Produksi
+
+Diuji dengan Nim 2.2.12. PDF dibangun dari sumber Markdown memakai Quarto 1.10.19 dan Typst. Buku ini
+tidak punya ISBN dan tidak diterbitkan oleh penerbit mana pun.
 
 ## Sumber dan kontak
 
