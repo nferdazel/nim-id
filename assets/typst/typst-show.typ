@@ -380,9 +380,12 @@
 #show: book.with(
   width: page-w,
   height: page-h,
-  // Inner margin carries the binding, the outer one stays smaller; the top is
-  // tight so the running head sits close to the text block.
-  margin: (inside: 32mm, outside: 27mm, top: m-top, bottom: m-bottom),
+  // Equal margins on both sides. There is no print edition, so a mirrored gutter
+  // buys nothing and costs 5 mm of shift between one page and the next, which is
+  // exactly what "the indentation is not uniform" looks like. The measure stays
+  // 119 mm either way, so nothing reflows; the top is tight so the running head
+  // sits close to the text block.
+  margin: (left: 29.5mm, right: 29.5mm, top: m-top, bottom: m-bottom),
   font-size: 11pt,
   // Space between paragraphs, no first-line indent (DESIGN.md): with an indent
   // and this spacing together the start of a paragraph becomes ambiguous.

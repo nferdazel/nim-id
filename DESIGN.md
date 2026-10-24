@@ -76,8 +76,10 @@ Aturan:
 
 ## PDF
 
-- Trim 178 × 233 mm, margin cermin dalam 32 / luar 27 / atas 21 / bawah 25 mm (sudah terpasang lewat
-  `assets/typst/typst-show.typ`).
+- Trim 178 × 233 mm, margin kiri dan kanan sama 29,5 mm, atas 21 mm, bawah 25 mm (terpasang lewat
+  `assets/typst/typst-show.typ`). Tidak ada margin cermin: buku ini digital-only, dan margin
+  bercermin membuat kolom teks bergeser 5 mm antara halaman ganjil dan genap, yang terbaca sebagai
+  indentasi tidak seragam saat halaman dibalik. Lebar kolom tetap 119 mm, jadi tidak ada reflow.
 - Badan 10pt, rata kiri (tidak justify, karena justify pada kolom sempit menghasilkan sungai
   spasi), jarak antarparagraf 1.3em, tanpa indentasi baris pertama. Diterapkan di
   `assets/typst/typst-show.typ` lewat `#show par: set par(justify: false, spacing: 1.3em)`.
