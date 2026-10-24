@@ -22,6 +22,15 @@ All code in `examples/` and every code block inside the book is licensed under
 [MIT](https://opensource.org/license/mit). You may use, modify, and sell the code with no
 attribution requirement. The full license text is at that link.
 
+## Trademark and liability
+
+The name Nim is used to refer to the Nim programming language and its project. This book is an
+independent work: it is not affiliated with, endorsed by, or sponsored by the Nim team, and any
+mistake in it belongs to the author.
+
+The text and the code samples are provided as they are, with no warranty of any kind, express or
+implied. The author is not liable for any loss arising from the use of the book or of the code in it.
+
 ## Production
 
 Tested with Nim 2.2.12. The PDF is built from Markdown sources with Quarto 1.10.19 and Typst. This

@@ -22,6 +22,16 @@ Semua kode di `examples/` dan setiap potongan kode di dalam buku dilisensikan di
 [MIT](https://opensource.org/license/mit). Pembaca boleh memakai, mengubah, dan menjual kode tanpa
 syarat atribusi. Teks lisensi lengkap ada di tautan itu.
 
+## Merek dan tanggung jawab
+
+Nama Nim dipakai untuk merujuk bahasa pemrograman Nim dan proyeknya. Buku ini karya independen:
+tidak ada afiliasi, dukungan, atau sponsor dari tim Nim, dan setiap kekeliruan di dalamnya milik
+penulis.
+
+Isi buku dan kode contoh disediakan apa adanya, tanpa jaminan apa pun, tersurat maupun tersirat.
+Penulis tidak bertanggung jawab atas kerugian yang timbul dari pemakaian isi buku atau kode di
+dalamnya.
+
 ## Produksi
 
 Diuji dengan Nim 2.2.12. PDF dibangun dari sumber Markdown memakai Quarto 1.10.19 dan Typst. Buku ini
