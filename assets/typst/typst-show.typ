@@ -150,17 +150,19 @@
       #text(size: 7.5pt, tracking: 0.34em, fill: ink-soft)[NIM]
     ])
   ])
-  #place(bottom + left, block(width: 178mm, height: 26mm, fill: accent)[
-    #pad(x: 22mm, top: 6.5mm)[
+  // The foot band is placed from both edges instead of flowing: the imprint
+  // sits 8 mm below the top, the licence 7.5 mm above the trim, so neither can
+  // drift past the paper when the type or the wording changes.
+  #place(bottom + left, block(width: 178mm, height: 28mm, fill: accent)[
+    #place(top + left, dx: 22mm, dy: 8mm, block(width: 134mm)[
       #grid(
         columns: (1fr, auto),
         align: (left, right),
         text(size: 12.5pt, fill: white)[#doc-author],
         text(size: 9pt, fill: white.transparentize(22%))[#version-word #doc-version],
       )
-      #v(2.6mm)
-      #text(size: 8pt, fill: white.transparentize(22%))[#license-line]
-    ]
+    ])
+    #place(bottom + left, dx: 22mm, dy: -7.5mm, text(size: 8pt, fill: white.transparentize(22%))[#license-line])
   ])
 ]
 
