@@ -325,8 +325,6 @@ hanya kalau perilaku memang berbeda per *type*; selain itu `proc` lebih murah da
 
 ## Latihan
 
-## Latihan
-
 1. Tambahkan field `email: string` pada `Person`, isi lewat *constructor*, lalu tampilkan.
 2. Tanpa menjalankan, prediksi *output*-nya:
    ```{.nim}

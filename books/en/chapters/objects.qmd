@@ -322,8 +322,6 @@ Both objects are a `Dog` and a `Cat`, yet the proc that runs is always the `Anim
 
 ## Exercises
 
-## Exercises
-
 1. Add an `email: string` field to `Person`, fill it with the constructor, then print it.
 2. Without running it, predict the output:
    ```{.nim}
