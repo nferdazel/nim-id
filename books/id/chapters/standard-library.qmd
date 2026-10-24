@@ -193,8 +193,8 @@ echo data["name"]
 Error: unhandled exception: key not found: name [KeyError]
 ```
 
-*Message*-nya menyebut kunci yang dicari dan jenis `KeyError`. *Output* lengkapnya juga memuat jejak
-tumpukan. Sebelum membaca, uji dengan `hasKey`, atau pakai `getOrDefault` supaya tidak berhenti
+*Message*-nya menyebut kunci yang dicari dan jenis `KeyError`. *Output* lengkapnya juga memuat
+*stack trace*. Sebelum membaca, uji dengan `hasKey`, atau pakai `getOrDefault` supaya tidak berhenti
 saat kuncinya hilang.
 
 ## *Module* lain punya babnya sendiri
