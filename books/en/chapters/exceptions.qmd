@@ -176,7 +176,7 @@ error: failed
 ```
 
 This check runs at compile time. The old `--effect:off` switch that disabled it is gone in Nim
-2.2.12.
+2.4.0.
 
 ```{.txt}
 command line(1, 2) Error: invalid command line option: '--effect'

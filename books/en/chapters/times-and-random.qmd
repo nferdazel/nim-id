@@ -46,7 +46,7 @@ the day, and `HH:mm:ss` for hour, minute, and second. `MMM` produces the short m
 long one, and `ddd` the weekday name. Fields such as `launch.hour` and `launch.minute` take a piece
 of the `DateTime` without reformatting it.
 
-In Nim 2.2.12 the old name of this procedure is `initDateTime`, and that name is marked
+In Nim 2.4.0 the old name of this procedure is `initDateTime`, and that name is marked
 `deprecated`. Use `dateTime`.
 
 ## Parsing text into time

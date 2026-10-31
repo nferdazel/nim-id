@@ -23,12 +23,15 @@ A reasonable fix: pass a string, such as `echo greet("42")`, or change the param
 **1.** The output of `nim --version` on the machine used to write this chapter:
 
 ```{.txt}
-Nim Compiler Version 2.2.12 [MacOSX: arm64]
-Compiled at 2026-09-08
+Nim Compiler Version 2.4.0 [MacOSX: arm64]
+Compiled at 2026-10-28
 Copyright (c) 2006-2026 by Andreas Rumpf
+active boot switches: -d:release -d:nimUseLinenoise
 ```
 
-The first line is what matters. The `[MacOSX: arm64]` part differs on every system.
+The first line is what matters. The `[MacOSX: arm64]` part differs on every system, and the last
+line names the build switches the compiler was built with; on another machine that line can differ or
+not appear at all.
 
 **2.** A sample message:
 
@@ -55,14 +58,14 @@ Nim translates code to C, and the C compiler builds the binary. Without a C comp
 breaks in the middle. That is why the "make sure the C compiler is ready" step in this chapter is not
 optional.
 
-**5.** From the latest stable release to 2.2.12, then back:
+**5.** From the latest stable release to 2.4.0, then back:
 
 ```{.bash}
-choosenim 2.2.12
+choosenim 2.4.0
 choosenim stable
 ```
 
-`choosenim 2.2.12` installs and activates that version; `choosenim stable` returns to the latest
+`choosenim 2.4.0` installs and activates that version; `choosenim stable` returns to the latest
 stable release.
 
 **6.** Change the string:

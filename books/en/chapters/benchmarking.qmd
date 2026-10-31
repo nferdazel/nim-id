@@ -10,7 +10,7 @@ invisible in the code.
 
 After this chapter you can measure a block with `getMonoTime`, read a `Duration` and
 `inMilliseconds`, write examples whose output stays stable, tell CPU time from wall-clock time, and
-run the profiler that ships with Nim 2.2.12.
+run the profiler that ships with Nim 2.4.0.
 :::
 
 ## Measuring one block

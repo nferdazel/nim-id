@@ -34,7 +34,7 @@ dalamnya.
 
 ## Produksi
 
-Diuji dengan Nim 2.2.12. PDF dibangun dari sumber Markdown memakai Quarto 1.10.19 dan Typst. Buku ini
+Diuji dengan Nim 2.4.0. PDF dibangun dari sumber Markdown memakai Quarto 1.10.19 dan Typst. Buku ini
 tidak punya ISBN dan tidak diterbitkan oleh penerbit mana pun.
 
 ## Sumber dan kontak

@@ -6,7 +6,7 @@ data sama tetapi tidak boleh tertukar, misalnya id pengguna dan id pesanan.
 
 Nim menjawab keduanya dengan cara berbeda. Object varian menyatukan beberapa bentuk ke dalam satu
 *type* dengan sebuah penanda. `distinct` membuat *type* benar-benar baru, sehingga compiler menolak
-pencampuran. Semua contoh diuji di Nim 2.2.12.
+pencampuran. Semua contoh diuji di Nim 2.4.0.
 
 ::: {.callout-note}
 ## Tujuan bab

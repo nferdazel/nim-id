@@ -8,7 +8,7 @@ but that only picks a branch.
 At that point `macro` takes over: a procedure that runs at compile time and takes code as data.
 
 This chapter starts from templates, shows the point where they run out, then builds a macro step by
-step. Every example is tested on Nim 2.2.12.
+step. Every example is tested on Nim 2.4.0.
 
 ::: {.callout-note}
 ## What you will be able to do

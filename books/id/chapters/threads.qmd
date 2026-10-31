@@ -43,7 +43,7 @@ main()
 ```
 
 Simpan sebagai `main.nim`, lalu jalankan `nim c -r main.nim`. *Module*-nya bernama
-`std/typedthreads`; nama `std/threads` tidak ada di Nim 2.2.12. `Thread[int]` berarti *procedure* di
+`std/typedthreads`; nama `std/threads` tidak ada di Nim 2.4.0. `Thread[int]` berarti *procedure* di
 dalamnya menerima satu `int`. `createThread(worker, square, 5)` menjalankan `square(5)` di *thread*
 baru, dan `joinThread` menunggu sampai pekerjaan itu selesai.
 
@@ -187,7 +187,7 @@ hanya aman untuk data yang tidak dikelola GC, dan itu pun tetap butuh penguncian
 dua *thread* yang menulis ke *variable* yang sama kehilangan sebagian penulisan.
 
 Satu catatan lama: `std/threadpool` dengan `spawn`, `^`, dan `sync` masih ada, tetapi ditandai
-`deprecated` di Nim 2.2.12. Compiler menyarankan *package* nimble seperti `malebolgia`, `taskpools`,
+`deprecated` di Nim 2.4.0. Compiler menyarankan *package* nimble seperti `malebolgia`, `taskpools`,
 atau `weave`. Bab ini hanya memakai *standard library*, jadi `Thread` dan `Channel` yang dipakai.
 
 ## Error sengaja: *type* `Channel` yang salah

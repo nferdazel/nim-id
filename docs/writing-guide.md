@@ -39,7 +39,7 @@ Nim. Jangan menjelaskan apa itu variabel. Jelaskan apa yang **berbeda** di Nim.
 - Buang: "pada era digital ini", "seperti yang kita ketahui", "tentu saja", "perlu diingat
   bahwa", "pada kesempatan kali ini".
 - Frasa favorit maksimal 1× per bab: "kurang lebih seperti berikut", "sebagai berikut", "oke".
-- Setiap klaim teknis bisa diuji. Sebut versi: "diuji di Nim 2.2.12".
+- Setiap klaim teknis bisa diuji. Sebut versi: "diuji di Nim 2.4.0".
 
 Contoh:
 

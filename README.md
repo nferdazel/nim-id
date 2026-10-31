@@ -33,7 +33,7 @@ English | [nim.qouver.com/en](https://nim.qouver.com/en) | [Learning-Nim.pdf](ht
 
 ## Build it
 
-You need [Quarto](https://quarto.org) 1.10.19, [Nim](https://nim-lang.org/install.html) 2.2.12, and
+You need [Quarto](https://quarto.org) 1.10.19, [Nim](https://nim-lang.org/install.html) 2.4.0, and
 Python 3. Quarto renders the site and both PDFs, Python 3 runs the check scripts, and Nim compiles
 the examples; Node is needed only by the JavaScript-backend examples.
 

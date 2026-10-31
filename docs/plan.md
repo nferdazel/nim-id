@@ -35,7 +35,7 @@ Alasan memilih Quarto:
 
 **Escape hatch:** isi tetap Markdown polos + callout standar. Kalau Quarto/Typst menyakitkan, pindah ke Docusaurus atau LaTeX tanpa menulis ulang isi. Jangan pakai fitur eksotis Quarto di luar: heading, code block, callout, gambar, tabel, footnote.
 
-**Sudah diverifikasi di M0 (23 Okt 2026, Quarto 1.10.19, Nim 2.2.12):**
+**Sudah diverifikasi di M0 (23 Okt 2026, Quarto 1.10.19, Nim 2.4.0):**
 
 - *Syntax highlighting Nim.* Klaim awal bahwa Pandoc/skylighting tidak mendukung Nim **salah**.
   `quarto pandoc --list-highlight-languages` memuat `nim`, dan hasil render benar-benar
@@ -94,7 +94,7 @@ Konsekuensinya: **jangan** menjelaskan apa itu variabel selama satu halaman; **j
 - Kalimat aktif. "Compiler menolak baris ini karena X", bukan "baris ini ditolak oleh compiler dikarenakan X".
 - Buang basa-basi: "pada era digital ini", "seperti yang kita ketahui", "tentu saja", "perlu diingat bahwa" (kecuali benar-benar perlu diingat).
 - Batasi frasa favorit jadi maksimal **1× per bab**: "kurang lebih seperti berikut", "sebagai berikut", "oke", "nah".
-- Setiap klaim teknis harus bisa diuji, dan sebut versinya: "diuji di Nim 2.2.12".
+- Setiap klaim teknis harus bisa diuji, dan sebut versinya: "diuji di Nim 2.4.0".
 
 Contoh:
 
@@ -320,7 +320,7 @@ Nama folder kerja sudah ikut diganti: `~/Projects/nim-book` → `~/Projects/nim-
 
 Sudah ada di `~/Projects/nim-id`:
 
-- Quarto 1.10.19 di `~/.local/opt` (tanpa sudo) dan Nim 2.2.12.
+- Quarto 1.10.19 di `~/.local/opt` (tanpa sudo) dan Nim 2.4.0.
 - Satu bab utuh (Variabel) + 8 contoh yang dikompilasi dan diverifikasi: `bash tools/verify-examples.sh` → `8 lulus, 0 gagal`.
 - Render web + PDF dari satu sumber. PDF 13 halaman, 197 KB.
 - Kerangka CI, blok Caddy, `deploy-static.sh`, glosarium, pedoman penulisan, jawaban latihan.

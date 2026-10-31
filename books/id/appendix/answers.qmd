@@ -24,12 +24,15 @@ Perbaikan yang wajar: kirim string, misalnya `echo greet("42")`, atau ubah *type
 **1.** *Output* `nim --version` di mesin yang dipakai menulis bab ini:
 
 ```{.txt}
-Nim Compiler Version 2.2.12 [MacOSX: arm64]
-Compiled at 2026-09-08
+Nim Compiler Version 2.4.0 [MacOSX: arm64]
+Compiled at 2026-10-28
 Copyright (c) 2006-2026 by Andreas Rumpf
+active boot switches: -d:release -d:nimUseLinenoise
 ```
 
-Yang penting *line* pertama. Bagian `[MacOSX: arm64]` berbeda di setiap sistem.
+Yang penting *line* pertama. Bagian `[MacOSX: arm64]` berbeda di setiap sistem, dan *line* terakhir
+menyebut *option* build yang dipakai saat compiler itu dibuat; di mesin lain *line* itu bisa berbeda
+atau tidak muncul.
 
 **2.** Contoh *message*:
 
@@ -56,14 +59,14 @@ Error: execution of an external compiler program 'gcc ...' failed with exit code
 Nim menerjemahkan kode ke C, dan biner dibuat oleh compiler C. Tanpa compiler C, rantainya putus di
 tengah. Karena itu langkah "pastikan compiler C siap" di bab ini bukan pelengkap.
 
-**5.** Dari versi stabil terbaru ke 2.2.12, lalu kembali:
+**5.** Dari versi stabil terbaru ke 2.4.0, lalu kembali:
 
 ```{.bash}
-choosenim 2.2.12
+choosenim 2.4.0
 choosenim stable
 ```
 
-`choosenim 2.2.12` memasang dan mengaktifkan versi itu; `choosenim stable` kembali ke versi
+`choosenim 2.4.0` memasang dan mengaktifkan versi itu; `choosenim stable` kembali ke versi
 stabil terbaru.
 
 **6.** Ganti string-nya:

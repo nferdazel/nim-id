@@ -10,7 +10,7 @@ Begitu kebutuhan sampai di situ, `macro` mengambil alih: *procedure* yang berjal
 menerima kode sebagai data.
 
 Bab ini mulai dari template, menunjukkan titik ketika ia mentok, lalu membangun macro selangkah
-demi selangkah. Semua contoh diuji di Nim 2.2.12.
+demi selangkah. Semua contoh diuji di Nim 2.4.0.
 
 ::: {.callout-note}
 ## Tujuan bab

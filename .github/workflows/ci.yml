@@ -18,10 +18,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: "Pasang Nim 2.2.12"
+      - name: "Pasang Nim 2.4.0"
         uses: jiro4989/setup-nim-action@v2
         with:
-          nim-version: '2.2.12'
+          nim-version: '2.4.0'
 
       - name: "Cache hasil kompilasi contoh"
         uses: actions/cache@v4

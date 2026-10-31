@@ -1,7 +1,7 @@
 # Cheat sheet
 
 Halaman ini merangkum sintaks yang paling sering dipakai. Setiap potongan kode di-write dalam bahasa Inggris, sama seperti seluruh kode di buku ini, dan
-diuji di Nim 2.2.12.
+diuji di Nim 2.4.0.
 
 ## Deklarasi
 
@@ -350,5 +350,5 @@ int twice(int x) { return x * 2; }
 | `nimble run` | bangun lalu jalankan |
 | `nimble install nama` | pasang *package* |
 
-Isi halaman ini diuji di Nim 2.2.12. Untuk penjelasan lebih panjang, setiap bagian punya babnya
+Isi halaman ini diuji di Nim 2.4.0. Untuk penjelasan lebih panjang, setiap bagian punya babnya
 sendiri di buku ini.

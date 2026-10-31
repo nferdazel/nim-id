@@ -7,7 +7,7 @@ batasan yang di-write sendiri, berdasarkan bentuk *type*.
 
 Bab ini membangun konsep dari yang sederhana sampai yang digabung, memakainya untuk memilih
 overloading, dan membaca *error message* ketika syaratnya tidak terpenuhi. Semua contoh diuji di Nim
-2.2.12.
+2.4.0.
 
 ::: {.callout-note}
 ## Tujuan bab
