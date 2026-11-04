@@ -10,10 +10,14 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
-  contoh:
-    name: "Contoh: kompilasi & cek output"
-    runs-on: ubuntu-latest
+  examples:
+    name: "Examples: compile and verify output"
+    runs-on: ubuntu-24.04
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
@@ -29,21 +33,21 @@ jobs:
           path: build
           key: contoh-${{ runner.os }}-${{ hashFiles('examples/**/*.nim') }}
 
-      - name: "Pustaka PCRE untuk std/re"
+      - name: "PCRE library for std/re"
         run: |
           sudo apt-get update
           sudo apt-get install -y --no-install-recommends libpcre3-dev
 
-      - name: "Verifikasi contoh"
+      - name: "Verify examples"
         run: bash tools/verify-examples.sh
 
-      - name: "Verifikasi blok lampiran"
+      - name: "Verify appendix blocks"
         run: python3 tools/check-appendix.py
 
-  buku:
-    name: "Buku: render dua bahasa + PDF"
-    needs: contoh
-    runs-on: ubuntu-latest
+  book:
+    name: "Book: render both languages + PDF"
+    needs: examples
+    runs-on: ubuntu-24.04
     timeout-minutes: 15
     # Only the tag run creates a release; branch and pull request runs stay read-only.
     permissions:
@@ -51,28 +55,28 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: "Buku: paritas ID/EN dan lint istilah"
+      - name: "Book: ID/EN parity and terminology lint"
         run: |
           python3 tools/lint-glossary.py
           python3 tools/check-parity.py
           python3 tools/check-glossary-page.py
 
-      - name: "Pasang Quarto 1.10.19"
+      - name: "Install Quarto 1.10.19"
         uses: quarto-dev/quarto-actions/setup@v2
         with:
           version: '1.10.19'
 
-      - name: "Render Indonesia + English"
+      - name: "Render Indonesian + English"
         run: bash tools/build-site.sh
 
-      - name: "Unggah situs (kedua bahasa)"
+      - name: "Upload site (both languages)"
         uses: actions/upload-artifact@v4
         with:
           name: situs
           path: public
           retention-days: 7
 
-      - name: "Unggah PDF"
+      - name: "Upload PDF"
         uses: actions/upload-artifact@v4
         with:
           name: pdf
@@ -81,7 +85,7 @@ jobs:
 
       # F-15. A release exists only if the tag names this exact version: without
       # the guard a mistyped tag would publish 0.7.3 PDFs under a 0.7.8 label.
-      - name: "Tag cocok dengan VERSION"
+      - name: "Tag matches VERSION"
         if: startsWith(github.ref, 'refs/tags/v')
         env:
           TAG: ${{ github.ref_name }}
@@ -95,7 +99,7 @@ jobs:
       # Same commit and the same Quarto and Nim versions the VPS uses, so these
       # attach the same PDFs the site serves. Re-running a failed tag build
       # uploads the assets again instead of failing on an existing release.
-      - name: "Terbitkan rilis GitHub"
+      - name: "Publish GitHub release"
         if: startsWith(github.ref, 'refs/tags/v')
         env:
           GH_TOKEN: ${{ github.token }}
