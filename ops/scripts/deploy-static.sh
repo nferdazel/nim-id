@@ -23,11 +23,11 @@ RILIS_DIR="$APP_DIR/releases"
 SIMPAN=3
 QUARTO="${QUARTO:-$APP_DIR/.tools/quarto/bin/quarto}"
 LOG="$APP_DIR/logs/deploy.log"
-HEALTH_URL="${NIMID_HEALTH_URL:-https://nim.qouver.com/}"
-# Uji origin langsung, bukan lewat Cloudflare: request dari VPS ke edge sendiri rawan
-# hairpin/timeout dan bukan yang sedang kita jamin. CF diuji terpisah dari luar.
-HEALTH_RESOLVE="${NIMID_HEALTH_RESOLVE:-127.0.0.1}"
-HEALTH_BODY="$APP_DIR/logs/health.html"
+# Caddy diuji lewat port 80 dengan Host header. Sejak Zone-level Authenticated
+# Origin Pulls aktif (2 Nov), TLS langsung ke origin tanpa client cert selalu
+# gagal (curl 000), jadi HTTPS loopback bukan lagi sinyal yang bisa dipakai.
+HEALTH_URL="${NIMID_HEALTH_URL:-http://127.0.0.1/}"
+HEALTH_HOST="${NIMID_HEALTH_HOST:-nim.qouver.com}"
 
 mkdir -p "$APP_DIR/logs" "$RILIS_DIR"
 
@@ -85,25 +85,25 @@ fi
 ln -sfn "$BARU" "$WEB_LINK"
 log "==> symlink web -> $BARU"
 
-# 6. Health check ke origin, dengan retry. Gagal berarti kembalikan symlink lama.
-# Body ditulis ke berkas dulu: `curl | grep -q` membuat grep keluar lebih awal, curl kena
-# SIGPIPE (exit 23), dan `pipefail` menandai pipeline gagal padahal isinya benar.
+# 6. Health check: routing Caddy + isi rilis di disk, dengan retry.
+# Gagal berarti kembalikan symlink lama.
 sehat=0
 for i in 1 2 3 4 5; do
-  if curl -fsS --max-time 10 --resolve "nim.qouver.com:443:$HEALTH_RESOLVE" -o "$HEALTH_BODY" "$HEALTH_URL" \
-      && grep -q "Dasar Pemrograman Nim" "$HEALTH_BODY" \
-      && curl -fsS --max-time 10 --resolve "nim.qouver.com:443:$HEALTH_RESOLVE" -o "$HEALTH_BODY.en" "${HEALTH_URL}en/" \
-      && grep -q "Learning Nim" "$HEALTH_BODY.en"; then
+  kode=$(curl -sS -o /dev/null -w '%{http_code}' --max-time 10 \
+           -H "Host: $HEALTH_HOST" "$HEALTH_URL" || echo "000")
+  if { [ "$kode" = "200" ] || [ "$kode" = "308" ]; } \
+      && grep -q "Dasar Pemrograman Nim" "$BARU/index.html" \
+      && grep -q "Learning Nim" "$BARU/en/index.html"; then
     sehat=1
     break
   fi
-  log "health check percobaan $i gagal, ulangi 2 detik"
+  log "health check percobaan $i gagal (HTTP $kode), ulangi 2 detik"
   sleep 2
 done
 
 if [ "$sehat" -ne 1 ]; then
-  kode=$(curl -sS -o /dev/null -w '%{http_code}' --max-time 10 --resolve "nim.qouver.com:443:$HEALTH_RESOLVE" "$HEALTH_URL" || echo "000")
-  log "Health check GAGAL di $HEALTH_URL (origin $HEALTH_RESOLVE, kode $kode)"
+  kode=$(curl -sS -o /dev/null -w '%{http_code}' --max-time 10 -H "Host: $HEALTH_HOST" "$HEALTH_URL" || echo "000")
+  log "Health check GAGAL di $HEALTH_URL (Host $HEALTH_HOST, kode $kode)"
   if [ -e "$APP_DIR/.previous" ]; then
     ln -sfn "$(readlink -f "$APP_DIR/.previous")" "$WEB_LINK"
     log "Rollback: symlink web dipulihkan"
