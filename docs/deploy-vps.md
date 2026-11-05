@@ -38,6 +38,9 @@ sudo tee -a /etc/caddy/Caddyfile < ops/caddy/Caddyfile.nim-id.example
 sudo caddy validate --config /etc/caddy/Caddyfile
 sudo systemctl restart caddy   # admin API dimatikan (H-5), reload mustahil
 
+# Blok itu memuat handle_errors (404 → /404.html), cache per jenis berkas, dan header keamanan.
+# Kalau blok di server berubah, ubah cerminnya di repo pada commit yang sama.
+
 # 4. Cek
 curl -sS -o /dev/null -w '%{http_code}\n' https://nim.qouver.com/
 ```
@@ -60,12 +63,13 @@ PDF dibuat di dua tempat, dari commit yang sama:
 
 - **VPS**, saat deploy: `deploy-static.sh` memanggil `tools/build-site.sh`, yang merender `html` dan
   `typst` sekaligus. Ini yang disajikan situs.
-- **GitHub Actions**, saat tag `v*` di-push: job `buku` merender ulang lalu menerbitkan kedua PDF
+- **GitHub Actions**, saat tag `v*` di-push: job `book` merender ulang lalu menerbitkan kedua PDF
   sebagai aset GitHub Release. Job itu berhenti kalau nama tag tidak sama dengan isi `VERSION`, jadi
   label rilis tidak bisa meleset.
 
-Keduanya memakai Quarto dan Nim versi yang sama, jadi isinya identik. Rilis tidak memicu deploy:
-webhook hanya mendengar `refs/heads/main`.
+Keduanya memakai Quarto 1.10.19 dan dirender dari commit yang sama; verifikasi contoh dengan Nim
+2.4.0 hanya berjalan di CI, tidak di VPS. Rilis tidak memicu deploy: webhook hanya mendengar
+`refs/heads/main`.
 
 ## Quarto di server (tanpa root)
 
@@ -96,15 +100,15 @@ curl -sS -o /dev/null -w '%{http_code}\n' https://nim.qouver.com/
   ganti di keduanya, lalu `systemctl --user restart webhook`.
 - Ref-guard di skrip hanya menerima `refs/heads/main`; event lain keluar dengan kode 0 (tidak
   dianggap gagal).
-- Health check memakai **origin langsung** (`--resolve nim.qouver.com:443:127.0.0.1` + retry 5×2
-  detik). Request dari VPS ke edge Cloudflare sendiri pernah gagal sesaat dan sempat memicu
-  rollback palsu; CF diuji terpisah dari luar.
+- Health check memakai **origin langsung** lewat HTTP port 80 + header `Host: nim.qouver.com`
+  (`http://127.0.0.1/`), retry 5×2 detik, lalu memastikan `index.html` memuat judul kedua edisi.
+  Sejak Zone-level Authenticated Origin Pulls aktif (2 Nov 2026), TLS langsung ke origin tanpa
+  client cert selalu gagal, jadi HTTPS loopback bukan lagi sinyal yang bisa dipakai. Request dari
+  VPS ke edge Cloudflare sendiri pernah gagal sesaat dan sempat memicu rollback palsu; CF diuji
+  terpisah dari luar.
 
-Jalankan manual (tanpa push):
-
-```bash
-cd /srv/qouver/apps/nim-id && ./scripts/deploy-static.sh nim-id refs/heads/main
-```
+Jalankan perintah yang sama secara manual (tanpa push) kalau perlu deploy ulang commit yang sedang
+aktif.
 
 Skrip menyalin versi terbarunya sendiri dari `monorepo/ops/scripts/` setelah deploy sukses, jadi
 perubahan pada skrip ikut terpasang pada deploy berikutnya.

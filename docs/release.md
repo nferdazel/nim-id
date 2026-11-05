@@ -14,7 +14,7 @@ Tiga angka, dibaca dari kiri: **X.Y.Z**. Naikkan **satu** angka, nolkan yang di 
 | Y | MINOR | ada tambahan, yang lama tetap berlaku | aman, tinggal lanjut |
 | Z | PATCH | hanya perbaikan | tidak ada yang perlu dilakukan |
 
-Contoh nyata untuk buku ini:
+Contoh penerapan (bukan riwayat rilis nyata):
 
 | Kejadian | Versi | Alasan |
 |---|---|---|
@@ -47,9 +47,9 @@ Pemetaan dari pesan commit (Conventional Commits):
 Skrip berhenti kalau pohon kerja belum bersih, kalau tidak ada commit baru, atau kalau tag tujuan
 sudah ada. Skrip **tidak** push; push tetap keputusan pemilik.
 
-## Rilis pertama (sekali saja)
+## Rilis pertama (sekali saja, sudah lewat)
 
-Belum ada tag, jadi tag pertama dibuat manual:
+Dipakai sekali saat belum ada tag: tag pertama dibuat manual.
 
 ```sh
 QUARTO=$HOME/.local/opt/bin/quarto ./task check
@@ -58,12 +58,12 @@ git tag -a v0.1.0 -m "nim-id 0.1.0"
 git push origin main --follow-tags
 ```
 
-Sesudah `v0.1.0` ada, semua rilis berikutnya lewat `./task release`.
+Sesudah `v0.1.0` ada, semua rilis berikutnya lewat `./task release`. Rilis terakhir saat ini
+`v0.7.11`; jangan mengulang langkah manual di atas.
 
-## Kenapa tag tidak memicu CI atau deploy
+## Tag memicu CI, bukan deploy
 
-- CI hanya jalan untuk push ke `main` dan `workflow_dispatch`. Tag `v*` sengaja tidak memicu apa
-  pun: commit yang sama sudah lolos di `main`, jadi menjalankan ulang hanya membakar menit.
+- CI jalan untuk push ke `main`, pull request, tag `v*`, dan `workflow_dispatch`. Tag `v*` menjalankan
+  job `book`: cek paritas/glosarium, render ulang, lalu menerbitkan kedua PDF sebagai aset GitHub
+  Release. Job berhenti kalau nama tag tidak sama dengan isi `VERSION`, jadi label tidak bisa meleset.
 - Deploy VPS dijaga ref-guard: hanya `refs/heads/main`. Push tag diabaikan, sesuai desain.
-- Kalau nanti butuh artefak rilis, tambahkan job yang membaca `VERSION` sebagai nama berkas,
-  jangan menghidupkan lagi trigger tag.

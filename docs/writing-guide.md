@@ -110,16 +110,16 @@ Panjang: 900–1.400 kata. Satu bab = satu sesi baca 10–15 menit. Lebih dari i
 
 ## Bahasa visual
 
-- Kode dan output dibedakan: kode berlatar putih, output berlatar abu tipis dengan label
-  `output` (lihat `assets/ku.css`).
+- Kode dan output sama-sama berlatar abu hangat `#F4F1EA`; output diberi label `output` dan garis
+  kiri 2px aksen supaya bisa dibedakan tanpa warna mencolok (lihat `assets/ku.css`).
 - Tangkapan layar hanya kalau benar-benar visual (pesan compiler berwarna, TUI, grafik), maksimal
   satu per lima bab, selalu dengan alt text.
 - Tabel maksimal 4 kolom; lebih dari itu pecah jadi dua tabel.
 
 ## PDF
 
-- Ukuran trim 178 × 233 mm, margin cermin 32/27/21/25 mm, diatur di `assets/typst/typst-show.typ`
-  (partial Quarto, disalin ke tiap buku saat build).
+- Ukuran trim 178 × 233 mm, margin 29,5 mm kiri-kanan, 21 mm atas, 25 mm bawah, tanpa margin
+  cermin; diatur di `assets/typst/typst-show.typ` (partial Quarto, disalin ke tiap buku saat build).
 - **Jangan** memakai `papersize` di `_quarto.yml`: template `orange-book` mengabaikannya dan
   memakai `paper-size`/`width`/`height`. Kalau trim berubah, ubah partial, bukan YAML.
 - `format: typst: lang: <id|en>` wajib ada; tanpa itu label "Daftar Isi"/"Lampiran" jatuh ke

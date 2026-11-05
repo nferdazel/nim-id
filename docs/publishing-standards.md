@@ -61,7 +61,7 @@ Urutan standar. Kolom **status**: W = wajib, O = opsional, X = tidak lazim untuk
 | # | Halaman | Status | Catatan |
 |---|---|---|---|
 | B1 | **Appendices** (Lampiran) | W bila dirujuk naskah | Buku ini merujuk Lampiran A dari tiap bab → wajib. |
-| B2 | **Glossary** | W untuk buku ini | 149 istilah sudah ada; letaknya setelah lampiran jawaban. |
+| B2 | **Glossary** | W untuk buku ini | 148 istilah sudah ada; letaknya setelah lampiran jawaban. |
 | B3 | **Bibliography / References** | O | Hanya bila ada sitasi formal. Buku ini mengacu ke dokumentasi daring lewat tautan; tidak wajib. |
 | B4 | **Subject index** | O (P2 untuk terbit-sendiri) | Mahal, tetapi penanda "buku sungguhan" untuk cetak/retail. Lihat §9. |
 | B5 | **Colophon** (di belakang) | O | Boleh digabung ke halaman copyright; cukup satu tempat. Lihat §3. |
@@ -95,7 +95,7 @@ Unsur **minimum** (W) dan **opsional** (O):
 | C6 | ISBN (cetak / digital) + barcode | O bila ada; **jangan mengarang** |
 | C7 | Lisensi teks, dengan tautan/teks kanonik yang **tidak bergantung berkas repo** | W |
 | C8 | Lisensi kode + cakupannya (apa yang dianggap kode) | W |
-| C9 | Versi edisi (mis. `0.6.0`) | W |
+| C9 | Versi edisi (mis. `0.7.11`) | W |
 | C10 | Tanggal edisi (satu sumber, format "$bulan $tahun") | W |
 | C11 | "Dicetak oleh" / printer + tahun cetak | O untuk ebook; W untuk cetak |
 | C12 | Nomor cetakan / "Cetakan pertama" | O |
@@ -103,7 +103,7 @@ Unsur **minimum** (W) dan **opsional** (O):
 | C14 | Alamat kontak/errata stabil (situs, repo) | O → W bila dijual |
 | C15 | Kolofon produksi (trim, jenis huruf, mesin, jumlah halaman) | O |
 
-**Contoh blok kolofon yang benar untuk buku ini** (ganti hanya angka versi/tanggal; JANGAN
+**Contoh blok kolofon yang memenuhi C1–C15** (angka versi/tanggal menyesuaikan edisi; JANGAN
 mengisi ISBN karena memang tidak ada):
 
 ```
@@ -111,7 +111,7 @@ Dasar Pemrograman Nim
 Belajar bahasa Nim dari nol, dalam Bahasa Indonesia
 
 Penulis        : Fredianto
-Versi          : 0.6.0
+Versi          : 0.7.11
 Tanggal        : 23 Oktober 2026
 
 © 2026 Fredianto. Diterbitkan sendiri; tanpa penerbit, tanpa ISBN.
@@ -157,7 +157,7 @@ repositori.
 | Kotak catatan ("Tujuan bab") | tidak dinomori | ikon/label | tanpa nomor ✓ |
 | Latihan | tidak dinomori; daftar `1. 2. 3.` per bab | — | ✓ |
 | **Jawaban** | ikut bab yang dijawab | **`A.1` = jawaban Bab 1**, `A.n` = Bab n | `A.1 … A.43` ✓ |
-| Lampiran | W | `Lampiran A`, `A.1`, `A.2` | A/B/C/D; anak `A.1` ✓ |
+| Lampiran | W | `Lampiran A`, `A.1`, `A.2` | A–E; anak `A.1` ✓ |
 
 **Cara buku besar menomori jawaban:** praktik O'Reilly/Manning adalah **bagian dalam lampiran
 yang dipetakan ke nomor bab** — bukan nomor urut baru. Jadi "A.1" wajib berarti "jawaban Bab 1",
@@ -186,7 +186,7 @@ Halaman pembuka bagian (part opener) wajib memuat:
 | P4 | Tanpa folio? **Boleh ada folio**, tetapi **tanpa running head** | W |
 | P5 | Himpunan pembuka konsisten: semua bagian & himpunan lampiran memakai bentuk yang sama | W |
 
-Halaman pembuka lampiran mengikuti bentuk yang sama: `Lampiran` + daftar `A–D` + (opsional)
+Halaman pembuka lampiran mengikuti bentuk yang sama: `Lampiran` + daftar `A–E` + (opsional)
 satu paragraf. Halaman pembuka bab memuat: label `BAB n`, judul, garis/aturan; **tanpa** running
 head, **dengan** folio.
 
@@ -235,15 +235,15 @@ Ambang untuk trim 178 × 233 mm (≈ 7.0 × 9.17 in). Sesuaikan proporsional bil
 | Q12 | Ukuran berkas & objektif PDF | wajar untuk distribusi (mis. < 15 MB) |
 | Q13 | Tidak ada rahasia (kunci API, email pribadi) di metadata | 0 |
 
-Untuk POD dihitung dulu: lebar spine ≈ jumlah halaman × tebal kertas (mis. 0,0572 mm/hlm × 393
-≈ 22,5 mm) untuk kertas putih; unggah sebagai sampul terpisah.
+Untuk POD dihitung dulu: lebar spine ≈ jumlah halaman × tebal kertas (mis. 0,0572 mm/hlm × 415
+≈ 23,7 mm) untuk kertas putih; unggah sebagai sampul terpisah.
 
 ---
 
 ## 8. Dua bahasa (ID ↔ EN)
 
 **Wajib identik:**
-- Jumlah & urutan bab (43) dan lampiran (A–D).
+- Jumlah & urutan bab (43) dan lampiran (A–E).
 - Skema penomoran (bab, subbab, `A.k`, lampiran).
 - Blok kode dan output yang identik (kode berbahasa Inggris di kedua edisi).
 - Himpunan lampiran & glosarium.
@@ -259,7 +259,7 @@ Untuk POD dihitung dulu: lebar spine ≈ jumlah halaman × tebal kertas (mis. 0,
 
 | ID | Aturan | Ambang |
 |---|---|---|
-| L1 | Paritas struktur | 43/43 bab, 4/4 lampiran, sama urutan |
+| L1 | Paritas struktur | 43/43 bab, 5/5 lampiran, sama urutan |
 | L2 | Paritas blok kode | jumlah & isi fence `{.nim}`/`{.txt}` sama |
 | L3 | Paritas grid | margin & ukuran font sama |
 | L4 | Paritas metadata | kunci metadata sama, hanya nilai yang diterjemahkan |

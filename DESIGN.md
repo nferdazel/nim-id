@@ -8,7 +8,7 @@ berkas ini, keputusan itu belum layak masuk.
 
 Buku teknis yang diterbitkan sendiri, dua bahasa, untuk pembaca yang sudah bisa menulis program di
 bahasa lain. Bukan landing page produk, bukan dokumentasi API. Yang dijual adalah **keterbacaan
-jangka panjang**: orang membaca bab ini 40 menit, bukan 40 detik.
+jangka panjang**: orang membaca satu bab 10–15 menit, bukan 40 detik.
 
 - **Audiens:** developer yang pindah ke Nim, membaca di laptop dan di kertas cetak.
 - **Kepribadian:** tenang, presisi, tanpa basa-basi pemasaran. Seperti buku ajar universitas yang
@@ -18,10 +18,11 @@ jangka panjang**: orang membaca bab ini 40 menit, bukan 40 detik.
 ## Dial
 
 ```
-ENERGY 1 / RHYTHM 2 / MOTION 1
+ENERGY 2 / RHYTHM 2 / MOTION 1
 ```
 
-- **ENERGY 1:** halaman tidak "menyapa" dengan keras. Tidak ada hero besar, tidak ada CTA.
+- **ENERGY 2:** halaman tidak "menyapa" dengan keras, tetapi tidak datar. Tenaga datang dari
+  tipografi dan garis, bukan warna atau dekorasi. Tidak ada hero besar, tidak ada CTA.
 - **RHYTHM 2:** sebagian besar konsisten (sidebar, kepala bab, blok kode), dengan beberapa
   pemecah ritme: pembuka bab, kotak catatan, tabel.
 - **MOTION 1:** hanya state hover dan fokus. Tidak ada animasi masuk, tidak ada parallax, tidak
@@ -106,11 +107,8 @@ Aturan:
 ## Sistem visual (revisi 2)
 
 Versi pertama terlalu datar: hasilnya masih terbaca sebagai "situs contoh Quarto". Revisi ini
-menaikkan ENERGY ke 2 dengan mengandalkan tipografi dan aturan garis, bukan warna atau dekorasi.
-
-```
-ENERGY 2 / RHYTHM 2 / MOTION 1
-```
+menaikkan ENERGY ke 2 dengan mengandalkan tipografi dan aturan garis, bukan warna atau dekorasi —
+dial di atas sudah memakai angka hasil revisi ini.
 
 ### Halaman depan (pembuka buku)
 
@@ -130,14 +128,14 @@ ENERGY 2 / RHYTHM 2 / MOTION 1
 ### Sidebar dan bagian buku
 
 - Sidebar memakai `book: parts`: "Bagian A: Dasar", "Bagian B: Menengah", "Bagian C: Praktik", dan
-  lampiran A sampai D.
+  lampiran A sampai E.
 - Label bagian kecil, uppercase, letter-spacing 0.08em, dengan garis atas tipis.
 - Bab aktif: garis navy 2px di kiri, teks tinta, tanpa latar.
 - Nomor bab di sidebar tabular, lebar tetap, rata kanan supaya judul sejajar.
 - Kotak pencarian: hanya garis bawah, bukan kotak berbingkai.
 - Catatan penyimpangan: `book: parts` dipakai bersama format typst, jadi PDF ikut
-  mendapat halaman judul bagian (114 → 118 halaman). Itu konsekuensi langsung dari
-  struktur parts yang diminta, bukan perubahan pada `assets/typst/**`.
+  mendapat halaman judul bagian (114 → 118 halaman, diukur saat bagian pertama ditambahkan). Itu
+  konsekuensi langsung dari struktur parts yang diminta, bukan perubahan pada `assets/typst/**`.
 
 ### Blok kode dan keluaran
 

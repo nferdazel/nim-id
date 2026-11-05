@@ -2,7 +2,7 @@
 #
 # nim-id — single entry point for all commands.
 #
-#   ./task examples  compile and verify every example (needs Nim 2.2.12)
+#   ./task examples  compile and verify every example (needs Nim 2.4.0)
 #   ./task site      render Indonesian + English, assemble public/
 #   ./task id        render the Indonesian edition only
 #   ./task en        render the English edition only (Quarto profile `en`)
@@ -28,7 +28,7 @@ usage() {
   cat <<'TXT'
 usage: ./task <command>
 
-  examples  compile and verify every example (needs Nim 2.2.12)
+  examples  compile and verify every example (needs Nim 2.4.0)
   site      render Indonesian + English, assemble public/
   id        render the Indonesian edition only
   en        render the English edition only
