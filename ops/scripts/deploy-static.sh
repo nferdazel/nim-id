@@ -53,7 +53,7 @@ fi
 
 # 2. Kunci: dua deploy bersamaan akan saling menimpa swap.
 exec 9>/tmp/deploy-nimid.lock
-if ! flock -n 9; then
+if ! flock -w 1200 9; then
   log "Deploy lain sedang berjalan. Keluar."
   exit 1
 fi
