@@ -197,6 +197,40 @@ Error: unhandled exception: key not found: name [KeyError]
 *stack trace*. Sebelum membaca, uji dengan `hasKey`, atau pakai `getOrDefault` supaya tidak berhenti
 saat kuncinya hilang.
 
+## `std/options`: *value* yang mungkin tidak ada
+
+`getOrDefault` mencegah error, tetapi ia menyamarkan "tidak ada" menjadi *value* biasa: `0` untuk
+`int`, string kosong untuk `string`. Kalau `0` juga *value* yang sah, pembaca tidak bisa membedakan
+"tidak ada" dari "nol". `std/options` membuat perbedaan itu eksplisit.
+
+```{.nim}
+import std/options
+
+proc findChar(s: string; c: char): Option[int] =
+  for i, ch in s:
+    if ch == c:
+      return some(i)
+  none(int)
+
+echo findChar("nim", 'm').get
+echo findChar("nim", 'z').isSome
+echo findChar("nim", 'z').get(-1)
+```
+
+```{.txt}
+2
+false
+-1
+```
+
+`Option[int]` berisi `some(`*value*`)` atau `none(int)`. `isSome` memeriksa isinya tanpa membukanya,
+`get` mengembalikan *value* di dalamnya dan berhenti dengan `UnpackDefect` kalau kosong, sedangkan
+`get(cadangan)` mengembalikan cadangan. Karena status "ada" dibawa terpisah, `int` tetap boleh
+bernilai nol.
+
+Pola serupa dipakai `std/strutils`: `parseInt` mengembalikan `bool` dan mengisi parameter `var`,
+bukan mengembalikan `Option`. Keduanya lebih jujur daripada `-1` sebagai penanda "tidak ketemu".
+
 ## *Module* lain punya babnya sendiri
 
 *Standard library* jauh lebih luas dari empat *module* ini. `std/os` dibahas di bab *file* dan operasi

@@ -161,6 +161,33 @@ is `"no greeting set"`. The fallback keeps the program from failing just because
 variable was never configured. When you need every argument as one sequence, `commandLineParams()`
 returns them as a `seq[string]`.
 
+## Running another process
+
+This chapter handles files and directories. Sometimes a program has to run another program: `git`,
+`ffmpeg`, or a script of the user's own. That is the job of `std/osproc`.
+
+```{.nim}
+import std/[osproc, strutils]
+
+let hasil = execCmdEx("echo hai")
+
+echo hasil.output.strip
+echo hasil.exitCode
+```
+
+```{.txt}
+hai
+0
+```
+
+`execCmdEx` returns a tuple with `output` and `exitCode`. With its default options, stderr goes into
+`output` too, and the command runs through a shell. `strip` removes the trailing newline so the result
+is not doubled when printed.
+
+A shell is convenient and dangerous at once: when the command is built from user input, a single quote
+can slip in another command. When the arguments are already a `seq`, `startProcess` runs them without
+a shell, and the output is read directly.
+
 ## Deliberate error: forgetting to import `std/os`
 
 The names above are not available by default. Forget `import std/os`, and the compiler stops on the

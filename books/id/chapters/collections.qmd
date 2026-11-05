@@ -164,6 +164,47 @@ mengubah panjangnya.
 Satu catatan tentang penyalinan: menugaskan `array` atau `seq` ke *variable* baru menyalin isinya,
 bukan berbagi. Mengubah salinannya tidak menyentuh yang asli, berbeda dari `list` di Python.
 
+## Slice dan `toOpenArray`
+
+*Index* tunggal mengambil satu *element*. *Slice* mengambil *range*, dan hasilnya `seq` baru:
+
+```{.nim}
+let a = [10, 20, 30, 40, 50]
+
+echo a[1 .. 3]
+echo a[1 ..< 4]
+echo a[^2 .. ^1]
+```
+
+```{.txt}
+@[20, 30, 40]
+@[20, 30, 40]
+@[40, 50]
+```
+
+`..` menyertakan batas akhir, `..<` tidak. `^1` menghitung dari belakang, jadi `a[^2 .. ^1]` mengambil
+dua *element* terakhir. Slice yang melewati batas tidak dipotong diam-diam: program berhenti dengan
+`RangeDefect`.
+
+Kalau bagian itu hanya dibaca, `toOpenArray` memberi pandangan tanpa menyalin:
+
+```{.nim}
+proc total(values: openArray[int]): int =
+  for value in values:
+    result = result + value
+
+let a = [10, 20, 30, 40, 50]
+
+echo total(toOpenArray(a, 1, 3))
+```
+
+```{.txt}
+90
+```
+
+`toOpenArray(a, 1, 3)` menunjuk *element* 1 sampai 3 tanpa membuat `seq` baru. Untuk data besar itu
+menghindari penyalinan; untuk data kecil, `a[1 .. 3]` lebih sederhana dan hasilnya sama.
+
 ## Batas *index* dan error out-of-bounds
 
 *Index* yang sah untuk `array` dan `seq` berukuran `len` adalah `0` sampai `len - 1`. *Index* *constant*

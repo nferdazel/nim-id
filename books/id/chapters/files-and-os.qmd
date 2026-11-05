@@ -164,6 +164,33 @@ dipakai adalah `"no greeting set"`. *Value* cadangan mencegah program gagal hany
 *variable* lingkungan belum disetel. Kalau seluruh *argument* dibutuhkan sebagai satu *seq*, ada
 `commandLineParams()` yang mengembalikannya sebagai `seq[string]`.
 
+## Menjalankan proses lain
+
+Bab ini mengurus *file* dan *directory*. Kadang program perlu menjalankan program lain: `git`,
+`ffmpeg`, atau skrip milik pengguna. Itu tugas `std/osproc`.
+
+```{.nim}
+import std/[osproc, strutils]
+
+let hasil = execCmdEx("echo hai")
+
+echo hasil.output.strip
+echo hasil.exitCode
+```
+
+```{.txt}
+hai
+0
+```
+
+`execCmdEx` mengembalikan *tuple* berisi `output` dan `exitCode`. Dengan *option* bawaannya, stderr
+ikut masuk ke `output`, dan *command*-nya dijalankan lewat shell. `strip` menghapus *newline* di ujung
+supaya hasilnya tidak dobel saat di-`echo`.
+
+Shell itu praktis sekaligus berbahaya: kalau *command*-nya disusun dari *input* pengguna, satu tanda
+kutip bisa menyisipkan *command* lain. Kalau *argument*-nya sudah berbentuk `seq`, `startProcess`
+menjalankannya tanpa shell, dan *output*-nya dibaca sendiri.
+
 ## Error sengaja: lupa mengimpor `std/os`
 
 Nama-nama di atas tidak tersedia begitu saja. Lupakan `import std/os`, dan compiler berhenti di

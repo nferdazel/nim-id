@@ -58,6 +58,11 @@ Semua tautan diperiksa hidup pada Oktober 2026.
   bandingkan dengan manual.
 - **[nim-in-action-code](https://github.com/dom96/nim-in-action-code)** — kode contoh buku itu.
 
+- **[Computer Programming with the Nim Programming Language](https://github.com/StefanSalewski/NimProgrammingBook)**
+  — Stefan Salewski, 2023. Mulai dari "apa itu komputer", untuk pembaca yang belum pernah memprogram;
+  buku ini mengasumsikan sebaliknya, jadi pakai kalau bab 1 terasa terlalu cepat. Sumbernya berhenti di
+  Nim 2.0, dan repositorinya tidak memakai lisensi.
+
 ## Kalau tautan mati
 
 Hampir semua alamat di atas berada di `nim-lang.org` dan `github.com`, dua nama paling stabil di

@@ -164,6 +164,46 @@ its length.
 One note about copying: assigning an `array` or a `seq` to a new variable copies the contents
 instead of sharing them. Changing the copy does not touch the original, unlike a `list` in Python.
 
+## Slices and `toOpenArray`
+
+A single index takes one element. A slice takes a range, and the result is a new `seq`:
+
+```{.nim}
+let a = [10, 20, 30, 40, 50]
+
+echo a[1 .. 3]
+echo a[1 ..< 4]
+echo a[^2 .. ^1]
+```
+
+```{.txt}
+@[20, 30, 40]
+@[20, 30, 40]
+@[40, 50]
+```
+
+`..` includes the end, `..<` does not. `^1` counts from the back, so `a[^2 .. ^1]` takes the last two
+elements. A slice past the end is not silently truncated: the program stops with `RangeDefect`.
+
+When the part is only read, `toOpenArray` gives a view without copying:
+
+```{.nim}
+proc total(values: openArray[int]): int =
+  for value in values:
+    result = result + value
+
+let a = [10, 20, 30, 40, 50]
+
+echo total(toOpenArray(a, 1, 3))
+```
+
+```{.txt}
+90
+```
+
+`toOpenArray(a, 1, 3)` points at elements 1 through 3 without building a new `seq`. For large data
+that avoids a copy; for small data `a[1 .. 3]` is simpler and gives the same answer.
+
 ## Index bounds and the out-of-bounds error
 
 The valid indices for an `array` or `seq` of length `len` run from `0` to `len - 1`. A constant index

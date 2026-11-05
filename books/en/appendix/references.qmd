@@ -59,6 +59,11 @@ language version, while this book follows its own release. Every link was checke
   the manual.
 - **[nim-in-action-code](https://github.com/dom96/nim-in-action-code)** — the example code for that book.
 
+- **[Computer Programming with the Nim Programming Language](https://github.com/StefanSalewski/NimProgrammingBook)**
+  — Stefan Salewski, 2023. It starts from "what is a computer", for readers who have never programmed;
+  this book assumes the opposite, so reach for it when chapter 1 feels too fast. The source stops at
+  Nim 2.0, and the repository carries no licence.
+
 ## When a link dies
 
 Almost every address above lives on `nim-lang.org` and `github.com`, the two most stable names in this

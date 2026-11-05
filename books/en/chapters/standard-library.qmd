@@ -196,6 +196,39 @@ The message names the missing key and the `KeyError` kind. The full output also 
 trace. Test with `hasKey` before reading, or use `getOrDefault`, so the program does not stop when
 the key is gone.
 
+## `std/options`: a value that may be absent
+
+`getOrDefault` prevents an error, but it disguises "absent" as an ordinary value: `0` for `int`, an
+empty string for `string`. When `0` is a valid value too, the reader cannot tell "absent" from
+"zero". `std/options` makes that difference explicit.
+
+```{.nim}
+import std/options
+
+proc findChar(s: string; c: char): Option[int] =
+  for i, ch in s:
+    if ch == c:
+      return some(i)
+  none(int)
+
+echo findChar("nim", 'm').get
+echo findChar("nim", 'z').isSome
+echo findChar("nim", 'z').get(-1)
+```
+
+```{.txt}
+2
+false
+-1
+```
+
+`Option[int]` holds `some(value)` or `none(int)`. `isSome` checks the contents without opening them,
+`get` returns the value inside and stops with `UnpackDefect` when empty, while `get(fallback)` returns
+the fallback. Because "present" is carried separately, `int` is still allowed to be zero.
+
+A similar pattern appears in `std/strutils`: `parseInt` returns a `bool` and fills a `var` parameter
+instead of returning an `Option`. Both are more honest than `-1` as a "not found" marker.
+
 ## Other modules have their own chapters
 
 The standard library is far larger than these four modules. `std/os` is covered in the files and
