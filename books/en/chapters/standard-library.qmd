@@ -1,7 +1,7 @@
 # A tour of the standard library
 
 A good language without a library is exhausting. Nim ships its standard library with the compiler,
-and its modules are imported with the `std/` prefix. This chapter tours the four modules you reach
+and its modules are imported with the `std/` prefix. This chapter tours the five modules you reach
 for most often: `strutils`, `sequtils`, `tables`, and `json`. Each gets enough coverage to be
 useful; the rest have their own chapters.
 
@@ -231,7 +231,7 @@ instead of returning an `Option`. Both are more honest than `-1` as a "not found
 
 ## Other modules have their own chapters
 
-The standard library is far larger than these four modules. `std/os` is covered in the files and
+The standard library is far larger than these five modules. `std/os` is covered in the files and
 operating system chapter, `std/strformat` in the variables chapter, and `std/math` and
 `std/algorithm` appear in the operators and files chapters. `std/random` and `std/times` are covered in the
 [time and random](times-and-random.qmd) chapter. The import pattern is

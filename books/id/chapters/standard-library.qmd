@@ -1,7 +1,7 @@
 # Tur *standard library*
 
 Bahasa yang bagus tanpa library akan melelahkan. Nim mengirim *standard library* bersama compiler,
-dan *module* itu diimpor dengan awalan `std/`. Bab ini menelusuri empat *module* yang paling sering
+dan *module* itu diimpor dengan awalan `std/`. Bab ini menelusuri lima *module* yang paling sering
 dipakai hari-hari: `strutils`, `sequtils`, `tables`, dan `json`. Setiap *module* dibahas secukupnya;
 sisanya punya bab sendiri.
 
@@ -233,7 +233,7 @@ bukan mengembalikan `Option`. Keduanya lebih jujur daripada `-1` sebagai penanda
 
 ## *Module* lain punya babnya sendiri
 
-*Standard library* jauh lebih luas dari empat *module* ini. `std/os` dibahas di bab *file* dan operasi
+*Standard library* jauh lebih luas dari lima *module* ini. `std/os` dibahas di bab *file* dan operasi
 sistem, `std/strformat` di bab *variable*, dan `std/math` serta `std/algorithm` muncul di bab operasi
 dan *file*. `std/random` dan `std/times` dibahas di bab [time dan random](times-and-random.qmd). Pola mengimpornya sama: `import std/nama`.
 
