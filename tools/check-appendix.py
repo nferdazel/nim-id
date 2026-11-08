@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Periksa blok kode di Lampiran A dengan `nim check`.
+"""Periksa blok kode di Lampiran A dan cheat sheet dengan `nim check`.
 
 Jawaban latihan memuat potongan kode: lanjutan blok di atasnya, satu berkas dari
 proyek berbilang berkas, atau daftar yang butuh `helper.c` buatan pembaca. Blok
@@ -18,7 +18,12 @@ import tempfile
 import textwrap
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
-BERKAS = [ROOT / "books/id/appendix/answers.qmd", ROOT / "books/en/appendix/answers.qmd"]
+BERKAS = [
+    ROOT / "books/id/appendix/answers.qmd",
+    ROOT / "books/en/appendix/answers.qmd",
+    ROOT / "books/id/appendix/cheatsheet.qmd",
+    ROOT / "books/en/appendix/cheatsheet.qmd",
+]
 
 BLOK = re.compile(r"^([ \t]*)```\{\.nim([^}]*)\}\n(.*?)^[ \t]*```", re.S | re.M)
 

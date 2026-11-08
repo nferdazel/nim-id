@@ -43,7 +43,7 @@ diuji di Nim 2.4.0.
 
 *Raw string* dan *multiline string* di-write tanpa escape:
 
-```nim
+```{.nim}
 let raw = r"C:\temp"
 let ml = """line one
 line two"""
@@ -51,7 +51,7 @@ line two"""
 
 ## `if`, `case`, `when`
 
-```nim
+```{.nim}
 let x = 3
 if x > 0:
   echo "positive"
@@ -61,21 +61,21 @@ else:
   echo "negative"
 ```
 
-```nim
+```{.nim}
 case 0
 of 0: echo "none"
 of 1, 2: echo "few"
 else: echo "many"
 ```
 
-```nim
+```{.nim}
 case 'a'
 of 'a' .. 'z': echo "lower"
 of '0' .. '9': echo "digit"
 else: echo "other"
 ```
 
-```nim
+```{.nim}
 when defined(windows):
   echo "windows"
 else:
@@ -121,7 +121,7 @@ else:
 
 ## Object dan `ref object`
 
-```nim
+```{.nim}
 type
   Person = object
     name: string
@@ -131,7 +131,7 @@ let p = Person(name: "Ada", age: 36)
 echo p.name
 ```
 
-```nim
+```{.nim}
 type Node = ref object
   value: int
   next: Node
@@ -144,7 +144,7 @@ echo n.value
 
 ## Enum dan set
 
-```nim
+```{.nim}
 type Color = enum
   red, green, blue
 
@@ -169,7 +169,7 @@ echo green in flags
 
 ## Generic
 
-```nim
+```{.nim}
 proc largest[T](items: openArray[T]): T =
   result = items[0]
   for item in items:
@@ -186,7 +186,7 @@ echo largest([3, 9, 4])
 
 ## Template
 
-```nim
+```{.nim}
 template twice(body: untyped) =
   body
   body
@@ -197,7 +197,7 @@ twice:
 
 ## Macro
 
-```nim
+```{.nim}
 import std/macros
 
 macro triple(x: untyped): untyped =
@@ -209,7 +209,7 @@ echo triple(4)
 
 ## Exception dan `raises`
 
-```nim
+```{.nim}
 try:
   raise newException(ValueError, "bad")
 except ValueError as e:
@@ -227,7 +227,7 @@ finally:
 
 ## Iterator
 
-```nim
+```{.nim}
 iterator evens(n: int): int =
   for i in 0 .. n:
     if i mod 2 == 0:
@@ -250,7 +250,7 @@ for e in evens(6):
 
 ## `strutils`, `sequtils`, `tables`, `json`
 
-```nim
+```{.nim}
 import std/[strutils, sequtils, tables, json]
 
 echo "  Ada  ".strip.split(' ')
@@ -285,7 +285,7 @@ echo doc["city"].getStr
 
 ## `unittest`
 
-```nim
+```{.nim}
 import std/unittest
 
 suite "add":
@@ -293,7 +293,7 @@ suite "add":
     check 2 + 2 == 4
 ```
 
-```nim
+```{.nim}
 import std/[unittest, strutils]
 
 expect ValueError:
@@ -302,7 +302,7 @@ expect ValueError:
 
 ## `async`
 
-```nim
+```{.nim}
 import std/asyncdispatch
 
 proc fetch(n: int): Future[int] {.async.} =
@@ -318,7 +318,7 @@ waitFor main()
 
 ## FFI
 
-```nim
+```{.nim .fragment}
 {.compile: "helper.c".}
 
 proc twice(x: cint): cint {.importc.}
@@ -326,7 +326,7 @@ proc twice(x: cint): cint {.importc.}
 echo twice(4)
 ```
 
-```c
+```{.c}
 int twice(int x) { return x * 2; }
 ```
 
