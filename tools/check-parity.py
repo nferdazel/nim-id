@@ -3,8 +3,9 @@
 
 Yang dibandingkan untuk setiap berkas bernama sama:
   - jumlah heading
-  - isi blok ```{.nim}
+  - isi blok ```{.nim} dan ```{.nim .fragment}
   - isi blok ```{.txt}
+  - isi blok ```{.c}
   - daftar target tautan markdown
 
 Dipakai di `./task check` dan CI. Gagal (exit 1) kalau ada perbedaan.
@@ -26,7 +27,8 @@ PASANGAN = [
 
 
 def blok(teks, bahasa):
-    return re.findall(r"```\{\.%s\}\n(.*?)```" % bahasa, teks, re.S)
+    """Ambil isi fence ```{.bahasa ...}, termasuk yang punya atribut tambahan."""
+    return re.findall(r"```\{\.%s[^}]*\}\n(.*?)```" % bahasa, teks, re.S)
 
 
 def target_tautan(teks):
@@ -42,7 +44,7 @@ def banding(berkas_id, berkas_en):
     if a.count("\n#") != b.count("\n#"):
         masalah.append(f"jumlah heading beda: {a.count(chr(10) + '#')} vs {b.count(chr(10) + '#')}")
 
-    for bahasa in ("nim", "txt"):
+    for bahasa in ("nim", "txt", "c"):
         if blok(a, bahasa) != blok(b, bahasa):
             masalah.append(f"blok {{{{{bahasa}}}}} berbeda")
 
