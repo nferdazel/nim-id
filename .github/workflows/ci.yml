@@ -22,16 +22,16 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: "Pasang Nim 2.4.0"
+      - name: "Pasang Nim 2.4.2"
         uses: jiro4989/setup-nim-action@v2
         with:
-          nim-version: '2.4.0'
+          nim-version: '2.4.2'
 
       - name: "Cache hasil kompilasi contoh"
         uses: actions/cache@v4
         with:
           path: build
-          key: contoh-${{ runner.os }}-${{ hashFiles('examples/**/*.nim') }}
+          key: contoh-${{ runner.os }}-nim-2.4.2-${{ hashFiles('examples/**/*.nim') }}
 
       - name: "PCRE library for std/re"
         run: |

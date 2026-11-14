@@ -40,7 +40,7 @@ only the prose is translated.
 
 ## Build it
 
-You need [Quarto](https://quarto.org) 1.10.19, [Nim](https://nim-lang.org/install.html) 2.4.0, and
+You need [Quarto](https://quarto.org) 1.10.19, [Nim](https://nim-lang.org/install.html) 2.4.2, and
 Python 3. A few examples also need Node (JavaScript backend) and libsqlite3 (the database chapter).
 
 ```sh

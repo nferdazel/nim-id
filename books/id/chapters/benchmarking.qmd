@@ -9,7 +9,7 @@ ukur dulu, baru menebak. Masalahnya, mengukur juga punya jebakan yang tidak terl
 
 Setelah bab ini, pembaca bisa mengukur satu blok dengan `getMonoTime`, membaca `Duration` dan
 `inMilliseconds`, menulis contoh yang *output*-nya stabil, membedakan waktu CPU dari waktu dinding,
-serta menjalankan profiler bawaan Nim 2.4.0.
+serta menjalankan profiler bawaan Nim 2.4.2.
 :::
 
 ## Mengukur satu blok

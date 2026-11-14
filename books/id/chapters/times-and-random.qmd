@@ -45,7 +45,7 @@ hari, dan `HH:mm:ss` untuk jam, menit, serta detik. Bentuk `MMM` menghasilkan na
 disingkat, `MMMM` nama panjang, sedangkan `ddd` nama hari. Field seperti `launch.hour` dan
 `launch.minute` mengambil bagian DateTime tanpa memformat ulang.
 
-Di Nim 2.4.0, nama lama untuk *procedure* ini adalah `initDateTime`, dan namanya sudah ditandai
+Di Nim 2.4.2, nama lama untuk *procedure* ini adalah `initDateTime`, dan namanya sudah ditandai
 `deprecated`. Pakai `dateTime`.
 
 ## Mengurai teks menjadi waktu

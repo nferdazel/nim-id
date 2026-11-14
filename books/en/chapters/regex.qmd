@@ -13,6 +13,14 @@ replace and split text with `replace`, `replacef`, and `split`, read capture gro
 and tell when a regular expression is overkill because `strutils` is enough.
 :::
 
+::: {.callout-warning}
+## `std/re` is deprecated
+
+Since Nim 2.4, `std/re` is deprecated because PCRE is obsolete; `std/nre2` replaces it. This chapter
+keeps using `std/re` because the API is still available and widely used, but for a new project
+consider `std/nre2`.
+:::
+
 ## One pattern, two groups
 
 `re"..."` turns the pattern text into a `Regex` value. The shortest form uses the `=~` template,

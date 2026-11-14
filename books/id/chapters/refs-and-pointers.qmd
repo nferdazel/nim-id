@@ -152,7 +152,7 @@ echo p[]
 2008
 ```
 
-`unsafeAddr` adalah alias lama untuk `addr`, dan dokumentasi `system.nim` di 2.4.0 sudah
+`unsafeAddr` adalah alias lama untuk `addr`, dan dokumentasi `system.nim` di 2.4.2 sudah
 menandainya usang. Compiler tidak selalu memunculkan *warning* saat memakainya, jadi pakai `addr`
 untuk kode baru.
 

@@ -2,13 +2,13 @@
 
 Most complaints that "Nim does not work" are not about Nim at all. The usual causes are a PATH that
 was never configured, a missing C compiler, or a version that differs from the one this book uses.
-This chapter installs Nim 2.4.0 and confirms three things: the `nim` command is found, a C compiler
+This chapter installs Nim 2.4.2 and confirms three things: the `nim` command is found, a C compiler
 exists, and the version matches.
 
 ::: {.callout-note}
 ## What you will be able to do
 
-After this chapter you can install Nim 2.4.0 on Linux, macOS, Windows, or Termux, check its
+After this chapter you can install Nim 2.4.2 on Linux, macOS, Windows, or Termux, check its
 version, and fix a `command not found` message.
 :::
 
@@ -18,7 +18,7 @@ An install counts as done only when all three hold:
 
 1. The shell finds the `nim` command. Test it with `nim --version`.
 2. A C compiler (gcc or clang) is present. Nim translates to C first, so this is required.
-3. The version is 2.4.0, or at least 2.x. This book tests every example on 2.4.0.
+3. The version is 2.4.2, or at least 2.x. This book tests every example on 2.4.2.
 
 If any of these fails, the fix is in this chapter. Check from the top: `nim --version` tests the first
 and third requirements at once. If the command is not found, PATH is wrong. If it is found but the
@@ -36,11 +36,11 @@ curl https://nim-lang.org/choosenim/init.sh -sSf | sh
 Follow the on-screen prompts. When it finishes, install the exact version this book uses:
 
 ```{.bash}
-choosenim 2.4.0
+choosenim 2.4.2
 ```
 
 `choosenim stable` installs the newest stable release, and `choosenim devel` installs the
-development branch. For this book, stay on 2.4.0 so the example output matches.
+development branch. For this book, stay on 2.4.2 so the example output matches.
 
 One advantage of `choosenim`: it installs everything under your home directory, so no administrator
 rights are needed, and several versions can live side by side. Switching versions does not remove
@@ -100,7 +100,7 @@ Reload that file with `source ~/.zshrc`, or simply open a new terminal.
 Once `nim` is found, check the version:
 
 ```{.txt}
-Nim Compiler Version 2.4.0 [MacOSX: arm64]
+Nim Compiler Version 2.4.2 [MacOSX: arm64]
 ```
 
 The part in square brackets names the system and architecture; it differs on every machine. The
@@ -134,12 +134,12 @@ line, the C compiler is missing. This is faster than checking them one by one.
 
 ## If the version differs
 
-If the installed version is not 2.4.0, the examples in this book will most likely still run. What
+If the installed version is not 2.4.2, the examples in this book will most likely still run. What
 changes most between versions is the wording of error messages and small details in the standard
 library. If the output on your machine differs from the book, the first step is to match versions:
 
 ```{.bash}
-choosenim 2.4.0
+choosenim 2.4.2
 ```
 
 After switching, run `nim --version` again to confirm the version really changed.
@@ -170,7 +170,7 @@ Answers are in [Appendix A](../appendix/answers.qmd).
 3. Check the C compiler on your system. Which command confirms it, and what is its output?
 4. Nim is installed, but the C compiler is not. What happens when `nim c hello.nim` runs? Explain.
 5. With `choosenim`, write the sequence of commands to move from the latest stable release to
-   2.4.0, then back again.
+   2.4.2, then back again.
 6. Change the `hello` program above so it prints your name instead of `Nim`.
 7. Write a program that prints `7 * 6` together with its result. Save it as `multiply.nim`.
 8. In the [addition example from the previous chapter](what-is-nim.qmd), change `1..5` to `1..10`.
@@ -182,7 +182,7 @@ Answers are in [Appendix A](../appendix/answers.qmd).
 - `choosenim` makes version switching easy; distro package managers are faster but often lag.
 - PATH must include Nim's `bin` directory and `~/.nimble/bin`.
 - `command not found` means the shell could not find the command on PATH, not that Nim is broken.
-- This book is tested on Nim 2.4.0; match the version if the output differs.
+- This book is tested on Nim 2.4.2; match the version if the output differs.
 
 ## Next
 

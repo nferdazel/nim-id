@@ -149,5 +149,5 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
 ## Selanjutnya
 
-[Instalasi Nim](installation.qmd) memasang versi 2.4.0 di mesin pembaca lewat `choosenim`,
+[Instalasi Nim](installation.qmd) memasang versi 2.4.2 di mesin pembaca lewat `choosenim`,
 pengelola *package*, atau biner siap pakai, lalu memastikan `nim --version` menjawab.

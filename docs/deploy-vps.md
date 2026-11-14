@@ -68,7 +68,7 @@ PDF dibuat di dua tempat, dari commit yang sama:
   label rilis tidak bisa meleset.
 
 Keduanya memakai Quarto 1.10.19 dan dirender dari commit yang sama; verifikasi contoh dengan Nim
-2.4.0 hanya berjalan di CI, tidak di VPS. Rilis tidak memicu deploy: webhook hanya mendengar
+2.4.2 hanya berjalan di CI, tidak di VPS. Rilis tidak memicu deploy: webhook hanya mendengar
 `refs/heads/main`.
 
 ## Quarto di server (tanpa root)

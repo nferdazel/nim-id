@@ -148,7 +148,7 @@ nim c -d:release --passL:-static --out:app app.nim
 ```
 
 *Result*-nya biner statis: tidak mencari library C saat dijalankan, jadi lebih aman dipindahkan.
-*Flag* ini untuk target Linux. Penaut macOS tidak mengenalnya, dan percobaan di Nim 2.4.0 berhenti
+*Flag* ini untuk target Linux. Penaut macOS tidak mengenalnya, dan percobaan di Nim 2.4.2 berhenti
 dengan `ld: library 'crt0.o' not found`.
 
 `--passL` meneruskan *option* ke penaut, `--passC` meneruskan *option* ke compiler C. Keduanya jembatan

@@ -66,7 +66,7 @@ Urutan standar. Kolom **status**: W = wajib, O = opsional, X = tidak lazim untuk
 | B4 | **Subject index** | O (P2 untuk terbit-sendiri) | Mahal, tetapi penanda "buku sungguhan" untuk cetak/retail. Lihat §9. |
 | B5 | **Colophon** (di belakang) | O | Boleh digabung ke halaman copyright; cukup satu tempat. Lihat §3. |
 | B6 | **About the author** | O (W bila dijual retail) | 3–5 baris + kontak stabil. Paling lazim di paling belakang. |
-| B7 | **Version history / changelog / errata** | O (naik ke W untuk buku teknis berumur panjang) | Buku ini memaku Nim 2.4.0 → halaman "versi yang diuji & errata" melindungi klaim. |
+| B7 | **Version history / changelog / errata** | O (naik ke W untuk buku teknis berumur panjang) | Buku ini memaku Nim 2.4.2 → halaman "versi yang diuji & errata" melindungi klaim. |
 | B8 | **Closing / blurb page** | O (W bila dijual cetak) | Ringkasan nilai buku + ruang barcode bila POD. |
 | B9 | **Credits / trademark notice** | O → W bila mengutip kode pihak ketiga | Sebut nama "Nim" dan lisensi pustaka yang dirujuk. |
 
@@ -128,7 +128,7 @@ buku ini adalah milik pemegangnya masing-masing; penyebutan
 dilakukan tanpa klaim afiliasi atau dukungan.
 
 Buku ini disusun dengan Quarto dan Typst. Trim 178 × 233 mm.
-Versi yang diuji: Nim 2.4.0.
+Versi yang diuji: Nim 2.4.2.
 
 Errata dan kode sumber: https://github.com/nferdazel/nim-id
 Situs: https://nim.qouver.com

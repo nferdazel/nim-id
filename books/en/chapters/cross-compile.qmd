@@ -147,7 +147,7 @@ nim c -d:release --passL:-static --out:app app.nim
 ```
 
 The result is a static binary: it does not look for C libraries at runtime, so it is safer to move
-around. This switch is for Linux targets. The macOS linker does not know it, and on Nim 2.4.0 the
+around. This switch is for Linux targets. The macOS linker does not know it, and on Nim 2.4.2 the
 attempt stops with `ld: library 'crt0.o' not found`.
 
 `--passL` forwards options to the linker and `--passC` forwards options to the C compiler. Both are

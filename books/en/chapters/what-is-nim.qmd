@@ -148,5 +148,5 @@ Answers are in [Appendix A](../appendix/answers.qmd).
 
 ## Next
 
-[Installing Nim](installation.qmd) sets up version 2.4.0 on your machine through `choosenim`, a
+[Installing Nim](installation.qmd) sets up version 2.4.2 on your machine through `choosenim`, a
 package manager, or a ready binary, and then confirms that `nim --version` answers.

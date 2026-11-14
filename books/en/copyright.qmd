@@ -33,7 +33,7 @@ implied. The author is not liable for any loss arising from the use of the book 
 
 ## Production
 
-Tested with Nim 2.4.0. The PDF is built from Markdown sources with Quarto 1.10.19 and Typst. This
+Tested with Nim 2.4.2. The PDF is built from Markdown sources with Quarto 1.10.19 and Typst. This
 book has no ISBN and is not issued by any publisher.
 
 ## Source and contact

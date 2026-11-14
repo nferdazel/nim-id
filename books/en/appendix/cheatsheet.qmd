@@ -1,7 +1,7 @@
 # Cheat sheet
 
 This page gathers the syntax used most often. Every snippet is written in English, as in the whole
-book, and tested on Nim 2.4.0.
+book, and tested on Nim 2.4.2.
 
 ## Declarations
 
@@ -350,5 +350,5 @@ int twice(int x) { return x * 2; }
 | `nimble run` | build and run |
 | `nimble install name` | install a package |
 
-The contents of this page are tested on Nim 2.4.0. For longer explanations, each part has its own
+The contents of this page are tested on Nim 2.4.2. For longer explanations, each part has its own
 chapter in this book.

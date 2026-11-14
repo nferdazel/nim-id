@@ -2,13 +2,13 @@
 
 Sebagian besar keluhan "Nim tidak jalan" bukan masalah Nim. Penyebabnya biasanya PATH yang belum
 diatur, compiler C yang belum terpasang, atau versi yang berbeda dari yang dipakai buku ini. Bab
-ini memasang Nim 2.4.0 dan memastikan tiga hal benar: command `nim` ditemukan, compiler C
+ini memasang Nim 2.4.2 dan memastikan tiga hal benar: command `nim` ditemukan, compiler C
 tersedia, dan versinya sesuai.
 
 ::: {.callout-note}
 ## Tujuan bab
 
-Setelah bab ini, pembaca bisa memasang Nim 2.4.0 di Linux, macOS, Windows, atau Termux, memeriksa
+Setelah bab ini, pembaca bisa memasang Nim 2.4.2 di Linux, macOS, Windows, atau Termux, memeriksa
 versinya, dan memperbaiki *message* `command not found`.
 :::
 
@@ -18,7 +18,7 @@ Instalasi Nim disebut selesai kalau ketiganya terpenuhi:
 
 1. Shell menemukan command `nim`. Uji dengan `nim --version`.
 2. Ada compiler C (gcc atau clang). Nim menerjemahkan kode ke C lebih dulu, jadi ini wajib.
-3. Versinya 2.4.0, atau setidaknya 2.x. Buku ini menguji semua contoh di 2.4.0.
+3. Versinya 2.4.2, atau setidaknya 2.x. Buku ini menguji semua contoh di 2.4.2.
 
 Kalau salah satu gagal, perbaikannya ada di bab ini. Periksa dari atas: `nim --version` sekaligus
 menguji syarat pertama dan ketiga. Kalau command itu tidak ditemukan, PATH yang salah. Kalau
@@ -36,11 +36,11 @@ curl https://nim-lang.org/choosenim/init.sh -sSf | sh
 Ikuti petunjuk di layar. Setelah selesai, pasang tepat versi yang dipakai buku ini:
 
 ```{.bash}
-choosenim 2.4.0
+choosenim 2.4.2
 ```
 
 `choosenim stable` memasang versi stabil terbaru, dan `choosenim devel` memasang cabang
-pengembangan. Untuk buku ini, tahan di 2.4.0 supaya *output* contoh cocok.
+pengembangan. Untuk buku ini, tahan di 2.4.2 supaya *output* contoh cocok.
 
 Satu keunggulan `choosenim`: semuanya dipasang di *directory* home, jadi tidak perlu hak
 administrator, dan beberapa versi bisa hidup berdampingan. Berpindah versi tidak menghapus versi
@@ -100,7 +100,7 @@ Muat ulang *file* itu dengan `source ~/.zshrc`, atau cukup buka terminal baru.
 Kalau `nim` sudah ditemukan, periksa versinya:
 
 ```{.txt}
-Nim Compiler Version 2.4.0 [MacOSX: arm64]
+Nim Compiler Version 2.4.2 [MacOSX: arm64]
 ```
 
 Bagian dalam kurung siku menyebut sistem dan arsitektur; isinya berbeda di setiap mesin. Yang
@@ -135,12 +135,12 @@ memeriksa satu per satu.
 
 ## Kalau versi berbeda
 
-Kalau versi yang terpasang bukan 2.4.0, contoh di buku ini kemungkinan besar tetap jalan. Yang
+Kalau versi yang terpasang bukan 2.4.2, contoh di buku ini kemungkinan besar tetap jalan. Yang
 paling sering berubah antar versi adalah isi *error message* dan detail kecil di *standard library*. Kalau
 *output* contoh di mesin pembaca berbeda dari buku, langkah pertama adalah mencocokkan versi:
 
 ```{.bash}
-choosenim 2.4.0
+choosenim 2.4.2
 ```
 
 Setelah berpindah, jalankan `nim --version` lagi untuk memastikan versinya benar-benar berganti.
@@ -173,7 +173,7 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
    *output*-nya?
 4. Nim sudah terpasang, tetapi compiler C belum. Apa yang terjadi waktu `nim c hello.nim`
    dijalankan? Jelaskan.
-5. Dengan `choosenim`, tulis urutan command untuk berpindah dari versi stabil terbaru ke 2.4.0,
+5. Dengan `choosenim`, tulis urutan command untuk berpindah dari versi stabil terbaru ke 2.4.2,
    lalu kembali lagi.
 6. Ubah program `hello` di atas supaya menampilkan nama pembaca, bukan `Nim`.
 7. Tulis program yang menampilkan `7 * 6` beserta *result*-nya. Simpan sebagai `kali.nim`.
@@ -186,7 +186,7 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 - `choosenim` memudahkan berpindah versi; pengelola *package* distro lebih cepat tapi sering tertinggal.
 - PATH perlu memuat *directory* `bin` Nim dan `~/.nimble/bin`.
 - `command not found` berarti shell tidak menemukan command di PATH, bukan Nim yang rusak.
-- Buku ini diuji di Nim 2.4.0; cocokkan versi kalau *output* berbeda.
+- Buku ini diuji di Nim 2.4.2; cocokkan versi kalau *output* berbeda.
 
 ## Selanjutnya
 

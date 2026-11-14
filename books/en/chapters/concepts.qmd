@@ -6,7 +6,7 @@ the list is fixed by the language. A concept fills the gap: a constraint you wri
 on the shape of a type.
 
 This chapter builds concepts from the simple to the combined, uses them to pick overloads, and reads
-error messages when a requirement is not met. Every example is tested on Nim 2.4.0.
+error messages when a requirement is not met. Every example is tested on Nim 2.4.2.
 
 ::: {.callout-note}
 ## What you will be able to do

@@ -6,7 +6,7 @@ must not be mixed up, such as a user id and an order id.
 
 Nim answers these two differently. A variant object folds several shapes into one type with a tag.
 `distinct` creates a genuinely new type, so the compiler refuses to mix them. This chapter uses both.
-Every example is tested on Nim 2.4.0.
+Every example is tested on Nim 2.4.2.
 
 ::: {.callout-note}
 ## What you will be able to do

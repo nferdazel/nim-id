@@ -13,6 +13,14 @@ Setelah bab ini, pembaca bisa menulis pola dengan `re"..."`, memakai `match`, `f
 *capture group*, menyalakan `(?i)`, dan tahu kapan *regex* berlebihan sehingga `strutils` sudah cukup.
 :::
 
+::: {.callout-warning}
+## `std/re` sudah ditandai *deprecated*
+
+Sejak Nim 2.4, `std/re` ditandai *deprecated* karena PCRE sudah usang; penggantinya `std/nre2`. Bab
+ini tetap memakai `std/re` karena API-nya masih tersedia dan paling banyak dipakai, tetapi untuk
+proyek baru pertimbangkan `std/nre2`.
+:::
+
 ## Satu pola, dua *capture group*
 
 `re"..."` mengubah teks pola menjadi *value* `Regex`. Bentuk paling ringkas memakai template `=~`,

@@ -43,7 +43,7 @@ main()
 ```
 
 Save it as `main.nim`, then run `nim c -r main.nim`. The module is named `std/typedthreads`; the name
-`std/threads` does not exist in Nim 2.4.0. `Thread[int]` means the procedure takes one `int`.
+`std/threads` does not exist in Nim 2.4.2. `Thread[int]` means the procedure takes one `int`.
 `createThread(worker, square, 5)` runs `square(5)` on a new thread, and `joinThread` waits until that
 work is done.
 
@@ -187,7 +187,7 @@ does not manage, and even then it needs a lock: without one, two threads writing
 lose writes.
 
 One old note: `std/threadpool` with `spawn`, `^`, and `sync` still exists, but it is marked
-`deprecated` in Nim 2.4.0. The compiler suggests nimble packages such as `malebolgia`, `taskpools`,
+`deprecated` in Nim 2.4.2. The compiler suggests nimble packages such as `malebolgia`, `taskpools`,
 or `weave`. This chapter uses the standard library only, so `Thread` and `Channel` are what it
 reaches for.
 
