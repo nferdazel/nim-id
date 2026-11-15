@@ -15,6 +15,22 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+
+  # Golden CI/CD contract: the same rules the server repo checks, run here so
+  # drift fails this repo's own build instead of waiting for a manual audit.
+  # The script is a byte-identical copy of the server repo's
+  # ops/scripts/contract-check.sh; fix it there and copy it out again.
+  contract:
+    name: "Contract: golden CI/CD rules"
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: "Contract: check this repo"
+        run: ./ops/scripts/contract-check.sh .
+
   examples:
     name: "Examples: compile and verify output"
     runs-on: ubuntu-24.04
@@ -43,6 +59,21 @@ jobs:
 
       - name: "Verify appendix blocks"
         run: python3 tools/check-appendix.py
+
+  # Independent of the build: a leaked secret fails on its own, and the full
+  # history lets the scan see every commit the pull request adds, not just its tip.
+  security:
+    name: "Security (gitleaks)"
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: gitleaks/gitleaks-action@e0c47f4f8be36e29cdc102c57e68cb5cbf0e8d1e # v3.0.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   book:
     name: "Book: render both languages + PDF"
