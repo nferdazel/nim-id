@@ -101,14 +101,14 @@ jobs:
         run: bash tools/build-site.sh
 
       - name: "Upload site (both languages)"
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: situs
           path: public
           retention-days: 7
 
       - name: "Upload PDF"
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: pdf
           path: public/**/*.pdf
