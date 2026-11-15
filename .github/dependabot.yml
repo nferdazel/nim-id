@@ -6,3 +6,8 @@ updates:
     schedule:
       interval: weekly
     open-pull-requests-limit: 5
+    # One PR for every action instead of one PR per action.
+    groups:
+      github-actions:
+        patterns:
+          - "*"
