@@ -44,7 +44,7 @@ jobs:
           nim-version: '2.4.2'
 
       - name: "Cache hasil kompilasi contoh"
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: build
           key: contoh-${{ runner.os }}-nim-2.4.2-${{ hashFiles('examples/**/*.nim') }}
