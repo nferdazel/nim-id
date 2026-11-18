@@ -58,8 +58,8 @@ git tag -a v0.1.0 -m "nim-id 0.1.0"
 git push origin main --follow-tags
 ```
 
-Sesudah `v0.1.0` ada, semua rilis berikutnya lewat `./task release`. Rilis terakhir saat ini
-`v0.7.11`; jangan mengulang langkah manual di atas.
+Sesudah `v0.1.0` ada, semua rilis berikutnya lewat `./task release`; langkah manual di atas tidak
+diulang lagi.
 
 ## Tag memicu CI, bukan deploy
 

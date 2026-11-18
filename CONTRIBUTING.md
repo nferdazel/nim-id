@@ -39,7 +39,7 @@ the version bump:
 
 ```
 feat: modules chapter
-fix: loops example prints the wrong output on Nim 2.2.12
+fix: loops example prints the wrong output on Nim 2.4.2
 docs: clarify the closure section
 chore: tidy the build scripts
 ```

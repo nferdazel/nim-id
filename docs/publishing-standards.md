@@ -95,7 +95,7 @@ Unsur **minimum** (W) dan **opsional** (O):
 | C6 | ISBN (cetak / digital) + barcode | O bila ada; **jangan mengarang** |
 | C7 | Lisensi teks, dengan tautan/teks kanonik yang **tidak bergantung berkas repo** | W |
 | C8 | Lisensi kode + cakupannya (apa yang dianggap kode) | W |
-| C9 | Versi edisi (mis. `0.7.11`) | W |
+| C9 | Versi edisi (dari `VERSION`) | W |
 | C10 | Tanggal edisi (satu sumber, format "$bulan $tahun") | W |
 | C11 | "Dicetak oleh" / printer + tahun cetak | O untuk ebook; W untuk cetak |
 | C12 | Nomor cetakan / "Cetakan pertama" | O |
@@ -111,7 +111,7 @@ Dasar Pemrograman Nim
 Belajar bahasa Nim dari nol, dalam Bahasa Indonesia
 
 Penulis        : Fredianto
-Versi          : 0.7.11
+Versi          : <isi VERSION>
 Tanggal        : 23 Oktober 2026
 
 © 2026 Fredianto. Diterbitkan sendiri; tanpa penerbit, tanpa ISBN.
@@ -235,7 +235,7 @@ Ambang untuk trim 178 × 233 mm (≈ 7.0 × 9.17 in). Sesuaikan proporsional bil
 | Q12 | Ukuran berkas & objektif PDF | wajar untuk distribusi (mis. < 15 MB) |
 | Q13 | Tidak ada rahasia (kunci API, email pribadi) di metadata | 0 |
 
-Untuk POD dihitung dulu: lebar spine ≈ jumlah halaman × tebal kertas (mis. 0,0572 mm/hlm × 415
+Untuk POD dihitung dulu: lebar spine ≈ jumlah halaman × tebal kertas (mis. 0,0572 mm/hlm × 414
 ≈ 23,7 mm) untuk kertas putih; unggah sebagai sampul terpisah.
 
 ---

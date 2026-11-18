@@ -11,12 +11,17 @@ health check.
 ├── monorepo/          # clone repo (sachiel)
 ├── releases/<sha>/    # hasil render, 3 terbaru disimpan
 ├── web -> releases/<sha>   # symlink yang dibaca Caddy
+├── .previous          # rilis aktif sebelumnya, dipakai rollback otomatis
+├── scripts/           # salinan deploy-static.sh, diperbarui sendiri tiap deploy sukses
 ├── .tools/quarto/     # Quarto CLI, tanpa root
 ├── logs/deploy.log
 └── .deployed_rev
 ```
 
 ## Sekali saja (butuh root)
+
+`ops/scripts/setup-vps.sh` menjalankan langkah 1–3 di bawah dalam satu perintah. Prasyaratnya satu:
+blok Caddy sudah disalin ke `/srv/qouver/apps/nim-id/Caddyfile.nim-id.block`.
 
 ```bash
 # 1. Direktori
@@ -100,12 +105,11 @@ curl -sS -o /dev/null -w '%{http_code}\n' https://nim.qouver.com/
   ganti di keduanya, lalu `systemctl --user restart webhook`.
 - Ref-guard di skrip hanya menerima `refs/heads/main`; event lain keluar dengan kode 0 (tidak
   dianggap gagal).
-- Health check memakai **origin langsung** lewat HTTP port 80 + header `Host: nim.qouver.com`
-  (`http://127.0.0.1/`), retry 5×2 detik, lalu memastikan `index.html` memuat judul kedua edisi.
-  Sejak Zone-level Authenticated Origin Pulls aktif (2 Nov 2026), TLS langsung ke origin tanpa
-  client cert selalu gagal, jadi HTTPS loopback bukan lagi sinyal yang bisa dipakai. Request dari
-  VPS ke edge Cloudflare sendiri pernah gagal sesaat dan sempat memicu rollback palsu; CF diuji
-  terpisah dari luar.
+- Health check menempuh **nama publik** (`https://nim.qouver.com/`, bisa ditimpa lewat
+  `NIMID_HEALTH_URL`): tabel nft `inet cfedge` membuang tcp 80/443 dari sumber selain rentang
+  Cloudflare, termasuk `127.0.0.1`, jadi curl ke loopback selalu timeout (kode 000) dan bukan sinyal
+  yang sah. Retry 5×2 detik, kode harus 200 atau 308, lalu `index.html` kedua edisi harus memuat
+  judulnya.
 
 Jalankan perintah yang sama secara manual (tanpa push) kalau perlu deploy ulang commit yang sedang
 aktif.

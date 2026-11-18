@@ -15,8 +15,8 @@ chapter files, headings, and code blocks), and every example is compiled with it
 each change, so the code in the book is code that runs.
 
 Read it online: [Indonesian](https://nim.qouver.com) and [English](https://nim.qouver.com/en).
-Download: [ID PDF, 415 pages](https://nim.qouver.com/Dasar-Pemrograman-Nim.pdf),
-[EN PDF, 407 pages](https://nim.qouver.com/en/Learning-Nim.pdf), or from
+Download: [ID PDF, 414 pages](https://nim.qouver.com/Dasar-Pemrograman-Nim.pdf),
+[EN PDF, 406 pages](https://nim.qouver.com/en/Learning-Nim.pdf), or from
 [GitHub Releases](https://github.com/nferdazel/nim-id/releases).
 
 What it is not: it is not a reference manual for the standard library, and it does not cover the C++
@@ -45,6 +45,14 @@ The book is a Quarto project rendered twice, once per language, from one shared 
 The text is written once in Indonesian and translated; code is shared by both editions and only the
 prose is translated. A parity script fails the build when the two editions lose the same shape.
 
+Why it has this shape: Quarto with Typst is one source and two outputs, so the site and the PDF
+cannot drift apart. The editions are two Quarto projects rather than one project with a profile,
+because a Quarto book needs `index.qmd` at the project root and a per-format `output-dir` is
+ignored. Deployment uses only the static part of the golden contract (ref guard, `flock`,
+fetch/reset, symlink swap, health check): a static site has no container, so there is no
+`:local`/`:prev` image to keep. For the same reason there is no `apps/` and `modules/` split — a
+book has no backend and no database.
+
 Inside the book:
 
 | Part | Chapters | Topics |
@@ -64,7 +72,7 @@ assets/    shared ku.css, Typst partials, and skip-link pages, copied into each 
 examples/  323 example programs grouped by chapter, with .expected / .expected-error files
 tools/     build and verification scripts (see Quality gates)
 ops/       Caddy block, VPS setup, and the static deploy script
-docs/      plan, writing guide, glossary source, publishing standards, release and VPS notes
+docs/      writing guide, glossary source, publishing standards, release and VPS notes
 public/    rendered site and PDFs (build output, not committed)
 ```
 
@@ -83,7 +91,7 @@ not on `PATH`, set `QUARTO=/path/to/quarto`.
 ./task pdf        # render both PDFs with Typst
 ./task check      # every gate: glossary, parity, examples, appendix, then the site
 ./task examples   # compile and verify every example
-./task dev        # local preview with auto-reload
+./task dev        # local preview of books/id with auto-reload
 ./task release    # bump VERSION from commit messages, then commit and tag
 ```
 
@@ -119,11 +127,12 @@ GitHub Release. Setup steps and the Caddy block are in `ops/` and `docs/deploy-v
 
 ## Documentation
 
-- [`docs/plan.md`](docs/plan.md): the plan the book is written against.
+- [`DESIGN.md`](DESIGN.md): the visual direction the web CSS and the PDF template follow.
 - [`docs/writing-guide.md`](docs/writing-guide.md): chapter template, sentence rules, definition of done.
 - [`docs/glossary.md`](docs/glossary.md): the canonical term list the glossary pages mirror.
 - [`docs/publishing-standards.md`](docs/publishing-standards.md): what a published edition must satisfy.
 - [`docs/release.md`](docs/release.md) and [`docs/deploy-vps.md`](docs/deploy-vps.md): release and VPS notes.
+- [`CHANGELOG.md`](CHANGELOG.md): what changed in each published version.
 
 ## Security
 
