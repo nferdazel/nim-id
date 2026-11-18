@@ -33,7 +33,7 @@ usage: ./task <command>
   id        render the Indonesian edition only
   en        render the English edition only
   pdf       render the PDF edition of both books
-  dev       local preview with auto-reload
+  dev       preview books/id with auto-reload
   check     examples + appendix + site (the gate before a commit)
   version   print the book version (from VERSION)
   release   bump the version from commit messages, commit, then tag (--major/--minor/--patch)
@@ -78,7 +78,9 @@ case "${1:-help}" in
     ;;
   dev)
     perlu "$QUARTO"
-    "$QUARTO" preview
+    sh tools/gen-version.sh
+    sh tools/sync-assets.sh
+    "$QUARTO" preview books/id
     ;;
   version | versi)
     tr -d '[:space:]' < VERSION
