@@ -12,6 +12,13 @@ releases page are the record for those releases.
 
 ## [Unreleased]
 
+### Changed
+
+- CI/CD v2.0: one local gate (`./task gate`, `./task gate-full`), one release mechanism
+  (`./task release`, no push without `--push`), the golden contract job renamed to `preflight`
+  and required by every expensive job.
+
+
 ## [0.7.13] - 2026-11-14
 
 Current edition. See the releases page for the PDFs and the tag this file was introduced at.

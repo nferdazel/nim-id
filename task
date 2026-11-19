@@ -34,9 +34,12 @@ usage: ./task <command>
   en        render the English edition only
   pdf       render the PDF edition of both books
   dev       preview books/id with auto-reload
+  gate      contract + shell syntax + secret scan + lints, no Quarto (<= 90 s)
+  gate-full gate + examples, then render both editions and the PDFs
   check     examples + appendix + site (the gate before a commit)
   version   print the book version (from VERSION)
-  release   bump the version from commit messages, commit, then tag (--major/--minor/--patch)
+  release   bump VERSION from the commit log, run gate-full, commit and tag locally
+            (--major/--minor/--patch, --skip-check, --push)
 
 environment:
   QUARTO   path to the quarto binary (default: quarto from PATH)
@@ -86,10 +89,18 @@ case "${1:-help}" in
     tr -d '[:space:]' < VERSION
     echo
     ;;
+  # Standard CI/CD v2.0: one gate and one release implementation, shared byte-identically with
+  # every other repo. See task.d/gate.sh and task.d/release.sh.
+  gate)
+    sh task.d/gate.sh gate
+    ;;
+  gate-full)
+    sh task.d/gate.sh gate-full
+    ;;
   release | rilis)
     shift
     perlu git
-    sh tools/release.sh "$@"
+    sh task.d/release.sh "$@"
     ;;
   check)
     perlu nim
