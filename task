@@ -39,7 +39,7 @@ usage: ./task <command>
   check     examples + appendix + site (the gate before a commit)
   version   print the book version (from VERSION)
   release   bump VERSION from the commit log, run gate-full, commit and tag locally
-            (--major/--minor/--patch, --skip-check, --push)
+            (--major/--minor/--patch, --skip-check, --push, --current)
 
 environment:
   QUARTO   path to the quarto binary (default: quarto from PATH)
