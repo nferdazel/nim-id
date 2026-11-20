@@ -13,10 +13,10 @@ command -v python3 >/dev/null 2>&1 || {
 python3 tools/lint-glossary.py
 python3 tools/check-parity.py
 python3 tools/check-glossary-page.py
-python3 tools/check-appendix.py
 
 if command -v nim >/dev/null 2>&1; then
   bash tools/verify-examples.sh
+  python3 tools/check-appendix.py
 else
-  printf '   nim not on PATH: example verification skipped here (CI runs it)\n'
+  printf '   nim not on PATH: example and appendix checks skipped here (CI runs them)\n'
 fi
