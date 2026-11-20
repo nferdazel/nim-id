@@ -92,10 +92,12 @@ case "${1:-help}" in
   # Standard CI/CD v2.0: one gate and one release implementation, shared byte-identically with
   # every other repo. See task.d/gate.sh and task.d/release.sh.
   gate)
-    sh task.d/gate.sh gate
+    shift
+    sh task.d/gate.sh gate "$@"
     ;;
   gate-full)
-    sh task.d/gate.sh gate-full
+    shift
+    sh task.d/gate.sh gate-full "$@"
     ;;
   release | rilis)
     shift
