@@ -83,9 +83,14 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+  # `needs: [preflight]` only: the render reads `books/**` and nothing the
+  # `examples` job writes (`build/verify` is that job's own output). Waiting on it
+  # put a 160 s job behind a 182 s one for no data, so the wall was the sum of the
+  # two instead of the slower one. nimony-id, which renders the same way, never
+  # had the edge either.
   book:
     name: "Book: render both languages + PDF"
-    needs: [examples, preflight]
+    needs: [preflight]
     runs-on: ubuntu-24.04
     timeout-minutes: 15
     # Only the tag run creates a release; branch and pull request runs stay read-only.
