@@ -61,8 +61,16 @@ Dipicu webhook saat push ke `main`, sama seperti aplikasi lain:
 /srv/qouver/apps/nim-id/scripts/deploy-static.sh nim-id refs/heads/main
 ```
 
-Skrip: ref-guard → `flock` → `git fetch`/`reset` → `tools/build-site.sh` (id + en) → rsync `public/` ke `releases/<sha>` →
+Skrip: ref-guard → `flock` → `git fetch`/`reset` → tunggu check `Gate` untuk SHA itu →
+`tools/build-site.sh` (id + en) → rsync `public/` ke `releases/<sha>` →
 swap `web` → `curl` health check → rollback symlink kalau gagal → sisakan 3 rilis.
+
+Webhook datang bersamaan dengan CI, jadi skrip menunggu check `Gate` pada SHA yang akan
+dipasang. Hanya `success` yang dilanjutkan; CI merah, check tidak muncul, atau lewat
+`NIMID_GATE_TIMEOUT` (default 1200 detik) membatalkan deploy dan situs lama tetap hidup.
+Token GitHub opsional lewat `NIMID_GITHUB_TOKEN` (menaikkan rate limit API); tanpa token
+pemeriksaan memakai API publik. Deploy darurat tanpa CI: `NIMID_SKIP_GATE=1`, tercatat di
+`logs/deploy.log`.
 
 PDF dibuat di dua tempat, dari commit yang sama:
 
@@ -105,6 +113,9 @@ curl -sS -o /dev/null -w '%{http_code}\n' https://nim.qouver.com/
   ganti di keduanya, lalu `systemctl --user restart webhook`.
 - Ref-guard di skrip hanya menerima `refs/heads/main`; event lain keluar dengan kode 0 (tidak
   dianggap gagal).
+- `main` mewajibkan check `Gate` sebelum merge (ruleset `Basic Branch Guardrail`). Admin repo
+  memegang bypass untuk rilis langsung lewat `./task release --push`; deploy tetap menunggu
+  `Gate` pada SHA hasil push.
 - Health check menempuh **nama publik** (`https://nim.qouver.com/`, bisa ditimpa lewat
   `NIMID_HEALTH_URL`): tabel nft `inet cfedge` membuang tcp 80/443 dari sumber selain rentang
   Cloudflare, termasuk `127.0.0.1`, jadi curl ke loopback selalu timeout (kode 000) dan bukan sinyal

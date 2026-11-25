@@ -9,6 +9,7 @@ _pdf/
 *.pdf
 !assets/**/*.pdf
 books/*/assets/
+books/*/favicon.ico
 # Artefak render satu berkas (`quarto render chapters/x.qmd` menulis HTML di sebelah sumber).
 books/*/*.html
 !books/id/404.html

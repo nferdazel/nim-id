@@ -12,6 +12,25 @@ releases page are the record for those releases.
 
 ## [Unreleased]
 
+### Added
+
+- SEO for both editions: `site-url`, book descriptions, Open Graph and Twitter cards, a favicon,
+  `sitemap.xml` and `robots.txt`. Every page also gets a canonical URL, ID/EN `hreflang` alternates
+  and `og:url`, which Quarto does not write for two separately rendered projects.
+- The 404 page follows the language of the address: `/en/...` gets the English page, not the
+  Indonesian one.
+- `task.d/release.local.sh` stamps the release date into both books, so the PDF title page and the
+  changelog no longer drift from `VERSION`.
+
+### Changed
+
+- The VPS deploy waits for the `Gate` check of the exact commit and aborts on red or timeout, so a
+  failed build no longer reaches the live site.
+- Dependabot pull requests skip the `examples` and `book` jobs; `preflight`, the secret scan and
+  `Gate` still run, and every push runs the full graph.
+- Index pages carry one `h1` again: "Prakata"/"Preface" is a level-2 heading under the book title
+  block.
+
 ## [0.7.14] - 2026-11-20
 
 ### Changed
@@ -22,4 +41,4 @@ releases page are the record for those releases.
 
 ## [0.7.13] - 2026-11-14
 
-Current edition. See the releases page for the PDFs and the tag this file was introduced at.
+See the releases page for the PDFs and the tag this file was introduced at.

@@ -8,6 +8,7 @@
 # Berbeda dari deploy service: tidak ada podman, tidak ada tag :local/:prev,
 # tidak ada migrasi. Yang dipertahankan dari kontrak: ref-guard fail-closed,
 # flock, fetch/reset idempoten, swap berbasis symlink, health check.
+# Tambahan khusus situs statis: deploy menunggu check `Gate` untuk SHA itu.
 #
 # Rollback: symlink `current` menunjuk satu direktori rilis. `previous` menyimpan
 # rilis sebelumnya. Kalau health check gagal, symlink dikembalikan ke `previous`.
@@ -45,6 +46,60 @@ bersihkan_rilis() {
 log() { printf '[%s] %s\n' "$(date '+%Y-%m-%d %H:%M:%S')" "$*" | tee -a "$LOG"; }
 die() { log "ERROR: $*"; exit 1; }
 
+# CI gate: webhook datang bersamaan dengan GitHub Actions, jadi deploy menunggu check
+# `Gate` untuk SHA yang akan dipasang, bukan menebak. Fail-closed: CI merah, tidak ada
+# check, atau lewat batas waktu berarti situs lama tetap hidup.
+GATE_TIMEOUT="${NIMID_GATE_TIMEOUT:-1200}" # detik
+GATE_POLL="${NIMID_GATE_POLL:-30}"         # detik
+
+tunggu_gate() {
+  local sha="$1" batas state auth=()
+  command -v python3 >/dev/null 2>&1 || die "python3 tidak ada: tidak bisa membaca status CI"
+  [ -n "${NIMID_GITHUB_TOKEN:-}" ] && auth=(-H "Authorization: Bearer $NIMID_GITHUB_TOKEN")
+  batas=$(( $(date +%s) + GATE_TIMEOUT ))
+  while :; do
+    state=$(curl -fsS --max-time 15 "${auth[@]}" \
+      -H 'Accept: application/vnd.github+json' \
+      "https://api.github.com/repos/nferdazel/nim-id/commits/$sha/check-runs" 2>/dev/null \
+      | python3 -c '
+import json, sys
+sha = sys.argv[1]
+try:
+    data = json.load(sys.stdin)
+except Exception:
+    print("unavailable")
+    sys.exit()
+runs = [r for r in data.get("check_runs", [])
+        if r.get("name") == "Gate" and r.get("head_sha") == sha]
+if not runs:
+    print("pending")
+elif any(r.get("status") != "completed" for r in runs):
+    print("pending")
+elif any(r.get("conclusion") == "success" for r in runs):
+    print("success")
+else:
+    print(runs[-1].get("conclusion") or "failure")
+' "$sha" 2>/dev/null) || state="unavailable"
+
+    case "$state" in
+      success)
+        log "==> CI Gate lulus untuk $sha"
+        return 0
+        ;;
+      pending | unavailable)
+        if [ "$(date +%s)" -ge "$batas" ]; then
+          die "CI Gate belum lulus untuk $sha setelah ${GATE_TIMEOUT}s: deploy dibatalkan"
+        fi
+        log "==> menunggu CI Gate untuk $sha ($state)"
+        sleep "$GATE_POLL"
+        ;;
+      *)
+        die "CI Gate berstatus '$state' untuk $sha: deploy dibatalkan"
+        ;;
+    esac
+  done
+}
+
 # 1. Ref-guard fail-closed. Hanya main.
 if [ "$REF" != "refs/heads/main" ]; then
   log "Deploy diabaikan: ref '$REF' bukan refs/heads/main"
@@ -66,6 +121,14 @@ git fetch --prune origin main
 git reset --hard origin/main
 REV="$(git rev-parse --short HEAD)"
 log "==> konten di $REV"
+
+# Hanya commit yang sudah lulus check `Gate` di GitHub Actions boleh dirender.
+# Override manual hanya untuk keadaan darurat, dan tercatat di log.
+if [ "${NIMID_SKIP_GATE:-0}" = "1" ]; then
+  log "WARN: NIMID_SKIP_GATE=1, check CI dilewati (deploy manual)"
+else
+  tunggu_gate "$(git rev-parse HEAD)"
+fi
 
 # 4. Render kedua bahasa + susun public/. PDF ikut dibangun render yang sama.
 QUARTO="$QUARTO" bash tools/build-site.sh 2>&1 | tee -a "$LOG" || die "render gagal"

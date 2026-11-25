@@ -7,8 +7,14 @@ book:
   title: "Learning Nim"
   subtitle: "From zero to working programs"
   author: "Fredianto"
-  date: "2026-10-23"
+  date: "2026-11-25"
   language: en
+  description: "A book about Nim for programmers who already know another language: static types, result, value and reference semantics, macros, and shipping a package."
+  site-url: "https://nim.qouver.com/en"
+  favicon: "favicon.ico"
+  image: "assets/og.png"
+  open-graph: true
+  twitter-card: true
   chapters:
     - index.qmd
     - copyright.qmd

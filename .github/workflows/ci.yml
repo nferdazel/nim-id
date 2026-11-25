@@ -40,6 +40,9 @@ jobs:
   examples:
     name: "Examples: compile and verify output"
     needs: [preflight]
+    # W10: Dependabot only bumps pinned actions here, so a book render adds no signal.
+    # `event_name` keeps this guard off push; on every push the full graph still runs.
+    if: github.actor != 'dependabot[bot]' || github.event_name != 'pull_request'
     runs-on: ubuntu-24.04
     timeout-minutes: 15
     steps:
@@ -91,6 +94,8 @@ jobs:
   book:
     name: "Book: render both languages + PDF"
     needs: [preflight]
+    # W10: same guard as `examples`; preflight, security and Gate still run on every PR.
+    if: github.actor != 'dependabot[bot]' || github.event_name != 'pull_request'
     runs-on: ubuntu-24.04
     timeout-minutes: 15
     # Only the tag run creates a release; branch and pull request runs stay read-only.
@@ -172,12 +177,18 @@ jobs:
       R_EXAMPLES: ${{ needs.examples.result }}
       R_SECURITY: ${{ needs.security.result }}
       R_BOOK: ${{ needs.book.result }}
+      DEPENDABOT: ${{ github.event_name == 'pull_request' && github.actor == 'dependabot[bot]' }}
     steps:
       - name: "Gate: require every job"
         shell: bash
         run: |
           fail=0
-          for r in "$R_PREFLIGHT" "$R_EXAMPLES" "$R_SECURITY" "$R_BOOK"; do
+          for r in "$R_PREFLIGHT" "$R_SECURITY"; do
+            [ "$r" = "success" ] || { echo "required job: $r"; fail=1; }
+          done
+          for r in "$R_EXAMPLES" "$R_BOOK"; do
+            # Dependabot PRs skip the two content jobs by design (W10); everything else must run.
+            if [ "$DEPENDABOT" = "true" ] && [ "$r" = "skipped" ]; then continue; fi
             [ "$r" = "success" ] || { echo "required job: $r"; fail=1; }
           done
           exit "$fail"

@@ -1,4 +1,4 @@
-# Preface {.unnumbered}
+## Preface {.unnumbered}
 
 This book teaches the [Nim](https://nim-lang.org) programming language in English, for readers who
 have written code in another language (Python, JavaScript, PHP, or Go) but have never used a

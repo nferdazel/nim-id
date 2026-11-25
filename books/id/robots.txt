@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://nim.qouver.com/sitemap.xml
+Sitemap: https://nim.qouver.com/en/sitemap.xml
