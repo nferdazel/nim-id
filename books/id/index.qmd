@@ -1,4 +1,4 @@
-# Prakata {.unnumbered}
+## Prakata {.unnumbered}
 
 Buku ini mengajarkan bahasa [Nim](https://nim-lang.org) dalam bahasa Indonesia, untuk pembaca yang
 sudah pernah menulis program di bahasa lain (Python, JavaScript, PHP, atau Go) tetapi belum pernah

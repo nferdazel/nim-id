@@ -40,5 +40,8 @@ find public -name '*.html' -exec perl -pi -e "s|assets/ku\.css|assets/ku.css?v=$
 # Skip-link: Quarto menaruhnya di dalam <main>, setelah sidebar. Pindahkan ke awal <body>.
 python3 tools/fix-skip-link.py
 
+# Canonical, hreflang ID/EN, dan og:url: Quarto tidak menulisnya untuk dua project terpisah.
+python3 tools/fix-seo.py
+
 printf 'public/: %s berkas\n' "$(find public -type f | wc -l | tr -d ' ')"
 find public -name '*.pdf' | sed 's|^|  |'

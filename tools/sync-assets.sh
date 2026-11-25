@@ -12,4 +12,8 @@ for b in id en; do
   cp "$root/assets/ku.css" "$root/books/$b/assets/ku.css"
   cp "$root/assets/typst/typst-show.typ" "$root/books/$b/assets/typst/typst-show.typ"
   cp "$root/assets/skip-link-$b.html" "$root/books/$b/assets/skip-link.html"
+  # Favicon sits at the project root so it lands at /favicon.ico (and /en/favicon.ico),
+  # which is the path the 404 page and browser defaults ask for.
+  cp "$root/assets/favicon.ico" "$root/books/$b/favicon.ico"
+  cp "$root/assets/og-$b.png" "$root/books/$b/assets/og.png"
 done

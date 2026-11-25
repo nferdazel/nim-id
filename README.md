@@ -25,7 +25,7 @@ online, without an ISBN.
 
 ## Status
 
-Version `VERSION` at the root, currently 0.7.13, tagged `vX.Y.Z`. Both editions are complete through
+Version lives in `VERSION` at the root; every release tags `vX.Y.Z`. Both editions are complete through
 the published chapter list and are kept in step by the parity gate; there is no half-translated
 chapter.
 
@@ -120,10 +120,12 @@ own if a secret is ever committed.
 
 ## Deployment
 
-A push to `main` triggers the VPS webhook. `ops/scripts/deploy-static.sh` fetches that commit,
-rebuilds both editions on the server, and swaps a symlink to the new release; the previous release
-stays available for rollback. A `v*` tag runs the same checks in CI and attaches both PDFs to a
-GitHub Release. Setup steps and the Caddy block are in `ops/` and `docs/deploy-vps.md`.
+A push to `main` triggers the VPS webhook. `ops/scripts/deploy-static.sh` fetches that commit and
+waits for the `Gate` check of that exact SHA before rebuilding both editions on the server; a red or
+missing check leaves the live site untouched. It then swaps a symlink to the new release, and the
+previous release stays available for rollback. `main` requires the `Gate` check, and a `v*` tag runs
+the same checks in CI and attaches both PDFs to a GitHub Release. Setup steps and the Caddy block are
+in `ops/` and `docs/deploy-vps.md`.
 
 ## Documentation
 

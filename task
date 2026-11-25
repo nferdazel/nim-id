@@ -34,8 +34,9 @@ usage: ./task <command>
   en        render the English edition only
   pdf       render the PDF edition of both books
   dev       preview books/id with auto-reload
-  gate      contract + shell syntax + secret scan + lints, no Quarto (<= 90 s)
-  gate-full gate + examples, then render both editions and the PDFs
+  gate      contract + shell syntax + secret scan + lints, plus every example when
+            Nim is on PATH (about 4-5 min with Nim, seconds without); no Quarto
+  gate-full gate, then render both editions and the PDFs (about 8 min)
   check     examples + appendix + site (the gate before a commit)
   version   print the book version (from VERSION)
   release   bump VERSION from the commit log, run gate-full, commit and tag locally

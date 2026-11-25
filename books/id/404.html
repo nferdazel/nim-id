@@ -28,6 +28,7 @@
     line-height: 1.65;
   }
   main { max-width: 34rem; }
+  [hidden] { display: none !important; }
   .kode {
     font-family: var(--sans);
     font-size: 0.8rem;
@@ -42,22 +43,38 @@
   li { border-bottom: 1px solid var(--garis); }
   a { display: block; padding: 0.7rem 0; color: var(--aksen); text-decoration: none; }
   a:hover, a:focus { text-decoration: underline; }
-  .en { color: var(--tinta-lembut); }
 </style>
 </head>
 <body>
 <main>
   <p class="kode">404</p>
-  <h1>Halaman ini tidak ada</h1>
-  <p>Alamat yang dibuka mungkin salah tulis, atau halamannya sudah pindah. Isi buku tetap utuh:</p>
-  <ul>
+  <h1 id="not-found-title">Halaman ini tidak ada</h1>
+  <p id="not-found-lead">Alamat yang dibuka mungkin salah tulis, atau halamannya sudah pindah. Isi buku tetap utuh:</p>
+  <ul id="links-id">
     <li><a href="/">Dasar Pemrograman Nim — edisi Indonesia</a></li>
     <li><a href="/en/" lang="en">Learning Nim — English edition</a></li>
-    <li><a href="/Dasar-Pemrograman-Nim.pdf">Unduh PDF — Bahasa Indonesia, 8,1 MB</a></li>
-    <li><a href="/en/Learning-Nim.pdf" lang="en">Download PDF — English, 7,3 MB</a></li>
+    <li><a href="/Dasar-Pemrograman-Nim.pdf">Unduh PDF — Bahasa Indonesia</a></li>
+    <li><a href="/en/Learning-Nim.pdf" lang="en">Download PDF — English</a></li>
   </ul>
-  <p class="en" lang="en"><strong>Page not found.</strong> Check the address, or start again from
-  the table of contents above.</p>
+  <ul id="links-en" hidden>
+    <li><a href="/en/">Learning Nim — English edition</a></li>
+    <li><a href="/" lang="id">Dasar Pemrograman Nim — edisi Indonesia</a></li>
+    <li><a href="/en/Learning-Nim.pdf">Download PDF — English</a></li>
+    <li><a href="/Dasar-Pemrograman-Nim.pdf" lang="id">Unduh PDF — Bahasa Indonesia</a></li>
+  </ul>
 </main>
+<script>
+  (function () {
+    var en = location.pathname === "/en" || location.pathname.indexOf("/en/") === 0;
+    if (!en) return;
+    document.documentElement.lang = "en";
+    document.title = "Page not found — Learning Nim";
+    document.getElementById("not-found-title").textContent = "This page does not exist";
+    document.getElementById("not-found-lead").textContent =
+      "The address may be misspelled, or the page may have moved. The book itself is still here:";
+    document.getElementById("links-id").hidden = true;
+    document.getElementById("links-en").hidden = false;
+  })();
+</script>
 </body>
 </html>
