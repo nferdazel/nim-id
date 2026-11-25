@@ -12,6 +12,8 @@ releases page are the record for those releases.
 
 ## [Unreleased]
 
+## [0.7.15] - 2026-11-25
+
 ### Added
 
 - SEO for both editions: `site-url`, book descriptions, Open Graph and Twitter cards, a favicon,
