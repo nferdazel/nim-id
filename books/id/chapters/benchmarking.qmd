@@ -248,7 +248,7 @@ panasnya seluruh program, bukan satu blok yang kita pilih.
 
 Beberapa kebiasaan membuat angka tidak menyesatkan:
 
-- Bandingkan hanya dalam satu mesin dan satu proses. Selisih antar mesin mencampur kecepatan
+- Bandingkan hanya dalam satu mesin dan satu proses. Selisih antar-mesin mencampur kecepatan
   prosesor dengan pengaruh *build*.
 - Kalau selisihnya sebesar derau, ulangi; beda di bawah dua kali lipat belum layak dipercaya.
 - Angka dari blok kecil belum tentu berlaku di program nyata. Bagian yang menyentuh *file* atau

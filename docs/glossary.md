@@ -64,6 +64,7 @@ Setelah mengubah tabel ini, jalankan `python3 tools/gen-glossary.py` untuk memba
 | escape sequence | escape sequence | pasangan `\` + huruf yang mewakili character khusus (`\n`, `\t`) | a `\` plus a letter that stands for a special character (`\n`, `\t`) | urutan escape | strings |
 | raw string | raw string | string `r"..."` yang tidak memproses escape | an `r"..."` string that does not process escapes | string mentah | strings |
 | multiline string | multiline string | string `"""..."""` yang mempertahankan line baru | a `"""..."""` string that keeps line breaks | string multi-baris, string multiline | strings |
+| tanda tangan | signature | bentuk *procedure*: nama, *parameter*, dan *return value*-nya | a procedure's name, parameters, and return value | — | procedures |
 | slicing | slicing | mengambil potongan string/koleksi dengan range index | taking a piece of a string or collection by an index range | — | strings |
 | overflow | overflow | value yang melewati batas type dan berakhir `OverflowDefect` | a value that crosses a type bound and ends in `OverflowDefect` | luapan | primitive-types |
 | short-circuit | short-circuit evaluation | `and`/`or` berhenti begitu result-nya pasti | `and`/`or` stop as soon as the result is settled | evaluasi singkat | operators |

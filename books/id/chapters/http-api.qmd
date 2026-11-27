@@ -229,7 +229,7 @@ bahwa masalahnya ada di dalam *procedure* async.
 
 ## Kenapa *handler* dipisah dari *socket*
 
-Pemisahan di atas bukan gaya-gayaan. *Handler* yang menerima data dan return data bisa
+Pemisahan di atas bukan hiasan. *Handler* yang menerima data dan return data bisa
 diuji tanpa port, tanpa jaringan, dan tanpa waktu tunggu. *Output*-nya pun selalu sama, sehingga bisa
 dipakai sebagai contoh yang diverifikasi. *Socket* hanya lapisan tipis yang meneruskan permintaan.
 Menjaga lapisan itu setipis mungkin adalah kebiasaan yang dibawa terus saat API tumbuh.

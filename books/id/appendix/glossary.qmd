@@ -135,6 +135,7 @@
 | subcommand | command kedua di dalam satu tool CLI (`tool add`) | [CLI dengan `parseopt`](../chapters/cli-tools.qmd) |
 | suite | kumpulan test dalam `unittest` | [`unittest` dan disiplin pengujian](../chapters/unit-testing.qmd) |
 | sumber daya | hal yang harus dibebaskan setelah dipakai (file, socket) | [*File*, *directory*, dan OS](../chapters/files-and-os.qmd) |
+| tanda tangan | bentuk *procedure*: nama, *parameter*, dan *return value*-nya | [*Procedure*, *parameter*, dan *return value*](../chapters/procedures.qmd) |
 | test | pemeriksaan otomatis terhadap perilaku kode | [`unittest` dan disiplin pengujian](../chapters/unit-testing.qmd) |
 | test case | satu pemeriksaan di dalam suite | [`unittest` dan disiplin pengujian](../chapters/unit-testing.qmd) |
 | thread | path eksekusi di dalam satu proses | [`async`/`await` dan IO](../chapters/async.qmd) |

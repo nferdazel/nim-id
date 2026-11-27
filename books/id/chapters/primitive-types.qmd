@@ -44,8 +44,8 @@ Polanya konsisten: setiap tambahan satu bit menggandakan *range* itu.
 |---|---|---|
 | `int8` | −128 sampai 127 | 1 byte |
 | `int16` | −32.768 sampai 32.767 | 2 byte |
-| `int32` | sekitar ±2,1 miliar | 4 byte |
-| `int64` | sekitar ±9,2 triliun | 8 byte |
+| `int32` | sekitar 2,1 miliar | 4 byte |
+| `int64` | sekitar 9,2 triliun | 8 byte |
 | `uint8` | 0 sampai 255 | 1 byte |
 | `int` | mengikuti mesin (64-bit di sini) | 8 byte |
 

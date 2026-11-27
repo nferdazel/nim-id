@@ -1,7 +1,7 @@
 # Menyimpan data: `Table`, JSON, dan SQLite
 
 Data yang disimpan di *variable* hilang begitu program ditutup. Database ada untuk menutup celah itu:
-menyimpan *row* sampai program berikutnya dijalankan. Kabar buruknya, sejak Nim 2.0 *module*
+menyimpan *row* sampai program berikutnya dijalankan. Sayangnya, sejak Nim 2.0 *module*
 `std/db_sqlite` tidak lagi ikut *compiler*. *Module* basis data dipindahkan ke *package* terpisah,
 `db_connector`. Karena buku ini hanya memakai *standard library*, kita belajar polanya dengan yang
 sudah tersedia, lalu memetakannya ke SQLite.

@@ -237,9 +237,11 @@ options:
 Dijalankan tanpa *argument*, program *print* teks bantuan. *Argument* pertama menjadi nama *subcommand*,
 sisanya menjadi operand; *option* dikenali dari tanda hubung, dan `std/parseopt` sudah membedakan
 keduanya. *Exit code* di-return sebagai `int`, lalu diteruskan ke `quit`, sehingga skrip lain
-bisa memeriksa keberhasilannya. Satu tempat masih memeriksa *input*: *index* untuk `remove` lewat
-`parseInt`, dan *input* yang bukan angka ditangkap `except ValueError` sebelum sempat menghentikan
-program. Tanpa itu, satu salah ketik menghasilkan *stack trace*, bukan *message*.
+bisa memeriksa keberhasilannya.
+
+Satu tempat masih memeriksa *input*: *index* untuk `remove` lewat `parseInt`, dan *input* yang bukan
+angka ditangkap `except ValueError` sebelum sempat menghentikan program. Tanpa itu, satu salah ketik
+menghasilkan *stack trace*, bukan *message*.
 
 Pemakaian sesungguhnya seperti ini:
 
