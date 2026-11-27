@@ -113,6 +113,8 @@ TERLARANG = {
     "pemanggil": "caller",
     "saklar": "flag",
     "bilangan bulat": "integer",
+    "waktu dinding": "wall-clock time",
+    "titik panas": "hotspot",
 }
 
 # Akhiran yang membuat istilah terlarang lolos dari pencocokan kata utuh (`pustakanya`,

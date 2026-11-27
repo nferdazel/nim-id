@@ -34,7 +34,7 @@ Nim. Jangan menjelaskan apa itu variabel. Jelaskan apa yang **berbeda** di Nim.
 ## Kalimat
 
 - Rata-rata ≤ 20 kata. Satu ide per paragraf, ≤ 4 baris.
-- Kalimat aktif. "Compiler menolak baris ini karena X", bukan "baris ini ditolak oleh compiler
+- Kalimat aktif. "*Compiler* menolak baris ini karena X", bukan "baris ini ditolak oleh *compiler*
   dikarenakan X".
 - Buang: "pada era digital ini", "seperti yang kita ketahui", "tentu saja", "perlu diingat
   bahwa", "pada kesempatan kali ini".
@@ -63,15 +63,19 @@ Keputusan berikut diambil pemilik buku, dan menggantikan kebiasaan yang bertenta
   (setelah "bisa", "lalu", "untuk", atau sebagai imperatif) pakai verba Indonesia. Satu aksi satu
   verba: jangan bergantian antara `di-call` dan "dipanggil" dalam satu bab. Nomina tetap Indonesia:
   "pemanggilan", "kembalian", "penulisan".
-- **Miring.** Hanya istilah yang ada di glosarium, ditambah frasa asing yang belum diserap
-  (*machine learning*, *query string*, *abstract syntax tree*). Kata yang sudah diserap dan dipakai
-  sebagai kata biasa ditulis tegak: compiler, string, command, character. Begitu juga istilah yang
-  sudah menjadi bagian frasa Indonesia ("object varian"). Di awal kalimat istilah tetap miring
-  dengan huruf kapital: `*Output*`.
+- **Miring.** Semua istilah asing dicetak miring: yang ada di glosarium, frasa yang belum diserap
+  (*machine learning*, *query string*, *abstract syntax tree*), dan kata Inggris yang lazim dipakai
+  tanpa padanan (*compiler*, *string*, *command*, *character*). Hanya kata Indonesia yang tegak. Di awal
+  kalimat istilah tetap miring dengan huruf kapital: `*Output*`.
+- ***wall-clock time***, bukan "waktu dinding": waktu nyata yang berlalu, termasuk bagian yang
+  menunggu.
+- ***hotspot***, bukan "titik panas": bagian kode tempat waktu paling banyak habis.
+- **"fungsi C"** sah untuk function milik C. `fungsi` tetap berarti `func` Nim (tanpa side effect)
+  di konteks Nim.
 - **Judul.** Istilah glosarium di judul dicetak miring, tidak pernah tebal.
 - ***seq***, bukan *sequence*: itu nama tipe yang dipakai kode.
 - ***type*** sah sebagai bentuk pendek *data type*.
-- ***error message*** untuk keluaran compiler; *message* untuk pesan lain.
+- ***error message*** untuk keluaran *compiler*; *message* untuk pesan lain.
 - **`print`** untuk keluaran program; "mencetak" hanya untuk cetak fisik.
 - **Label di dalam kode berbahasa Inggris** (`(line, column)`, `{expression:rule}`), karena seluruh
   kode di buku ini berbahasa Inggris.
@@ -86,7 +90,7 @@ Keputusan berikut diambil pemilik buku, dan menggantikan kebiasaan yang bertenta
 2. **Tujuan** dalam callout: "Setelah bab ini, pembaca bisa …".
 3. **Konsep** sesingkat mungkin, satu contoh kecil yang jalan.
 4. **Bangun bertahap**: satu program yang tumbuh; satu langkah = satu perubahan + satu output.
-5. **Error-first**: sengaja salahkan kode, tampilkan pesan compiler asli, ajari cara membaca
+5. **Error-first**: sengaja salahkan kode, tampilkan *error message* asli, ajari cara membaca
    pesan itu (berkas, baris/kolom, tingkat, isi).
 6. **Output nyata** di blok ```` ```{.txt} ````, bukan gambar.
 7. **Latihan 3–5 soal** bergradasi: ubah, prediksi output, tulis dari nol, perbaiki kode rusak.
@@ -94,7 +98,8 @@ Keputusan berikut diambil pemilik buku, dan menggantikan kebiasaan yang bertenta
 8. **Ringkasan** 3–5 poin.
 9. **Selanjutnya** satu tautan ke bab berikutnya.
 
-Panjang: 900–1.400 kata. Satu bab = satu sesi baca 10–15 menit. Lebih dari itu, pecah.
+Panjang mengikuti kebutuhan bab, tidak ada target angka. Satu bab = satu sesi baca. Kalau satu bab
+butuh lebih dari satu sesi, pecah.
 
 ## Kode
 
@@ -112,7 +117,7 @@ Panjang: 900–1.400 kata. Satu bab = satu sesi baca 10–15 menit. Lebih dari i
 
 - Kode dan output sama-sama berlatar abu hangat `#F4F1EA`; output diberi label `output` dan garis
   kiri 2px aksen supaya bisa dibedakan tanpa warna mencolok (lihat `assets/ku.css`).
-- Tangkapan layar hanya kalau benar-benar visual (pesan compiler berwarna, TUI, grafik), maksimal
+- Tangkapan layar hanya kalau benar-benar visual (*error message* berwarna, TUI, grafik), maksimal
   satu per lima bab, selalu dengan alt text.
 - Tabel maksimal 4 kolom; lebih dari itu pecah jadi dua tabel.
 

@@ -160,6 +160,8 @@ Setelah mengubah tabel ini, jalankan `python3 tools/gen-glossary.py` untuk memba
 | timestamp | timestamp | jumlah detik sejak 1970 | seconds since 1970 | cap waktu | times-and-random |
 | channel | channel | antrean *message* antar-*thread* di Nim | a message queue between threads in Nim | saluran | threads |
 | endpoint | endpoint | alamat dan metode yang dilayani sebuah API | an address and method served by an API | titik akhir | http-api |
+| wall-clock time | wall-clock time | waktu nyata yang berlalu, termasuk bagian yang menunggu | the real time that passes, including waiting | waktu dinding | benchmarking |
+| hotspot | hot spot | bagian kode tempat waktu paling banyak habis | the part of the code where most time is spent | titik panas | benchmarking |
 Aturan singkat:
 
 - Istilah di kolom pertama dipakai di teks Indonesia; kolom English di teks Inggris.
