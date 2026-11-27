@@ -12,6 +12,8 @@ releases page are the record for those releases.
 
 ## [Unreleased]
 
+## [0.7.16] - 2026-11-27
+
 ### Changed
 
 - The Indonesian edition sets every foreign term in italics. The rule said so all along; the prose
