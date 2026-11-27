@@ -3,7 +3,7 @@
 *Procedure* *generic* dengan `[T]` menerima *type* apa saja. Itu sering terlalu longgar: badan *procedure*
 memakai `x.name`, tapi tidak ada yang mencegah *calling* dengan `int`. Batasan seperti
 `[T: SomeInteger]` membantu, tapi daftarnya sudah ditentukan bahasa. Konsep menutup celah itu:
-batasan yang di-write sendiri, berdasarkan bentuk *type*.
+batasan yang ditulis sendiri, berdasarkan bentuk *type*.
 
 Bab ini membangun konsep dari yang sederhana sampai yang digabung, memakainya untuk memilih
 *overloading*, dan membaca *error message* ketika syaratnya tidak terpenuhi. Semua contoh diuji di Nim

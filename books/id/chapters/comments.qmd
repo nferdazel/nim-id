@@ -75,7 +75,7 @@ sebelum menemukan `]#`.
 Ada pelajaran penting di posisinya. Kita write `#[` di *line* 1, tetapi *compiler* menunjuk *line* 3:
 *line* kosong setelah *line* terakhir. *Compiler* baru tahu *comment*-nya tidak pernah ditutup waktu
 mencapai akhir *file*. Jadi posisi yang dilaporkan adalah tempat *compiler* menyadari masalahnya,
-bukan selalu tempat *error* itu di-write. Karena itu, saat menemui *error* yang menunjuk di luar
+bukan selalu tempat *error* itu ditulis. Karena itu, saat menemui *error* yang menunjuk di luar
 dugaan, periksa beberapa *line* sebelumnya.
 
 ## *Doc comment*: `##`
@@ -153,7 +153,7 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 2. Pada *block comment* contoh kedua, hapus blok bersarang `#[ Nested blocks work too. ]#`. Apakah
    *output* program berubah? Mengapa?
 3. Pada contoh *comment* yang tidak ditutup, di *line* berapa *compiler* melaporkan *error*? Mengapa bukan
-   di *line* tempat `#[` di-write?
+   di *line* tempat `#[` ditulis?
 4. Sebuah *procedure* diberi keterangan dengan `#` alih-alih `##` tepat di atasnya. Apakah keterangan
    itu muncul di `htmldocs/`? Jelaskan.
 5. Tulis *procedure* yang diekspor dengan *doc comment* dan satu blok `runnableExamples`, lalu

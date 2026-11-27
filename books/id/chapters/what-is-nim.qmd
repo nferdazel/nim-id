@@ -18,7 +18,7 @@ Memahami arti "di-compile" dan "bertipe statis", membaca *error message* *type*,
 
 ## Di-compile, bukan diinterpretasi
 
-Program Python di-read dan dijalankan *line* demi *line* oleh interpreter. Program Nim diterjemahkan
+Program Python dibaca dan dijalankan *line* demi *line* oleh interpreter. Program Nim diterjemahkan
 lebih dulu. *Compiler* read *file* `.nim`, menghasilkan kode C, lalu memanggil *compiler* C untuk
 membuat biner. Biner itulah yang dijalankan.
 
@@ -71,7 +71,7 @@ dieksekusi, mungkin setelah data pengguna masuk.
 
 ## *Procedure* dan *loop*
 
-Nim tetap ringkas untuk program yang lebih besar. *Procedure* di-write dengan `proc`, dan *expression*
+Nim tetap ringkas untuk program yang lebih besar. *Procedure* ditulis dengan `proc`, dan *expression*
 terakhir di badannya menjadi *return value*.
 
 ```{.nim}

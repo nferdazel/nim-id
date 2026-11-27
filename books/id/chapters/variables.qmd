@@ -59,7 +59,7 @@ score: 15
 
 ## *Type*: ditulis eksplisit atau disimpulkan *compiler*
 
-Pada contoh sebelumnya, *type* *variable* tidak di-write. *Compiler* menyimpulkannya dari *value* awal:
+Pada contoh sebelumnya, *type* *variable* tidak ditulis. *Compiler* menyimpulkannya dari *value* awal:
 `"Nim"` adalah `string`, `2008` adalah `int`. Ini disebut *type inference*.
 
 Kalau *type* perlu ditegaskan (misalnya untuk menghemat *memory*, atau karena *value* itu akan diisi

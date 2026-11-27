@@ -57,7 +57,7 @@ di-print adalah *comparison* yang sama di semua mesin unix-like: apakah cabang `
 
 ## Menyalakan fitur dari *command line*
 
-Selain `--os` dan `--cpu`, ada `-d:nama` untuk mendefinisikan simbol. Simbol itu di-read `when`, jadi
+Selain `--os` dan `--cpu`, ada `-d:nama` untuk mendefinisikan simbol. Simbol itu dibaca `when`, jadi
 pilihan *build* tidak perlu mengubah kode.
 
 ```{.nim}
@@ -93,7 +93,7 @@ pola yang dipakai banyak program: satu biner, beberapa konfigurasi, tanpa menyen
 
 Kode yang sama, *result* yang berbeda. *File* contoh di repositori buku ini menyimpan *flag*
 compile-nya di *file* `.mode`, sehingga pemeriksaan otomatis memakai cara yang sama dengan yang
-di-write di sini.
+ditulis di sini.
 
 ```{.nim}
 when defined(release):

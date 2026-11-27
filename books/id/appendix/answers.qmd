@@ -253,7 +253,7 @@ echo name
    3
    ```
 
-**3.** *Path* Windows paling bersih di-write sebagai *raw string*:
+**3.** *Path* Windows paling bersih ditulis sebagai *raw string*:
    ```{.nim}
    echo r"C:\temp\new"
    ```
@@ -480,7 +480,7 @@ echo smallest(@[7, 2, 8])
 
 **4.** `@[]` tidak memuat petunjuk apa pun tentang *type* *element* itu, sehingga *compiler* tidak bisa
 menyimpulkannya dan menolak dengan `cannot infer the type of the sequence`. Pada `var y: seq[int]`,
-*type* itu di-write eksplisit; Nim mengisinya dengan `seq` kosong, dan panjangnya `0`. Jadi yang kurang
+*type* itu ditulis eksplisit; Nim mengisinya dengan `seq` kosong, dan panjangnya `0`. Jadi yang kurang
 pada kasus pertama bukan *value* awalnya, melainkan *type* *element* itu.
 
 **5.** `values` bertipe `array[0..2, int]`, ukurannya sudah bagian dari *type* dan tidak bisa diubah.
@@ -958,7 +958,7 @@ cat
 `string` pada panggilan kedua, sehingga *tuple* yang dibentuk menyesuaikan.
 
 **3.** `T` hanya muncul di *type* balik `seq[T]`, bukan di daftar *parameter*. Tidak ada *argument* yang
-bertipe `T`, jadi *compiler* tidak punya petunjuk untuk menyimpulkannya. *Argument* *type* harus di-write
+bertipe `T`, jadi *compiler* tidak punya petunjuk untuk menyimpulkannya. *Argument* *type* harus ditulis
 eksplisit: `makeSeq[int](3)`.
 
 **4.** *Message*-nya menampilkan satu-satunya kandidat, `double` dengan syarat `T: SomeInteger`, dan
@@ -2183,7 +2183,7 @@ Ada
 ```
 
 **5.** Memeriksa akhiran tetap, misalnya `endsWith(".txt")`, atau awalan tetap dengan `startsWith`.
-Tidak ada pola yang perlu di-write, dan `strutils` lebih mudah dibaca.
+Tidak ada pola yang perlu ditulis, dan `strutils` lebih mudah dibaca.
 
 ## Time dan random
 
@@ -2445,7 +2445,7 @@ echo $notes
 ```
 
 **5.** Satu keuntungan memisahkan *module* penyimpanan: aturan "*file* tidak ada berarti belum ada
-catatan" di-write sekali di `loadNotes`, dan baik CLI maupun *test* memakai aturan yang sama. Kalau
+catatan" ditulis sekali di `loadNotes`, dan baik CLI maupun *test* memakai aturan yang sama. Kalau
 aturan itu disalin ke dua tempat, keduanya bisa berbeda diam-diam.
 
 Satu pekerjaan yang harus ditambahkan sebelum dipakai dari dua komputer: aturan untuk penulisan

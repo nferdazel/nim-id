@@ -103,7 +103,7 @@ Keduanya menyimpan banyak *value*, tapi untuk keperluan berbeda.
 |---|---|
 | urutan penting, akses lewat *index* | `seq` |
 | pencarian cepat lewat kunci | `Table` |
-| data kecil, urutan yang di-read | `seq` |
+| data kecil, urutan yang dibaca | `seq` |
 
 `Table` menyimpan lewat fungsi hash, sehingga pencarian hampir langsung berapa pun isinya. `seq`
 harus diperiksa satu per satu, tapi urutannya tetap dan bisa diakses lewat *index*. Untuk data

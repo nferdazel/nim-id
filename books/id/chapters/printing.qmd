@@ -100,7 +100,7 @@ Awalan `&` sebelum *string* membuka interpolasi: apa pun di dalam `{...}` dieval
 disisipkan. Isinya boleh *expression*, bukan hanya nama *variable*. Tanpa awalan itu, kurung kurawal
 tetap teks biasa, jadi `echo "{name}"` *print* `{name}` apa adanya. Perhatikan
 `float(count) * price`: Nim tidak mencampur `int` dan `float` diam-diam, jadi konversi harus
-di-write eksplisit.
+ditulis eksplisit.
 
 ## Format angka dan perataan
 

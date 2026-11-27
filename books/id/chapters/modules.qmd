@@ -60,7 +60,7 @@ Hello, Ada
 ```
 
 Setelah `import`, simbol yang diekspor dipakai langsung dengan namanya. `greet` dan `version` berasal
-dari `a01_greeting`, tetapi tidak perlu di-write dengan awalan apa pun.
+dari `a01_greeting`, tetapi tidak perlu ditulis dengan awalan apa pun.
 
 ## `from ... import`: mengambil sebagian nama
 
@@ -160,7 +160,7 @@ akses lengkapnya `format.upper`, bukan `textutils/format.upper`. Aturan yang sam
 
 ## `include`: menyisipkan *file*, bukan mengimpor
 
-`include` tidak membuat *module* baru. Ia menyalin isi *file* ke posisi *command* itu, seakan di-write di
+`include` tidak membuat *module* baru. Ia menyalin isi *file* ke posisi *command* itu, seakan ditulis di
 sana. Karena itu `include` berguna untuk memecah satu *module* yang sangat panjang, bukan untuk
 memisahkan tanggung jawab.
 

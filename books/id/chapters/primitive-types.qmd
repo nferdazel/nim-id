@@ -146,7 +146,7 @@ itu jangan membandingkan *float* dengan `==`; bandingkan selisihnya dengan toler
 
 ## Konversi antar *type*
 
-Nim tidak mengubah *type* diam-diam. Perpindahan harus di-write eksplisit.
+Nim tidak mengubah *type* diam-diam. Perpindahan harus ditulis eksplisit.
 
 ```{.nim}
 import std/strutils
@@ -201,7 +201,7 @@ true
 true
 ```
 
-`char` di-write dengan kutip tunggal dan menyimpan satu byte. `.ord` memberinya kode numerik,
+`char` ditulis dengan kutip tunggal dan menyimpan satu byte. `.ord` memberinya kode numerik,
 `char(...)` dan `chr(...)` melakukan arah sebaliknya. *Expression* `'\n' == char(10)` benar karena
 `\n` memang *character* dengan kode 10. `bool` hanya berisi `true` atau `false` dan menjadi bahan
 operator logika di bab operator.

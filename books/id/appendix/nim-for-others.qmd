@@ -29,7 +29,7 @@ dihitung saat compile.
 | Rust | `fn f(a: i32, b: i32) -> i32 { a + b }` |
 | Nim | `proc f(a, b: int): int = a + b` |
 
-*Type* *parameter* di-write seperti Go dan Rust, dan *default value* seperti Python. *Expression* terakhir
+*Type* *parameter* ditulis seperti Go dan Rust, dan *default value* seperti Python. *Expression* terakhir
 badan *procedure* menjadi *return value*, jadi `return` jarang perlu. *Overloading* diizinkan, jadi
 beberapa *procedure* boleh bernama sama asalkan daftar *parameter*-nya berbeda; ini tidak ada di Python
 dan Rust, tetapi terasa akrab bagi penulis Java.
@@ -44,7 +44,7 @@ dan Rust, tetapi terasa akrab bagi penulis Java.
 | Nim | `type Point = object` berisi *field* |
 
 Nim memisahkan data dari perilaku. *Method* adalah *procedure* biasa yang *parameter* pertamanya bertipe
-itu, di-call dengan titik seperti di Python. *Object* *value* disalin utuh saat ditugaskan, sedangkan
+itu, dipanggil dengan titik seperti di Python. *Object* *value* disalin utuh saat ditugaskan, sedangkan
 `ref object` disalin sebagai *pointer*. Warisan class dibatasi, sebab Nim lebih mengandalkan generik
 dan konsep untuk menyusun *type*.
 
@@ -114,7 +114,7 @@ atau `nim js`. Untuk pengembangan, `nim r` melewati penamaan biner dan langsung 
 | Rust | `cargo test`, atribut `#[test]` |
 | Nim | `std/unittest`, `suite`, `test`, `check` |
 
-Bentuknya dekat ke Rust dan Go: blok *test* di-write di *file* yang sama atau terpisah, lalu dijalankan
+Bentuknya dekat ke Rust dan Go: blok *test* ditulis di *file* yang sama atau terpisah, lalu dijalankan
 oleh *compiler* sebagai program biasa. `check` menguji satu *expression* boolean, dan `expect` memastikan
 sebuah *exception* benar-benar dilempar. Keduanya melaporkan kegagalan dengan *exit code* bukan
 nol, jadi ramah untuk CI.
@@ -169,7 +169,7 @@ berbagi, pakai `ref object`. Tidak ada dekorator seperti di Python; peran serupa
 dalam `{.kurung.}` dan makro. Warisan class dihindari; generik, konsep, dan *object* varian lebih
 sering dipakai untuk menyusun *type*.
 
-Nim juga tidak memakai operator `?` Rust untuk meneruskan *error*; *exception* di-write eksplisit
+Nim juga tidak memakai operator `?` Rust untuk meneruskan *error*; *exception* ditulis eksplisit
 dengan blok `try`/`except`. Sebaliknya, pemeriksaan lengkap pada `case` membuat *compiler* sering
 menangkap ketidaksinkronan sebelum program dijalankan. Kurung kurawal pembuka dan penutup yang
 biasa dipakai Rust dan Go digantikan oleh titik dua dan indentasi.

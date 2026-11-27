@@ -43,7 +43,7 @@ checksum: 19999900000
 elapsed is not negative: true
 ```
 
-Pengurangan dua `MonoTime` menghasilkan `Duration`. Angka itu di-read dalam satuan lain lewat
+Pengurangan dua `MonoTime` menghasilkan `Duration`. Angka itu dibaca dalam satuan lain lewat
 `inMilliseconds`, `inMicroseconds`, atau `inSeconds`, dan fungsi-fungsi itu tinggal di `std/times`,
 bukan `std/monotimes`. Karena itu kedua *module* diimpor bersama: satu menyediakan jamnya, satu cara
 membacanya.
@@ -222,7 +222,7 @@ nim c -r --profiler:on --stackTrace:on app.nim
 
 Saat selesai, program *print* `writing profile_results.txt...`, dan *file* `profile_results.txt`
 muncul di *directory* kerja. Isinya daftar *stack trace* yang diurutkan dari yang paling banyak
-memakai waktu, lengkap dengan persentase per *line*. Yang di-read adalah entri teratas: di situlah
+memakai waktu, lengkap dengan persentase per *line*. Yang dibaca adalah entri teratas: di situlah
 waktu paling banyak habis.
 
 *Profiler* ini mengambil sampel, jadi kegunaannya sebanding dengan lamanya program berjalan. Program
