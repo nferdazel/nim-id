@@ -2,7 +2,7 @@
 
 Membuat server HTTP terdengar seperti proyek besar. Padahal dengan `std/asynchttpserver`, satu
 server sederhana cukup belasan *line*, dan semua bagiannya ada di *standard library*. Yang membuat kode
-server sulit diuji bukan *socket*-nya, melainkan *handler* yang bercampur dengan *socket* itu.
+server sulit diuji adalah *handler* yang bercampur dengan *socket*-nya.
 
 ::: {.callout-note}
 ## Tujuan bab

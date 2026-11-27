@@ -140,7 +140,7 @@ seperti klausa `WHERE`: hanya *row* yang lolos syarat ikut dikumpulkan. `sort` b
 `ORDER BY`.
 
 Kebiasaan yang menyelamatkan: urutkan selalu di tempat yang memutuskan *output*, bukan bergantung
-pada urutan *file*. Sama seperti di SQL, `ORDER BY` bukan hiasan, melainkan bagian dari jawaban.
+pada urutan *file*. Sama seperti di SQL, `ORDER BY` bagian dari jawaban, bukan hiasan.
 
 ## *Transaction*: semua atau tidak sama sekali
 

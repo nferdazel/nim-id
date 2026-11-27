@@ -137,7 +137,7 @@ menebak *type* isinya. *Argument* *type* di-write di dalam kurung siku setelah n
 
 ## `typedesc`: menerima *type* sebagai *argument*
 
-Kadang yang dioper bukan *value*, melainkan *type* itu. *Parameter* bertipe `typedesc` menerima *type* itu.
+Kadang yang dioper adalah *type*-nya sendiri. *Parameter* bertipe `typedesc` menerima *type* itu.
 
 ```{.nim}
 proc nameOf(T: typedesc): string =
@@ -152,7 +152,7 @@ int
 string
 ```
 
-`nameOf(int)` tidak mengoper *value* `int`, melainkan *type* `int` itu sendiri. Panggilan seperti ini
+`nameOf(int)` mengoper *type* `int` itu sendiri, bukan *value*-nya. Panggilan seperti ini
 umum di *standard library*, misalnya untuk membuat koleksi kosong bertipe tertentu.
 
 ## `static[T]`: *value* yang diketahui saat compile

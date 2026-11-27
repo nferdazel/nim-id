@@ -103,7 +103,7 @@ hitungan milidetik.
 
 ## Membandingkan dua versi
 
-Pertanyaan yang lebih sering muncul bukan "berapa cepat", melainkan "mana yang lebih cepat". Untuk
+Pertanyaan yang lebih sering muncul: mana yang lebih cepat, bukan berapa cepat. Untuk
 itu, dua versi diukur dalam satu proses yang sama, lalu *result*-nya dibandingkan.
 
 ```{.nim}

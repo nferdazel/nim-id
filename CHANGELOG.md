@@ -12,6 +12,18 @@ releases page are the record for those releases.
 
 ## [Unreleased]
 
+### Changed
+
+- The Indonesian edition sets every foreign term in italics. The rule said so all along; the prose
+  had drifted, leaving `compiler`, `string`, `field`, `print` and about 1.600 others upright.
+  `tools/italicize-terms.py` repeats the pass when new prose lands.
+- Every chapter's goal callout is now two sentences: one capability, then at most four concrete
+  items. The fifth item and beyond moved to Ringkasan, so nothing was dropped. Applies to both
+  editions.
+- *wall-clock time* and *hotspot* replace the literal translations "waktu dinding" and "titik panas",
+  and `tools/lint-glossary.py` rejects both. Word-count targets per chapter are gone: chapters run as
+  long as the topic needs.
+
 ## [0.7.15] - 2026-11-25
 
 ### Added

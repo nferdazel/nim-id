@@ -137,7 +137,7 @@ echo show()
 changed
 ```
 
-`show` tidak menyimpan teks `"hello"`, melainkan menunjuk *variable* `message`. Begitu `message`
+`show` menunjuk *variable* `message`, bukan menyimpan teks `"hello"`. Begitu `message`
 diganti, `show` melihat *value* barunya.
 
 Kalau *variable* itu `let`, isinya tidak bisa diganti. *Closure* tetap read *variable* yang sama, dan

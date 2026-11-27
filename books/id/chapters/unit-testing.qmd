@@ -2,7 +2,7 @@
 
 *Test* yang tidak pernah dijalankan tidak membuktikan apa pun. Nim menyertakan `unittest` di *standard library*,
 jadi tidak ada *package* yang perlu dipasang. Bab ini menulis *test* yang benar-benar berjalan,
-lalu membaca *output*-nya. Yang dibawa pulang bukan kerangkanya, melainkan kebiasaan menjalankannya
+lalu membaca *output*-nya. Yang dibawa pulang adalah kebiasaan menjalankannya, bukan kerangkanya
 setiap kali kode berubah.
 
 ::: {.callout-note}
