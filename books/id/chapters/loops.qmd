@@ -11,9 +11,9 @@ memakai *iterator*: *range*, *array*, `seq`, atau *iterator* buatan sendiri. Ben
 ::: {.callout-note}
 ## Tujuan bab
 
-Setelah bab ini, pembaca bisa membedakan *range* inklusif `..` dan eksklusif `..<`, memakai
-`countdown` dan `countup`, mengiterasi *element* dengan `items` dan pasangan *index*-*element* dengan
-`pairs`, menulis `while` yang berhenti, serta memakai `break` dan `continue`.
+Setelah bab ini, pembaca bisa mengulang blok kode tanpa salah batas.
+
+Membedakan `..` dari `..<`, memakai `countdown` dan `countup`, mengiterasi dengan `items` dan `pairs`, serta memakai `break` dan `continue`.
 :::
 
 ## `for` dengan *range*: `..` dan `..<`

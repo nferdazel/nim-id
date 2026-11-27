@@ -11,9 +11,9 @@ ditangkap kadang terlihat, kadang tidak, tergantung apakah *variable* itu `var` 
 ::: {.callout-note}
 ## Tujuan bab
 
-Setelah bab ini, pembaca bisa menyimpan *procedure* dalam *variable* bertipe `proc`, menulis *closure*
-yang menangkap *variable*, menjelaskan kapan capture menunjuk dan kapan menyalin, dan mengenali
-jebakan *closure* di dalam *loop*.
+Setelah bab ini, pembaca bisa menulis *closure* yang menangkap *variable*.
+
+Menyimpan *procedure* bertipe `proc`, menjelaskan kapan capture menunjuk dan kapan menyalin, serta mengenali jebakan *closure* di dalam *loop*.
 :::
 
 ## *Procedure* sebagai *value*

@@ -11,9 +11,9 @@ later. This chapter separates the three with examples you can run.
 ::: {.callout-note}
 ## What you will be able to do
 
-After this chapter you can choose between `var`, `let`, and `const` with a reason, read the error
-`cannot be assigned to`, and explain why Nim treats `user_name` and `userName` as the same
-variable.
+After this chapter you can choose between `var`, `let`, and `const`.
+
+Read the `cannot be assigned to` error, and explain why `user_name` and `userName` are the same identifier.
 :::
 
 ## `var`: a value that may change

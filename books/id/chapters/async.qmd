@@ -8,9 +8,9 @@ yang *output*-nya selalu sama.
 ::: {.callout-note}
 ## Tujuan bab
 
-Setelah bab ini, pembaca bisa menandai *procedure* dengan `{.async.}`, memanggilnya dengan `await`,
-menjalankan beberapa tugas sekaligus dengan `all`, dan membaca *error* "Can only 'await' inside a proc
-marked as 'async'" saat salah menempatkan `await`.
+Setelah bab ini, pembaca bisa menjalankan beberapa tugas tanpa saling menunggu.
+
+Menandai *procedure* dengan `{.async.}`, memanggilnya lewat `await`, menggabung tugas dengan `all`, dan membaca *error* saat `await` salah tempat.
 :::
 
 ## *Procedure* async dan `Future`

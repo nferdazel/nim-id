@@ -7,9 +7,9 @@ juga. Nim menaruh kedua *module* itu di *standard library*: `std/times` dan `std
 ::: {.callout-note}
 ## Tujuan bab
 
-Setelah bab ini, pembaca bisa membentuk `DateTime` dengan `dateTime`, memformatnya dengan `format`,
-mengurai teks dengan `parse`, menghitung selisih waktu, memakai `initRand` dengan *seed* tetap, serta
-menjelaskan kenapa `now()` berbahaya di dalam *test*.
+Setelah bab ini, pembaca bisa mengolah waktu dan angka acak.
+
+Membentuk `DateTime`, memformat dan mengurainya, memakai `initRand` dengan *seed* tetap, dan menjelaskan kenapa `now()` berbahaya di *test*.
 :::
 
 ## Membentuk dan memformat `DateTime`

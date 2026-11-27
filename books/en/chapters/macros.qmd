@@ -13,9 +13,9 @@ step. Every example is tested on Nim 2.4.2.
 ::: {.callout-note}
 ## What you will be able to do
 
-After this chapter you can explain how `template` and `macro` differ, read an AST with `NimNode` and
-`treeRepr`, use `quote do`, choose `untyped` or `typed`, build nodes with `newTree`, and know when to
-stay with templates.
+After this chapter you can write code that produces code.
+
+Tell `template` and `macro` apart, read an AST with `NimNode` and `treeRepr`, use `quote do`, and choose `untyped` or `typed`.
 :::
 
 ## Templates first: code substitution
@@ -311,7 +311,8 @@ Answers are in [Appendix A](../appendix/answers.qmd).
 - A `macro` is a compile-time procedure that takes `NimNode` and returns `NimNode`.
 - `quote do` builds an AST; a backtick splices a node or value from outside, and its local names are
   safe from clashes.
-- `treeRepr` prints the AST; `getType` works only on a `typed` argument.
+- `treeRepr` prints the AST; `getType` works only on a `typed` argument; `newTree` builds a node by
+  hand.
 - `quote do` and the AST API need `import std/macros`; a simple macro that only forwards nodes does
   not. Prefer `template` and `const` before writing a macro.
 

@@ -10,9 +10,9 @@ change?", because the answer is always "nothing".
 ::: {.callout-note}
 ## What you will be able to do
 
-After this chapter you can write procedures with explicit types, choose between `proc` and `func`,
-use default parameters, named arguments, `var` parameters, and `openArray`, and read the
-`can have side effects` error.
+After this chapter you can write procedures with explicit types.
+
+Choose `proc` or `func`, use default parameters and named arguments, and read the `can have side effects` message.
 :::
 
 ## `proc`: a routine that may have side effects

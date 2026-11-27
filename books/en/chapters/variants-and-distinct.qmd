@@ -11,9 +11,9 @@ Every example is tested on Nim 2.4.2.
 ::: {.callout-note}
 ## What you will be able to do
 
-After this chapter you can define a variant object with a `case` field, read the error for a
-conflicting construction, recognize a `FieldDefect`, create a `distinct` type, convert explicitly,
-and know when `distinct` beats a type alias.
+After this chapter you can use variant objects and `distinct` types.
+
+Write a `case` field, read the conflicting-construction error, recognise `FieldDefect`, and convert a `distinct` type explicitly.
 :::
 
 ## A variant object: fields that depend on a tag

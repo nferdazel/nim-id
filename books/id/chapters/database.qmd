@@ -9,9 +9,9 @@ sudah tersedia, lalu memetakannya ke SQLite.
 ::: {.callout-note}
 ## Tujuan bab
 
-Setelah bab ini, pembaca bisa menyimpan *row* ke *file*, menyaring dan mengurutkan *result*-nya,
-menulis pembaruan yang tidak berhenti setengah jalan, membaca *error* `IOError`, dan tahu kapan
-SQLite lebih tepat daripada *file* JSON.
+Setelah bab ini, pembaca bisa menyimpan data ke *file* dan membacanya kembali.
+
+Menyaring dan mengurutkan *row*, menulis pembaruan yang tidak berhenti setengah jalan, membaca `IOError`, dan menimbang SQLite.
 :::
 
 ## *Row* di *memory*

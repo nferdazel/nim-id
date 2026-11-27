@@ -11,8 +11,9 @@ dijalankan; bab berikutnya yang memasang toolchain-nya.
 ::: {.callout-note}
 ## Tujuan bab
 
-Setelah bab ini, pembaca bisa menjelaskan arti "di-compile" dan "bertipe statis", membaca
-*error message* *type* yang dikeluarkan *compiler*, dan menimbang kapan Nim layak dipilih.
+Setelah bab ini, pembaca bisa menjelaskan cara kerja Nim sebelum memilihnya.
+
+Memahami arti "di-compile" dan "bertipe statis", membaca *error message* *type*, dan menimbang kapan Nim layak dipakai.
 :::
 
 ## Di-compile, bukan diinterpretasi

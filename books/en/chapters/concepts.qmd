@@ -11,9 +11,9 @@ error messages when a requirement is not met. Every example is tested on Nim 2.4
 ::: {.callout-note}
 ## What you will be able to do
 
-After this chapter you can write a `concept`, use it as a generic constraint, combine requirements
-with `and` and `or`, use a concept to select an overload, and read the message
-`concept predicate failed`.
+After this chapter you can write a `concept` as a generic constraint.
+
+Combine requirements with `and` and `or`, use a concept to pick an overload, and read the `concept predicate failed` message.
 :::
 
 ## Built-in constraints: `SomeNumber`

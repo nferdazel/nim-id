@@ -12,9 +12,9 @@ Bab ini membangun konsep dari yang sederhana sampai yang digabung, memakainya un
 ::: {.callout-note}
 ## Tujuan bab
 
-Setelah bab ini, pembaca bisa menulis `concept`, memakainya sebagai batasan *generic*, menggabung
-syarat dengan `and` dan `or`, memakai konsep untuk memilih *overloading*, dan membaca *message*
-`concept predicate failed`.
+Setelah bab ini, pembaca bisa menulis `concept` sebagai batasan *generic*.
+
+Menggabung syarat dengan `and` dan `or`, memakai konsep untuk memilih *overloading*, dan membaca *message* `concept predicate failed`.
 :::
 
 ## Batasan bawaan: `SomeNumber`

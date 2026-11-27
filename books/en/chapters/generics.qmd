@@ -11,9 +11,9 @@ call site, with a reason attached.
 ::: {.callout-note}
 ## What you will be able to do
 
-After this chapter you can write generic procedures and types, put constraints on a type parameter,
-read the error when a constraint is not met, and tell automatic inference apart from explicit type
-arguments.
+After this chapter you can write generic procedures and types.
+
+Put constraints on a type parameter, read the error when a constraint is not met, and tell inference from explicit type arguments.
 :::
 
 ## One procedure for many types

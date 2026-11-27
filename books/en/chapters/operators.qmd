@@ -10,9 +10,9 @@ unexpected type. This chapter collects the operators you reach for most and the 
 ::: {.callout-note}
 ## What you will be able to do
 
-After this chapter you can use `div` and `mod` correctly for negative numbers, tell `/` apart from
-`div`, read a `type mismatch` error on operands, and use `and`, `or`, `not`, `in`, and `notin`
-knowing how short-circuit evaluation works.
+After this chapter you can use arithmetic operators without miscounting.
+
+Tell `/` from `div` and `mod`, read a `type mismatch` error, and use `and`, `or`, `in`, and `notin`.
 :::
 
 ## Basic arithmetic

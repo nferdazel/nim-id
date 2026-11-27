@@ -10,10 +10,9 @@ ubah?", karena jawabannya selalu "tidak ada".
 ::: {.callout-note}
 ## Tujuan bab
 
-Setelah bab ini, pembaca bisa menulis *procedure* bertipe jelas, memilih antara `proc` dan `func`,
-memakai *parameter* default, *named argument*, `var` *parameter*, dan `openArray`,
-serta membaca *message*
-*error* `can have side effects`.
+Setelah bab ini, pembaca bisa menulis *procedure* dengan *type* yang jelas.
+
+Memilih `proc` atau `func`, memakai *parameter* default dan *named argument*, serta membaca *message* `can have side effects`.
 :::
 
 ## `proc`: rutin yang boleh punya *side effect*

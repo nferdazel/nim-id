@@ -10,8 +10,9 @@ Sets go further. Once the values are an enum, a collection of them fits into bit
 ::: {.callout-note}
 ## What you will be able to do
 
-After this chapter you can define an enum, read its ordinal values, convert an integer to an enum,
-and use `set` with `incl`, `excl`, and `in`.
+After this chapter you can give names to ordered values.
+
+Define an enum, read its ordinal values, convert an integer to an enum, and use `set` with `incl`, `excl`, and `in`.
 :::
 
 ## Enums: names with a fixed order

@@ -7,9 +7,9 @@ Nim puts both modules in its standard library: `std/times` and `std/random`.
 ::: {.callout-note}
 ## What you will be able to do
 
-After this chapter you can build a `DateTime` with `dateTime`, format it with `format`, parse text
-with `parse`, measure a time difference, use `initRand` with a fixed seed, and explain why `now()`
-is dangerous inside a test.
+After this chapter you can work with time and random numbers.
+
+Build a `DateTime`, format and parse it, use `initRand` with a fixed seed, and explain why `now()` is dangerous in a test.
 :::
 
 ## Building and formatting a `DateTime`

@@ -7,8 +7,9 @@ use every day". Four habits cover most work: `nim r` to try things fast, `nim c`
 ::: {.callout-note}
 ## What you will be able to do
 
-After this chapter you can choose between `nim r` and `nim c`, read an error that points at a file
-and column, use `nimble` for a project, and set up an editor with `nimsuggest`.
+After this chapter you can run a Nim program from the terminal.
+
+Choose between `nim r` and `nim c`, read an error that points at a file and column, and set up an editor.
 :::
 
 ## `nim r`: compile, then run

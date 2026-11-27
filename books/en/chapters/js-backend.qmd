@@ -8,9 +8,9 @@ target. It also closes Part B.
 ::: {.callout-note}
 ## What you will be able to do
 
-After this chapter you can compile a Nim program to JavaScript with `nim js`, run it with `node`,
-know that some modules are unavailable on this target, and read the error "marshal module is not
-supported in javascript".
+After this chapter you can compile a Nim program to JavaScript.
+
+Run it with `node`, know which modules are missing on this target, and read the marshal error that comes up.
 :::
 
 ## `nim js`: an output target, not another language

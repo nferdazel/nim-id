@@ -8,9 +8,9 @@ sisanya punya bab sendiri.
 ::: {.callout-note}
 ## Tujuan bab
 
-Setelah bab ini, pembaca bisa mengolah teks dengan `std/strutils`, mengubah *seq* dengan
-`std/sequtils`, menyimpan *value* berkunci di `Table`, membaca dan membangun JSON, serta memilih
-antara `Table` dan `seq` dengan alasan yang jelas.
+Setelah bab ini, pembaca bisa memakai *module* bawaan Nim sehari-hari.
+
+Mengolah teks dengan `strutils`, mengubah *seq* dengan `sequtils`, menyimpan *value* berkunci di `Table`, serta membaca dan membangun JSON.
 :::
 
 ## Mengimpor *module* *standard library*

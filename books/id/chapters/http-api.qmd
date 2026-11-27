@@ -7,10 +7,9 @@ server sulit diuji bukan *socket*-nya, melainkan *handler* yang bercampur dengan
 ::: {.callout-note}
 ## Tujuan bab
 
-Setelah bab ini, pembaca bisa membedakan `HttpCode` dan `HttpMethod`, menulis *route* sederhana,
-membaca body JSON lalu mengembalikan JSON, membaca *query string* dengan `std/uri`, menyalakan
-server dengan `newAsyncHttpServer` dan `serve`, serta membaca *message* `has to be used (or discarded)`
-saat lupa `await` pada `respond`.
+Setelah bab ini, pembaca bisa menyalakan server HTTP kecil dengan Nim.
+
+Menulis *route* sederhana, membaca body JSON lalu membalas JSON, membaca *query string*, dan membaca *message* saat lupa `await`.
 :::
 
 ## Status, metode, dan *header*
@@ -270,9 +269,9 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 - `std/httpcore` menyediakan `HttpCode`, `HttpMethod`, dan `HttpHeaders` untuk kedua sisi.
 - `dispatch` murni memisahkan keputusan *route* dari *socket*, sehingga bisa diuji dengan *output* tetap.
 - Body JSON di-read dengan `parseJson` dan dibalas dengan `%*` lalu `$`.
-- `parseUri` dan `decodeQuery` mengambil *value* dari *query string*.
-- `newAsyncHttpServer` dan `serve` menyambungkan *handler*; `respond` wajib di-call dengan
-  `await`.
+- `parseUri` dan `decodeQuery` dari `std/uri` mengambil *value* dari *query string*.
+- `newAsyncHttpServer` dan `serve` menyambungkan *handler*; `respond` tanpa `await` ditolak dengan
+  `has to be used (or discarded)`.
 
 ## Selanjutnya
 

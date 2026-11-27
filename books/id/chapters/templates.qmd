@@ -11,9 +11,9 @@ hygiene, dan menyediakan dua jalan keluar saat kita memang butuh menembusnya.
 ::: {.callout-note}
 ## Tujuan bab
 
-Setelah bab ini, pembaca bisa menulis *template*, menjelaskan hygiene dan kapan memakai `{.inject.}`
-dan `{.dirty.}`, serta memilih antara *template*, *generic*, dan *procedure* biasa dengan alasan yang
-jelas.
+Setelah bab ini, pembaca bisa menulis *template* yang aman dipakai.
+
+Menjelaskan hygiene, memakai `{.inject.}` dan `{.dirty.}` saat perlu, dan memilih antara *template*, *generic*, dan *procedure*.
 :::
 
 ## *Template* pertama: `swap`

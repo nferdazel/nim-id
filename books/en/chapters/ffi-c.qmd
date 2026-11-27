@@ -8,9 +8,9 @@ one small function, then reads the error you get when a pragma lands in the wron
 ::: {.callout-note}
 ## What you will be able to do
 
-After this chapter you can compile a C file together with a Nim program, declare a C function with
-`{.importc.}`, use the `cint`, `csize_t`, and `cstring` types, and read the `invalid pragma: compile`
-error.
+After this chapter you can call C code from a Nim program.
+
+Compile a C file alongside the program, declare a C function with `{.importc.}`, use the `cint` and `cstring` types, and read a pragma error.
 :::
 
 ## Calling a function from a C file
@@ -179,7 +179,8 @@ Answers are in [Appendix A](../appendix/answers.qmd).
 - `{.importc.}` connects a Nim declaration to a C symbol of the same name.
 - `header: "<...>"` pulls a function from a system header without compiling an extra file.
 - `cint`, `csize_t`, and `cstring` keep types matched to C.
-- `{.compile.}` stands on its own; it cannot attach to a procedure declaration.
+- `{.compile.}` stands on its own; attaching it to a procedure declaration fails with
+  `invalid pragma: compile`.
 
 ## Next
 

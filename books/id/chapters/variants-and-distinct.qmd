@@ -11,9 +11,9 @@ pencampuran. Semua contoh diuji di Nim 2.4.2.
 ::: {.callout-note}
 ## Tujuan bab
 
-Setelah bab ini, pembaca bisa mendefinisikan *object* varian dengan *field* `case`, membaca *error*
-konstruksi yang bertentangan, mengenali `FieldDefect`, membuat *type* `distinct`, melakukan konversi
-eksplisit, dan tahu kapan `distinct` lebih baik daripada alias *type*.
+Setelah bab ini, pembaca bisa memakai *object* varian dan *type* `distinct`.
+
+Menulis *field* `case`, membaca *error* konstruksi yang bertentangan, mengenali `FieldDefect`, dan mengonversi `distinct` secara eksplisit.
 :::
 
 ## *Object* varian: *field* yang bergantung pada penanda

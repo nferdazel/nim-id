@@ -11,8 +11,9 @@ sebagai bit, dan pertanyaan "apakah ini termasuk?" dijawab satu operasi.
 ::: {.callout-note}
 ## Tujuan bab
 
-Setelah bab ini, pembaca bisa mendefinisikan *enum*, membaca *value* ordinalnya, mengubah *integer*
-menjadi *enum*, dan memakai `set` beserta `incl`, `excl`, serta `in`.
+Setelah bab ini, pembaca bisa memberi nama pada *value* berurutan.
+
+Mendefinisikan *enum*, membaca *value* ordinalnya, mengubah *integer* menjadi *enum*, dan memakai `set` dengan `incl`, `excl`, serta `in`.
 :::
 
 ## *Enum*: nama dengan urutan tetap

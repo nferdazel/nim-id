@@ -11,9 +11,9 @@ loop, one small choice makes every closure point at the same variable.
 ::: {.callout-note}
 ## What you will be able to do
 
-After this chapter you can store a procedure in a variable of type `proc`, write closures that
-capture variables, explain when a capture refers and when it copies, and recognize the closure trap
-inside a loop.
+After this chapter you can write closures that capture variables.
+
+Store a procedure of type `proc`, explain when a capture refers and when it copies, and spot the closure trap inside a loop.
 :::
 
 ## Procedures as values

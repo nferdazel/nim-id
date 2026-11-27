@@ -8,9 +8,9 @@ path of execution that really runs at the same time. Nim provides one through `T
 ::: {.callout-note}
 ## What you will be able to do
 
-After this chapter you can create a thread with `createThread`, wait for it with `joinThread`, send
-results through `Channel[T]`, check `compileOption("threads")`, and choose between threads and
-`async`.
+After this chapter you can run work on its own thread.
+
+Create and join threads, send results through `Channel[T]`, and choose between threads and `async`.
 :::
 
 ## A first thread

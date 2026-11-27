@@ -8,9 +8,9 @@ sana. Pada `object` biasa, data menempel langsung di *variable* itu. Bab ini mem
 ::: {.callout-note}
 ## Tujuan bab
 
-Setelah bab ini, pembaca bisa mengalokasikan `ref` dengan `new`, membaca *field* lewat dereferensi
-otomatis, memakai `ptr` bersama `addr`, menguji `nil` dengan `isNil`, dan tahu kapan `ptr` perlu
-beserta risikonya.
+Setelah bab ini, pembaca bisa memakai `ref` dan `ptr` dengan sadar.
+
+Mengalokasikan dengan `new`, membaca *field* lewat dereferensi otomatis, menguji `nil`, dan tahu kapan `ptr` perlu.
 :::
 
 ## `ref`: data disimpan di heap

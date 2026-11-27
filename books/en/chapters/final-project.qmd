@@ -8,9 +8,9 @@ down.
 ::: {.callout-note}
 ## What you will be able to do
 
-After this chapter you can split a small tool into separate modules, store data in a JSON file, read
-subcommands with `std/parseopt`, write its tests with `std/unittest`, and read the error message you
-get when JSON is treated like an ordinary object.
+After this chapter you can build one small tool from scratch to tests.
+
+Split it into modules, store data in JSON, read subcommands, and write the tests with `std/unittest`.
 :::
 
 ## Step 1: one note as JSON

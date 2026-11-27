@@ -11,9 +11,9 @@ parameter that accepts either, without copying.
 ::: {.callout-note}
 ## What you will be able to do
 
-After this chapter you can write a fixed-size `array`, grow a `seq` with `add`, `insert`, and
-`delete`, use the index `[^1]` for the last element, write an `openArray` parameter that accepts both
-an `array` and a `seq`, and recognize an out-of-bounds index error.
+After this chapter you can choose between an `array` and a `seq`.
+
+Write a fixed-size `array`, grow a `seq` with `add` and `delete`, use the index `[^1]`, and write an `openArray` parameter.
 :::
 
 ## `array`: fixed size

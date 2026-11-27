@@ -8,9 +8,9 @@ mengarahkan *result*-nya ke sistem lain, tetapi tidak dengan satu *flag* ajaib: 
 ::: {.callout-note}
 ## Tujuan bab
 
-Setelah bab ini, pembaca bisa memilih target dengan `--os` dan `--cpu`, menyalakan fitur dari
-*command line* lewat `-d:` dan `{.strdefine.}`, membedakan `-d:release`, `--opt:speed`, dan `-d:danger`,
-membuat biner statis, serta tahu kapan cross-compile akan gagal karena toolchain-nya tidak ada.
+Setelah bab ini, pembaca bisa membangun biner untuk mesin lain.
+
+Memilih target dengan `--os` dan `--cpu`, menyalakan fitur lewat `-d:`, membedakan tingkat optimasi, dan membuat biner statis.
 :::
 
 ## Memilih target: `--os` dan `--cpu`

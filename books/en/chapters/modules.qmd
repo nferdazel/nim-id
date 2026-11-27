@@ -8,8 +8,9 @@ surprises is `import`: which names enter, whose they are, and who may use them.
 ::: {.callout-note}
 ## What you will be able to do
 
-After this chapter you can split code into modules, use `import`, `from ... import`, and `export`,
-put modules inside folders, and read the `cannot open file` and `invalid module name` errors.
+After this chapter you can split a program into several modules.
+
+Use `import`, `from ... import`, and `export`, put modules inside folders, and read the `cannot open file` message.
 :::
 
 ## One file, one module
@@ -219,7 +220,8 @@ Answers are in [Appendix A](../appendix/answers.qmd).
 
 ## Summary
 
-- One Nim file is one module; the file name becomes the module name and must be a valid identifier.
+- One Nim file is one module; the file name becomes the module name, and an invalid one fails with
+  `invalid module name`.
 - Without a `*`, a symbol does not leave its module.
 - `import` opens every export, `from ... import` opens some, `export` forwards.
 - A module in a folder is still named after its file, not its path.

@@ -8,8 +8,9 @@ tersedia, dan versinya sesuai.
 ::: {.callout-note}
 ## Tujuan bab
 
-Setelah bab ini, pembaca bisa memasang Nim 2.4.2 di Linux, macOS, Windows, atau Termux, memeriksa
-versinya, dan memperbaiki *message* `command not found`.
+Setelah bab ini, pembaca bisa memasang Nim 2.4.2 di mesinnya.
+
+Memilih cara pasang untuk Linux, macOS, Windows, atau Termux, memeriksa versinya, dan memperbaiki *message* `command not found`.
 :::
 
 ## Tiga hal yang harus benar

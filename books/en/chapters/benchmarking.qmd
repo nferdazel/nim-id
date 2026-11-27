@@ -8,9 +8,9 @@ invisible in the code.
 ::: {.callout-note}
 ## What you will be able to do
 
-After this chapter you can measure a block with `getMonoTime`, read a `Duration` and
-`inMilliseconds`, write examples whose output stays stable, tell CPU time from wall-clock time, and
-run the profiler that ships with Nim 2.4.2.
+After this chapter you can measure how long one block takes.
+
+Use `getMonoTime`, read a `Duration` and `inMilliseconds`, tell CPU time from wall-clock time, and run the bundled profiler.
 :::
 
 ## Measuring one block

@@ -10,9 +10,9 @@ safely.
 ::: {.callout-note}
 ## What you will be able to do
 
-After this chapter you can write escape sequences and raw strings, take a character or a slice of
-text with indexing and slicing, tell `&` apart from `add`, and explain why `s[0] = 'N'` is
-rejected when `s` is declared with `let`.
+After this chapter you can handle strings without an off-by-one.
+
+Write escape sequences and raw strings, use indexing and slicing, and tell `&` from `add`.
 :::
 
 ## Escape sequences
@@ -233,7 +233,8 @@ Answers are in [Appendix A](../appendix/answers.qmd).
 - `\n`, `\"`, and `\\` are escapes in an ordinary string; `r"..."` turns them off.
 - Three quotes build a multi-line string, and the newline after the opener counts.
 - `len` gives the number of bytes, indexing starts at zero, and `^n` counts from the back.
-- `add` changes a string in place (needs `var`); `&` builds a new string.
+- `add` changes a string in place (needs `var`), so `s[0] = 'N'` is rejected when `s` is declared
+  with `let`; `&` builds a new string.
 - `split` and `strip` from `std/strutils` break and clean text.
 
 ## Next

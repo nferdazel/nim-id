@@ -11,9 +11,9 @@ apa pun dan baru mengeluh jauh di dalam. Dengan batasan, *type* yang salah ditol
 ::: {.callout-note}
 ## Tujuan bab
 
-Setelah bab ini, pembaca bisa menulis *procedure* dan *type* *generic*, memasang batasan pada *parameter*
-*type*, membaca *error message* saat batasannya tidak dipenuhi, serta membedakan inferensi otomatis dan
-*argument* *type* eksplisit.
+Setelah bab ini, pembaca bisa menulis *procedure* dan *type* *generic*.
+
+Memasang batasan pada *parameter* *type*, membaca *error message* saat batasan tidak dipenuhi, dan membedakan inferensi dari *argument* eksplisit.
 :::
 
 ## Satu *procedure* untuk banyak *type*

@@ -8,9 +8,9 @@ module: `std/os`. This chapter uses that module for the tasks you will reach for
 ::: {.callout-note}
 ## What you will be able to do
 
-After this chapter you can split and rebuild file paths, write and then read a file, walk a
-directory with stable output, read command-line arguments and environment variables, and read the
-`undeclared identifier` message when a module is not imported.
+After this chapter you can handle files, directories, and paths.
+
+Build paths, write and then read a file, walk a directory with stable output, and read arguments and environment variables.
 :::
 
 ## One door: the `std/os` module

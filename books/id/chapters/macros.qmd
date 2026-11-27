@@ -15,9 +15,9 @@ demi selangkah. Semua contoh diuji di Nim 2.4.2.
 ::: {.callout-note}
 ## Tujuan bab
 
-Setelah bab ini, pembaca bisa menjelaskan perbedaan `template` dan `macro`, membaca AST lewat
-`NimNode` dan `treeRepr`, memakai `quote do`, memilih `untyped` atau `typed`, membangun node
-dengan `newTree`, dan tahu kapan sebaiknya tetap memakai *template*.
+Setelah bab ini, pembaca bisa menulis kode yang menghasilkan kode.
+
+Membedakan `template` dan `macro`, membaca AST lewat `NimNode` dan `treeRepr`, memakai `quote do`, dan memilih `untyped` atau `typed`.
 :::
 
 ## *Template* dulu: substitusi kode
@@ -320,7 +320,8 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 - `macro` adalah *procedure* saat compile yang menerima `NimNode` dan return `NimNode`.
 - `quote do` membangun AST; *backtick* menempelkan node atau *value* dari luar, dan nama lokalnya
   aman dari bentrok.
-- `treeRepr` menampilkan AST; `getType` hanya bekerja pada *argument* `typed`.
+- `treeRepr` menampilkan AST; `getType` hanya bekerja pada *argument* `typed`; `newTree` membangun
+  node sendiri.
 - `quote do` dan API AST butuh `import std/macros`; *macro* sederhana yang hanya meneruskan node
   tidak. Dahulukan `template` dan `const` sebelum menulis *macro*.
 

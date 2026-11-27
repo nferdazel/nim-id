@@ -10,9 +10,9 @@ membahas `echo`, `repr`, interpolasi, dan format angka.
 ::: {.callout-note}
 ## Tujuan bab
 
-Setelah bab ini, pembaca bisa menampilkan beberapa *value* dalam satu `echo`, menjelaskan bedanya
-`echo` dengan `repr`, menulis interpolasi `&"..."`, mengatur lebar dan presisi angka, serta tahu
-kenapa `echo` dan `stdout.write` berperilaku berbeda soal *newline*.
+Setelah bab ini, pembaca bisa menampilkan *value* ke layar dengan rapi.
+
+Memakai `echo` dan `repr`, menulis interpolasi `&"..."`, mengatur lebar dan presisi angka, dan tahu bedanya dengan `stdout.write`.
 :::
 
 ## `echo` dan *argument*-nya

@@ -8,9 +8,9 @@ melewati data yang sangat besar, atau bahkan data yang belum ada, tanpa menunggu
 ::: {.callout-note}
 ## Tujuan bab
 
-Setelah bab ini, pembaca bisa menulis *iterator* dengan `yield`, memakainya di dalam `for`, memakai
-`items` dan `pairs`, membuat *iterator* *closure* yang bisa dilanjutkan, serta membaca *error message* saat
-*iterator* inline diperlakukan sebagai *value*.
+Setelah bab ini, pembaca bisa menulis *iterator* dengan `yield`.
+
+Memakainya di dalam `for`, memakai `items` dan `pairs`, membuat *iterator* *closure*, serta membaca *error* saat *iterator* inline diperlakukan sebagai *value*.
 :::
 
 ## `iterator` dan `yield`

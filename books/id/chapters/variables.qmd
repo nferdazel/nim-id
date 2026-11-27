@@ -11,9 +11,9 @@ memisahkan ketiganya dengan contoh yang bisa dijalankan.
 ::: {.callout-note}
 ## Tujuan bab
 
-Setelah bab ini, pembaca bisa memilih `var`, `let`, atau `const` dengan alasan yang jelas,
-membaca *error message* `cannot be assigned to`, dan tahu kenapa `user_name` dan `userName` dianggap
-*identifier* yang sama oleh Nim.
+Setelah bab ini, pembaca bisa memilih antara `var`, `let`, dan `const`.
+
+Membaca *error message* `cannot be assigned to`, dan tahu kenapa `user_name` dan `userName` dianggap *identifier* yang sama.
 :::
 
 ## `var`: *value* yang boleh berubah

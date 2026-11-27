@@ -11,9 +11,9 @@ offers two escapes for when we genuinely need to break through it.
 ::: {.callout-note}
 ## What you will be able to do
 
-After this chapter you can write a template, explain hygiene and when to use `{.inject.}` and
-`{.dirty.}`, and choose between a template, a generic, and an ordinary procedure with a clear
-reason.
+After this chapter you can write a template that stays safe.
+
+Explain hygiene, use `{.inject.}` and `{.dirty.}` when needed, and choose between a template, a generic, and a procedure.
 :::
 
 ## A first template: `swap`

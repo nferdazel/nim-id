@@ -8,9 +8,9 @@ pada saat yang tepat: `=destroy`, `=copy`, dan `=sink`.
 ::: {.callout-note}
 ## Tujuan bab
 
-Setelah bab ini, pembaca bisa menjelaskan perbedaan ARC dan ORC, memverifikasi mode *memory* yang
-aktif, memakai `--mm:arc` dan `--mm:orc`, menulis `=destroy` untuk *type* yang memegang sumber daya,
-serta membaca *error* tanda tangan *hook* yang salah.
+Setelah bab ini, pembaca bisa menjelaskan cara Nim mengelola *memory*.
+
+Membedakan ARC dan ORC, memeriksa mode yang aktif, memilih `--mm`, dan menulis `=destroy` untuk *type* pemilik sumber daya.
 :::
 
 ## Dua mode *memory*: ARC dan ORC

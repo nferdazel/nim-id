@@ -7,9 +7,9 @@ take away is not the framework but the habit of running it every time the code c
 ::: {.callout-note}
 ## What you will be able to do
 
-After this chapter you can write `suite` and `test` blocks, use `check`, `require`, and `expect`,
-read passing and failing output, and recognize `undeclared identifier` when `std/unittest` is not
-imported.
+After this chapter you can write tests with `std/unittest`.
+
+Group with `suite`, use `check` and `expect`, and read the passing and failing output.
 :::
 
 ## Suites and tests

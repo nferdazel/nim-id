@@ -8,9 +8,9 @@ sudah biasa kita tulis, menunjukkan apa yang tetap sama dan apa yang berbeda, la
 ::: {.callout-note}
 ## Tujuan bab
 
-Setelah bab ini, pembaca bisa meng-compile program Nim ke JavaScript dengan `nim js`, menjalankannya
-dengan `node`, tahu bahwa sebagian *module* tidak tersedia di target ini, dan membaca *error* "marshal
-*module* is not supported in javascript".
+Setelah bab ini, pembaca bisa meng-compile program Nim ke JavaScript.
+
+Menjalankannya dengan `node`, tahu *module* mana yang tidak tersedia di target ini, dan membaca *error* marshal yang muncul.
 :::
 
 ## `nim js`: target *output*, bukan bahasa lain

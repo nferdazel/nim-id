@@ -7,10 +7,9 @@ test is not the socket but the handler tangled up with the socket.
 ::: {.callout-note}
 ## What you will be able to do
 
-After this chapter you can tell `HttpCode` and `HttpMethod` apart, write simple routes, read a JSON
-body and return JSON, read a *query string* with `std/uri`, start a server with `newAsyncHttpServer`
-and `serve`, and read the `has to be used (or discarded)` message when you forget `await` on
-`respond`.
+After this chapter you can start a small HTTP server in Nim.
+
+Write simple routes, read a JSON body and reply with JSON, read a query string, and read the message when `await` is missing.
 :::
 
 ## Status, method, and headers
@@ -267,8 +266,9 @@ Answers are in [Appendix A](../appendix/answers.qmd).
 - `std/httpcore` provides `HttpCode`, `HttpMethod`, and `HttpHeaders` for both sides.
 - A pure `dispatch` separates route decisions from the socket, so it can be tested with fixed output.
 - A JSON body is read with `parseJson` and answered with `%*` followed by `$`.
-- `parseUri` and `decodeQuery` pull values out of a *query string*.
-- `newAsyncHttpServer` and `serve` connect the handler; `respond` must be called with `await`.
+- `parseUri` and `decodeQuery` from `std/uri` pull values out of a *query string*.
+- `newAsyncHttpServer` and `serve` connect the handler; `respond` without `await` fails with
+  `has to be used (or discarded)`.
 
 ## Next
 

@@ -8,9 +8,9 @@ useful; the rest have their own chapters.
 ::: {.callout-note}
 ## What you will be able to do
 
-After this chapter you can process text with `std/strutils`, transform sequences with
-`std/sequtils`, store keyed values in a `Table`, read and build JSON, and choose between `Table`
-and `seq` with a clear reason.
+After this chapter you can use the everyday Nim modules.
+
+Process text with `strutils`, transform sequences with `sequtils`, store keyed values in a `Table`, and read and build JSON.
 :::
 
 ## Importing standard library modules

@@ -10,9 +10,9 @@ branch **at compile time**: the branch that loses is not compiled at all.
 ::: {.callout-note}
 ## What you will be able to do
 
-After this chapter you can write `if`/`elif`/`else`, take a value out of an `if`, use `case` with
-sets and ranges, split code by operating system with `when`, and read the messages `type mismatch`
-and `not all cases are covered`.
+After this chapter you can steer a program with `if` and `case`.
+
+Take a value out of an `if`, use `case` with sets and ranges, split code by system with `when`, and read the `type mismatch` message.
 :::
 
 ## `if`, `elif`, `else`
@@ -190,7 +190,7 @@ Answers are in [Appendix A](../appendix/answers.qmd).
 condition; Nim does not treat `0` or `""` as false.
 - `if` is an expression; used as a value, all branches must share a type and `else` is required.
 - `case` supports value lists (`12, 1, 2`) and ranges (`3 .. 5`); an incomplete `of` set without
-  `else` is rejected by the compiler.
+  `else` is rejected with `not all cases are covered`.
 - `when` picks a branch at compile time; only the chosen branch is compiled.
 ## Next
 

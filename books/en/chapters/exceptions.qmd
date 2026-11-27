@@ -8,8 +8,9 @@ at once.
 ::: {.callout-note}
 ## What you will be able to do
 
-After this chapter you can catch and throw exceptions, define your own exception type, annotate
-procedures with `raises`, and read the `can raise an unlisted exception` error.
+After this chapter you can catch and throw exceptions.
+
+Define your own exception type, annotate procedures with `raises`, and read the `can raise an unlisted exception` message.
 :::
 
 ## `try`, `except`, and `raise`

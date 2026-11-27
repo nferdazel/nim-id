@@ -8,9 +8,9 @@ menunjukkan kenapa `import std/os` tidak boleh terlupa.
 ::: {.callout-note}
 ## Tujuan bab
 
-Setelah bab ini, pembaca bisa membongkar dan menyusun *path* *file*, menulis lalu membaca *file*,
-menelusuri *directory* dengan *output* yang stabil, membaca *argument* dan *variable* lingkungan, serta
-membaca *message* `undeclared identifier` saat sebuah *module* lupa diimpor.
+Setelah bab ini, pembaca bisa mengurus *file*, *directory*, dan *path*.
+
+Menyusun *path*, menulis lalu membaca *file*, menelusuri *directory* dengan *output* stabil, serta membaca *argument* dan *variable* lingkungan.
 :::
 
 ## Satu pintu: *module* `std/os`

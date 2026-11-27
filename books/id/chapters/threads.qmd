@@ -8,9 +8,9 @@ menyita CPU dari awal sampai akhir, jadi menunggu di *event loop* tidak menolong
 ::: {.callout-note}
 ## Tujuan bab
 
-Setelah bab ini, pembaca bisa membuat *thread* dengan `createThread`, menunggunya dengan
-`joinThread`, mengirim *result* lewat `Channel[T]`, memeriksa `compileOption("threads")`, dan memilih
-antara *thread* dan `async`.
+Setelah bab ini, pembaca bisa menjalankan pekerjaan di *thread* sendiri.
+
+Membuat dan menunggu *thread*, mengirim *result* lewat `Channel[T]`, dan memilih antara *thread* dan `async`.
 :::
 
 ## Membuat *thread* pertama

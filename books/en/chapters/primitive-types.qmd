@@ -10,9 +10,9 @@ that build them, and how to move between types without losing data.
 ::: {.callout-note}
 ## What you will be able to do
 
-After this chapter you can choose an integer type that fits the range you need, read an overflow
-error, write hexadecimal and binary literals, and convert between types knowing what happens to
-the value.
+After this chapter you can pick the right number type.
+
+Read an overflow error, write hexadecimal and binary literals, and convert between types knowing what happens.
 :::
 
 ## The range and size of every integer type

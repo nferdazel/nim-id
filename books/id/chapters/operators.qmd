@@ -11,9 +11,9 @@ belakangnya.
 ::: {.callout-note}
 ## Tujuan bab
 
-Setelah bab ini, pembaca bisa memakai `div` dan `mod` dengan benar untuk bilangan negatif,
-membedakan `/` dari `div`, membaca *error* `type mismatch` pada operand, serta memakai `and`, `or`,
-`not`, `in`, dan `notin` dengan pemahaman *short-circuit*.
+Setelah bab ini, pembaca bisa memakai operator aritmetika tanpa salah hitung.
+
+Membedakan `/` dari `div` dan `mod`, membaca *error* `type mismatch`, serta memakai `and`, `or`, `in`, dan `notin`.
 :::
 
 ## Aritmetika dasar

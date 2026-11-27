@@ -8,9 +8,9 @@ output is always the same.
 ::: {.callout-note}
 ## What you will be able to do
 
-After this chapter you can mark a procedure with `{.async.}`, call it with `await`, run several
-tasks at once with `all`, and read the error "Can only 'await' inside a proc marked as 'async'" when
-`await` lands in the wrong place.
+After this chapter you can run several tasks without waiting on each other.
+
+Mark a procedure with `{.async.}`, call it through `await`, join tasks with `all`, and read the error when `await` sits in the wrong place.
 :::
 
 ## Async procedures and `Future`

@@ -8,9 +8,9 @@ susah dibaca. *Regex* menulis aturan itu sekali sebagai satu pola. Nim mengirim 
 ::: {.callout-note}
 ## Tujuan bab
 
-Setelah bab ini, pembaca bisa menulis pola dengan `re"..."`, memakai `match`, `find`, dan
-`findAll`, mengganti serta memecah teks dengan `replace`, `replacef`, dan `split`, membaca
-*capture group*, menyalakan `(?i)`, dan tahu kapan *regex* berlebihan sehingga `strutils` sudah cukup.
+Setelah bab ini, pembaca bisa mencari dan mengganti teks dengan *regex*.
+
+Memakai `match`, `find`, dan `findAll`, memakai *capture group*, menyalakan `(?i)`, dan tahu kapan `strutils` sudah cukup.
 :::
 
 ::: {.callout-warning}

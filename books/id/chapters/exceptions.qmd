@@ -8,8 +8,9 @@ yang jarang dimiliki bahasa lain: *compiler* melacak *exception* apa saja yang m
 ::: {.callout-note}
 ## Tujuan bab
 
-Setelah bab ini, pembaca bisa menangkap dan melempar *exception*, membuat *type* *exception* sendiri,
-menandai *procedure* dengan `raises`, serta membaca *error message* `can raise an unlisted exception`.
+Setelah bab ini, pembaca bisa menangkap dan melempar *exception*.
+
+Membuat *type* *exception* sendiri, menandai *procedure* dengan `raises`, dan membaca *error message* `can raise an unlisted exception`.
 :::
 
 ## `try`, `except`, dan `raise`

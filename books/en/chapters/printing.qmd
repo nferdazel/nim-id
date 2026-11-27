@@ -10,9 +10,9 @@ interpolation, and number formatting.
 ::: {.callout-note}
 ## What you will be able to do
 
-After this chapter you can print several values in one `echo`, explain how `echo` differs from
-`repr`, write `&"..."` interpolation, control the width and precision of numbers, and say why
-`echo` and `stdout.write` behave differently around new lines.
+After this chapter you can show values on screen cleanly.
+
+Use `echo` and `repr`, write `&"..."` interpolation, control width and precision, and say how `stdout.write` differs.
 :::
 
 ## `echo` and its arguments

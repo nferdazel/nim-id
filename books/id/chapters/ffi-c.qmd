@@ -8,9 +8,9 @@ mulai dari satu fungsi sederhana, lalu membaca *error message* saat pragma-nya s
 ::: {.callout-note}
 ## Tujuan bab
 
-Setelah bab ini, pembaca bisa meng-compile *file* C bersama program Nim, mendeklarasikan fungsi C
-dengan `{.importc.}`, memakai *type* `cint`, `csize_t`, dan `cstring`, serta membaca *error*
-`invalid pragma: compile`.
+Setelah bab ini, pembaca bisa memanggil kode C dari program Nim.
+
+Meng-compile *file* C bersama program, mendeklarasikan fungsi C dengan `{.importc.}`, memakai *type* `cint` dan `cstring`, serta membaca *error pragma*.
 :::
 
 ## Memanggil fungsi dari *file* C
@@ -180,7 +180,8 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 - `{.importc.}` menyambungkan deklarasi Nim ke simbol C yang namanya sama.
 - `header: "<...>"` mengambil fungsi dari *header* sistem tanpa meng-compile *file* tambahan.
 - `cint`, `csize_t`, dan `cstring` menjaga kecocokan dengan *type* C.
-- `{.compile.}` berdiri sendiri; ia tidak bisa menempel pada deklarasi *procedure*.
+- `{.compile.}` berdiri sendiri; menempelkannya pada deklarasi *procedure* ditolak dengan
+  `invalid pragma: compile`.
 
 ## Selanjutnya
 

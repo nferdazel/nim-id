@@ -11,8 +11,9 @@ not run; the next chapter installs the toolchain.
 ::: {.callout-note}
 ## What you will be able to do
 
-After this chapter you can explain what "compiled" and "statically typed" mean, read the type error
-the compiler prints, and weigh when Nim is worth choosing.
+After this chapter you can explain how Nim works before choosing it.
+
+Understand "compiled" and "statically typed", read the type error, and weigh when Nim is worth picking.
 :::
 
 ## Compiled, not interpreted

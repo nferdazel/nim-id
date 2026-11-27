@@ -8,9 +8,9 @@ pattern engine in its standard library, in the `std/re` module.
 ::: {.callout-note}
 ## What you will be able to do
 
-After this chapter you can write a pattern with `re"..."`, use `match`, `find`, and `findAll`,
-replace and split text with `replace`, `replacef`, and `split`, read capture groups, turn on `(?i)`,
-and tell when a regular expression is overkill because `strutils` is enough.
+After this chapter you can search and replace text with regular expressions.
+
+Use `match`, `find`, and `findAll`, read capture groups, turn on `(?i)`, and tell when `strutils` is enough.
 :::
 
 ::: {.callout-warning}

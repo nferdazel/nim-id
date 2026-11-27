@@ -8,9 +8,9 @@ setiap kali kode berubah.
 ::: {.callout-note}
 ## Tujuan bab
 
-Setelah bab ini, pembaca bisa menulis `suite` dan `test`, memakai `check`, `require`, dan `expect`,
-membaca *output* lulus dan gagal, serta mengenali `undeclared identifier` saat lupa mengimpor
-`std/unittest`.
+Setelah bab ini, pembaca bisa menulis *test* dengan `std/unittest`.
+
+Mengelompokkan dengan `suite`, memakai `check` serta `expect`, dan membaca *output* lulus dan gagal.
 :::
 
 ## *Suite* dan *test*

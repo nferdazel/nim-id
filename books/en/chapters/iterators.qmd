@@ -7,9 +7,9 @@ time, when asked. The values are not stored; what moves is the iterator's positi
 ::: {.callout-note}
 ## What you will be able to do
 
-After this chapter you can write iterators with `yield`, use them inside `for`, rely on `items` and
-`pairs`, build a closure iterator you can resume, and read the error you get when an inline iterator
-is treated as a value.
+After this chapter you can write iterators with `yield`.
+
+Use them inside `for`, rely on `items` and `pairs`, resume a closure iterator, and read the error when an inline iterator acts as a value.
 :::
 
 ## `iterator` and `yield`

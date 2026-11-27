@@ -10,8 +10,9 @@ data that does not need to become a full type yet.
 ::: {.callout-note}
 ## What you will be able to do
 
-After this chapter you can create anonymous and named tuples, access their fields, unpack their
-values into several variables, and use a tuple as a procedure's return value.
+After this chapter you can group several values at once.
+
+Create anonymous and named tuples, access their fields, unpack them into variables, and use one as a return value.
 :::
 
 ## Anonymous tuples: values that stick together

@@ -10,8 +10,9 @@ pasangan, atau menampung data sementara yang belum perlu menjadi *type* penuh.
 ::: {.callout-note}
 ## Tujuan bab
 
-Setelah bab ini, pembaca bisa membuat *tuple* anonim dan bernama, mengakses *fieldnya*, membongkar
-*value* itu ke beberapa *variable*, dan memakai *tuple* sebagai *return value* *procedure*.
+Setelah bab ini, pembaca bisa mengelompokkan beberapa *value* sekaligus.
+
+Membuat *tuple* anonim dan bernama, mengakses *field*-nya, membongkarnya ke beberapa *variable*, dan memakainya sebagai *return value*.
 :::
 
 ## *Tuple* anonim: *value* yang menempel

@@ -8,9 +8,9 @@ mengambil kode terbaru.
 ::: {.callout-note}
 ## Tujuan bab
 
-Setelah bab ini, pembaca bisa menyusun struktur *package*, menulis *file* `.nimble`, memakai
-`nimble check` dan `nimble test`, memilih nomor versi menurut versi semantik, dan memahami langkah
-menerbitkan *package* ke repositori Git.
+Setelah bab ini, pembaca bisa mengemas kode sebagai *package* nimble.
+
+Menyusun struktur *package*, menulis *file* `.nimble`, memakai `nimble check` dan `nimble test`, serta memilih nomor versi semantik.
 :::
 
 ## Satu *package*, satu *directory*

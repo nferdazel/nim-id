@@ -8,9 +8,9 @@ antaranya menjadi bahan dokumentasi. Salah menaruhnya membuat dokumentasi hilang
 ::: {.callout-note}
 ## Tujuan bab
 
-Setelah bab ini, pembaca bisa memakai *line comment* `#`, *block comment* `#[ ]#`, dan *doc comment*
-`##` secara tepat, menghasilkan dokumentasi dengan `nim doc`, dan menulis contoh yang ikut diuji
-*compiler* lewat `runnableExamples`.
+Setelah bab ini, pembaca bisa memakai tiga bentuk *comment* dengan tepat.
+
+*Line comment* `#`, *block comment* `#[ ]#`, *doc comment* `##`, serta contoh `runnableExamples` yang ikut diuji *compiler*.
 :::
 
 ## *Line comment*: `#`

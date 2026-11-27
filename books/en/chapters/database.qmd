@@ -9,8 +9,9 @@ onto SQLite.
 ::: {.callout-note}
 ## What you will be able to do
 
-After this chapter you can store rows in a file, filter and sort the result, write an update that
-does not stop half way, read an `IOError`, and explain when SQLite beats a JSON file.
+After this chapter you can store data in a file and read it back.
+
+Filter and sort rows, write an update that does not stop half way, read an `IOError`, and weigh SQLite against a JSON file.
 :::
 
 ## Rows in memory

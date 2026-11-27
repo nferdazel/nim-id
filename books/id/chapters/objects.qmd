@@ -10,9 +10,9 @@ berperilaku berbeda saat disalin. Mengabaikannya sering berujung bug.
 ::: {.callout-note}
 ## Tujuan bab
 
-Setelah bab ini, pembaca bisa mendefinisikan `object` dan mengisinya lewat *constructor*, memakai
-*default value*, membedakan *object* *value* dari `ref object`, menimpa `$`, dan membaca *error message*
-`undeclared field`.
+Setelah bab ini, pembaca bisa mengelompokkan data di dalam `object`.
+
+Mengisi lewat *constructor*, memakai *default value*, membedakan *object* *value* dari `ref object`, dan menimpa `$`.
 :::
 
 ## Mendefinisikan *object* dan mengisinya
@@ -351,7 +351,8 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
 ## Ringkasan
 
-- `object` mengelompokkan *field* bernama; `Type(field: value)` adalah *constructor* *literal*.
+- `object` mengelompokkan *field* bernama; `Type(field: value)` adalah *constructor* *literal*, dan
+  *field* yang tidak ada ditolak dengan `undeclared field`.
 - *Field* yang tidak diisi memakai default *type* itu, dan *object* tanpa isi tetap aman dipakai.
 - *Object* *value* punya `$` bawaan; `ref object` tidak, jadi definisikan `$` atau pakai `p[]`.
 - Menyalin *object* *value* menggandakan datanya; menyalin `ref object` menggandakan *pointer*-nya.

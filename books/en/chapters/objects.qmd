@@ -10,8 +10,9 @@ This chapter also unpacks one difference that keeps surprising people: value obj
 ::: {.callout-note}
 ## What you will be able to do
 
-After this chapter you can define an `object` and fill it with a constructor, use default values,
-tell a value object from a `ref object`, override `$`, and read the `undeclared field` error.
+After this chapter you can group data inside an `object`.
+
+Fill it through a constructor, use default values, tell a value object from a `ref object`, and override `$`.
 :::
 
 ## Defining an object and filling it
@@ -348,7 +349,8 @@ Answers are in [Appendix A](../appendix/answers.qmd).
 
 ## Summary
 
-- An `object` groups named fields; `Type(field: value)` is the literal constructor.
+- An `object` groups named fields; `Type(field: value)` is the literal constructor, and a missing
+  field fails with `undeclared field`.
 - Omitted fields take their type's default, and an object without a value is safe to use.
 - Value objects have a built-in `$`; `ref object`s do not, so define `$` or use `p[]`.
 - Copying a value object duplicates the data; copying a `ref object` duplicates the pointer.

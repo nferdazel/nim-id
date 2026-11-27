@@ -10,9 +10,9 @@ mengubahnya dengan aman.
 ::: {.callout-note}
 ## Tujuan bab
 
-Setelah bab ini, pembaca bisa menulis *escape sequence* dan *raw string*, mengambil *character* dan
-potongan teks dengan *index* dan *slicing*, membedakan `&` dari `add`, serta menjelaskan kenapa
-`s[0] = 'N'` ditolak saat `s` dideklarasikan `let`.
+Setelah bab ini, pembaca bisa mengolah *string* tanpa salah *index*.
+
+Menulis *escape sequence* dan *raw string*, memakai *index* dan *slicing*, serta membedakan `&` dari `add`.
 :::
 
 ## *Escape sequence*
@@ -235,7 +235,8 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 - `\n`, `\"`, dan `\\` adalah *escape* di *string* biasa; `r"..."` mematikannya.
 - Tiga kutip membentuk *multiline string*, dan *newline* setelah pembuka ikut terhitung.
 - `len` memberi jumlah byte, *index* mulai dari nol, dan `^n` dihitung dari belakang.
-- `add` mengubah *string* di tempat (butuh `var`); `&` membuat *string* baru.
+- `add` mengubah *string* di tempat (butuh `var`), jadi `s[0] = 'N'` ditolak saat `s`
+  dideklarasikan `let`; `&` membuat *string* baru.
 - `split` dan `strip` dari `std/strutils` memecah dan membersihkan teks.
 
 ## Selanjutnya

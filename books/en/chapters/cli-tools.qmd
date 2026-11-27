@@ -8,10 +8,9 @@ library: `std/parseopt`.
 ::: {.callout-note}
 ## What you will be able to do
 
-After this chapter you can read arguments with `initOptParser`, tell `cmdLongOption`,
-`cmdShortOption`, `cmdArgument`, and `cmdEnd` apart, handle options that take values, use the
-`getopt` iterator, write `usage` text with exit codes, and read an `undeclared identifier` message
-when the import is missing.
+After this chapter you can read arguments from the command line.
+
+Tell the four `cmd` token kinds apart, handle options that take values, use the `getopt` iterator, and write `usage` text with exit codes.
 :::
 
 ## One turn, one token
@@ -297,7 +296,8 @@ Answers are in [Appendix A](../appendix/answers.qmd).
 - The `getopt` iterator hides the manual loop; `shortNoVal` and `longNoVal` mark options that take
   no value.
 - An exit code of `0` means success; return an `int` and then call `quit`.
-- `--` stops option processing; the remaining arguments are taken with `remainingArgs`.
+- `--` stops option processing; the remaining arguments are taken with `remainingArgs`. Forgetting
+  `import std/parseopt` ends in `undeclared identifier` at compile time.
 
 ## Next
 

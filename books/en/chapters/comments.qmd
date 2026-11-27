@@ -7,9 +7,9 @@ documentation. Placing it wrong makes the documentation disappear without a sing
 ::: {.callout-note}
 ## What you will be able to do
 
-After this chapter you can use the line comment `#`, the block comment `#[ ]#`, and the doc comment
-`##` correctly, generate documentation with `nim doc`, and write examples that the compiler tests
-through `runnableExamples`.
+After this chapter you can use the three comment forms correctly.
+
+The line comment `#`, the block comment `#[ ]#`, the doc comment `##`, and `runnableExamples` blocks that the compiler tests.
 :::
 
 ## Line comments: `#`

@@ -9,9 +9,9 @@ array, a `seq`, or a custom iterator. That shape removes many index-counting mis
 ::: {.callout-note}
 ## What you will be able to do
 
-After this chapter you can tell the inclusive range `..` from the exclusive `..<`, use `countdown`
-and `countup`, iterate elements with `items` and index-element pairs with `pairs`, write a `while`
-that terminates, and use `break` and `continue`.
+After this chapter you can repeat a block without getting the bounds wrong.
+
+Tell `..` from `..<`, use `countdown` and `countup`, iterate with `items` and `pairs`, and use `break` and `continue`.
 :::
 
 ## `for` over a range: `..` and `..<`

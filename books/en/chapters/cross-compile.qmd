@@ -8,9 +8,9 @@ toolchain available on the machine doing the build.
 ::: {.callout-note}
 ## What you will be able to do
 
-After this chapter you can pick a target with `--os` and `--cpu`, set features from the command line
-with `-d:` and `{.strdefine.}`, tell `-d:release`, `--opt:speed`, and `-d:danger` apart, build a
-static binary, and recognize when cross-compiling must fail because the toolchain is missing.
+After this chapter you can build a binary for another machine.
+
+Pick a target with `--os` and `--cpu`, set features with `-d:`, tell the optimisation levels apart, and build a static binary.
 :::
 
 ## Choosing a target: `--os` and `--cpu`

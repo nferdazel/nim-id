@@ -8,8 +8,9 @@ exists, and the version matches.
 ::: {.callout-note}
 ## What you will be able to do
 
-After this chapter you can install Nim 2.4.2 on Linux, macOS, Windows, or Termux, check its
-version, and fix a `command not found` message.
+After this chapter you can install Nim 2.4.2 on your machine.
+
+Pick the install path for Linux, macOS, Windows, or Termux, check the version, and fix a `command not found` message.
 :::
 
 ## Three things must be right

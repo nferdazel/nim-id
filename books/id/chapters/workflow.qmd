@@ -8,8 +8,9 @@ bicara dengan *compiler*.
 ::: {.callout-note}
 ## Tujuan bab
 
-Setelah bab ini, pembaca bisa memilih antara `nim r` dan `nim c`, membaca *error message* yang menunjuk
-*file* dan kolom, memakai `nimble` untuk proyek, dan menyiapkan editor dengan `nimsuggest`.
+Setelah bab ini, pembaca bisa menjalankan program Nim dari terminal.
+
+Memilih antara `nim r` dan `nim c`, membaca *error message* yang menunjuk *file* dan kolom, serta menyiapkan editor.
 :::
 
 ## `nim r`: compile lalu jalankan

@@ -7,8 +7,9 @@ one directory, one version number, one place to fetch the newest code from.
 ::: {.callout-note}
 ## What you will be able to do
 
-After this chapter you can lay out a package, write its `.nimble` file, use `nimble check` and
-`nimble test`, pick versions with semantic versioning, and publish a package to a Git repository.
+After this chapter you can package code as a nimble package.
+
+Lay out the package, write its `.nimble` file, use `nimble check` and `nimble test`, and pick semantic version numbers.
 :::
 
 ## One package, one directory

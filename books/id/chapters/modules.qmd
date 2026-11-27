@@ -9,9 +9,9 @@ boleh memakainya.
 ::: {.callout-note}
 ## Tujuan bab
 
-Setelah bab ini, pembaca bisa memecah kode menjadi beberapa *module*, memakai `import`,
-`from ... import`, dan `export`, menaruh *module* di dalam *directory*, serta membaca *error message*
-`cannot open file` dan `invalid module name`.
+Setelah bab ini, pembaca bisa memecah program menjadi beberapa *module*.
+
+Memakai `import`, `from ... import`, dan `export`, menaruh *module* di dalam *directory*, serta membaca *error message* `cannot open file`.
 :::
 
 ## Satu *file*, satu *module*
@@ -221,7 +221,8 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
 ## Ringkasan
 
-- Satu *file* Nim adalah satu *module*; nama *file* menjadi nama *module*, dan harus *identifier* yang sah.
+- Satu *file* Nim adalah satu *module*; nama *file* menjadi nama *module*, dan nama yang tidak sah
+  ditolak dengan `invalid module name`.
 - Tanpa tanda `*`, simbol tidak keluar dari *module* itu.
 - `import` membuka semua nama yang diekspor, `from ... import` membuka sebagian, `export` meneruskan.
 - *Module* di *directory* tetap bernama *file* itu, bukan *path* itu.

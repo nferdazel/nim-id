@@ -8,9 +8,9 @@ that box: `ref`, `ptr`, and `nil`.
 ::: {.callout-note}
 ## What you will be able to do
 
-After this chapter you can allocate a `ref` with `new`, read fields through automatic
-dereferencing, use `ptr` with `addr`, test for `nil` with `isNil`, and explain when `ptr` is needed
-and what it risks.
+After this chapter you can use `ref` and `ptr` deliberately.
+
+Allocate with `new`, read fields through automatic dereferencing, test for `nil`, and know when `ptr` is needed.
 :::
 
 ## `ref`: data lives on the heap

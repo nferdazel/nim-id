@@ -8,9 +8,9 @@ the right moment: `=destroy`, `=copy`, and `=sink`.
 ::: {.callout-note}
 ## What you will be able to do
 
-After this chapter you can explain how ARC and ORC differ, verify which memory mode is active, use
-`--mm:arc` and `--mm:orc`, write `=destroy` for a type that owns a resource, and read the error for
-a hook with the wrong signature.
+After this chapter you can explain how Nim manages memory.
+
+Tell ARC and ORC apart, check which mode is active, pick `--mm`, and write `=destroy` for a type that owns a resource.
 :::
 
 ## Two memory modes: ARC and ORC
