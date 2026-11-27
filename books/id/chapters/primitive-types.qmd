@@ -141,8 +141,9 @@ false
 `float32` menyimpan sekitar tujuh angka penting, `float64` sekitar lima belas. Konsekuensinya,
 `1.0 / 3.0` berbeda presisi saat dihitung sebagai `float32`. Akhiran `'f32` memaksa sebuah *literal*
 menjadi `float32`. *Line* terakhir memperlihatkan hal yang sering mengejutkan: `0.1 + 0.2` dan `0.3`
-bukan *value* yang sama persis, karena keduanya tidak bisa disimpan dengan tepat dalam biner. Karena
-itu jangan membandingkan *float* dengan `==`; bandingkan selisihnya dengan toleransi.
+bukan *value* yang sama persis, karena keduanya tidak bisa disimpan dengan tepat dalam biner.
+
+Karena itu jangan membandingkan *float* dengan `==`; bandingkan selisihnya dengan toleransi.
 
 ## Konversi antar *type*
 

@@ -82,9 +82,10 @@ suite "isEven":
 
 Untuk berhenti di tengah *test*, pakai `require`. Bedanya dengan `check`: `check` mencatat kegagalan
 tetapi melanjutkan sisa *test*, sedangkan `require` menghentikan seluruh proses *test* saat itu juga;
-`teardown` pun tidak sempat berjalan. Pakai `require`
-kalau langkah berikutnya tidak masuk akal tanpa langkah sebelumnya, misalnya membagi dengan *value*
-yang baru saja dipastikan bukan nol.
+`teardown` pun tidak sempat berjalan.
+
+Pakai `require` kalau langkah berikutnya tidak masuk akal tanpa langkah sebelumnya, misalnya membagi
+dengan *value* yang baru saja dipastikan bukan nol.
 
 `expect` memeriksa bahwa sebuah blok melempar *exception* dengan *type* tertentu. Blok di dalamnya
 tidak boleh lolos tanpa *error*; kalau lolos, *test*-nya gagal. Ini cara menguji *path* *error*, bukan hanya

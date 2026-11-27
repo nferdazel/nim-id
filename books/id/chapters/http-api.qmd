@@ -94,11 +94,12 @@ for (httpMethod, path, body) in requests:
 `Http400`, yang berarti permintaan klien tidak sesuai. *Path* yang tidak dikenal dijawab `Http404`.
 Pemisahan ini penting: `Http400` menyalahkan permintaan, `Http404` mengatakan *route* itu tidak ada.
 
-Body JSON di-read dengan `parseJson` dari `std/json`. *Field* diambil memakai `payload["name"]`, lalu
+Body JSON dibaca dengan `parseJson` dari `std/json`. *Field* diambil memakai `payload["name"]`, lalu
 `getStr` mengubahnya menjadi `string`. Untuk membalas, `%*{...}` membangun JSON langsung dan `$`
-mengubahnya menjadi teks: `$(%*{"name": ...})`. Karena `dispatch` call `parseJson`, ia
-dideklarasikan sebagai `proc`, bukan `func`. `parseJson` punya *side effect* menurut *compiler*, dan
-sebuah `func` menolak memanggilnya.
+mengubahnya menjadi teks: `$(%*{"name": ...})`.
+
+Karena `dispatch` call `parseJson`, ia dideklarasikan sebagai `proc`, bukan `func`. `parseJson` punya
+*side effect* menurut *compiler*, dan sebuah `func` menolak memanggilnya.
 
 *Parameter* bernama `httpMethod`, bukan `method`, karena `method` adalah kata kunci Nim.
 

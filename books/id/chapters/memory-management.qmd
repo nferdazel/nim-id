@@ -163,7 +163,9 @@ d = temp
 ```
 
 `Box(name: "temp")` adalah *value* sementara; menugaskannya ke `d` bisa memindahkan isinya, jadi
-`=sink` di-call. Kalau sumbernya *variable* biasa, *path* yang dipakai `=copy`. Sama seperti
+`=sink` di-call. Kalau sumbernya *variable* biasa, *path* yang dipakai `=copy`.
+
+Sama seperti
 `=copy`, *hook* ini mengambil alih tanggung jawab membuang *value* lama: `d` berisi `old` sebelum
 ditimpa, dan contoh di atas tidak call `=destroy(dest)`, jadi *type* pemilik sumber daya perlu
 menambahkannya sendiri.
