@@ -260,5 +260,5 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
 ## Selanjutnya
 
-Bab berikutnya menambah tenaga: [*Thread* dan *Channel*](threads.qmd), menjalankan pekerjaan di
-beberapa *thread* sekaligus dan mengirim *result*-nya kembali dengan aman.
+Bab berikutnya menjalankan pekerjaan di beberapa [*thread*](threads.qmd) sekaligus, dan mengirim
+*result*-nya kembali lewat `Channel` dengan aman.
