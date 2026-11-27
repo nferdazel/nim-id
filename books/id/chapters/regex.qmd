@@ -263,5 +263,4 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
 ## Selanjutnya
 
-Bab berikutnya meninggalkan teks dan masuk ke waktu: [Time dan random](times-and-random.qmd),
-membaca jam, mengubah format tanggal, dan menghasilkan angka acak yang bisa diulang.
+Bab berikutnya meninggalkan teks dan masuk ke waktu: [Time dan random](times-and-random.qmd), membaca jam, menghitung selang, dan angka acak dengan *seed*.

@@ -360,5 +360,4 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
 ## Selanjutnya
 
-Bab berikutnya membahas [*enum* dan *set*](enums-and-sets.qmd): *set* *value* bernama dengan urutan
-tetap, dan *bitset* untuk menguji keanggotaan dengan cepat.
+*Set* *value* bernama dengan urutan tetap menutup celah antara angka dan teks. Lanjut ke [*enum* dan *set*](enums-and-sets.qmd).

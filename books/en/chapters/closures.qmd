@@ -291,4 +291,4 @@ Answers are in [Appendix A](../appendix/answers.qmd).
 ## Next
 
 The next chapter covers *generics*: writing a single procedure or type that works for many types,
-with constraints the compiler checks before the program runs.
+with constraints the compiler checks before the program runs. Next up: [*Generics*](generics.qmd).

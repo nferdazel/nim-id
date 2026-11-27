@@ -241,5 +241,4 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
 ## Selanjutnya
 
-Bab berikutnya membahas cara menampilkan *value*: `echo`, `repr`, interpolasi `&"..."`, format angka,
-dan perbedaan `echo` dengan `write`.
+Menampilkan *value* punya aturannya sendiri: `echo`, `repr`, interpolasi `&"..."`, dan format angka. Lanjut ke [*Printing*](printing.qmd).

@@ -274,5 +274,4 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
 ## Selanjutnya
 
-Bab berikutnya membahas *file* dan sistem operasi: [*file* dan OS](files-and-os.qmd), membaca dan
-menulis *file*, menelusuri *directory*, serta membaca *argument* dan *variable* lingkungan.
+*File* dan sistem operasi jadi urusan berikutnya: [*file* dan OS](files-and-os.qmd), membaca dan menulis *file*, menelusuri *directory*, dan membaca *variable* lingkungan.

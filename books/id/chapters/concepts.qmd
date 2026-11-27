@@ -276,5 +276,4 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
 ## Selanjutnya
 
-Bab berikutnya membahas [*object* varian dan `distinct`](variants-and-distinct.qmd): satu *type* *object*
-yang bentuk *fieldnya* berubah sesuai penanda, dan *type* baru yang tidak bisa tertukar.
+Bab berikutnya membahas [*object* varian dan `distinct`](variants-and-distinct.qmd): satu *type* *object* yang bentuk *field*-nya berubah sesuai penanda, dan *type* baru yang tidak bisa tertukar.

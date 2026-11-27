@@ -215,5 +215,4 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
 ## Selanjutnya
 
-Bab berikutnya membahas *template*: potongan kode yang disalin *compiler* ke tempat *calling*,
-berbeda dari *generic* yang membuat versi baru dari sebuah *procedure*.
+*Template* menyalin potongan kode ke tempat *calling*, berbeda dari *generic* yang membuat satu versi per *type*. Lanjut ke [*Template*](templates.qmd).

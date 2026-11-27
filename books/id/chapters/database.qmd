@@ -303,5 +303,4 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
 ## Selanjutnya
 
-Data punya tempat tetap. Pekerjaan berikutnya adalah mengemas kode supaya bisa dipakai ulang dan
-dibagikan: [membuat dan menerbitkan *package* nimble](nimble-packages.qmd).
+Data punya tempat tetap. Pekerjaan berikutnya adalah mengemas kode supaya bisa dipakai ulang dan dibagikan: [*package* nimble](nimble-packages.qmd), dari struktur *directory* sampai `nimble test`.

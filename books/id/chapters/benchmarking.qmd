@@ -286,6 +286,4 @@ dipakai untuk selang.
 
 ## Selanjutnya
 
-Angka sudah ada, dan *hotspot* sudah ketemu. Yang belum: biner yang bisa dijalankan di mesin
-selain mesin pengembang. Bab berikutnya membahas pilihan target, *flag* *compiler*, dan biner statis.
-Lanjut ke [Cross-compile dan deploy biner](cross-compile.qmd).
+Angka sudah ada, dan *hotspot* sudah ketemu. Yang belum: biner yang bisa dijalankan di mesin selain mesin pengembang. Bab berikutnya membahas pilihan target, *flag* compiler, dan biner statis. Lanjut ke [Cross-compile dan deploy biner](cross-compile.qmd).

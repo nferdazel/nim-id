@@ -281,4 +281,4 @@ Answers are in [Appendix A](../appendix/answers.qmd).
 ## Next
 
 The next chapter covers *macros*: templates that run on code structure rather than text, so they can
-decide the output shape from the contents of their arguments.
+decide the output shape from the contents of their arguments. Next up: [*Macros*](macros.qmd).

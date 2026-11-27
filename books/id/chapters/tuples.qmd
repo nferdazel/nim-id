@@ -224,5 +224,4 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
 ## Selanjutnya
 
-Bab berikutnya membahas [*object*](objects.qmd): *type* gabungan dengan *field* bernama, *constructor*, *value*
-default, dan dua bentuk penyimpanan: *value* dan referensi.
+Bab berikutnya membahas [*object*](objects.qmd): *type* gabungan dengan *field* bernama, *constructor*, dan *value* *semantics*-nya.

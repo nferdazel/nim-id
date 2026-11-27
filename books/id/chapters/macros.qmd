@@ -327,5 +327,4 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
 ## Selanjutnya
 
-Bab berikutnya membahas [konsep dan pencocokan *type*](concepts.qmd): membatasi *procedure* *generic*
-berdasarkan bentuk *type*, bukan namanya.
+Bab berikutnya membahas [konsep dan pencocokan *type*](concepts.qmd): membatasi *procedure* *generic* berdasarkan bentuk *type*, bukan namanya.

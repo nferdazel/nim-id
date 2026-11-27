@@ -212,5 +212,4 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
 ## Selanjutnya
 
-Bab berikutnya membahas [kumpulan data](collections.qmd): `array` berukuran tetap, `seq` yang bisa
-tumbuh, dan `openArray` yang menerima keduanya sebagai *parameter* *procedure*.
+Satu *value* berulang kali butuh wadah. Bab berikutnya membahas [kumpulan data](collections.qmd): `array` berukuran tetap, `seq` yang bisa tumbuh, dan `openArray`.

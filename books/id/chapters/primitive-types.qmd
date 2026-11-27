@@ -234,5 +234,4 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
 ## Selanjutnya
 
-Bab berikutnya membahas `string`: *escape sequence*, *raw string*, *multiline string*, serta cara
-mengambil sebagian teks dengan *index* dan *slicing*.
+Teks butuh perlakuan sendiri. Bab berikutnya membahas `string`: *escape sequence*, *raw string*, *multiline string*, serta cara mengambil sepotong teks dengan *index* dan *slicing*. Lanjut ke [*String*](strings.qmd).

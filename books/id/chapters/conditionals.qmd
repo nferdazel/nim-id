@@ -195,5 +195,4 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 - `when` memilih cabang saat compile; hanya cabang terpilih yang di-compile.
 ## Selanjutnya
 
-Bab berikutnya membahas [*loop*](loops.qmd): `for` dengan *range*, `while`, `countdown`, serta
-cara memakai `break` dan `continue` tanpa membuat alurnya sulit dibaca.
+Alur yang sama diulang berkali-kali butuh bentuk ringkas. Bab berikutnya membahas [*loop*](loops.qmd): `for` dengan *range*, `while`, `countdown`, serta `break` dan `continue`.

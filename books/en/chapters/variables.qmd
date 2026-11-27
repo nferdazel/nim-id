@@ -246,4 +246,4 @@ Answers are in [Appendix A](../appendix/answers.qmd).
 ## Next
 
 The next chapter covers primitive types in detail: the range of each integer type, when `float32`
-matters, and how to convert between types without losing data.
+matters, and how to convert between types without losing data. Next up: [*Primitive types* and *literals*](primitive-types.qmd).

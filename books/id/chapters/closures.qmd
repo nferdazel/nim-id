@@ -289,5 +289,4 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
 ## Selanjutnya
 
-Bab berikutnya membahas *generic*: write satu *procedure* atau *type* yang bekerja untuk banyak *type*,
-dengan batasan yang diperiksa *compiler* sebelum program berjalan.
+Satu *procedure* yang bekerja untuk banyak *type*. Bab berikutnya membahas *generic*, dengan batasan yang diperiksa *compiler*. Lanjut ke [*Generic*](generics.qmd).

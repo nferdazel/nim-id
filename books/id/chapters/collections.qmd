@@ -278,5 +278,4 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
 ## Selanjutnya
 
-Bab berikutnya membahas cara membungkus logika ke dalam [*procedure* dan fungsi](procedures.qmd):
-*parameter*, *return value*, dan perbedaan `proc` dengan `func`.
+Logika yang sama dipakai berulang layak dibungkus. Bab berikutnya membahas [*procedure* dan fungsi](procedures.qmd): *parameter*, *return value*, dan kapan memilih `func`.

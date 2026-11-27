@@ -302,5 +302,4 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
 ## Selanjutnya
 
-Bab berikutnya menaikkan taruhan: dari tool yang read *argument* menjadi layanan yang menerima
-permintaan. Lanjut ke [HTTP API dengan `asynchttpserver`](http-api.qmd).
+Dari tool yang membaca *argument* ke layanan yang menerima permintaan. Bab berikutnya memasang server HTTP kecil. Lanjut ke [HTTP API dengan `asynchttpserver`](http-api.qmd).

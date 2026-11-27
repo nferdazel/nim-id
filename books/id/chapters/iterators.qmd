@@ -216,5 +216,4 @@ tidak menyimpannya dan dipakai langsung di dalam `for`.
 
 ## Selanjutnya
 
-Bab berikutnya membahas [*closure*](closures.qmd): *procedure* yang mengingat *variable* di sekitarnya,
-dan kapan sifat itu lebih berguna daripada *procedure* biasa.
+Bab berikutnya membahas [*closure*](closures.qmd): *procedure* yang mengingat *variable* di sekitarnya, dan jebakan yang muncul di dalam *loop*.

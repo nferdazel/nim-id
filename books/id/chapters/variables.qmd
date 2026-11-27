@@ -249,5 +249,4 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
 ## Selanjutnya
 
-Bab berikutnya membahas *data type* dasar secara lebih rinci: *range* setiap *type* *integer*, kapan
-memakai `float32` dan kapan `float64`, serta cara konversi antar *type* tanpa kehilangan data.
+Bab berikutnya membahas *data type* dasar secara lebih rinci: *range* setiap *type* *integer*, kapan memakai `int` dan kapan `int64`, serta *literal* dalam basis lain. Lanjut ke [*Data type* primitif dan *literal*](primitive-types.qmd).

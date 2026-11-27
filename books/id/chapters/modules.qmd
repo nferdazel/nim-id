@@ -230,5 +230,4 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
 ## Selanjutnya
 
-Bab berikutnya membahas [*exception*](exceptions.qmd): apa yang terjadi saat operasi gagal di tengah
-program, dan bagaimana Nim melacak *exception* yang mungkin muncul.
+Operasi yang gagal di tengah program butuh cara keluar yang rapi. Bab berikutnya membahas [*exception*](exceptions.qmd) dan cara Nim melacaknya.

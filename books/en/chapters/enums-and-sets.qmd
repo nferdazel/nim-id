@@ -255,4 +255,4 @@ Answers are in [Appendix A](../appendix/answers.qmd).
 ## Next
 
 The next chapter opens the intermediate part: modules and `import`, splitting code into reusable
-files.
+files. Next up: [*Modules* and `import`](modules.qmd).

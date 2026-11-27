@@ -231,5 +231,4 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
 ## Selanjutnya
 
-Bab berikutnya membahas *branching*: `if`, *expression* `if`, `case`, dan `when` untuk memilih *path*
-eksekusi.
+Rangkaian *comparison* yang panjang butuh *branching*: `if`, *expression* `if`, `case`, dan `when`. Lanjut ke [*Branching*](conditionals.qmd).

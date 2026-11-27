@@ -258,5 +258,4 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
 ## Selanjutnya
 
-Bab berikutnya membuka bagian menengah: *module* dan `import`, cara memecah kode ke beberapa *file*
-yang bisa dipakai ulang.
+*Module* dan `import` membuka bagian menengah: cara memecah kode ke beberapa *file* yang bisa dipakai ulang. Lanjut ke [*Module* dan `import`](modules.qmd).

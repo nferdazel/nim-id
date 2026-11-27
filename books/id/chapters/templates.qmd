@@ -279,5 +279,4 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
 ## Selanjutnya
 
-Bab berikutnya membahas *macro*: *template* yang berjalan pada struktur kode, bukan pada teks,
-sehingga bisa memutuskan bentuk *output* berdasarkan isi *argument*-nya.
+*Macro* berjalan pada struktur kode, bukan pada teks. Lanjut ke [*Macro*](macros.qmd).

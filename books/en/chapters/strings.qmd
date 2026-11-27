@@ -240,4 +240,4 @@ Answers are in [Appendix A](../appendix/answers.qmd).
 ## Next
 
 The next chapter covers showing values: `echo`, `repr`, interpolation with `&"..."`, number
-formatting, and how `echo` differs from `write`.
+formatting, and how `echo` differs from `write`. Next up: [*Printing*](printing.qmd).

@@ -264,5 +264,4 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
 ## Selanjutnya
 
-Bab berikutnya menelusuri [*standard library*](standard-library.qmd): `strutils`, `sequtils`, `tables`,
-dan `json`, lalu kapan memilih masing-masing.
+Bab berikutnya menelusuri [*standard library*](standard-library.qmd): `strutils`, `sequtils`, `tables`, dan `json`.

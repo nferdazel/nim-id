@@ -169,5 +169,4 @@ dalamnya ikut di-compile dan dijalankan.
 
 ## Selanjutnya
 
-Bab berikutnya kembali ke kode: [*variable* dan tiga kata kunci](variables.qmd) `var`, `let`, dan
-`const`, beserta cara memilih di antara ketiganya.
+Kembali ke kode: [*variable* dan tiga kata kunci](variables.qmd) `var`, `let`, dan `const`, beserta janji yang ditepati *compiler* untuk masing-masing.

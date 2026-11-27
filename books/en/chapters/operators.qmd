@@ -229,4 +229,4 @@ Answers are in [Appendix A](../appendix/answers.qmd).
 ## Next
 
 The next chapter covers branching: `if`, `if` expressions, `case`, and `when` for choosing a path
-of execution.
+of execution. Next up: [*Branching*](conditionals.qmd).

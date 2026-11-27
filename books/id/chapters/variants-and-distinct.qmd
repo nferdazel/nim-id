@@ -297,5 +297,4 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
 ## Selanjutnya
 
-Bab berikutnya membahas [`ref`, `ptr`, dan `nil`](refs-and-pointers.qmd): *value* yang menunjuk *value*
-lain, kapan menyalin dan kapan berbagi, serta bedanya `ref`, `ptr`, dan `nil`.
+Bab berikutnya membahas [`ref`, `ptr`, dan `nil`](refs-and-pointers.qmd): *value* yang menunjuk *value* lain, dan kapan cara itu perlu.

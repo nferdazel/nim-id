@@ -191,6 +191,4 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
 ## Selanjutnya
 
-Bab berikutnya menghubungkan Nim dengan kode C yang sudah ada: meng-compile *file* C bersama
-program, mendeklarasikan fungsi dengan `{.importc.}`, dan memakai *type* C dengan benar. Lanjut ke
-[FFI ke C](ffi-c.qmd).
+Kode C yang sudah ada bisa dipakai langsung: meng-compile *file* C bersama program, mendeklarasikan fungsinya dengan `{.importc.}`, dan membaca *error pragma* saat deklarasinya meleset. Lanjut ke [FFI ke C](ffi-c.qmd).

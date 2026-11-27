@@ -217,4 +217,4 @@ Answers are in [Appendix A](../appendix/answers.qmd).
 ## Next
 
 The next chapter covers *templates*: code that the compiler copies into the call site, unlike a
-generic, which creates a new version of a procedure.
+generic, which creates a new version of a procedure. Next up: [*Templates*](templates.qmd).

@@ -275,5 +275,4 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
 ## Selanjutnya
 
-Bab berikutnya menyimpan data agar tidak hilang saat server berhenti. Lanjut ke
-[database](database.qmd).
+Data yang hilang saat server berhenti perlu tempat tetap. Lanjut ke [database](database.qmd).

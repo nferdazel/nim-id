@@ -234,4 +234,4 @@ Answers are in [Appendix A](../appendix/answers.qmd).
 ## Next
 
 The next chapter covers `string`: escape sequences, raw strings, multi-line strings, and how to
-take part of a text with indexing and slicing.
+take part of a text with indexing and slicing. Next up: [*Strings*](strings.qmd).

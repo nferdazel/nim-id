@@ -257,5 +257,4 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
 ## Selanjutnya
 
-Bab berikutnya membahas apa yang terjadi pada *memory* setelah sebuah *value* dibuang:
-[manajemen *memory*](memory-management.qmd), ARC, ORC, dan *destructor* `=destroy`.
+Bab berikutnya membahas apa yang terjadi pada *memory* setelah sebuah *value* dibuang: [manajemen *memory* dengan ARC dan ORC](memory-management.qmd).
