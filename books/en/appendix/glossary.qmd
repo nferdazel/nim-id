@@ -63,6 +63,7 @@
 | garbage collector | the automatic memory manager in the classic GC mode | [What Nim is and why](../chapters/what-is-nim.qmd) |
 | generic instantiation | forming a concrete type from a generic at the point of use | [Generics: types and procedures](../chapters/generics.qmd) |
 | handler | the function that handles one request or event | [An HTTP API with `asynchttpserver`](../chapters/http-api.qmd) |
+| hot spot | the part of the code where most time is spent | [Benchmarks and profiling](../chapters/benchmarking.qmd) |
 | hygienic | a macro or template that does not leak names to the caller | [Templates: code expanded by the compiler](../chapters/templates.qmd) |
 | identifier | a name for a variable, type, procedure, or module | [Variables: `var`, `let`, `const`](../chapters/variables.qmd) |
 | import | using the contents of another module | [Modules, `import`, and `export`](../chapters/modules.qmd) |
@@ -149,6 +150,7 @@
 | variable | a name for a value | [Variables: `var`, `let`, `const`](../chapters/variables.qmd) |
 | variant object | an object whose fields depend on a single tag | [Variant objects and `distinct`](../chapters/variants-and-distinct.qmd) |
 | virtual machine | a software layer that runs code on top of the CPU | [What Nim is and why](../chapters/what-is-nim.qmd) |
+| wall-clock time | the real time that passes, including waiting | [Benchmarks and profiling](../chapters/benchmarking.qmd) |
 | warning | a compiler message about code worth checking | [Workflow: `nim r`, `nimble`, editor](../chapters/workflow.qmd) |
 
 New terms go into the master list first, and only then into a chapter.

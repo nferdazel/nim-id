@@ -8,8 +8,8 @@ ukur dulu, baru menebak. Masalahnya, mengukur juga punya jebakan yang tidak terl
 ## Tujuan bab
 
 Setelah bab ini, pembaca bisa mengukur satu blok dengan `getMonoTime`, membaca `Duration` dan
-`inMilliseconds`, menulis contoh yang *output*-nya stabil, membedakan waktu CPU dari waktu dinding,
-serta menjalankan profiler bawaan Nim 2.4.2.
+`inMilliseconds`, menulis contoh yang *output*-nya stabil, membedakan waktu CPU dari
+*wall-clock time*, serta menjalankan profiler bawaan Nim 2.4.2.
 :::
 
 ## Mengukur satu blok
@@ -149,11 +149,11 @@ putaran keduanya menghasilkan teks yang sama, tetapi yang kedua jauh lebih murah
 itu tetap benar di mesin mana pun, sedangkan angka milidetiknya bisa bergeser dari 10 ke 15 tanpa
 mengubah kesimpulan.
 
-## Waktu CPU dan waktu dinding
+## Waktu CPU dan *wall-clock time*
 
 Ada dua cara menjawab "berapa lama". `cpuTime` dari `std/times` menghitung waktu prosesor yang dipakai
-proses: bagian yang dihitung, bukan yang menunggu. `epochTime` menghitung waktu dinding sebagai detik
-sejak 1970, berguna sebagai *timestamp*.
+proses: bagian yang dihitung, bukan yang menunggu. `epochTime` menghitung *wall-clock time* sebagai
+detik sejak 1970, berguna sebagai *timestamp*.
 
 ```{.nim}
 import std/times
@@ -178,7 +178,7 @@ wall clock looks plausible: true
 ```
 
 Bedanya terasa saat program menunggu: mengunduh *file* menghabiskan sedikit waktu CPU dan banyak
-waktu dinding. Untuk mengukur pekerjaan hitung, jam monotonik lebih tepat. `epochTime` jangan dipakai
+*wall-clock time*. Untuk mengukur pekerjaan hitung, jam monotonik lebih tepat. `epochTime` jangan dipakai
 untuk selang, karena jam sistem bisa disesuaikan dan *result* pengurangannya bisa negatif.
 
 ## Error sengaja: `inMilliseconds` menerima `Duration`
@@ -256,9 +256,9 @@ Beberapa kebiasaan membuat angka tidak menyesatkan:
 
 Optimasi tidak selalu perlu. Kalau program sudah selesai dalam waktu yang bisa ditunggu, mengejar
 beberapa milidetik hanya menambah kode yang sulit dibaca. Kalau waktu habis di *input*/*output* atau
-menunggu jaringan, mempercepat perhitungan tidak mengubah apa pun. Ukur dulu, temukan titik panasnya
-dengan profiler, baru ubah algoritmanya: mengganti algoritma yang salah hampir selalu lebih besar
-*result*-nya daripada menambal detail kecil.
+menunggu jaringan, mempercepat perhitungan tidak mengubah apa pun. Ukur dulu, temukan
+*hotspot*-nya dengan profiler, baru ubah algoritmanya: mengganti algoritma yang salah hampir selalu
+lebih besar *result*-nya daripada menambal detail kecil.
 
 ## Latihan
 
@@ -280,12 +280,12 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
   `std/times`.
 - Satu kali ukur selalu melebih-lebihkan; lakukan warm-up, ulangi, lalu ambil putaran tercepat.
 - Contoh di buku ini tidak print waktu, hanya jumlah iterasi, checksum, dan *comparison* boolean.
-- `cpuTime` menghitung waktu prosesor, `epochTime` menghitung waktu dinding; jam monotonik dipakai
-  untuk selang.
-- Ukur dulu, profil untuk menemukan titik panas, dan berhenti kalau kecepatannya sudah cukup.
+- `cpuTime` menghitung waktu prosesor, `epochTime` menghitung *wall-clock time*; jam monotonik
+dipakai untuk selang.
+- Ukur dulu, profil untuk menemukan *hotspot*, dan berhenti kalau kecepatannya sudah cukup.
 
 ## Selanjutnya
 
-Angka sudah ada, dan titik panas sudah ketemu. Yang belum: biner yang bisa dijalankan di mesin
+Angka sudah ada, dan *hotspot* sudah ketemu. Yang belum: biner yang bisa dijalankan di mesin
 selain mesin pengembang. Bab berikutnya membahas pilihan target, *flag* compiler, dan biner statis.
 Lanjut ke [Cross-compile dan deploy biner](cross-compile.qmd).
