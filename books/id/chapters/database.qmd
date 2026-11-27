@@ -10,7 +10,7 @@ sudah tersedia, lalu memetakannya ke SQLite.
 ## Tujuan bab
 
 Setelah bab ini, pembaca bisa menyimpan *row* ke *file*, menyaring dan mengurutkan *result*-nya,
-write pembaruan yang tidak berhenti setengah jalan, membaca error `IOError`, dan tahu kapan
+menulis pembaruan yang tidak berhenti setengah jalan, membaca error `IOError`, dan tahu kapan
 SQLite lebih tepat daripada *file* JSON.
 :::
 

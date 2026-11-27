@@ -131,7 +131,7 @@ true
 ```
 
 `in` return `bool`, jadi *result*-nya bisa langsung dipakai sebagai kondisi `if`. Pencariannya
-satu operasi bit, tidak bergantung pada banyaknya anggota.
+satu operasi *bitwise*, tidak bergantung pada banyaknya anggota.
 
 ## Iterasi set
 

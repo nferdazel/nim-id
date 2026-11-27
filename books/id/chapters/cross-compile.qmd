@@ -20,7 +20,7 @@ prosesor. *Value* yang umum: `linux`, `windows`, `macosx` untuk sistem, dan `amd
 `arm` untuk prosesor.
 
 Cara paling aman memeriksa target adalah bertanya kepada compiler. `defined` dan `when` dijawab
-sebelum program berjalan, sementara `hostOS` dan `hostCPU` menyimpan nama yang sama untuk di-read
+sebelum program berjalan, sementara `hostOS` dan `hostCPU` menyimpan nama yang sama untuk dibaca
 program. Keduanya berasal dari `system`, jadi tidak perlu diimpor.
 
 ```{.nim}

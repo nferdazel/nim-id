@@ -81,7 +81,7 @@ Bedanya praktis: `import` membuka semua nama, `from ... import` membuka yang dis
 *module* besar, bentuk kedua membuat daftar ketergantungan terbaca dari satu *line*.
 
 Nama *module* itu sendiri tetap terikat. Setelah `from a01_greeting import greet`, `a01_greeting.version`
-masih bisa di-write. Kalau justru ingin memaksa kualifikasi, pakai `from a01_greeting import nil`.
+masih bisa ditulis. Kalau justru ingin memaksa kualifikasi, pakai `from a01_greeting import nil`.
 
 ## `export`: meneruskan simbol ke *module* lain
 

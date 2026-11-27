@@ -1,6 +1,6 @@
 import std/[osproc, strutils]
 
-let hasil = execCmdEx("echo hai")
+let cmd = execCmdEx("echo hai")
 
-echo hasil.output.strip
-echo hasil.exitCode
+echo cmd.output.strip
+echo cmd.exitCode

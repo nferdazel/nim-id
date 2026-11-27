@@ -55,7 +55,7 @@ format biner atau menghemat *memory* di dalam struktur besar.
 
 ## Literal numerik
 
-*Value* yang sama bisa di-write dengan beberapa cara. Semuanya menghasilkan bilangan, bukan teks.
+*Value* yang sama bisa ditulis dengan beberapa cara. Semuanya menghasilkan bilangan, bukan teks.
 
 ```{.nim}
 echo 255          # decimal

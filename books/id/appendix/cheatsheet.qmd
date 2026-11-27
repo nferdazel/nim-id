@@ -269,7 +269,7 @@ echo doc["city"].getStr
 | `strutils` | `strip`, `split`, `join`, `toUpperAscii`, `startsWith`, `replace`, `parseInt` |
 | `sequtils` | `mapIt`, `filterIt`, `foldl` |
 | `tables` | `initTable`, `hasKey`, `getOrDefault`, `t["k"]` |
-| `json` | `parseJson`, `%*`, `getStr`, `getInt`, `pretty`, `to(Tipe)` |
+| `json` | `parseJson`, `%*`, `getStr`, `getInt`, `pretty`, `to(Person)` |
 
 ## `os`
 

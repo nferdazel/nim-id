@@ -59,7 +59,7 @@ disentuh dan cache prosesor masih dingin, jadi ukurannya lebih lambat dari kemam
 ## Satu kali ukur tidak cukup
 
 Satu kali pengukuran hampir selalu menipu, dan arahnya selalu sama: angkanya jadi lebih besar. Proses
-lain ikut berjalan, pengumpul sampah mengambil giliran, atau prosesor melambat karena panas.
+lain ikut berjalan, *garbage collector* mengambil giliran, atau prosesor melambat karena panas.
 Gangguan hanya bisa menambah waktu, tidak mengurangi.
 
 ```{.nim}

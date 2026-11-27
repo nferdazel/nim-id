@@ -175,7 +175,7 @@ Ada is 36
 ```
 
 `%*{...}` membangun `JsonNode` langsung dari literal, tanpa menulis string JSON lalu menguraikannya.
-`to(Tipe)` mengubahnya menjadi *object* biasa. Keduanya menghindari penggabungan string manual yang
+`to(Person)` mengubahnya menjadi *object* biasa. Keduanya menghindari penggabungan string manual yang
 mudah salah.
 
 ## Membaca error: kunci yang tidak ada

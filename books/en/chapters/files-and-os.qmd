@@ -169,10 +169,10 @@ This chapter handles files and directories. Sometimes a program has to run anoth
 ```{.nim}
 import std/[osproc, strutils]
 
-let hasil = execCmdEx("echo hai")
+let cmd = execCmdEx("echo hai")
 
-echo hasil.output.strip
-echo hasil.exitCode
+echo cmd.output.strip
+echo cmd.exitCode
 ```
 
 ```{.txt}

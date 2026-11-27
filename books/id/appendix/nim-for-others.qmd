@@ -138,7 +138,7 @@ goroutine ringan dengan `select` di atas banyak *channel*.
 ## Yang mirip
 
 *Type* statis dengan inferensi, generic, closure, dan *module* terasa akrab dari ketiga bahasa. *Procedure*
-bisa di-call dengan gaya metode, jadi `teks.len` sama dengan `len(teks)`. Nim juga menawarkan
+bisa dipanggil dengan gaya metode, jadi `teks.len` sama dengan `len(teks)`. Nim juga menawarkan
 `let` dan `const` sebagai bawaan tidak berubah, sejalan dengan `let` Rust dan `const` Go. Fungsi
 adalah *value*, sehingga bisa dikirim dan di-return. Pengelola *package* berperan sama
 seperti pip, Go modules, dan cargo.
