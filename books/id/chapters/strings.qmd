@@ -1,7 +1,7 @@
-# String, raw string, dan character
+# *String*, *raw string*, dan *character*
 
 Hampir setiap program menyentuh teks. Di Nim, `string` adalah *seq* byte yang boleh diubah di
-tempat, berbeda dari bahasa yang memperlakukan string sebagai *value* beku. Perbedaan itu muncul di
+tempat, berbeda dari bahasa yang memperlakukan *string* sebagai *value* beku. Perbedaan itu muncul di
 *index*, penggabungan, dan *error message* yang kadang tidak terduga.
 
 Bab ini mulai dari menulis teks harfiah, lalu bergerak ke cara mengambil sebagian isinya dan
@@ -10,12 +10,12 @@ mengubahnya dengan aman.
 ::: {.callout-note}
 ## Tujuan bab
 
-Setelah bab ini, pembaca bisa menulis escape sequence dan raw string, mengambil character dan
-potongan teks dengan *index* dan slicing, membedakan `&` dari `add`, serta menjelaskan kenapa
+Setelah bab ini, pembaca bisa menulis *escape sequence* dan *raw string*, mengambil *character* dan
+potongan teks dengan *index* dan *slicing*, membedakan `&` dari `add`, serta menjelaskan kenapa
 `s[0] = 'N'` ditolak saat `s` dideklarasikan `let`.
 :::
 
-## Escape sequence
+## *Escape sequence*
 
 Simpan sebagai `escapes.nim`, lalu jalankan dengan `nim r escapes.nim`.
 
@@ -34,15 +34,15 @@ backslash: \
 brace: { }
 ```
 
-Garis miring terbalik di dalam string membuka *escape sequence*. `\n` menjadi *newline*, `\"`
-menjadi tanda kutip yang tidak menutup string, dan `\\` menjadi satu garis miring. Perhatikan *line*
-terakhir: kurung kurawal `{` biasa-biasa saja di string biasa. Character itu hanya punya arti
+Garis miring terbalik di dalam *string* membuka *escape sequence*. `\n` menjadi *newline*, `\"`
+menjadi tanda kutip yang tidak menutup *string*, dan `\\` menjadi satu garis miring. Perhatikan *line*
+terakhir: kurung kurawal `{` biasa-biasa saja di *string* biasa. *Character* itu hanya punya arti
 khusus di dalam interpolasi `&"..."` yang dibahas di bab berikutnya.
 
-## Raw string
+## *Raw string*
 
-Kadang kita justru butuh garis miring apa adanya, misalnya pada path Windows atau pola reguler.
-Awalan `r` mematikan semua escape:
+Kadang kita justru butuh garis miring apa adanya, misalnya pada *path* Windows atau pola reguler.
+Awalan `r` mematikan semua *escape*:
 
 ```{.nim}
 let path = r"C:\Users\nim\bin"
@@ -57,7 +57,7 @@ C:\Users\nim\bin
 \d+\.\d+
 ```
 
-Tanpa `r`, `\U` dan `\d` bukan escape yang dikenal dan bisa memicu *warning*. Raw string juga
+Tanpa `r`, `\U` dan `\d` bukan *escape* yang dikenal dan bisa memicu *warning*. *Raw string* juga
 tidak memperlakukan `"` sebagai penutup, jadi teks di atas terbaca persis seperti tertulis.
 
 ## *Multiline string*
@@ -83,13 +83,13 @@ line two
 END
 ```
 
-Perhatikan `len` bernilai 18. Isi string adalah `line one\nline two\n`: 8 + 1 + 8 + 1 character.
-*Newline* setelah `"""` pembuka ikut terhitung, dan itu sering menjadi sumber error hitung
-saat pembaca baru memakainya. Raw string tiga kutip juga tidak memproses escape.
+Perhatikan `len` bernilai 18. Isi *string* adalah `line one\nline two\n`: 8 + 1 + 8 + 1 *character*.
+*Newline* setelah `"""` pembuka ikut terhitung, dan itu sering menjadi sumber *error* hitung
+saat pembaca baru memakainya. *Raw string* tiga kutip juga tidak memproses *escape*.
 
 ## Panjang dan *index*
 
-`len` memberi jumlah byte, dan *index* dimulai dari nol. Memanggil `len` murah: panjang string
+`len` memberi jumlah byte, dan *index* dimulai dari nol. Memanggil `len` murah: panjang *string*
 disimpan bersama datanya, bukan dihitung ulang setiap kali.
 
 ```{.nim}
@@ -109,11 +109,11 @@ Nim
 ```
 
 `s[^1]` menunjuk *element* terakhir; `^n` adalah gula untuk `s.len - n`. Karena `s[0]` menghasilkan
-`char`, bukan string satu huruf, operator pada `char` (seperti `.ord`) berlaku langsung. Mengambil
+`char`, bukan *string* satu huruf, operator pada `char` (seperti `.ord`) berlaku langsung. Mengambil
 *index* di luar *range* tidak di-return sebagai `nil`; Nim menghentikan program dengan
-`IndexDefect` saat runtime.
+`IndexDefect` saat *runtime*.
 
-## Slicing
+## *Slicing*
 
 Potongan teks diambil dengan *range* di dalam kurung siku. Kedua ujungnya ikut disertakan.
 
@@ -134,7 +134,7 @@ im rock
 ```
 
 *Range* `a..b` berarti dari *index* `a` sampai `b`, keduanya masuk. Karena `^n` dihitung dari
-belakang, `s[^5..^1]` mengambil lima character terakhir. Slicing menghasilkan string baru; string
+belakang, `s[^5..^1]` mengambil lima *character* terakhir. *Slicing* menghasilkan *string* baru; *string*
 aslinya tidak berubah.
 
 ## `&` versus `add`
@@ -158,15 +158,15 @@ Hello, Nim!
 count: 11
 ```
 
-`add` menambahkan langsung ke string yang sudah ada. Karena mengubah *value*, `greeting` harus `var`.
-Operator `&` membuat string baru dari dua sisi tanpa menyentuh yang lama; karena itu `shout` boleh
+`add` menambahkan langsung ke *string* yang sudah ada. Karena mengubah *value*, `greeting` harus `var`.
+Operator `&` membuat *string* baru dari dua sisi tanpa menyentuh yang lama; karena itu `shout` boleh
 `let`. Untuk menggabung banyak bagian sekaligus, `add` lebih hemat karena tidak menyalin berulang.
-Rangkaian `a & b & c` membuat string perantara di tiap langkah, sedangkan `add` menumbuhkan satu
-buffer yang sama.
+Rangkaian `a & b & c` membuat *string* perantara di tiap langkah, sedangkan `add` menumbuhkan satu
+*buffer* yang sama.
 
 ## Kenapa `s[0] = 'N'` ditolak
 
-String Nim memang bisa diubah di tempat, tapi hanya kalau pengikatnya `var`. Simpan sebagai
+*String* Nim memang bisa diubah di tempat, tapi hanya kalau pengikatnya `var`. Simpan sebagai
 `mutation.nim`:
 
 ```{.nim}
@@ -180,8 +180,8 @@ mutation.nim(2, 2) Error: 's[0]' cannot be assigned to
 ```
 
 *Message* menunjuk *line* 2, kolom 2, tepat di `[0]`. Yang ditolak adalah *assignment* ke *element*, bukan
-penulisan string itu sendiri: `s` dibuat dengan `let`, jadi tidak ada bagiannya yang boleh
-diubah. Ganti `let` menjadi `var` dan program berjalan, print `Nim`.
+penulisan *string* itu sendiri: `s` dibuat dengan `let`, jadi tidak ada bagiannya yang boleh
+diubah. Ganti `let` menjadi `var` dan program berjalan, *print* `Nim`.
 
 ## Memotong dan memecah teks
 
@@ -206,7 +206,7 @@ echo "[" & "  padded  ".strip & "]"
 [padded]
 ```
 
-`split` memecah string menjadi `seq[string]` pada setiap pemisah. Perhatikan *result* `split` masih
+`split` memecah *string* menjadi `seq[string]` pada setiap pemisah. Perhatikan *result* `split` masih
 menyimpan spasi setelah koma; `strip` menghapus spasi di kedua ujung. *Line* *output* yang diapit
 kurung siku dibuat agar spasi tidak terlihat sekilas hilang.
 
@@ -214,28 +214,28 @@ kurung siku dibuat agar spasi tidak terlihat sekilas hilang.
 
 Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
-1. Tampilkan satu string yang berisi tanda kutip ganda dan satu garis miring terbalik dengan escape
+1. Tampilkan satu *string* yang berisi tanda kutip ganda dan satu garis miring terbalik dengan *escape*
    yang benar.
 2. Tanpa menjalankan, prediksi *output*:
    ```{.nim}
    echo "a" & "b" & "c"
    echo "abc".len
    ```
-3. Tulis path `C:\temp\new` memakai raw string, lalu tampilkan.
+3. Tulis *path* `C:\temp\new` memakai *raw string*, lalu tampilkan.
 4. Kode berikut gagal. Perbaiki, lalu jelaskan kenapa gagal:
    ```{.nim}
    let s = "abc"
    s.add("d")
    echo s
    ```
-5. Ambil tiga character terakhir dari `"programming"` dengan slicing, lalu tampilkan *result*-nya.
+5. Ambil tiga *character* terakhir dari `"programming"` dengan *slicing*, lalu tampilkan *result*-nya.
 
 ## Ringkasan
 
-- `\n`, `\"`, dan `\\` adalah escape di string biasa; `r"..."` mematikannya.
+- `\n`, `\"`, dan `\\` adalah *escape* di *string* biasa; `r"..."` mematikannya.
 - Tiga kutip membentuk *multiline string*, dan *newline* setelah pembuka ikut terhitung.
 - `len` memberi jumlah byte, *index* mulai dari nol, dan `^n` dihitung dari belakang.
-- `add` mengubah string di tempat (butuh `var`); `&` membuat string baru.
+- `add` mengubah *string* di tempat (butuh `var`); `&` membuat *string* baru.
 - `split` dan `strip` dari `std/strutils` memecah dan membersihkan teks.
 
 ## Selanjutnya

@@ -1,7 +1,7 @@
-# *Procedure*, parameter, dan *return value*
+# *Procedure*, *parameter*, dan *return value*
 
 Di banyak bahasa, semua rutin disebut "fungsi". Nim memisahkan dua hal: rutin yang boleh mengubah
-keadaan di luar dirinya (`proc`), dan rutin yang dijamin tidak (`func`). Compiler menegakkan
+keadaan di luar dirinya (`proc`), dan rutin yang dijamin tidak (`func`). *Compiler* menegakkan
 pemisahan itu, bukan sekadar menyarankannya.
 
 Bedanya terasa saat kode membesar. Sebuah `func` bisa dibaca tanpa bertanya "apa lagi yang dia
@@ -13,7 +13,7 @@ ubah?", karena jawabannya selalu "tidak ada".
 Setelah bab ini, pembaca bisa menulis *procedure* bertipe jelas, memilih antara `proc` dan `func`,
 memakai *parameter* default, *named argument*, `var` *parameter*, dan `openArray`,
 serta membaca *message*
-error `can have side effects`.
+*error* `can have side effects`.
 :::
 
 ## `proc`: rutin yang boleh punya *side effect*
@@ -64,11 +64,11 @@ main.nim(1, 6) Error: 'shout' can have side effects
 ```
 
 Baca dari depan: *file*, posisi `(line, column)`, tingkat, lalu isi *message*-nya. `(1, 6)` menunjuk
-*line* 1 kolom 6, tepat di nama `shout`. Compiler menambahkan `Hint` yang menyebut `echo` sebagai
+*line* 1 kolom 6, tepat di nama `shout`. *Compiler* menambahkan `Hint` yang menyebut `echo` sebagai
 penyebabnya. Perbaikan langsungnya: ganti `func` menjadi `proc`, karena `echo` write ke layar,
 sebuah *side effect*.
 
-Aturan praktisnya: `func` untuk perhitungan murni, `proc` saat rutin memang print, write
+Aturan praktisnya: `func` untuk perhitungan murni, `proc` saat rutin memang *print*, write
 *file*, atau mengubah *argument*-nya.
 
 ## `result` dan *return value* yang dibangun bertahap
@@ -154,7 +154,7 @@ lagi penting.
 Satu aturan tetap berlaku: *parameter* tanpa *default value* harus di-write sebelum *parameter* yang punya
 *default value*.
 
-## `var` parameter: menulis balik ke *caller*
+## `var` *parameter*: menulis balik ke *caller*
 
 *Parameter* biasa dioper sebagai salinan. Untuk mengubah *value* milik *caller*, tandai *parameter*
 dengan `var`.
@@ -197,9 +197,9 @@ echo total(@[10, 20])
 *Calling* pertama mengirim *array*, yang kedua mengirim *seq*. Satu *procedure* menangani
 keduanya. Batasnya: `openArray` tidak bisa diubah isinya dari dalam *procedure*.
 
-## Overloading: nama sama, *type* berbeda
+## *Overloading*: nama sama, *type* berbeda
 
-Beberapa *procedure* boleh memakai nama yang sama asalkan daftar *parameter*-nya berbeda. Compiler
+Beberapa *procedure* boleh memakai nama yang sama asalkan daftar *parameter*-nya berbeda. *Compiler*
 memilih berdasarkan *type* *argument*.
 
 ```{.nim}
@@ -281,13 +281,13 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
 ## Ringkasan
 
-- `proc` boleh punya *side effect*; `func` dijamin tidak, dan compiler menolak yang melanggar.
+- `proc` boleh punya *side effect*; `func` dijamin tidak, dan *compiler* menolak yang melanggar.
 - *Expression* terakhir menjadi *return value*; `result` untuk *value* bertahap, `return` untuk keluar awal.
 - *Parameter* default dan *named argument* membuat *calling* panjang tetap terbaca.
 - `var` *parameter* menulis balik ke *caller*; `openArray` menerima *array* dan *seq*.
-- *Return value* yang tidak dipakai ditolak compiler; tulis `discard` kalau memang dibuang.
+- *Return value* yang tidak dipakai ditolak *compiler*; tulis `discard` kalau memang dibuang.
 
 ## Selanjutnya
 
-Bab berikutnya membahas [tuple](tuples.qmd): menggabungkan beberapa *value* menjadi satu,
+Bab berikutnya membahas [*tuple*](tuples.qmd): menggabungkan beberapa *value* menjadi satu,
 mengembalikannya dari *procedure*, dan membongkarnya kembali dalam satu *line*.

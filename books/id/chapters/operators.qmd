@@ -4,7 +4,7 @@ Di banyak bahasa, `+` pada dua *integer* menghasilkan *integer*, dan pembagian s
 *float*. Nim membalik sebagian kebiasaan itu: `/` selalu menghasilkan `float`, sedangkan
 pembagian bulat punya operatornya sendiri, `div`.
 
-Kesalahpahaman soal operator kecil, tapi *effect* itu nyata: *result* yang salah tanpa error, atau *type*
+Kesalahpahaman soal operator kecil, tapi *effect* itu nyata: *result* yang salah tanpa *error*, atau *type*
 yang tidak terduga. Bab ini merangkum operator yang paling sering dipakai dan jebakan di
 belakangnya.
 
@@ -12,7 +12,7 @@ belakangnya.
 ## Tujuan bab
 
 Setelah bab ini, pembaca bisa memakai `div` dan `mod` dengan benar untuk bilangan negatif,
-membedakan `/` dari `div`, membaca error `type mismatch` pada operand, serta memakai `and`, `or`,
+membedakan `/` dari `div`, membaca *error* `type mismatch` pada operand, serta memakai `and`, `or`,
 `not`, `in`, dan `notin` dengan pemahaman *short-circuit*.
 :::
 
@@ -96,7 +96,7 @@ true
 ```
 
 Perhatikan *line* pertama. Nim **tidak** mendukung penulisan berantai seperti `18 <= age < 65`; dua
-*comparison* harus disatukan dengan `and`. String dibandingkan secara leksikografis, jadi `"abc"`
+*comparison* harus disatukan dengan `and`. *String* dibandingkan secara leksikografis, jadi `"abc"`
 sama dengan `"abc"` persis, termasuk besar-kecil hurufnya.
 
 ## Logika dan *short-circuit*
@@ -149,7 +149,7 @@ true
 false
 ```
 
-`in` bekerja pada *range*, *set* (`{...}`), dan *array*; lewat `strutils`, juga pada string. *Line*
+`in` bekerja pada *range*, *set* (`{...}`), dan *array*; lewat `strutils`, juga pada *string*. *Line*
 terakhir bernilai `false` karena `4` memang tidak ada di dalam *array* tersebut.
 
 ## Prioritas operator
@@ -180,7 +180,7 @@ operatornya dengan sadar.
 
 ## *Type* yang tidak cocok
 
-Memperbandingkan dua *type* berbeda ditolak compiler. Simpan sebagai `type_error.nim`:
+Memperbandingkan dua *type* berbeda ditolak *compiler*. Simpan sebagai `type_error.nim`:
 
 ```{.nim}
 let a = 5
@@ -197,7 +197,7 @@ Expression: a == b
 ```
 
 *Message* menunjukkan *line* dan kolom, lalu mengutip *expression* yang gagal beserta *type* setiap operan.
-Bagian yang paling berguna ada di bawahnya: compiler mendaftar semua versi `==` yang dikenalnya,
+Bagian yang paling berguna ada di bawahnya: *compiler* mendaftar semua versi `==` yang dikenalnya,
 supaya kita bisa melihat bahwa tidak ada yang menerima pasangan `int` dan `string`. Perbaikannya
 adalah menyamakan *type* lebih dulu, misalnya `a == parseInt(b)`.
 
@@ -214,7 +214,7 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 3. Kenapa `-9 mod 4` bernilai `-1` dan bukan `3`? Jelaskan aturannya.
 4. Tulis kondisi yang bernilai `true` hanya kalau `x` berada di antara 1 dan 100. Ingat bahwa
    penulisan berantai tidak didukung.
-5. Kode berikut error. Perbaiki dan jelaskan *message*-nya:
+5. Kode berikut *error*. Perbaiki dan jelaskan *message*-nya:
    ```{.nim}
    let n = 4
    if n in "4":
@@ -226,8 +226,8 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 - `/` selalu menghasilkan `float`; pembagian bulat memakai `div`, sisanya `mod`.
 - `mod` mengikuti tanda bilangan yang dibagi; membagi dengan nol menghentikan program.
 - `^` berasal dari `std/math` dan menerima `int` maupun `float`.
-- `and` dan `or` mengevaluasi singkat; pada `int` keduanya berarti operasi bitwise.
-- `in` dan `notin` memeriksa keanggotaan pada *range*, *set*, *array*, dan string.
+- `and` dan `or` mengevaluasi singkat; pada `int` keduanya berarti operasi *bitwise*.
+- `in` dan `notin` memeriksa keanggotaan pada *range*, *set*, *array*, dan *string*.
 
 ## Selanjutnya
 

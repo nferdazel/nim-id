@@ -13,14 +13,14 @@ diuji di Nim 2.4.2.
 | *type* di-write eksplisit | `var age: int8 = 24` |
 | tanpa *value* awal, berisi default *type* | `var flag: bool` |
 
-## *Type* dasar dan literal
+## *Type* dasar dan *literal*
 
 | Konsep | Kode |
 |---|---|
 | *integer* | `let n = 42` |
 | *float* | `let f = 3.14` |
 | boolean | `let b = true` |
-| character | `let c = 'x'` |
+| *character* | `let c = 'x'` |
 | teks | `let s = "text"` |
 | *type* bulat berlebar | `int8`, `int16`, `int32`, `int64`, `int` |
 | *float* | `float32`, `float64`, `float` |
@@ -29,19 +29,19 @@ diuji di Nim 2.4.2.
 | pemisah digit | `1_000_000` |
 | konversi | `int(3.9)`, `float(2)`, `$42` |
 
-## String dan `&`
+## *String* dan `&`
 
 | Konsep | Kode |
 |---|---|
-| escape | `"line\n"`, `"tab\t"`, `"quote\""` |
+| *escape* | `"line\n"`, `"tab\t"`, `"quote\""` |
 | interpolasi | `&"{name} has {count}"` |
 | gabung | `"a" & "b"` |
 | *index* | `s[0]`, `s[^1]` |
 | potong | `s[1 .. 3]`, `s[^3 .. ^1]` |
-| satu character bertipe `char` | `s[0]` |
+| satu *character* bertipe `char` | `s[0]` |
 | panjang | `s.len` |
 
-*Raw string* dan *multiline string* di-write tanpa escape:
+*Raw string* dan *multiline string* di-write tanpa *escape*:
 
 ```{.nim}
 let raw = r"C:\temp"
@@ -109,17 +109,17 @@ else:
 | potong | `s[0 .. ^2]` |
 | *parameter* fleksibel | `proc total(xs: openArray[int]): int` |
 
-## Tuple dan destructuring
+## *Tuple* dan *destructuring*
 
 | Konsep | Kode |
 |---|---|
 | *type* bernama | `type Point = tuple[x, y: int]` |
 | *value* | `let p: Point = (x: 1, y: 2)` |
-| akses field | `p.x` |
+| akses *field* | `p.x` |
 | akses posisi | `p[0]` |
 | bongkar jadi *variable* | `let (a, b) = (1, 2)` |
 
-## Object dan `ref object`
+## *Object* dan `ref object`
 
 ```{.nim}
 type
@@ -142,7 +142,7 @@ n.value = 1
 echo n.value
 ```
 
-## Enum dan set
+## *Enum* dan *set*
 
 ```{.nim}
 type Color = enum
@@ -156,7 +156,7 @@ flags.excl red
 echo green in flags
 ```
 
-## *Procedure* dan parameter
+## *Procedure* dan *parameter*
 
 | Konsep | Kode |
 |---|---|
@@ -164,10 +164,10 @@ echo green in flags
 | tanpa *side effect* | `func square(x: int): int = x * x` |
 | *parameter* default | `proc greet(name: string, punctuation = "!")` |
 | *named argument* | `greet(punctuation = "?")` |
-| overloading | `proc show(x: int)` dan `proc show(x: string)` |
+| *overloading* | `proc show(x: int)` dan `proc show(x: string)` |
 | *parameter* `var` | `proc double(x: var int) = x = x * 2` |
 
-## Generic
+## *Generic*
 
 ```{.nim}
 proc largest[T](items: openArray[T]): T =
@@ -181,10 +181,10 @@ echo largest([3, 9, 4])
 
 | Konsep | Kode |
 |---|---|
-| *type* generic | `type Box[T] = object` |
+| *type* *generic* | `type Box[T] = object` |
 | batasan *type* | `proc double[T: SomeNumber](x: T): T` |
 
-## Template
+## *Template*
 
 ```{.nim}
 template twice(body: untyped) =
@@ -195,7 +195,7 @@ twice:
   echo "ping"
 ```
 
-## Macro
+## *Macro*
 
 ```{.nim}
 import std/macros
@@ -207,7 +207,7 @@ macro triple(x: untyped): untyped =
 echo triple(4)
 ```
 
-## Exception dan `raises`
+## *Exception* dan `raises`
 
 ```{.nim}
 try:
@@ -225,7 +225,7 @@ finally:
 | *effect* `raises` | `proc risky(): int {.raises: [ValueError].}` |
 | bersihkan saat keluar | `defer: echo "cleanup"` |
 
-## Iterator
+## *Iterator*
 
 ```{.nim}
 iterator evens(n: int): int =
@@ -330,19 +330,19 @@ echo twice(4)
 int twice(int x) { return x * 2; }
 ```
 
-## Command `nim` dan `nimble`
+## *Command* `nim` dan `nimble`
 
-| Command | Arti |
+| *Command* | Arti |
 |---|---|
 | `nim c file.nim` | compile |
 | `nim r file.nim` | compile lalu jalankan |
 | `nim check file.nim` | periksa *type* saja |
-| `nim c -d:release file.nim` | build teroptimasi |
+| `nim c -d:release file.nim` | *build* teroptimasi |
 | `nim c -o:app file.nim` | tentukan nama biner |
 | `nim c --mm:orc file.nim` | pilih mode *memory* |
 | `nim js file.nim` | compile ke JavaScript |
 | `nim doc file.nim` | buat dokumentasi |
-| `nim c --hints:off file.nim` | senyapkan hint |
+| `nim c --hints:off file.nim` | senyapkan *hint* |
 | `nimble test` | jalankan *test* |
 | `nimble add pkg` | tambah dependensi |
 | `nimble init` | buat *scaffold* |

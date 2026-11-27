@@ -1,8 +1,8 @@
 # Manajemen *memory*: ARC, ORC, dan `=destroy`
 
 Program yang mengalokasikan tanpa pernah membersihkan akan tumbuh sampai kehabisan *memory*. Di
-bahasa dengan garbage collector, itu diurus otomatis; di Nim 2.x, keputusannya diambil saat
-compile lewat mode *memory*. Bab ini menjelaskan ARC dan ORC, lalu hook yang di-call compiler
+bahasa dengan *garbage collector*, itu diurus otomatis; di Nim 2.x, keputusannya diambil saat
+compile lewat mode *memory*. Bab ini menjelaskan ARC dan ORC, lalu *hook* yang di-call *compiler*
 pada saat yang tepat: `=destroy`, `=copy`, dan `=sink`.
 
 ::: {.callout-note}
@@ -10,14 +10,14 @@ pada saat yang tepat: `=destroy`, `=copy`, dan `=sink`.
 
 Setelah bab ini, pembaca bisa menjelaskan perbedaan ARC dan ORC, memverifikasi mode *memory* yang
 aktif, memakai `--mm:arc` dan `--mm:orc`, menulis `=destroy` untuk *type* yang memegang sumber daya,
-serta membaca error tanda tangan hook yang salah.
+serta membaca *error* tanda tangan *hook* yang salah.
 :::
 
 ## Dua mode *memory*: ARC dan ORC
 
 ARC dan ORC sama-sama menghitung referensi. Setiap kali sebuah `ref` disalin, jumlah *pointer*-nya
 bertambah; setiap kali satu hilang, jumlahnya berkurang. Ketika angka itu mencapai nol, *memory*-nya
-dibebaskan saat itu juga. Tidak ada jeda seperti pada garbage collector klasik.
+dibebaskan saat itu juga. Tidak ada jeda seperti pada *garbage collector* klasik.
 
 Bedanya satu: ORC menambahkan pendeteksi siklus. Dua *object* yang saling menunjuk tidak akan pernah
 turun ke nol dengan penghitungan biasa; ORC menemukan pasangan seperti itu dan membebaskannya.
@@ -32,7 +32,7 @@ Sejak Nim 2.x, mode bawaan adalah ORC.
 
 ## Memeriksa mode yang aktif
 
-Compiler mendefinisikan simbol yang bisa diuji dengan `when`.
+*Compiler* mendefinisikan simbol yang bisa diuji dengan `when`.
 
 ```{.nim}
 when defined(gcOrc):
@@ -49,7 +49,7 @@ orc
 
 ## Mengubah mode dengan `--mm`
 
-Untuk memilih mode lain, berikan *flag* ke compiler. *File* contoh `a06_mm_arc.nim` berisi kode yang
+Untuk memilih mode lain, berikan *flag* ke *compiler*. *File* contoh `a06_mm_arc.nim` berisi kode yang
 sama dengan di atas, dengan *file* `a06_mm_arc.mode` berisi `--mm:arc`. Jalankan dengan
 `nim c -r --mm:arc main.nim`, dan *output*-nya menjadi `arc`, karena *flag* itu mendefinisikan
 `gcArc` dan bukan `gcOrc`. Ganti *flag* menjadi `--mm:orc` untuk kembali ke mode bawaan. Verifikasi
@@ -91,7 +91,7 @@ after block
 destroy outer
 ```
 
-Bacalah urutannya. `make()` print `make`, lalu mengembalikan sebuah `Box`; *value* itu disimpan di
+Bacalah urutannya. `make()` *print* `make`, lalu mengembalikan sebuah `Box`; *value* itu disimpan di
 `y`. Di akhir blok, `y` keluar dari *scope* dan `=destroy` di-call untuknya, jadi
 `destroy temp` muncul sebelum `after block`. `x` baru dibuang di akhir `main()`, jadi
 `destroy outer` paling akhir.
@@ -104,7 +104,7 @@ Dari urutan di atas, aturannya jelas:
 - ***Value* sementara.** Dibuang paling cepat di akhir *statement* yang memakainya, dan sering baru
   di akhir *scope*. Jangan bergantung pada momen persisnya.
 - **Penimpaan.** Saat sebuah *variable* ditimpa *value* baru, *value* lamanya dibuang lebih dulu, kecuali
-  *type* itu punya hook `=copy` atau `=sink` sendiri: hook itulah yang bertanggung jawab.
+  *type* itu punya *hook* `=copy` atau `=sink` sendiri: *hook* itulah yang bertanggung jawab.
 
 Yang tidak terjadi: `=destroy` tidak di-call tepat saat *value* dibuat, dan tidak di-call untuk
 `ptr` yang menunjuk ke *value* itu.
@@ -132,17 +132,17 @@ b = a
 ```
 
 `var b = a` menyalin dari sebuah *variable*, jadi `=copy` yang di-call. Definisi di atas menyalin
-fieldnya secara dangkal. Untuk *type* yang memegang *file* atau *pointer*, `=copy` perlu membuat
+*fieldnya* secara dangkal. Untuk *type* yang memegang *file* atau *pointer*, `=copy` perlu membuat
 salinan yang benar-benar terpisah, bukan menyalin *pointer*-nya.
 
-Hook di atas juga belum membuang *value* lama di `dest`. Itu disengaja supaya contohnya pendek:
+*Hook* di atas juga belum membuang *value* lama di `dest`. Itu disengaja supaya contohnya pendek:
 begitu kita write `=copy` sendiri, tanggung jawab itu pindah ke kita. Pada *type* pemilik sumber
-daya, awali hook dengan `=destroy(dest)`, kalau tidak sumber daya lama bocor setiap kali *value*
+daya, awali *hook* dengan `=destroy(dest)`, kalau tidak sumber daya lama bocor setiap kali *value*
 ditimpa.
 
 ## `=sink`: menyerap *value* sementara
 
-Kalau sumbernya *value* sementara yang tidak dipakai lagi, compiler memilih `=sink`, bukan `=copy`.
+Kalau sumbernya *value* sementara yang tidak dipakai lagi, *compiler* memilih `=sink`, bukan `=copy`.
 
 ```{.nim}
 type Box = object
@@ -164,13 +164,13 @@ d = temp
 
 `Box(name: "temp")` adalah *value* sementara; menugaskannya ke `d` bisa memindahkan isinya, jadi
 `=sink` di-call. Kalau sumbernya *variable* biasa, *path* yang dipakai `=copy`. Sama seperti
-`=copy`, hook ini mengambil alih tanggung jawab membuang *value* lama: `d` berisi `old` sebelum
+`=copy`, *hook* ini mengambil alih tanggung jawab membuang *value* lama: `d` berisi `old` sebelum
 ditimpa, dan contoh di atas tidak call `=destroy(dest)`, jadi *type* pemilik sumber daya perlu
 menambahkannya sendiri.
 
-## `move`: memindahkan tanpa hook
+## `move`: memindahkan tanpa *hook*
 
-`move` memberi tahu compiler bahwa sumbernya memang boleh dikosongkan.
+`move` memberi tahu *compiler* bahwa sumbernya memang boleh dikosongkan.
 
 ```{.nim}
 type Box = object
@@ -191,9 +191,9 @@ a = ""
 `=wasMoved`; sebuah `string` kembali menjadi `""`. Setelah `move`, isi `a` tidak boleh diandalkan
 lagi.
 
-## Membaca error: tanda tangan hook yang salah
+## Membaca *error*: tanda tangan *hook* yang salah
 
-Setiap hook punya tanda tangan yang ditetapkan compiler.
+Setiap *hook* punya tanda tangan yang ditetapkan *compiler*.
 
 ```{.nim}
 type Box = object
@@ -216,15 +216,15 @@ diharapkan lengkap: `proc[T: object](x: var T; y: T)`. Samakan tanda tangannya d
 
 ## Aturan praktis
 
-Biarkan hook bawaan kalau *type* hanya berisi data biasa; compiler sudah menyediakan `=destroy`,
-`=copy`, dan `=sink` yang benar. Tulis hook sendiri hanya saat *type* memegang sumber daya di luar
+Biarkan *hook* bawaan kalau *type* hanya berisi data biasa; *compiler* sudah menyediakan `=destroy`,
+`=copy`, dan `=sink` yang benar. Tulis *hook* sendiri hanya saat *type* memegang sumber daya di luar
 *memory* terkelola, misalnya *file*, *socket*, atau *memory* yang dialokasikan manual.
 
 ## Latihan
 
 Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
-1. Tulis *type* `Handle` dengan `=destroy` yang print `close`; alokasikan di dalam sebuah blok dan
+1. Tulis *type* `Handle` dengan `=destroy` yang *print* `close`; alokasikan di dalam sebuah blok dan
    amati kapan *message*-nya muncul.
 2. Tanpa menjalankan, prediksi *output*-nya:
    ```{.nim}
@@ -260,7 +260,7 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 - `=destroy` di-call di akhir *scope*, saat *value* sementara habis, dan saat *value* ditimpa.
 - `=copy` menyalin dari *variable*, `=sink` menyerap *value* sementara, `move` memindahkan tanpa
   keduanya.
-- Tulis hook hanya kalau *type* memegang sumber daya di luar *memory* terkelola.
+- Tulis *hook* hanya kalau *type* memegang sumber daya di luar *memory* terkelola.
 
 ## Selanjutnya
 

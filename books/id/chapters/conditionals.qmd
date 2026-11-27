@@ -37,9 +37,9 @@ cool
 Tiga hal yang berbeda dari banyak bahasa lain:
 
 - Kondisi tidak perlu tanda kurung. Titik dua `:` menutup kondisi, dan isi blok di-write menjorok.
-- Indentasi menentukan batas blok, jadi jangan mencampur tab dan spasi dalam satu *file*. Gaya resmi
+- Indentasi menentukan batas blok, jadi jangan mencampur *tab* dan spasi dalam satu *file*. Gaya resmi
   Nim memakai dua spasi.
-- Nim memakai kata kunci `elif`. `else if` tidak dikenal compiler.
+- Nim memakai kata kunci `elif`. `else if` tidak dikenal *compiler*.
 
 ## `if` sebagai *expression*
 
@@ -100,7 +100,7 @@ Satu `of` bisa memuat daftar *value* yang dipisah koma (`12, 1, 2`) atau *range*
 `string`. *Range* hanya berlaku untuk *type* ordinal: pada `string`, `of` menerima daftar *value* saja,
 dan `of "a" .. "c"` ditolak dengan *message* `range of string is invalid`.
 
-## `when`: cabang yang dipilih compiler
+## `when`: cabang yang dipilih *compiler*
 
 `when` terlihat seperti `if`, tapi diputuskan **saat *compile***. Hanya cabang yang terpilih yang
 benar-benar di-compile.
@@ -125,7 +125,7 @@ Pola ini juga dipakai untuk `when isMainModule:` atau `when sizeof(int) == 8:`.
 
 ## Membaca *error message*: kondisi harus `bool`
 
-Nim tidak mengonversi *value* lain menjadi boolean. Angka `0`, string kosong, dan `nil` bukan `false`.
+Nim tidak mengonversi *value* lain menjadi boolean. Angka `0`, *string* kosong, dan `nil` bukan `false`.
 
 ```{.nim}
 var count = 3
@@ -164,7 +164,7 @@ main.nim(2, 3) Error: not all cases are covered
 ```
 
 `case` pada `int` tidak bisa dihabiskan. *Value* `2`, `3`, sampai jutaan lain tidak punya cabang. Nim
-menolaknya di depan, bukan menyerahkan masalah ke runtime. Tambahkan `else:` untuk menangani sisanya.
+menolaknya di depan, bukan menyerahkan masalah ke *runtime*. Tambahkan `else:` untuk menangani sisanya.
 Untuk *type* tertutup seperti `bool` atau `enum`, daftar `of` yang lengkap bisa menghabiskan `case`
 tanpa `else`.
 
@@ -177,7 +177,7 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
    atau `"adult"` (20 ke atas), lalu tampilkan *result*-nya.
 3. Tulis *procedure* yang menerima `char` dan memakai `case` untuk mengembalikan `"vowel"` untuk
    `'a'`/`'i'`/`'u'`/`'e'`/`'o'`, `"digit"` untuk `'0' .. '9'`, dan `"other"` untuk sisanya.
-4. Kode berikut gagal di-compile. Perbaiki, lalu sebutkan *line* dan kolom yang ditunjuk compiler:
+4. Kode berikut gagal di-compile. Perbaiki, lalu sebutkan *line* dan kolom yang ditunjuk *compiler*:
    ```{.nim}
    var name = "Nim"
 
@@ -191,7 +191,7 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 `bool`; Nim tidak menganggap `0` atau `""` sebagai salah.
 - `if` adalah *expression*; kalau dipakai sebagai *value*, semua cabang harus bertipe sama dan `else` wajib.
 - `case` mendukung daftar *value* (`12, 1, 2`) dan *range* (`3 .. 5`); `of` yang tidak lengkap tanpa
-  `else` ditolak compiler.
+  `else` ditolak *compiler*.
 - `when` memilih cabang saat compile; hanya cabang terpilih yang di-compile.
 ## Selanjutnya
 

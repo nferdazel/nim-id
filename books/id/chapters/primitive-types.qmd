@@ -1,21 +1,21 @@
-# *Data type* primitif dan literal
+# *Data type* primitif dan *literal*
 
 Di bahasa lain, satu *type* `int` cukup untuk semua bilangan. Di Nim, *integer* dipecah menurut
 lebar bit, dan pilihan itu menentukan *range* *value* sekaligus jumlah *memory* yang dipakai.
 
 Pilih terlalu sempit, program berhenti dengan `OverflowDefect` di tengah jalan. Pilih terlalu
-lebar, *memory* terbuang percuma. Bab ini memetakan *type* primitif Nim, literal yang membentuknya,
+lebar, *memory* terbuang percuma. Bab ini memetakan *type* primitif Nim, *literal* yang membentuknya,
 dan cara berpindah antar *type* tanpa kehilangan data.
 
 ::: {.callout-note}
 ## Tujuan bab
 
-Setelah bab ini, pembaca bisa memilih *type* integer sesuai *range* yang dibutuhkan, membaca error
-overflow, menulis literal heksadesimal dan biner, serta mengonversi *value* antar *type* dengan sadar
+Setelah bab ini, pembaca bisa memilih *type* *integer* sesuai *range* yang dibutuhkan, membaca *error*
+*overflow*, menulis *literal* heksadesimal dan biner, serta mengonversi *value* antar *type* dengan sadar
 apa yang terjadi pada *value* itu.
 :::
 
-## *Range* dan ukuran setiap *type* integer
+## *Range* dan ukuran setiap *type* *integer*
 
 Simpan kode berikut sebagai `ranges.nim`, lalu jalankan dengan `nim r ranges.nim`.
 
@@ -53,7 +53,7 @@ Polanya konsisten: setiap tambahan satu bit menggandakan *range* itu.
 dijalankan. Pakai *type* berlebar tetap hanya kalau ukurannya memang penting, misalnya saat membaca
 format biner atau menghemat *memory* di dalam struktur besar.
 
-## Literal numerik
+## *Literal* numerik
 
 *Value* yang sama bisa ditulis dengan beberapa cara. Semuanya menghasilkan bilangan, bukan teks.
 
@@ -76,7 +76,7 @@ echo 2e3          # scientific notation is a float
 ```
 
 Awalan `0x` menandai heksadesimal, `0b` biner, dan `0o` oktal. Garis bawah di dalam angka hanya
-tool mata; compiler mengabaikannya. *Line* terakhir terlihat seperti *integer*, tapi
+tool mata; *compiler* mengabaikannya. *Line* terakhir terlihat seperti *integer*, tapi
 `2e3` adalah `float`; karena itu *result*-nya `2000.0`, bukan `2000`.
 
 ## Ketika *value* melewati batas
@@ -95,12 +95,12 @@ Error: unhandled exception: over- or underflow [OverflowDefect]
 ```
 
 *Message* pertama menyebut *file* dan *line*. *Message* kedua menyebut jenis masalahnya: `OverflowDefect`.
-Secara bawaan Nim memeriksa overflow dan menghentikan program, bukan diam-diam membungkus *value* itu
+Secara bawaan Nim memeriksa *overflow* dan menghentikan program, bukan diam-diam membungkus *value* itu
 menjadi −128. Pemeriksaan itu bisa dimatikan dengan `--overflowChecks:off` (atau `-d:danger`),
 dan saat itu *line* di atas benar-benar menghasilkan −128. Jangan lakukan itu untuk menghilangkan
-error; *result* yang membungkus hampir selalu bug yang lebih sulit dilacak.
+*error*; *result* yang membungkus hampir selalu bug yang lebih sulit dilacak.
 
-Kalau *value* itu sudah diketahui saat menulis kode, compiler menangkapnya lebih awal:
+Kalau *value* itu sudah diketahui saat menulis kode, *compiler* menangkapnya lebih awal:
 
 ```{.nim}
 const TooBig: int8 = 127 + 1
@@ -111,7 +111,7 @@ echo TooBig
 Error: type mismatch: got 'int literal(128)' for '128' but expected 'int8'
 ```
 
-Di sini tidak ada program yang dijalankan; compiler mengevaluasi `127 + 1` dan melihat *result*-nya
+Di sini tidak ada program yang dijalankan; *compiler* mengevaluasi `127 + 1` dan melihat *result*-nya
 tidak cocok dengan `int8`.
 
 ## *Float*: `float32` dan `float64`
@@ -139,7 +139,7 @@ false
 ```
 
 `float32` menyimpan sekitar tujuh angka penting, `float64` sekitar lima belas. Konsekuensinya,
-`1.0 / 3.0` berbeda presisi saat dihitung sebagai `float32`. Akhiran `'f32` memaksa sebuah literal
+`1.0 / 3.0` berbeda presisi saat dihitung sebagai `float32`. Akhiran `'f32` memaksa sebuah *literal*
 menjadi `float32`. *Line* terakhir memperlihatkan hal yang sering mengejutkan: `0.1 + 0.2` dan `0.3`
 bukan *value* yang sama persis, karena keduanya tidak bisa disimpan dengan tepat dalam biner. Karena
 itu jangan membandingkan *float* dengan `==`; bandingkan selisihnya dengan toleransi.
@@ -171,7 +171,7 @@ echo $ratio
 ```
 
 `int(ratio)` membuang bagian pecahan; *result*-nya 2, bukan 3, karena pemotongan terjadi ke arah nol.
-Sebaliknya `$` mengubah *value* menjadi string, dan `parseInt` melakukan arah kebalikannya. Perhatikan
+Sebaliknya `$` mengubah *value* menjadi *string*, dan `parseInt` melakukan arah kebalikannya. Perhatikan
 bahwa `int("128")` tidak bekerja; teks harus melewati `parseInt` lebih dulu.
 
 ## `bool` dan `char`
@@ -203,16 +203,16 @@ true
 
 `char` di-write dengan kutip tunggal dan menyimpan satu byte. `.ord` memberinya kode numerik,
 `char(...)` dan `chr(...)` melakukan arah sebaliknya. *Expression* `'\n' == char(10)` benar karena
-`\n` memang character dengan kode 10. `bool` hanya berisi `true` atau `false` dan menjadi bahan
+`\n` memang *character* dengan kode 10. `bool` hanya berisi `true` atau `false` dan menjadi bahan
 operator logika di bab operator.
 
 ## Latihan
 
 Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
-1. Tulis tiga literal, yaitu `0xFF`, `0b1010`, dan `1_000`. Prediksi *output* `echo` untuk masing-masing
+1. Tulis tiga *literal*, yaitu `0xFF`, `0b1010`, dan `1_000`. Prediksi *output* `echo` untuk masing-masing
    sebelum menjalankannya.
-2. Apa yang terjadi pada kode ini, dan mengapa *message*-nya muncul saat runtime, bukan saat compile?
+2. Apa yang terjadi pada kode ini, dan mengapa *message*-nya muncul saat *runtime*, bukan saat compile?
    ```{.nim}
    var n: int8 = 127
    n = n + 1
@@ -226,13 +226,13 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 ## Ringkasan
 
 - `int8` sampai `int64` punya lebar tetap; `int` mengikuti ukuran mesin.
-- Awalan `0x`, `0b`, dan `0o` write literal dalam basis lain; `_` diabaikan.
-- Overflow pada *integer* menghentikan program dengan `OverflowDefect`, bukan membungkus
+- Awalan `0x`, `0b`, dan `0o` write *literal* dalam basis lain; `_` diabaikan.
+- *Overflow* pada *integer* menghentikan program dengan `OverflowDefect`, bukan membungkus
   diam-diam.
 - `float` sama dengan `float64`; jangan bandingkan *float* dengan `==`.
 - Konversi selalu eksplisit: `int(...)`, `float(...)`, `$`, dan `parseInt`.
 
 ## Selanjutnya
 
-Bab berikutnya membahas `string`: escape sequence, raw string, *multiline string*, serta cara
-mengambil sebagian teks dengan *index* dan slicing.
+Bab berikutnya membahas `string`: *escape sequence*, *raw string*, *multiline string*, serta cara
+mengambil sebagian teks dengan *index* dan *slicing*.

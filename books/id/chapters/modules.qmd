@@ -115,10 +115,10 @@ Hello, Ada
 `a05_facade` tidak mendefinisikan `greet` sendiri. Ia hanya meneruskan. Pola ini menyembunyikan
 susunan internal sebuah *package* dan menyediakan satu *entry point*.
 
-## Nama *module* harus identifier yang sah
+## Nama *module* harus *identifier* yang sah
 
-Nama *module* harus identifier Nim yang sah. Nama tidak boleh diawali angka dan tidak boleh memuat
-tanda hubung. Compiler menolaknya sebelum sempat read isi *file*.
+Nama *module* harus *identifier* Nim yang sah. Nama tidak boleh diawali angka dan tidak boleh memuat
+tanda hubung. *Compiler* menolaknya sebelum sempat read isi *file*.
 
 ```{.nim}
 echo "this file is fine; its name is not"
@@ -160,7 +160,7 @@ akses lengkapnya `format.upper`, bukan `textutils/format.upper`. Aturan yang sam
 
 ## `include`: menyisipkan *file*, bukan mengimpor
 
-`include` tidak membuat *module* baru. Ia menyalin isi *file* ke posisi command itu, seakan di-write di
+`include` tidak membuat *module* baru. Ia menyalin isi *file* ke posisi *command* itu, seakan di-write di
 sana. Karena itu `include` berguna untuk memecah satu *module* yang sangat panjang, bukan untuk
 memisahkan tanggung jawab.
 
@@ -180,12 +180,12 @@ notes
 
 Perhatikan `appName` dipakai langsung, tanpa awalan *module*. Tidak ada *module* yang dibuat. Karena
 `include` bekerja dengan menyalin teks, satu nama di dalamnya bisa bertabrakan dengan nama di
-*file* induk tanpa *warning* dari compiler. Untuk memisahkan kode, `import` hampir selalu pilihan
+*file* induk tanpa *warning* dari *compiler*. Untuk memisahkan kode, `import` hampir selalu pilihan
 yang lebih aman.
 
-## Membaca error: *module* tidak ditemukan
+## Membaca *error*: *module* tidak ditemukan
 
-Kalau nama *module* salah, compiler mencarinya di *file* dan berhenti.
+Kalau nama *module* salah, *compiler* mencarinya di *file* dan berhenti.
 
 ```{.nim}
 import not_a_real_module
@@ -197,10 +197,10 @@ echo "never reached"
 main.nim(1, 8) Error: cannot open file: not_a_real_module
 ```
 
-Posisi `(1, 8)` menunjuk nama *module* di *line* `import`. Compiler tidak tahu *file* itu memang tidak
-ada atau hanya salah ketik, jadi *message*-nya literal: *file* tidak bisa dibuka. Periksa kembali nama
+Posisi `(1, 8)` menunjuk nama *module* di *line* `import`. *Compiler* tidak tahu *file* itu memang tidak
+ada atau hanya salah ketik, jadi *message*-nya *literal*: *file* tidak bisa dibuka. Periksa kembali nama
 *file* dan letaknya. Untuk *standard library*, awalan `std/` adalah konvensi yang membuat asal *module*
-jelas: `import std/strutils`. Bentuk tanpa awalan masih dikenali compiler, tetapi tidak menunjukkan
+jelas: `import std/strutils`. Bentuk tanpa awalan masih dikenali *compiler*, tetapi tidak menunjukkan
 bahwa *module* itu bagian dari *standard library*.
 
 ## Latihan
@@ -221,7 +221,7 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
 ## Ringkasan
 
-- Satu *file* Nim adalah satu *module*; nama *file* menjadi nama *module*, dan harus identifier yang sah.
+- Satu *file* Nim adalah satu *module*; nama *file* menjadi nama *module*, dan harus *identifier* yang sah.
 - Tanpa tanda `*`, simbol tidak keluar dari *module* itu.
 - `import` membuka semua nama yang diekspor, `from ... import` membuka sebagian, `export` meneruskan.
 - *Module* di *directory* tetap bernama *file* itu, bukan *path* itu.

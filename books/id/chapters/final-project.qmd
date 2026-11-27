@@ -3,14 +3,14 @@
 Tool kecil yang berguna hampir selalu punya bentuk yang sama: beberapa *module*, satu *file* data,
 beberapa *subcommand*, dan beberapa *test*. Bagian C sudah menutup potongan yang dibutuhkan tool ini.
 Sekarang potongan itu disatukan menjadi satu program yang benar-benar bisa dipakai: `notes`, tool
-command line untuk mencatat hal-hal pendek.
+*command line* untuk mencatat hal-hal pendek.
 
 ::: {.callout-note}
 ## Tujuan bab
 
 Setelah bab ini, pembaca bisa memecah satu tool kecil menjadi *module* terpisah, menyimpan data ke
 *file* JSON, membaca *subcommand* dengan `std/parseopt`, menulis *test*-nya dengan `std/unittest`, dan
-membaca *error message* ketika JSON diperlakukan seperti object biasa.
+membaca *error message* ketika JSON diperlakukan seperti *object* biasa.
 :::
 
 ## Langkah 1: satu catatan menjadi JSON
@@ -126,7 +126,7 @@ left: 1
 *Module* ini adalah seluruh aturan penyimpanan dalam satu tempat. `loadNotes` return *seq*
 kosong kalau *file* itu belum ada, sehingga *caller* pertama tidak perlu menanganinya sendiri.
 `removeNote` return `bool` sebagai laporan, bukan menghentikan program dengan *exception*,
-karena *index* di luar *range* adalah error pemakaian yang wajar. `writeFile` menulis langsung ke
+karena *index* di luar *range* adalah *error* pemakaian yang wajar. `writeFile` menulis langsung ke
 *file* tujuan: kalau proses berhenti di tengah, isinya bisa tinggal separuh. Pola yang lebih aman
 adalah menulis ke *file* sementara lalu memindahkannya dengan `moveFile`; bab ini memakai bentuk
 sederhana dan meninggalkan penggantian itu sebagai latihan.
@@ -138,7 +138,7 @@ lalu menghapusnya sendiri di akhir.
 
 ## Langkah 3: *subcommand*
 
-Lapisan terakhir adalah tool command line itu. Simpan sebagai `a03_main.nim`.
+Lapisan terakhir adalah tool *command line* itu. Simpan sebagai `a03_main.nim`.
 
 ```{.nim}
 import std/[parseopt, os, strutils]
@@ -234,7 +234,7 @@ options:
   -f, --file:path  where the notes are stored
 ```
 
-Dijalankan tanpa *argument*, program print teks bantuan. *Argument* pertama menjadi nama *subcommand*,
+Dijalankan tanpa *argument*, program *print* teks bantuan. *Argument* pertama menjadi nama *subcommand*,
 sisanya menjadi operand; *option* dikenali dari tanda hubung, dan `std/parseopt` sudah membedakan
 keduanya. *Exit code* di-return sebagai `int`, lalu diteruskan ke `quit`, sehingga skrip lain
 bisa memeriksa keberhasilannya. Satu tempat masih memeriksa *input*: *index* untuk `remove` lewat
@@ -317,9 +317,9 @@ sebelum dan sesudah tiap kasus, sehingga urutan pelaksanaan tidak lagi penting d
 mewarisi sisa *test* sebelumnya. *Test* jenis ini yang membuat program kecil tetap bisa diubah setelah
 berbulan-bulan.
 
-## Error sengaja: `JsonNode` bukan object biasa
+## *Error* sengaja: `JsonNode` bukan *object* biasa
 
-Object yang didefinisikan sendiri punya field bernama. `JsonNode` tidak.
+*Object* yang didefinisikan sendiri punya *field* bernama. `JsonNode` tidak.
 
 ```{.nim}
 import std/json
@@ -334,8 +334,8 @@ echo note.text
 main.nim(6, 10) Error: undeclared field: 'text' for type json.JsonNode [type declared in json.nim(194, 3)]
 ```
 
-*Message* ini menunjuk *line* 6 kolom 10, tepat di `.text`, lalu menyebut sebabnya: field bernama `text`
-tidak ada pada `json.JsonNode`. Di dalam tanda kurung, compiler juga menyebut *file* tempat *type* itu
+*Message* ini menunjuk *line* 6 kolom 10, tepat di `.text`, lalu menyebut sebabnya: *field* bernama `text`
+tidak ada pada `json.JsonNode`. Di dalam tanda kurung, *compiler* juga menyebut *file* tempat *type* itu
 dideklarasikan, supaya jelas *type* mana yang dimaksud. Nomor *line* di dalam kurung itu milik
 Nim 2.4.2 dan bisa bergeser di versi lain. Perbaikannya memakai *index* seperti *object* JSON
 sesungguhnya: `note["text"]`, lalu diterjemahkan dengan `getStr` menjadi `string`.

@@ -3,13 +3,13 @@
 Biner yang dihasilkan di laptop tidak otomatis berjalan di mesin lain. Format *file* yang bisa
 dijalankan berbeda antara sistem operasi, dan instruksi prosesornya pun berbeda. Nim bisa
 mengarahkan *result*-nya ke sistem lain, tetapi tidak dengan satu *flag* ajaib: *result*-nya hanya sebaik
-toolchain C yang tersedia di mesin pengembang.
+*toolchain* C yang tersedia di mesin pengembang.
 
 ::: {.callout-note}
 ## Tujuan bab
 
 Setelah bab ini, pembaca bisa memilih target dengan `--os` dan `--cpu`, menyalakan fitur dari
-command line lewat `-d:` dan `{.strdefine.}`, membedakan `-d:release`, `--opt:speed`, dan `-d:danger`,
+*command line* lewat `-d:` dan `{.strdefine.}`, membedakan `-d:release`, `--opt:speed`, dan `-d:danger`,
 membuat biner statis, serta tahu kapan cross-compile akan gagal karena toolchain-nya tidak ada.
 :::
 
@@ -19,7 +19,7 @@ Dua *flag* menentukan mesin tujuan. `--os` memilih sistem operasi, `--cpu` memil
 prosesor. *Value* yang umum: `linux`, `windows`, `macosx` untuk sistem, dan `amd64`, `arm64`, `i386`,
 `arm` untuk prosesor.
 
-Cara paling aman memeriksa target adalah bertanya kepada compiler. `defined` dan `when` dijawab
+Cara paling aman memeriksa target adalah bertanya kepada *compiler*. `defined` dan `when` dijawab
 sebelum program berjalan, sementara `hostOS` dan `hostCPU` menyimpan nama yang sama untuk dibaca
 program. Keduanya berasal dari `system`, jadi tidak perlu diimpor.
 
@@ -50,15 +50,15 @@ hostOS agrees with defined(linux): true
 hostCPU is set: true
 ```
 
-Contoh ini sengaja tidak print *value* `hostOS` dan `hostCPU` mentah. *Value* itu berbeda antara
+Contoh ini sengaja tidak *print* *value* `hostOS` dan `hostCPU` mentah. *Value* itu berbeda antara
 mesin pengembang dan mesin pemeriksa, sehingga blok *output*-nya tidak akan pernah cocok. Yang
 di-print adalah *comparison* yang sama di semua mesin unix-like: apakah cabang `when` sesuai dengan
 `hostOS`, dan apakah `hostCPU` terisi.
 
-## Menyalakan fitur dari command line
+## Menyalakan fitur dari *command line*
 
 Selain `--os` dan `--cpu`, ada `-d:nama` untuk mendefinisikan simbol. Simbol itu di-read `when`, jadi
-pilihan build tidak perlu mengubah kode.
+pilihan *build* tidak perlu mengubah kode.
 
 ```{.nim}
 # `-d:symbol` sets a compile-time flag that `when` can see.
@@ -82,7 +82,7 @@ target name: host
 workers: 1
 ```
 
-Tanpa *flag* tambahan, *output*-nya seperti di atas: build default, nama default, dan satu pekerja.
+Tanpa *flag* tambahan, *output*-nya seperti di atas: *build* default, nama default, dan satu pekerja.
 Dijalankan dengan `nim c -r -d:release -d:targetName=server -d:workers=4`, *line* pertama berubah
 menjadi `release` dan dua *line* berikutnya mengikuti *value* yang diberikan.
 
@@ -113,8 +113,8 @@ danger define is not set
 ```
 
 Contoh di atas dijalankan dengan `nim c -r -d:release`. `-d:release` menyalakan optimasi dan
-mematikan *stack trace*; pemeriksaan runtime tetap aktif. `--opt:speed` mengurus optimasinya saja,
-tanpa mengubah yang lain. `-d:danger` melangkah lebih jauh: ia mematikan semua pemeriksaan runtime.
+mematikan *stack trace*; pemeriksaan *runtime* tetap aktif. `--opt:speed` mengurus optimasinya saja,
+tanpa mengubah yang lain. `-d:danger` melangkah lebih jauh: ia mematikan semua pemeriksaan *runtime*.
 
 ```{.nim}
 when defined(danger):
@@ -141,27 +141,27 @@ biner yang sudah terbukti benar, bukan untuk tahap menulis kode.
 ## Biner statis
 
 Biner yang di-compile di satu distribusi kadang menolak berjalan di distribusi lain karena versi
-library C-nya berbeda. Penaut bisa diminta memasukkan seluruh library ke dalam biner:
+*library* C-nya berbeda. Penaut bisa diminta memasukkan seluruh *library* ke dalam biner:
 
 ```bash
 nim c -d:release --passL:-static --out:app app.nim
 ```
 
-*Result*-nya biner statis: tidak mencari library C saat dijalankan, jadi lebih aman dipindahkan.
+*Result*-nya biner statis: tidak mencari *library* C saat dijalankan, jadi lebih aman dipindahkan.
 *Flag* ini untuk target Linux. Penaut macOS tidak mengenalnya, dan percobaan di Nim 2.4.2 berhenti
 dengan `ld: library 'crt0.o' not found`.
 
-`--passL` meneruskan *option* ke penaut, `--passC` meneruskan *option* ke compiler C. Keduanya jembatan
+`--passL` meneruskan *option* ke penaut, `--passC` meneruskan *option* ke *compiler* C. Keduanya jembatan
 ketika Nim belum punya *flag*-nya sendiri:
 
 ```bash
 nim c --passC:-DLOG_LEVEL=2 --passL:-lm --out:app app.nim
 ```
 
-Pakai keduanya seperlunya. *Option* yang tidak dipahami compiler C akan menggagalkan build, dan
-*message*-nya datang dari compiler C, bukan dari Nim.
+Pakai keduanya seperlunya. *Option* yang tidak dipahami *compiler* C akan menggagalkan *build*, dan
+*message*-nya datang dari *compiler* C, bukan dari Nim.
 
-## Error sengaja: `when` butuh *value* compile-time
+## *Error* sengaja: `when` butuh *value* compile-time
 
 `when` berbeda dari `if`. Cabangnya dipilih saat compile, jadi syaratnya harus bisa dihitung saat
 itu juga.
@@ -185,29 +185,29 @@ main.nim(6, 6) Error: cannot evaluate at compile time: requested
 dan itu terjadi setelah biner berjalan. Perbaikannya mengganti `when` dengan `if`, atau memindahkan
 syaratnya ke `const` yang bisa dihitung saat compile.
 
-## Keterbatasan: toolchain C untuk target
+## Keterbatasan: *toolchain* C untuk target
 
 `--os` dan `--cpu` hanya memberi tahu Nim mau ke mana. Yang benar-benar membentuk biner adalah
-compiler C, dan ia harus tersedia untuk target itu.
+*compiler* C, dan ia harus tersedia untuk target itu.
 
 ```bash
 # Needs a MinGW toolchain; without one the C compiler stops at windows.h.
 nim c -d:mingw --os:windows --cpu:amd64 --out:app.exe app.nim
 ```
 
-Tanpa toolchain tersebut, build berhenti di compiler C dengan
+Tanpa *toolchain* tersebut, *build* berhenti di *compiler* C dengan
 `fatal error: 'windows.h' file not found`. Di Linux, *package* MinGW menyediakan
 `x86_64-w64-mingw32-gcc`, dan Nim sudah menyiapkan pemetaannya di `config/nim.cfg` pada bagian
 `@if unix and mingw`.
 
 Perilaku yang lebih halus: mengubah `--os` saja tidak selalu gagal. Di macOS,
 `--os:linux --cpu:amd64` berjalan sampai selesai dan meninggalkan *file* Mach-O, bukan ELF. Nim percaya dirinya
-membuat biner Linux, sementara compiler C tetap menghasilkan biner host. Biner seperti itu tidak
-berguna; error barunya muncul jauh kemudian, saat dijalankan di mesin tujuan.
+membuat biner Linux, sementara *compiler* C tetap menghasilkan biner host. Biner seperti itu tidak
+berguna; *error* barunya muncul jauh kemudian, saat dijalankan di mesin tujuan.
 
-## Command per target
+## *Command* per target
 
-Beberapa command yang sering dipakai, lengkap dengan catatannya:
+Beberapa *command* yang sering dipakai, lengkap dengan catatannya:
 
 ```bash
 # Native release build for the machine doing the compiling.
@@ -222,7 +222,7 @@ ssh server 'chmod +x /srv/app/app && /srv/app/app --version'
 ```
 
 Proyek yang memakai nimble bisa menitipkan *flag* yang sama lewat `nimble build`, karena *argument*
-tambahan diteruskan ke compiler Nim:
+tambahan diteruskan ke *compiler* Nim:
 
 ```bash
 nimble build --os:windows --cpu:amd64 -d:release
@@ -236,7 +236,7 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
    *output* contoh pertama.
 2. Tanpa menjalankan, prediksi *output*-nya kalau contoh kedua di-compile dengan
    `-d:release -d:workers=8`.
-3. Tulis program yang print `"windows target"` atau `"unix target"` memakai `when defined`, lalu
+3. Tulis program yang *print* `"windows target"` atau `"unix target"` memakai `when defined`, lalu
    sebutkan apa yang terjadi pada cabang yang tidak dipilih.
 4. Kode berikut gagal di-compile. Perbaiki, lalu jelaskan *message*-nya:
    `let mode = paramStr(1)` diikuti `when mode == "--debug": echo "debug"`.
@@ -250,9 +250,9 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 - `-d:nama` menyalakan simbol compile-time; `{.strdefine.}` dan `{.intdefine.}` menerima *value* itu.
 - `-d:release` menyalakan optimasi, `--opt:speed` mengurus optimasi sendiri, dan `-d:danger`
   mematikan semua pemeriksaan.
-- `--passC` dan `--passL` meneruskan *option* ke compiler C dan penaut; `--passL:-static` menghasilkan
+- `--passC` dan `--passL` meneruskan *option* ke *compiler* C dan penaut; `--passL:-static` menghasilkan
   biner statis di Linux.
-- Cross-compile butuh toolchain C untuk target. Tanpa itu, build berhenti atau menghasilkan biner
+- Cross-compile butuh *toolchain* C untuk target. Tanpa itu, *build* berhenti atau menghasilkan biner
   host yang tidak berguna.
 
 ## Selanjutnya

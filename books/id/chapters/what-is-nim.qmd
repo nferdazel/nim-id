@@ -12,19 +12,19 @@ dijalankan; bab berikutnya yang memasang toolchain-nya.
 ## Tujuan bab
 
 Setelah bab ini, pembaca bisa menjelaskan arti "di-compile" dan "bertipe statis", membaca
-*error message* *type* yang dikeluarkan compiler, dan menimbang kapan Nim layak dipilih.
+*error message* *type* yang dikeluarkan *compiler*, dan menimbang kapan Nim layak dipilih.
 :::
 
 ## Di-compile, bukan diinterpretasi
 
 Program Python di-read dan dijalankan *line* demi *line* oleh interpreter. Program Nim diterjemahkan
-lebih dulu. Compiler read *file* `.nim`, menghasilkan kode C, lalu memanggil compiler C untuk
+lebih dulu. *Compiler* read *file* `.nim`, menghasilkan kode C, lalu memanggil *compiler* C untuk
 membuat biner. Biner itulah yang dijalankan.
 
 Konsekuensinya tiga:
 
-- Error ditemukan sebelum program berjalan, bukan saat *line* yang salah akhirnya dieksekusi.
-- Kecepatannya setara kode C: yang dijalankan memang kode C hasil *generate*. Pemeriksaan runtime
+- *Error* ditemukan sebelum program berjalan, bukan saat *line* yang salah akhirnya dieksekusi.
+- Kecepatannya setara kode C: yang dijalankan memang kode C hasil *generate*. Pemeriksaan *runtime*
   dan pengelola *memory* menambah sedikit biaya, dan biaya itu bisa diukur sendiri.
 - *Result*-nya satu *file* yang bisa disalin ke mesin lain tanpa memasang Nim di sana. Ia tetap
   bergantung pada *library* sistem seperti libc, dan program yang menautkan *library* tambahan butuh
@@ -36,7 +36,7 @@ mahal daripada bug yang tertangkap sebelum program jalan.
 
 ## *Type* diperiksa sebelum program berjalan
 
-Inilah bedanya dengan Python. Di Nim, setiap *value* punya *type* yang sudah diketahui compiler. Kalau
+Inilah bedanya dengan Python. Di Nim, setiap *value* punya *type* yang sudah diketahui *compiler*. Kalau
 *type* tidak cocok, program tidak pernah dijalankan. Kode berikut tidak akan pernah berjalan.
 
 ```{.nim}
@@ -44,7 +44,7 @@ var age: int = "twenty"
 echo age
 ```
 
-Compiler menolaknya:
+*Compiler* menolaknya:
 
 ```{.txt}
 (1, 16) Error: type mismatch: got 'string' for '"twenty"' but expected 'int'
@@ -55,17 +55,17 @@ Bacalah dari kiri ke kanan:
 | Bagian | Arti |
 |---|---|
 | `(1, 16)` | *line* 1, kolom 16 |
-| `Error` | tingkat keparahan; build berhenti di sini |
+| `Error` | tingkat keparahan; *build* berhenti di sini |
 | `got 'string' ... but expected 'int'` | yang diberikan bertipe `string`, yang dibutuhkan `int` |
 
-Di depan posisi itu Nim menulis nama *file*-nya, kadang sebagai path lengkap
+Di depan posisi itu Nim menulis nama *file*-nya, kadang sebagai *path* lengkap
 (`/home/.../hello.nim(1, 16)`) tergantung versi dan sistem. Yang dibaca tetap posisinya.
 
 `echo` di *line* kedua menulis *argument*-nya ke stdout dan menutup dengan *newline*. Tidak ada `main`
 di sini, dan satu *file* boleh berisi *statement* di tingkat atas seperti itu.
 
 Tidak ada *output*, karena tidak ada program yang berjalan. Bagi pemula ini terasa seperti halangan.
-Lama-lama ini jadi keuntungan: error yang sama di Python baru muncul ketika *line* itu
+Lama-lama ini jadi keuntungan: *error* yang sama di Python baru muncul ketika *line* itu
 dieksekusi, mungkin setelah data pengguna masuk.
 
 ## *Procedure* dan *loop*
@@ -84,7 +84,7 @@ echo greet("Nim")
 Hello, Nim
 ```
 
-`&` menggabungkan dua string. *Line* `"Hello, " & name` adalah *expression* terakhir, jadi itulah yang
+`&` menggabungkan dua *string*. *Line* `"Hello, " & name` adalah *expression* terakhir, jadi itulah yang
 di-return. Tidak perlu `return` selama tidak ada *branching*.
 
 *Loop* memakai indentasi yang sama:
@@ -106,15 +106,15 @@ pilihan `var`, `let`, dan `const` sampai tuntas.
 
 ## Satu kode, banyak target
 
-Backend bawaan Nim adalah C. Tersedia juga backend C++, Objective-C, dan JavaScript; backend
+*Backend* bawaan Nim adalah C. Tersedia juga *backend* C++, Objective-C, dan JavaScript; *backend*
 JavaScript menghasilkan *file* `.js` dari kode yang sama. Untuk sebagian besar program, kita jarang
-perlu memilih backend secara manual, dan [Compile ke JavaScript](js-backend.qmd) membahasnya sendiri.
+perlu memilih *backend* secara manual, dan [Compile ke JavaScript](js-backend.qmd) membahasnya sendiri.
 
 Nim 2.x memakai ORC sebagai pengelola *memory* bawaan. ORC menghitung referensi dan mengumpulkan
 siklus, dan *destructor* berjalan saat *value* keluar dari *scope*-nya. Tidak ada *garbage
 collector* yang berhenti untuk menyapu seluruh *heap* dalam satu jeda panjang; biayanya tersebar di
 titik alokasi, dan pengumpul siklusnya berjalan saat daftar akar melewati ambang. Untuk kode sehari-hari yang
-penting: kita tidak call `free`, dan lupa tidak membebaskan *memory* bukan error fatal.
+penting: kita tidak call `free`, dan lupa tidak membebaskan *memory* bukan *error* fatal.
 
 Nim juga punya *template* dan *macro*: kode yang dijalankan saat compile untuk menghasilkan kode
 lain. Karena itu Nim bisa punya sintaks khusus bidang (*domain-specific language*) dan *boilerplate*
@@ -124,10 +124,10 @@ pemahaman *type* yang lebih dulu.
 ## Kapan Nim cocok, dan kapan tidak
 
 Nim cocok ketika kita butuh biner native, pemakaian *memory* yang bisa diprediksi, dan kode yang
-enak dibaca. Tool command line, layanan jaringan, pengolah data, dan program yang dibagikan
+enak dibaca. Tool *command line*, layanan jaringan, pengolah data, dan program yang dibagikan
 sebagai satu *file* semuanya masuk hitungan.
 
-Nim bukan pilihan pertama kalau ekosistem yang menentukan. Untuk *machine learning*, library Python
+Nim bukan pilihan pertama kalau ekosistem yang menentukan. Untuk *machine learning*, *library* Python
 jauh lebih lengkap. Untuk aplikasi web dengan lowongan kerja terbanyak, JavaScript dan Go lebih
 aman. Jujur soal ini lebih berguna daripada menjual satu bahasa sebagai jawaban untuk segalanya.
 
@@ -135,16 +135,16 @@ aman. Jujur soal ini lebih berguna daripada menjual satu bahasa sebagai jawaban 
 
 Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
-1. Kode `var age: int = "twenty"` gagal di-compile. Jelaskan mengapa compiler menunjuk kolom 16, dan
+1. Kode `var age: int = "twenty"` gagal di-compile. Jelaskan mengapa *compiler* menunjuk kolom 16, dan
    bukan kolom 5 tempat nama `age` berada.
 2. Tanpa menjalankan, tentukan apakah `echo greet(42)` pada contoh `greet` valid. Jelaskan alasanmu.
 
 ## Ringkasan
 
 - Nim di-compile ke C lalu ke biner; tidak ada mesin virtual saat program berjalan.
-- *Type* diperiksa saat compile, jadi error *type* menghentikan build sebelum ada *output*.
-- `echo` print ke stdout; *procedure* memakai `proc` dengan *expression* terakhir sebagai *return value*.
-- Backend bisa diganti (C, C++, Objective-C, JavaScript); pengelola *memory* bawaan adalah ORC.
+- *Type* diperiksa saat compile, jadi *error* *type* menghentikan *build* sebelum ada *output*.
+- `echo` *print* ke stdout; *procedure* memakai `proc` dengan *expression* terakhir sebagai *return value*.
+- *Backend* bisa diganti (C, C++, Objective-C, JavaScript); pengelola *memory* bawaan adalah ORC.
 - Ekosistem Nim lebih kecil daripada Python atau JavaScript; pilih Nim karena kebutuhan, bukan tren.
 
 ## Selanjutnya

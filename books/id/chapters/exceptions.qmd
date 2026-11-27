@@ -2,7 +2,7 @@
 
 Operasi bisa gagal di tengah jalan: *file* tidak ada, isi *file* bukan angka, jaringan putus.
 Membiarkan program berhenti mendadak bukan pilihan. Nim memakai *exception*, dan menambahkan satu hal
-yang jarang dimiliki bahasa lain: compiler melacak *exception* apa saja yang mungkin dilempar sebuah
+yang jarang dimiliki bahasa lain: *compiler* melacak *exception* apa saja yang mungkin dilempar sebuah
 *procedure*.
 
 ::: {.callout-note}
@@ -91,9 +91,9 @@ except NegativeAge as e:
 caught: age cannot be negative
 ```
 
-`Defect` dipakai untuk error program seperti *index* di luar batas, dan sengaja tidak ikut
-ditangkap oleh `except CatchableError`. Jadi `except CatchableError` menangkap semua error yang
-wajar dipulihkan, bukan error yang menandakan logika program keliru.
+`Defect` dipakai untuk *error* program seperti *index* di luar batas, dan sengaja tidak ikut
+ditangkap oleh `except CatchableError`. Jadi `except CatchableError` menangkap semua *error* yang
+wajar dipulihkan, bukan *error* yang menandakan logika program keliru.
 
 ## `raise` dengan konteks yang lebih berguna
 
@@ -128,7 +128,7 @@ dulu, baru *line* kedua berhenti dan tertangkap. `raise` tanpa *value* di dalam 
 ## *Effect* `raises`: siapa boleh melempar
 
 Nim melacak *exception* yang mungkin keluar dari sebuah *procedure*. Ini disebut *effect* `raises`, dan
-compiler memeriksanya seperti *type* biasa. *Procedure* dengan `raises: []` berjanji tidak melempar
+*compiler* memeriksanya seperti *type* biasa. *Procedure* dengan `raises: []` berjanji tidak melempar
 `CatchableError`. `Defect` tidak dilacak *effect* ini, jadi `raises: []` bukan jaminan program tidak
 akan berhenti karena *index* di luar batas atau pembagian dengan nol.
 
@@ -233,7 +233,7 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
    proc useIt(): int {.raises: [].} =
      readValue()
    ```
-5. Tulis `proc openLog()` yang print `open` dan `close` dengan `defer`, lalu satu *line* di
+5. Tulis `proc openLog()` yang *print* `open` dan `close` dengan `defer`, lalu satu *line* di
    antaranya.
 
 ## Ringkasan
@@ -246,5 +246,5 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
 ## Selanjutnya
 
-Bab berikutnya membahas [iterator](iterators.qmd): cara menghasilkan *value* satu per satu, dan kapan
-iterator lebih hemat daripada *seq*.
+Bab berikutnya membahas [*iterator*](iterators.qmd): cara menghasilkan *value* satu per satu, dan kapan
+*iterator* lebih hemat daripada *seq*.

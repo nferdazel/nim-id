@@ -11,7 +11,7 @@ istilah sistem bisa langsung ke [dokumentasi resmi](https://nim-lang.org/documen
 ## Untuk siapa buku ini
 
 Buku ini menjelaskan apa yang berbeda di Nim, bukan mengulang dasar pemrograman. Pembaca
-diasumsikan sudah mengenal *variable*, *loop*, fungsi, dan error. Kalau istilah itu masih asing,
+diasumsikan sudah mengenal *variable*, *loop*, fungsi, dan *error*. Kalau istilah itu masih asing,
 selesaikan dulu satu pengantar bahasa lain, lalu kembali ke sini. Buku ini juga bukan pengantar
 pemrograman yang pertama; ia mempercepat pembaca yang sudah punya bekal, bukan membangun bekal itu
 dari nol.

@@ -4,7 +4,7 @@ Program yang tidak menampilkan apa pun sulit dipercaya. Karena itu `echo` biasan
 pertama yang kita tulis dan *line* yang paling sering dipakai untuk memeriksa *value*.
 
 Masalahnya, `echo` punya aturan yang jarang disadari: ia tidak menambahkan pemisah di antara
-*argument*, dan *value* string di-print apa adanya sementara bentuk lain di-print berbeda. Bab ini
+*argument*, dan *value* *string* di-print apa adanya sementara bentuk lain di-print berbeda. Bab ini
 membahas `echo`, `repr`, interpolasi, dan format angka.
 
 ::: {.callout-note}
@@ -39,7 +39,7 @@ abc
 
 `echo` menerima berapa pun *argument* dan menampilkannya berurutan tanpa pemisah. Perhatikan *line*
 terakhir: `"a", "b", "c"` di-print `abc` tanpa spasi. Semua spasi pada *output* di atas datang dari
-string yang kita tulis sendiri. Setelah semua *argument*, `echo` menambahkan tepat satu *newline*.
+*string* yang kita tulis sendiri. Setelah semua *argument*, `echo` menambahkan tepat satu *newline*.
 
 Karena setiap *value* diubah lewat `$`, `echo` bisa menampilkan hampir semua *type*: bilangan, `char`,
 `bool`, sampai *seq*. *Seq* ditandai `@` di depannya, misalnya `@[1, 2, 3]`, dan bentuk itu
@@ -65,11 +65,11 @@ Nim
 score: 42
 ```
 
-`echo` memakai `$` untuk mengubah *value* menjadi string, jadi `"Nim"` di-print sebagai `Nim` tanpa
+`echo` memakai `$` untuk mengubah *value* menjadi *string*, jadi `"Nim"` di-print sebagai `Nim` tanpa
 tanda kutip. `repr` sebaliknya menampilkan bentuk yang bisa dibaca mesin: tanda kutip muncul, dan
-character khusus seperti *newline* ditampilkan sebagai `\n`. Karena itu `repr` berguna saat *value*
-sulit dibedakan di layar; string kosong tampil sebagai `""`, bukan ruang kosong tanpa jejak. Saat
-menggabung dengan `&`, `$` harus di-call manual karena `&` hanya menerima string di kedua
+*character* khusus seperti *newline* ditampilkan sebagai `\n`. Karena itu `repr` berguna saat *value*
+sulit dibedakan di layar; *string* kosong tampil sebagai `""`, bukan ruang kosong tanpa jejak. Saat
+menggabung dengan `&`, `$` harus di-call manual karena `&` hanya menerima *string* di kedua
 sisinya.
 
 ## Interpolasi dengan `&"..."`
@@ -96,9 +96,9 @@ total: 37.5
 upper: NIM
 ```
 
-Awalan `&` sebelum string membuka interpolasi: apa pun di dalam `{...}` dievaluasi dan *result*-nya
+Awalan `&` sebelum *string* membuka interpolasi: apa pun di dalam `{...}` dievaluasi dan *result*-nya
 disisipkan. Isinya boleh *expression*, bukan hanya nama *variable*. Tanpa awalan itu, kurung kurawal
-tetap teks biasa, jadi `echo "{name}"` print `{name}` apa adanya. Perhatikan
+tetap teks biasa, jadi `echo "{name}"` *print* `{name}` apa adanya. Perhatikan
 `float(count) * price`: Nim tidak mencampur `int` dan `float` diam-diam, jadi konversi harus
 di-write eksplisit.
 
@@ -128,13 +128,13 @@ total:    12.50
 
 `>6` meratakan ke kanan dalam lebar 6, `<6` ke kiri, dan `^6` ke tengah. Untuk bilangan,
 `04d` mengisi dengan nol sampai empat digit, sedangkan `8.2f` memakai lebar 8 dengan dua angka di
-belakang koma. `fmt"..."` sama dengan `&"..."`; `fmt` hanya menegaskan bahwa string itu memang
+belakang koma. `fmt"..."` sama dengan `&"..."`; `fmt` hanya menegaskan bahwa *string* itu memang
 untuk diformat. Aturan format selalu mengikuti pola `{expression:rule}`, dan aturannya boleh
 dihilangkan kalau *value* itu cukup ditampilkan apa adanya.
 
 ## `echo` versus `write`
 
-`echo` selalu menutup dengan *newline*. Kalau kita ingin print tanpa pindah *line*, gunakan
+`echo` selalu menutup dengan *newline*. Kalau kita ingin *print* tanpa pindah *line*, gunakan
 `stdout.write`.
 
 ```{.nim}
@@ -167,10 +167,10 @@ echo fmt"{42}"
 missing_import.nim(1, 6) Error: undeclared identifier: 'fmt'
 ```
 
-*Message* menunjukkan kolom 6, tepat di huruf pertama `fmt`. Compiler tidak menemukan simbol bernama
-`fmt` di *scope* mana pun. Solusinya satu *line* di atas kode: `import std/strformat`. Error yang
-sama bisa muncul untuk `&"..."`, hanya saja *message*-nya berbentuk `type mismatch` karena compiler
-mengira `&` adalah operator penggabung string biasa. *Message* `undeclared identifier` selalu berarti
+*Message* menunjukkan kolom 6, tepat di huruf pertama `fmt`. *Compiler* tidak menemukan simbol bernama
+`fmt` di *scope* mana pun. Solusinya satu *line* di atas kode: `import std/strformat`. *Error* yang
+sama bisa muncul untuk `&"..."`, hanya saja *message*-nya berbentuk `type mismatch` karena *compiler*
+mengira `&` adalah operator penggabung *string* biasa. *Message* `undeclared identifier` selalu berarti
 hal yang sama: nama itu belum diperkenalkan ke *file*, biasanya lewat `import` yang terlupa.
 
 ## Latihan

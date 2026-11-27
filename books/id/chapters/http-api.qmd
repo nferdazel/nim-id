@@ -13,7 +13,7 @@ server dengan `newAsyncHttpServer` dan `serve`, serta membaca *message* `has to 
 saat lupa `await` pada `respond`.
 :::
 
-## Status, metode, dan header
+## Status, metode, dan *header*
 
 Sebelum menyentuh *socket*, kenali dulu *type* yang dipakai bersama: `HttpCode`, `HttpMethod`, dan
 `HttpHeaders`. Ketiganya berasal dari `std/httpcore`, *module* yang dipakai baik oleh sisi klien
@@ -39,7 +39,7 @@ application/json
 ```
 
 `Http200` adalah *value* `HttpCode`, *type* `distinct` yang *value* itu dibatasi 0 sampai 599. `httpcore`
-memberi `$` untuk *type* ini, sehingga `echo Http200` print `"200 OK"`, bukan angka telanjang.
+memberi `$` untuk *type* ini, sehingga `echo Http200` *print* `"200 OK"`, bukan angka telanjang.
 Konversi `.int` return angkanya saja, dan dipakai nanti untuk menyusun *output* yang ringkas.
 `HttpMethod` adalah `enum`: `HttpGet` bernilai teks `GET`, `HttpPost` bernilai `POST`, begitu
 seterusnya.
@@ -95,15 +95,15 @@ for (httpMethod, path, body) in requests:
 `Http400`, yang berarti permintaan klien tidak sesuai. *Path* yang tidak dikenal dijawab `Http404`.
 Pemisahan ini penting: `Http400` menyalahkan permintaan, `Http404` mengatakan *route* itu tidak ada.
 
-Body JSON di-read dengan `parseJson` dari `std/json`. Field diambil memakai `payload["name"]`, lalu
+Body JSON di-read dengan `parseJson` dari `std/json`. *Field* diambil memakai `payload["name"]`, lalu
 `getStr` mengubahnya menjadi `string`. Untuk membalas, `%*{...}` membangun JSON langsung dan `$`
 mengubahnya menjadi teks: `$(%*{"name": ...})`. Karena `dispatch` call `parseJson`, ia
-dideklarasikan sebagai `proc`, bukan `func`. `parseJson` punya *side effect* menurut compiler, dan
+dideklarasikan sebagai `proc`, bukan `func`. `parseJson` punya *side effect* menurut *compiler*, dan
 sebuah `func` menolak memanggilnya.
 
 *Parameter* bernama `httpMethod`, bukan `method`, karena `method` adalah kata kunci Nim.
 
-## Query string
+## *Query string*
 
 Data yang tidak wajib dikirim lewat body biasanya menempel di URL. `std/uri` memisahkannya.
 
@@ -126,14 +126,14 @@ page = 2
 ```
 
 `parseUri` membongkar URL menjadi bagian-bagiannya: `.path`, `.query`, `.hostname`, dan lainnya.
-Bagian `query` masih teks mentah. Iterator `decodeQuery` membagi atas `&`, lalu mengurai tiap
+Bagian `query` masih teks mentah. *Iterator* `decodeQuery` membagi atas `&`, lalu mengurai tiap
 pasangan `key=value`. Perhatikan `q`: tanda plus menjadi spasi, karena pada *query string* `+`
 memang mewakili spasi. *Value* yang di-print sudah terurai, siap dipakai.
 
 ## Dari `Request` ke *handler*
 
-Saat server call *handler*, ia menyerahkan sebuah `Request`: object yang membawa metode, URL,
-header, dan body. Contoh menyusun satu `Request` secara manual untuk melihat field-nya tanpa
+Saat server call *handler*, ia menyerahkan sebuah `Request`: *object* yang membawa metode, URL,
+*header*, dan body. Contoh menyusun satu `Request` secara manual untuk melihat field-nya tanpa
 menyentuh jaringan.
 
 ```{.nim}
@@ -152,7 +152,7 @@ GET /items/7
 ```
 
 `reqMethod` adalah `HttpMethod`, dan `url` adalah `Uri` yang sama seperti *result* `parseUri`. Karena
-`Request` adalah object biasa, ia bisa dibentuk di dalam *test*: cukup isi field yang dibutuhkan.
+`Request` adalah *object* biasa, ia bisa dibentuk di dalam *test*: cukup isi *field* yang dibutuhkan.
 Inilah alasan *handler* murni mudah diuji, sementara *socket* itu tidak perlu ikut berjalan.
 
 ## Menyalakan server
@@ -197,7 +197,7 @@ di-write dengan `await`. *Procedure* `main` membangun server, lalu memanggil `se
 dinyalakan di sini: contoh hanya call `dispatch` langsung supaya *output*-nya tetap. Di program
 sungguhan, *line* terakhir adalah `waitFor main()`, yang menjalankan *event loop*.
 
-Setelah server berjalan, uji dengan tool command line biasa:
+Setelah server berjalan, uji dengan tool *command line* biasa:
 
 ```bash
 $ curl -s http://localhost:8080/health
@@ -206,9 +206,9 @@ $ curl -s http://localhost:8080/nope
 {"error":"not found"}
 ```
 
-## Error sengaja: lupa `await` pada `respond`
+## *Error* sengaja: lupa `await` pada `respond`
 
-Error pertama yang hampir selalu terjadi: memanggil `respond` tanpa `await`.
+*Error* pertama yang hampir selalu terjadi: memanggil `respond` tanpa `await`.
 
 ```{.nim}
 import std/[asynchttpserver, asyncdispatch, httpcore]
@@ -225,7 +225,7 @@ main.nim(4, 6) Error: expression 'respond(req, Http200, "ok", nil)' is of type '
 *Message*-nya dua bagian. Bagian pertama menyebut *type* *result* panggilan: `Future[system.void]`, bukan
 `void`. Bagian kedua menawarkan dua pilihan, memakai *value* itu atau membuangnya dengan sadar. Karena
 kita memang menunggu balasan terkirim, jawabannya `await`. Penulisan yang benar:
-`await req.respond(Http200, "ok")`. Compiler juga menandai *line* tempat `{.async.}` dipakai, tanda
+`await req.respond(Http200, "ok")`. *Compiler* juga menandai *line* tempat `{.async.}` dipakai, tanda
 bahwa masalahnya ada di dalam *procedure* async.
 
 ## Kenapa *handler* dipisah dari *socket*

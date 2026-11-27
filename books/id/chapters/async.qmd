@@ -9,7 +9,7 @@ yang *output*-nya selalu sama.
 ## Tujuan bab
 
 Setelah bab ini, pembaca bisa menandai *procedure* dengan `{.async.}`, memanggilnya dengan `await`,
-menjalankan beberapa tugas sekaligus dengan `all`, dan membaca error "Can only 'await' inside a proc
+menjalankan beberapa tugas sekaligus dengan `all`, dan membaca *error* "Can only 'await' inside a proc
 marked as 'async'" saat salah menempatkan `await`.
 :::
 
@@ -35,7 +35,7 @@ waitFor main()
 hello, Nim
 ```
 
-Perhatikan tiga hal. Pragma `{.async.}` mengubah *procedure* sehingga `return` di dalamnya mengisi
+Perhatikan tiga hal. *Pragma* `{.async.}` mengubah *procedure* sehingga `return` di dalamnya mengisi
 `Future`. Di dalam `main`, `await greeting("Nim")` menunggu sampai *result*-nya siap lalu membuka
 *value* itu. Di luar *procedure* async, `waitFor` yang menjalankan mesin async sampai tugasnya selesai.
 
@@ -43,7 +43,7 @@ Perhatikan tiga hal. Pragma `{.async.}` mengubah *procedure* sehingga `return` d
 menunggu. Biasanya cukup satu `waitFor` di tingkat teratas program; memanggilnya dua kali tetap
 berjalan, tetapi jarang diperlukan.
 
-`Future` adalah *type* generik. `Future[string]` berisi string, `Future[int]` berisi *integer*.
+`Future` adalah *type* generik. `Future[string]` berisi *string*, `Future[int]` berisi *integer*.
 `waitFor` return *value* yang sama dengan isi `Future` itu, jadi `let total = waitFor sum()`
 memberi `int` biasa, bukan wadah lagi.
 
@@ -121,11 +121,11 @@ Satu hal yang mudah salah: `sleep` biasa (dari `std/os`) memblokir seluruh *even
 sedangkan `sleepAsync` return kendali ke mesin async. Di dalam *procedure* `{.async.}`, pakai versi async dari setiap
 operasi yang menunggu. Kalau tidak, tugas-tugas itu berjalan berurutan lagi tanpa disadari.
 
-Error di dalam *procedure* async muncul saat `Future`-nya di-`await`. Artinya `try` dan `except`
+*Error* di dalam *procedure* async muncul saat `Future`-nya di-`await`. Artinya `try` dan `except`
 dipasang di sekitar `await`, bukan di dalam *procedure* yang melempar. Kalau beberapa tugas digabung
 dengan `all`, satu tugas yang gagal menggagalkan seluruh gabungan.
 
-## Error sengaja: `await` di luar *procedure* async
+## *Error* sengaja: `await` di luar *procedure* async
 
 `await` hanya sah di dalam *procedure* yang ditandai `{.async.}`.
 
@@ -148,16 +148,16 @@ main.nim(7, 25) Error: Can only 'await' inside a proc marked as 'async'. Use 'wa
 
 *Message* itu punya dua bagian. Bagian pertama menyebut aturannya. Bagian kedua langsung memberi jalan
 keluar: pakai `waitFor` kalau *caller*-nya bukan *procedure* async. `(7, 25)` menunjuk panggilan
-`work()` yang ditunggu dengan `await`, bukan token `await` itu sendiri.
+`work()` yang ditunggu dengan `await`, bukan *token* `await` itu sendiri.
 
 Ada dua perbaikan yang wajar. Ubah `main` menjadi *procedure* async lalu panggil dengan `waitFor`,
 atau biarkan `main` sinkron dan panggil `waitFor work()` di dalamnya.
 
-Ada juga `asyncCheck`, yang memasang pemeriksa pada `Future` supaya error yang tidak ditunggu
-tetap dilaporkan. Hati-hati memakainya: kalau tugas itu gagal, error itu dilempar di *event loop*
-dan program bisa berhenti dengan exception yang tidak tertangani. Kalau error memang ingin
+Ada juga `asyncCheck`, yang memasang pemeriksa pada `Future` supaya *error* yang tidak ditunggu
+tetap dilaporkan. Hati-hati memakainya: kalau tugas itu gagal, *error* itu dilempar di *event loop*
+dan program bisa berhenti dengan *exception* yang tidak tertangani. Kalau *error* memang ingin
 diabaikan, `discard` pada `Future` itulah yang menelannya. Pakai `await` selama *result* atau
-error itu penting.
+*error* itu penting.
 
 ## Latihan
 

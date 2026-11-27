@@ -1,19 +1,19 @@
 # Konsep dan pencocokan *type*
 
-*Procedure* generic dengan `[T]` menerima *type* apa saja. Itu sering terlalu longgar: badan *procedure*
+*Procedure* *generic* dengan `[T]` menerima *type* apa saja. Itu sering terlalu longgar: badan *procedure*
 memakai `x.name`, tapi tidak ada yang mencegah *calling* dengan `int`. Batasan seperti
 `[T: SomeInteger]` membantu, tapi daftarnya sudah ditentukan bahasa. Konsep menutup celah itu:
 batasan yang di-write sendiri, berdasarkan bentuk *type*.
 
 Bab ini membangun konsep dari yang sederhana sampai yang digabung, memakainya untuk memilih
-overloading, dan membaca *error message* ketika syaratnya tidak terpenuhi. Semua contoh diuji di Nim
+*overloading*, dan membaca *error message* ketika syaratnya tidak terpenuhi. Semua contoh diuji di Nim
 2.4.2.
 
 ::: {.callout-note}
 ## Tujuan bab
 
-Setelah bab ini, pembaca bisa menulis `concept`, memakainya sebagai batasan generic, menggabung
-syarat dengan `and` dan `or`, memakai konsep untuk memilih overloading, dan membaca *message*
+Setelah bab ini, pembaca bisa menulis `concept`, memakainya sebagai batasan *generic*, menggabung
+syarat dengan `and` dan `or`, memakai konsep untuk memilih *overloading*, dan membaca *message*
 `concept predicate failed`.
 :::
 
@@ -37,7 +37,7 @@ echo total(@[1.5, 2.5])
 
 `SomeNumber` mencakup *type* bilangan. Satu *procedure*, dua *type* berbeda, tanpa menulis ulang. Batasan
 seperti ini berguna selama bentuk yang diinginkan sudah ada di *standard library*. Begitu yang
-dibutuhkan adalah "punya field `name`", tidak ada nama bawaan yang menolong.
+dibutuhkan adalah "punya *field* `name`", tidak ada nama bawaan yang menolong.
 
 ## Konsep: syarat yang ditulis sendiri
 
@@ -67,7 +67,7 @@ Hello, Ada
 Hello, R2
 ```
 
-`x.name is string` adalah syaratnya: *type* apa pun yang punya field `name` bertipe `string` cocok.
+`x.name is string` adalah syaratnya: *type* apa pun yang punya *field* `name` bertipe `string` cocok.
 Perhatikan bahwa `Person` dan `Robot` tidak berhubungan sama sekali. Konsep mencocokkan **bentuk**,
 bukan keturunan atau nama *type*.
 
@@ -98,7 +98,7 @@ Ada is 36
 `Employee` cocok karena memenuhi kedua syarat. Kalau salah satu saja tidak terpenuhi, misalnya
 `age` bertipe `string`, maka *type* itu ditolak.
 
-## Konsep menentukan overloading mana yang dipakai
+## Konsep menentukan *overloading* mana yang dipakai
 
 Karena konsep menyaring *type*, beberapa *procedure* bernama sama bisa hidup berdampingan dan masing-masing
 menangkap kelompok *type* yang berbeda.
@@ -128,7 +128,7 @@ named kit
 sized 3
 ```
 
-`Label` hanya cocok dengan `Named`, `Box` hanya cocok dengan `Sized`, jadi compiler tidak ragu.
+`Label` hanya cocok dengan `Named`, `Box` hanya cocok dengan `Sized`, jadi *compiler* tidak ragu.
 Kalau satu *type* memenuhi keduanya, *calling* menjadi ambigu dan harus diselesaikan dengan cara
 lain. Karena itu, jaga agar konsep tetap sempit.
 
@@ -193,13 +193,13 @@ name: kit
 size: 3
 ```
 
-Karena satu *type* yang cocok mungkin hanya punya salah satu field, badan *procedure* harus memeriksa
+Karena satu *type* yang cocok mungkin hanya punya salah satu *field*, badan *procedure* harus memeriksa
 cabang mana yang berlaku. `when x is HasName` memilih saat compile, dan tiap cabang hanya mengakses
-field yang dijamin ada. Ini pola yang sering muncul begitu `or` dipakai.
+*field* yang dijamin ada. Ini pola yang sering muncul begitu `or` dipakai.
 
-## Membaca error: predicate gagal
+## Membaca *error*: predicate gagal
 
-Memanggil *procedure* dengan *type* yang tidak memenuhi konsep ditolak compiler.
+Memanggil *procedure* dengan *type* yang tidak memenuhi konsep ditolak *compiler*.
 
 ```{.nim}
 type
@@ -228,7 +228,7 @@ main.nim(3, 5) Named: concept predicate failed
 
 Bacalah dari bawah. *Line* terakhir, `concept predicate failed`, menyebut penyebab sebenarnya. *Line*
 di atasnya menunjuk *file* dan *line* konsep, yaitu `Named` di *line* 3, lalu merinci *expression* mana
-yang gagal. Compiler mencoba `x.name` pada `int`, menemukan tidak ada field `name`, dan melaporkannya
+yang gagal. *Compiler* mencoba `x.name` pada `int`, menemukan tidak ada *field* `name`, dan melaporkannya
 berulang untuk tiap bagian *expression*. *Message*-nya panjang, tapi arahnya jelas: periksa konsep di *line*
 yang ditunjuk.
 
@@ -250,7 +250,7 @@ echo value
 main.nim(5, 5) Error: invalid type: 'Named' for var
 ```
 
-Pencocokan juga bersifat struktural: *type* yang kebetulan punya field `name` ikut cocok,
+Pencocokan juga bersifat struktural: *type* yang kebetulan punya *field* `name` ikut cocok,
 meskipun penulisnya tidak pernah berniat begitu. Konsep juga tidak memeriksa makna, hanya bentuk.
 Untuk *type* yang benar-benar harus terdaftar, warisan atau `distinct` lebih tepat daripada konsep.
 
@@ -258,23 +258,23 @@ Untuk *type* yang benar-benar harus terdaftar, warisan atau `distinct` lebih tep
 
 Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
-1. Tulis konsep `Sized` yang menuntut `x.size is int`, lalu *procedure* yang print ukurannya untuk
+1. Tulis konsep `Sized` yang menuntut `x.size is int`, lalu *procedure* yang *print* ukurannya untuk
    *type* `Box`.
-2. Apakah `type Num = object` dengan field `name: int` cocok dengan `Named`? Jalankan untuk membuktikan.
+2. Apakah `type Num = object` dengan *field* `name: int` cocok dengan `Named`? Jalankan untuk membuktikan.
 3. Gabungkan dua konsep dengan `and`, lalu pakai sebagai batasan satu *procedure*.
-4. Jelaskan kenapa `var value: Named` ditolak compiler, lalu tulis deklarasi setara yang memakai
-   *type* konkret dengan field `name`.
+4. Jelaskan kenapa `var value: Named` ditolak *compiler*, lalu tulis deklarasi setara yang memakai
+   *type* konkret dengan *field* `name`.
 
 ## Ringkasan
 
 - `concept` menyaring *type* berdasarkan bentuk, misalnya `x.name is string`.
 - Beberapa *line* di dalam satu konsep digabung dengan `and` secara implisit.
 - `and` dan `or` menyatukan konsep; `or` menuntut badan *procedure* memeriksa cabang dengan `when`.
-- Konsep bisa memilih overloading selama tiap *type* hanya cocok dengan satu kandidat.
+- Konsep bisa memilih *overloading* selama tiap *type* hanya cocok dengan satu kandidat.
 - Konsep bukan *type*: `var x: Named` ditolak, dan *message* gagalnya berbentuk
   `concept predicate failed`.
 
 ## Selanjutnya
 
-Bab berikutnya membahas [object varian dan `distinct`](variants-and-distinct.qmd): satu *type* *object*
-yang bentuk fieldnya berubah sesuai penanda, dan *type* baru yang tidak bisa tertukar.
+Bab berikutnya membahas [*object* varian dan `distinct`](variants-and-distinct.qmd): satu *type* *object*
+yang bentuk *fieldnya* berubah sesuai penanda, dan *type* baru yang tidak bisa tertukar.

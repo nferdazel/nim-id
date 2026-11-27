@@ -8,7 +8,7 @@ sana. Pada `object` biasa, data menempel langsung di *variable* itu. Bab ini mem
 ::: {.callout-note}
 ## Tujuan bab
 
-Setelah bab ini, pembaca bisa mengalokasikan `ref` dengan `new`, membaca field lewat dereferensi
+Setelah bab ini, pembaca bisa mengalokasikan `ref` dengan `new`, membaca *field* lewat dereferensi
 otomatis, memakai `ptr` bersama `addr`, menguji `nil` dengan `isNil`, dan tahu kapan `ptr` perlu
 beserta risikonya.
 :::
@@ -34,11 +34,11 @@ Ada is 36
 ```
 
 `var p: Person` belum menunjuk ke *object* apa pun; *value* itu `nil`. `new(p)` meminta *memory* di heap,
-membentuk *object* dengan default setiap field, lalu menyimpan alamatnya di `p`. Setelah itu field
+membentuk *object* dengan default setiap *field*, lalu menyimpan alamatnya di `p`. Setelah itu *field*
 bisa diisi seperti *object* biasa.
 
-*Constructor* literal mempersingkat dua langkah itu. `Person(name: "Ada", age: 36)` mengalokasikan
-dan mengisi fieldnya sekaligus.
+*Constructor* *literal* mempersingkat dua langkah itu. `Person(name: "Ada", age: 36)` mengalokasikan
+dan mengisi *fieldnya* sekaligus.
 
 ## Dereferensi otomatis
 
@@ -59,7 +59,7 @@ Ada
 Ada
 ```
 
-Kedua *line* menghasilkan hal yang sama. Compiler menyisipkan dereferensi saat pembaca write
+Kedua *line* menghasilkan hal yang sama. *Compiler* menyisipkan dereferensi saat pembaca write
 `p.name` pada sebuah `ref`. `p[]` adalah bentuk eksplisitnya, dan berlaku umum: `p.age`, `p.name`,
 dan seterusnya, tanpa menulis `[]` setiap kali.
 
@@ -89,7 +89,7 @@ false
 `isNil` return `true` selama referensinya kosong. Setelah diisi, *result*-nya `false`. Uji
 `isNil` sebelum memakai referensi yang mungkin belum diisi. Mendereferensi `nil` menghentikan
 program saat berjalan, bukan saat compile: di macOS dan Linux prosesnya mati dengan `SIGSEGV`,
-bukan exception Nim yang bisa ditangkap `try`.
+bukan *exception* Nim yang bisa ditangkap `try`.
 
 ## `ptr`: alamat, bukan pemilik
 
@@ -133,7 +133,7 @@ echo c.hits
 3
 ```
 
-`addr c` mengambil alamat `c`; `pc[].hits = 3` mengubah field lewat *pointer*, dan `c.hits` ikut
+`addr c` mengambil alamat `c`; `pc[].hits = 3` mengubah *field* lewat *pointer*, dan `c.hits` ikut
 berubah.
 
 ## `addr` dan `unsafeAddr`
@@ -153,7 +153,7 @@ echo p[]
 ```
 
 `unsafeAddr` adalah alias lama untuk `addr`, dan dokumentasi `system.nim` di 2.4.2 sudah
-menandainya usang. Compiler tidak selalu memunculkan *warning* saat memakainya, jadi pakai `addr`
+menandainya usang. *Compiler* tidak selalu memunculkan *warning* saat memakainya, jadi pakai `addr`
 untuk kode baru.
 
 ## `cast` singkat
@@ -170,12 +170,12 @@ echo cast[uint8]('A')
 
 `'A'` disimpan sebagai byte `65`, dan `cast[uint8]` membacanya sebagai bilangan. `cast` tidak
 mengubah *value*; ia menafsirkan ulang bit yang sama. Bandingkan `cast[int32](3.5'f32)`, yang
-menghasilkan `1080033280`: bit float itu di-read sebagai `int32`. Untuk mengubah *type* mengikuti
+menghasilkan `1080033280`: bit *float* itu di-read sebagai `int32`. Untuk mengubah *type* mengikuti
 aturan bahasa, pakai `int(x)`, `float(x)`, atau `$x`; `cast` hanya untuk kode tingkat rendah.
 
-## Membaca error: *expression* tanpa alamat
+## Membaca *error*: *expression* tanpa alamat
 
-`addr` menuntut lokasi yang tetap. Literal tidak punya lokasi, jadi tidak bisa dialamati.
+`addr` menuntut lokasi yang tetap. *Literal* tidak punya lokasi, jadi tidak bisa dialamati.
 
 ```{.nim}
 var p = addr 42
@@ -186,7 +186,7 @@ echo p[]
 main.nim(1, 14) Error: expression has no address
 ```
 
-Posisi `(1, 14)` menunjuk literal `42` di `addr 42`, bukan token `addr` itu sendiri; *message*-nya lalu
+Posisi `(1, 14)` menunjuk *literal* `42` di `addr 42`, bukan *token* `addr` itu sendiri; *message*-nya lalu
 menyebut masalahnya: *expression* itu tidak punya alamat. Perbaikannya, simpan dulu *value* itu ke sebuah
 *variable*, lalu ambil alamat *variable* itu.
 
@@ -199,7 +199,7 @@ Perbedaannya paling terasa saat *value* disalin.
 | data disimpan di | *variable* itu sendiri | heap |
 | isi *variable* | data langsung | *pointer* |
 | menyalin berarti | menggandakan data | menggandakan *pointer* |
-| *default value* | default setiap field | `nil` |
+| *default value* | default setiap *field* | `nil` |
 
 `ref object` dipakai saat beberapa bagian kode harus berbagi satu *value*, atau saat datanya besar.
 `object` dipakai untuk *value* kecil yang memang ingin disalin. Rincian penyalinannya sudah dibahas
@@ -208,7 +208,7 @@ di bab *object*.
 ## Kapan `ptr` perlu, dan risikonya
 
 `ptr` diperlukan untuk berbicara dengan C, menulis *procedure* tingkat rendah, atau menunjuk ke dalam
-buffer. Di luar itu, `ref` hampir selalu lebih baik karena *memory*-nya dikelola otomatis.
+*buffer*. Di luar itu, `ref` hampir selalu lebih baik karena *memory*-nya dikelola otomatis.
 
 Risikonya nyata:
 
@@ -217,7 +217,7 @@ Risikonya nyata:
 - **Tanpa pemeriksaan.** `ptr` bisa menunjuk ke mana saja; Nim tidak memeriksa batas atau *type*
   saat program berjalan.
 - **`nil` yang tidak diuji.** Mendereferensi `ptr` atau `ref` yang `nil` menghentikan program
-  dengan `SIGSEGV`, bukan exception.
+  dengan `SIGSEGV`, bukan *exception*.
 
 Aturannya sederhana: pakai `ref` kalau bisa, pakai `ptr` hanya saat tidak ada pilihan.
 
@@ -225,7 +225,7 @@ Aturannya sederhana: pakai `ref` kalau bisa, pakai `ptr` hanya saat tidak ada pi
 
 Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
-1. Alokasikan `ref object` `Book` berisi field `title`, buat dua instance dengan `new`, lalu tampilkan
+1. Alokasikan `ref object` `Book` berisi *field* `title`, buat dua instance dengan `new`, lalu tampilkan
    kedua judulnya.
 2. Tanpa menjalankan, prediksi *output*-nya:
    ```{.nim}

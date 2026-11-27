@@ -1,21 +1,21 @@
-# Iterator dan `yield`
+# *Iterator* dan `yield`
 
 *Seq* (`seq`) menyimpan semua *element* itu di *memory*. Itu boros kalau *element* itu banyak, atau baru
-bisa dihitung saat dibutuhkan. Nim punya iterator: rutin yang menghasilkan *value* satu per satu, saat
-diminta. *Value* itu tidak disimpan; yang berpindah adalah posisi iteratornya. Karena itu iterator bisa
+bisa dihitung saat dibutuhkan. Nim punya *iterator*: rutin yang menghasilkan *value* satu per satu, saat
+diminta. *Value* itu tidak disimpan; yang berpindah adalah posisi *iteratornya*. Karena itu *iterator* bisa
 melewati data yang sangat besar, atau bahkan data yang belum ada, tanpa menunggu semuanya siap.
 
 ::: {.callout-note}
 ## Tujuan bab
 
-Setelah bab ini, pembaca bisa menulis iterator dengan `yield`, memakainya di dalam `for`, memakai
-`items` dan `pairs`, membuat iterator closure yang bisa dilanjutkan, serta membaca *error message* saat
-iterator inline diperlakukan sebagai *value*.
+Setelah bab ini, pembaca bisa menulis *iterator* dengan `yield`, memakainya di dalam `for`, memakai
+`items` dan `pairs`, membuat *iterator* *closure* yang bisa dilanjutkan, serta membaca *error message* saat
+*iterator* inline diperlakukan sebagai *value*.
 :::
 
 ## `iterator` dan `yield`
 
-Iterator dideklarasikan dengan `iterator`, dan `yield` mengeluarkan satu *value*.
+*Iterator* dideklarasikan dengan `iterator`, dan `yield` mengeluarkan satu *value*.
 
 ```{.nim}
 iterator countTo(n: int): int =
@@ -34,16 +34,16 @@ for value in countTo(3):
 3
 ```
 
-`for` menjalankan iterator sampai habis. Setiap `yield` menyerahkan satu *value*, lalu iterator
+`for` menjalankan *iterator* sampai habis. Setiap `yield` menyerahkan satu *value*, lalu *iterator*
 berhenti sebentar dan dilanjutkan pada putaran berikutnya. Karena *value* keluar satu per satu,
 *caller* bisa berhenti kapan saja tanpa menghitung sisanya.
 
-Iterator tanpa penanda khusus default-nya inline: compiler menyalin badannya ke tempat pemakaian.
+*Iterator* tanpa penanda khusus default-nya inline: *compiler* menyalin badannya ke tempat pemakaian.
 *Result*-nya sama cepat dengan *loop* yang ditulis tangan.
 
-## Iterator menerima parameter
+## *Iterator* menerima *parameter*
 
-Iterator menerima *parameter* seperti *procedure*.
+*Iterator* menerima *parameter* seperti *procedure*.
 
 ```{.nim}
 iterator evens(numbers: openArray[int]): int =
@@ -62,11 +62,11 @@ for n in evens([1, 2, 3, 4, 5, 6]):
 ```
 
 `evens` hanya mengeluarkan bilangan genap dari *input*-nya. *Parameter* `openArray[int]` menerima *array*
-maupun *seq*, jadi satu iterator menangani keduanya.
+maupun *seq*, jadi satu *iterator* menangani keduanya.
 
 ## `items` dan `pairs`
 
-`for` bekerja dengan iterator, dan koleksi menyediakan iterator bawaan.
+`for` bekerja dengan *iterator*, dan koleksi menyediakan *iterator* bawaan.
 
 ```{.nim}
 let names = @["Ada", "Grace"]
@@ -89,10 +89,10 @@ Grace
 sebenarnya singkatan dari `for name in items(names)`; write `items` dan `pairs` secara eksplisit
 kadang memperjelas mana yang sedang dipakai.
 
-## Closure iterator dan `finished`
+## *Closure* *iterator* dan `finished`
 
-Iterator inline menempel di dalam `for`, jadi ia tidak bisa dipisahkan dari *loop*. Iterator yang perlu
-disimpan atau dioper ditandai `{.closure.}`. Closure dibahas di bab berikutnya; di sini cukup tahu bahwa iterator seperti ini bisa disimpan.
+*Iterator* inline menempel di dalam `for`, jadi ia tidak bisa dipisahkan dari *loop*. *Iterator* yang perlu
+disimpan atau dioper ditandai `{.closure.}`. *Closure* dibahas di bab berikutnya; di sini cukup tahu bahwa *iterator* seperti ini bisa disimpan.
 
 ```{.nim}
 iterator countBetween(a, b: int): int {.closure.} =
@@ -115,15 +115,15 @@ while true:
 5
 ```
 
-`countBetween` adalah fungsi yang bisa dilanjutkan. `var it = countBetween` menyiapkan iteratornya,
-dan *argument* `(3, 5)` diberikan pada tiap *calling*. `finished(it)` bernilai `true` setelah iterator
+`countBetween` adalah fungsi yang bisa dilanjutkan. `var it = countBetween` menyiapkan *iteratornya*,
+dan *argument* `(3, 5)` diberikan pada tiap *calling*. `finished(it)` bernilai `true` setelah *iterator*
 selesai. Perhatikan urutannya: panggil dulu, periksa `finished`, baru pakai *value* itu. Manual Nim
 memperingatkan bahwa `finished` baru bernilai `true` satu putaran setelah *value* terakhir keluar, jadi
 *value* pada putaran itu harus dibuang.
 
-## Factory: *procedure* yang mengembalikan iterator
+## Factory: *procedure* yang mengembalikan *iterator*
 
-Iterator closure adalah *value*, jadi sebuah *procedure* bisa mengembalikannya.
+*Iterator* *closure* adalah *value*, jadi sebuah *procedure* bisa mengembalikannya.
 
 ```{.nim}
 proc countTo(n: int): iterator (): int =
@@ -144,12 +144,12 @@ for n in numbers():
 3
 ```
 
-`countTo` menangkap `n`, lalu mengembalikan iterator anonim yang memakainya. Pola ini memisahkan
+`countTo` menangkap `n`, lalu mengembalikan *iterator* anonim yang memakainya. Pola ini memisahkan
 penyiapan dari pengambilan *value*, dan *result*-nya bisa langsung dipakai di `for`.
 
-## Membaca error: iterator inline bukan *value*
+## Membaca *error*: *iterator* inline bukan *value*
 
-Iterator inline hanya boleh dipakai di dalam `for`.
+*Iterator* inline hanya boleh dipakai di dalam `for`.
 
 ```{.nim}
 iterator countTo(n: int): int =
@@ -166,23 +166,23 @@ main.nim(7, 5) Error: invalid type: 'iterator (n: int): int{.inline, noSideEffec
 ```
 
 *Message*-nya menuliskan *type* lengkapnya, termasuk penanda `{.inline.}`, dan menolak `let`. Solusinya:
-pakai langsung di `for`, atau tandai iteratornya `{.closure.}` kalau memang perlu disimpan sebagai
+pakai langsung di `for`, atau tandai *iteratornya* `{.closure.}` kalau memang perlu disimpan sebagai
 *value*.
 
-## Iterator atau *seq*?
+## *Iterator* atau *seq*?
 
-Iterator tidak menyimpan *element*, jadi ia hemat *memory* dan bisa berhenti lebih awal. Harganya: satu
+*Iterator* tidak menyimpan *element*, jadi ia hemat *memory* dan bisa berhenti lebih awal. Harganya: satu
 *element* hanya bisa dilewati sekali. Tidak ada *index* acak, tidak ada `.len`, dan tidak bisa diurutkan.
 
 *Seq* menampilkan semua *element* di *memory*. Ia cocok kalau *element* itu perlu diindeks, diurutkan, atau
 dipakai berkali-kali.
 
-Aturan praktisnya: pilih iterator kalau alirannya besar atau tak terbatas, dan kalau pencarian sering
-berhenti di tengah. Pilih *seq* kalau butuh koleksi utuh. Membaca *line* log raksasa sambil mencari
-satu pola adalah contoh yang sering: iterator berhenti begitu pola ketemu, tanpa memuat seluruh
+Aturan praktisnya: pilih *iterator* kalau alirannya besar atau tak terbatas, dan kalau pencarian sering
+berhenti di tengah. Pilih *seq* kalau butuh koleksi utuh. Membaca *line* *log* raksasa sambil mencari
+satu pola adalah contoh yang sering: *iterator* berhenti begitu pola ketemu, tanpa memuat seluruh
 *file*.
 
-Dari sisi kecepatan, iterator inline dilipat ke kode *caller* tanpa biaya tambahan. Iterator closure
+Dari sisi kecepatan, *iterator* inline dilipat ke kode *caller* tanpa biaya tambahan. *Iterator* *closure*
 melibatkan *calling* fungsi, jadi sedikit lebih mahal. Keduanya tetap lebih hemat *memory* daripada
 membangun *seq* yang hanya dilewati sekali.
 
@@ -204,17 +204,17 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
    echo sum
    ```
 3. Tulis `proc countdown(n: int): iterator (): int` yang mengeluarkan *value* dari `n` turun sampai 1.
-4. Jelaskan kapan memilih iterator dan kapan memilih *seq* untuk data yang sama.
+4. Jelaskan kapan memilih *iterator* dan kapan memilih *seq* untuk data yang sama.
 
 ## Ringkasan
 
-- `iterator` dan `yield` menghasilkan *value* satu per satu saat diminta; iterator inline (default)
+- `iterator` dan `yield` menghasilkan *value* satu per satu saat diminta; *iterator* inline (default)
 tidak menyimpannya dan dipakai langsung di dalam `for`.
 - `items` mengeluarkan *element*, `pairs` mengeluarkan *index* dan *element*.
-- Iterator closure bisa disimpan dan dilanjutkan; `finished` menandai akhirnya.
-- Pilih iterator untuk aliran besar atau berhenti awal, *seq* untuk koleksi utuh.
+- *Iterator* *closure* bisa disimpan dan dilanjutkan; `finished` menandai akhirnya.
+- Pilih *iterator* untuk aliran besar atau berhenti awal, *seq* untuk koleksi utuh.
 
 ## Selanjutnya
 
-Bab berikutnya membahas [closure](closures.qmd): *procedure* yang mengingat *variable* di sekitarnya,
+Bab berikutnya membahas [*closure*](closures.qmd): *procedure* yang mengingat *variable* di sekitarnya,
 dan kapan sifat itu lebih berguna daripada *procedure* biasa.

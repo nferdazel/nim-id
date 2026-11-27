@@ -1,8 +1,8 @@
 # *Object* dan *constructor*
 
-Tuple bagus untuk data kecil yang cepat dibongkar. Tapi begitu ada sepuluh field bernama, penanda
-berulang, dan aturan sendiri, tuple mulai menyulitkan. *Object* memberi nama pada sekumpulan field,
-dan Nim menambahkan *constructor* literal yang membuatnya nyaman dipakai.
+*Tuple* bagus untuk data kecil yang cepat dibongkar. Tapi begitu ada sepuluh *field* bernama, penanda
+berulang, dan aturan sendiri, *tuple* mulai menyulitkan. *Object* memberi nama pada sekumpulan *field*,
+dan Nim menambahkan *constructor* *literal* yang membuatnya nyaman dipakai.
 
 Bab ini juga membongkar satu perbedaan yang sering mengejutkan: *object* *value* dan `ref object`
 berperilaku berbeda saat disalin. Mengabaikannya sering berujung bug.
@@ -17,7 +17,7 @@ Setelah bab ini, pembaca bisa mendefinisikan `object` dan mengisinya lewat *cons
 
 ## Mendefinisikan *object* dan mengisinya
 
-Deklarasikan *object* dengan `type`, lalu tulis daftar field di bawahnya.
+Deklarasikan *object* dengan `type`, lalu tulis daftar *field* di bawahnya.
 
 ```{.nim}
 type Person = object
@@ -32,13 +32,13 @@ echo ada.name, " is ", ada.age
 Ada is 36
 ```
 
-`Person(name: "Ada", age: 36)` adalah *constructor* literal. Nim membuatnya otomatis untuk setiap
-*type* *object*, jadi tidak ada fungsi yang perlu di-write sendiri. Field yang tidak disebut akan
+`Person(name: "Ada", age: 36)` adalah *constructor* *literal*. Nim membuatnya otomatis untuk setiap
+*type* *object*, jadi tidak ada fungsi yang perlu di-write sendiri. *Field* yang tidak disebut akan
 memakai *default value*.
 
-## Field yang bisa diubah
+## *Field* yang bisa diubah
 
-Field boleh diubah selama *variable* itu dideklarasikan `var`.
+*Field* boleh diubah selama *variable* itu dideklarasikan `var`.
 
 ```{.nim}
 type Point = object
@@ -53,11 +53,11 @@ echo p.x, ",", p.y
 10,2
 ```
 
-`x, y: int` adalah singkatan untuk dua field bertipe sama.
+`x, y: int` adalah singkatan untuk dua *field* bertipe sama.
 
 ## *Default value* *object*
 
-*Object* yang dideklarasikan tanpa isi sudah aman dipakai; setiap field berisi default *type* itu.
+*Object* yang dideklarasikan tanpa isi sudah aman dipakai; setiap *field* berisi default *type* itu.
 
 ```{.nim}
 type Counter = object
@@ -90,7 +90,7 @@ echo Person(name: "Ada")
 (name: "Ada")
 ```
 
-*Output*-nya menyerupai literal asalnya: nama field beserta *value* itu. Cocok untuk inspeksi
+*Output*-nya menyerupai *literal* asalnya: nama *field* beserta *value* itu. Cocok untuk inspeksi
 cepat, tapi biasanya belum enak dibaca manusia.
 
 ## Menimpa `$` sendiri
@@ -113,7 +113,7 @@ Ada (36)
 ```
 
 Setelah `$` didefinisikan, `echo` memakainya otomatis. Aturan yang sama berlaku untuk `&`,
-interpolasi string, dan *calling* `$` eksplisit. Inilah cara idiomatis menambah representasi teks
+interpolasi *string*, dan *calling* `$` eksplisit. Inilah cara idiomatis menambah representasi teks
 pada *type* sendiri.
 
 ## `ref object`: disimpan di heap
@@ -134,7 +134,7 @@ echo head.value, " -> ", head.next.value
 1 -> 2
 ```
 
-Field `next` bertipe `Node`, yaitu referensi ke node lain. Struktur berantai seperti inilah yang
+*Field* `next` bertipe `Node`, yaitu referensi ke node lain. Struktur berantai seperti inilah yang
 membuat `ref` praktis. `nil` adalah *value* yang sah untuk sebuah referensi.
 
 Deklarasi `ref` tanpa *value* awal berisi `nil`. Untuk mengisinya, pakai `new`.
@@ -157,8 +157,8 @@ Ada
 Grace
 ```
 
-`new(q)` mengalokasikan *object* lalu menyimpannya di `q`. Constructor literal seperti
-`Person(name: "Ada")` melakukan hal yang sama, lalu mengisi fieldnya.
+`new(q)` mengalokasikan *object* lalu menyimpannya di `q`. *Constructor* *literal* seperti
+`Person(name: "Ada")` melakukan hal yang sama, lalu mengisi *fieldnya*.
 
 ## `$` bawaan tidak berlaku untuk `ref`
 
@@ -219,9 +219,9 @@ sama, sehingga mengubah `d` ikut mengubah `c`.
 Aturannya: pakai `object` untuk *value* kecil yang ingin disalin, dan `ref object` untuk data besar
 atau saat beberapa bagian kode memang harus berbagi satu *value*.
 
-## Membaca error: field yang tidak ada
+## Membaca *error*: *field* yang tidak ada
 
-Mengakses field yang tidak dideklarasikan ditolak compiler.
+Mengakses *field* yang tidak dideklarasikan ditolak *compiler*.
 
 ```{.nim}
 type Person = object
@@ -235,14 +235,14 @@ echo ada.email
 main.nim(5, 9) Error: undeclared field: 'email'
 ```
 
-*Message*-nya menyebut field yang dicari. Awali pemeriksaan dari deklarasi *type*: `Person` hanya punya
-`name`, jadi `email` memang tidak ada. Ini jenis error yang paling mudah diperbaiki, karena
+*Message*-nya menyebut *field* yang dicari. Awali pemeriksaan dari deklarasi *type*: `Person` hanya punya
+`name`, jadi `email` memang tidak ada. Ini jenis *error* yang paling mudah diperbaiki, karena
 jawabannya ada di definisi *type*, bukan di *line* pemakaiannya. *Message* aslinya menambahkan
 `for type Person` di ekor; di sini dipotong.
 
 ## Warisan dasar
 
-*Object* bisa mewarisi field dari *object* lain lewat `object of`.
+*Object* bisa mewarisi *field* dari *object* lain lewat `object of`.
 
 ```{.nim}
 type
@@ -262,11 +262,11 @@ echo describe(rex), " knows ", rex.tricks, " tricks"
 Rex knows 3 tricks
 ```
 
-`Dog` mewarisi field `name` dari `Animal` dan menambah `tricks`. *Procedure* yang menerima `Animal`
+`Dog` mewarisi *field* `name` dari `Animal` dan menambah `tricks`. *Procedure* yang menerima `Animal`
 juga menerima `Dog`, karena `Dog` adalah `Animal` yang lebih khusus. Warisan memakai `ref object`
 dengan `RootObj` sebagai akar hierarki.
 
-## Memilih *procedure* saat runtime
+## Memilih *procedure* saat *runtime*
 
 `proc` memilih versi berdasarkan *type* statis, bukan *type* *object* saat berjalan. Untuk perilaku yang
 memang bergantung pada *type* saat berjalan, Nim menyediakan `method`.
@@ -294,7 +294,7 @@ Milo meows
 ```
 
 Walaupun `animals` bertipe `seq[Animal]`, `speak(a)` memanggil `method` milik *type* aslinya. Satu
-`method` ditandai `{.base.}` sebagai akar hierarki; tanpa penanda itu compiler memberi *warning*
+`method` ditandai `{.base.}` sebagai akar hierarki; tanpa penanda itu *compiler* memberi *warning*
 karena bentuk lamanya sudah usang.
 
 Sebagai pembanding, `proc` dengan nama sama tidak melihat *type* saat berjalan:
@@ -327,7 +327,7 @@ hanya kalau perilaku memang berbeda per *type*; selain itu `proc` lebih murah da
 
 Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
-1. Tambahkan field `email: string` pada `Person`, isi lewat *constructor*, lalu tampilkan.
+1. Tambahkan *field* `email: string` pada `Person`, isi lewat *constructor*, lalu tampilkan.
 2. Tanpa menjalankan, prediksi *output*-nya:
    ```{.nim}
    type Task = object
@@ -337,7 +337,7 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
    var t = Task(title: "write")
    echo t.done, " ", t.title
    ```
-3. Tulis `type Book = ref object of RootObj` dengan field `title` dan `pages`, buat satu instance,
+3. Tulis `type Book = ref object of RootObj` dengan *field* `title` dan `pages`, buat satu instance,
    lalu tampilkan lewat *procedure* yang menerima `Book`.
 4. Kode berikut gagal. Perbaiki tanpa mengubah `let`:
    ```{.nim}
@@ -351,13 +351,13 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
 ## Ringkasan
 
-- `object` mengelompokkan field bernama; `Type(field: value)` adalah *constructor* literal.
-- Field yang tidak diisi memakai default *type* itu, dan *object* tanpa isi tetap aman dipakai.
+- `object` mengelompokkan *field* bernama; `Type(field: value)` adalah *constructor* *literal*.
+- *Field* yang tidak diisi memakai default *type* itu, dan *object* tanpa isi tetap aman dipakai.
 - *Object* *value* punya `$` bawaan; `ref object` tidak, jadi definisikan `$` atau pakai `p[]`.
 - Menyalin *object* *value* menggandakan datanya; menyalin `ref object` menggandakan *pointer*-nya.
-- `object of RootObj` mewariskan field; `new` mengalokasikan `ref` yang masih `nil`.
+- `object of RootObj` mewariskan *field*; `new` mengalokasikan `ref` yang masih `nil`.
 
 ## Selanjutnya
 
-Bab berikutnya membahas [enum dan set](enums-and-sets.qmd): *set* *value* bernama dengan urutan
+Bab berikutnya membahas [*enum* dan *set*](enums-and-sets.qmd): *set* *value* bernama dengan urutan
 tetap, dan *bitset* untuk menguji keanggotaan dengan cepat.

@@ -1,17 +1,17 @@
-# Generic: *type* dan *procedure*
+# *Generic*: *type* dan *procedure*
 
 Menulis satu *procedure* untuk `int`, lalu menyalinnya untuk `string`, lalu lagi untuk `float`, cepat
 melelahkan. Nim menyelesaikan ini dengan *generic*: satu deklarasi yang di-write sekali, lalu
-compiler membuat versinya untuk setiap *type* yang dipakai.
+*compiler* membuat versinya untuk setiap *type* yang dipakai.
 
-Bagian yang mudah salah bukan penulisannya, tapi batasannya. Tanpa batasan, compiler menerima *type*
+Bagian yang mudah salah bukan penulisannya, tapi batasannya. Tanpa batasan, *compiler* menerima *type*
 apa pun dan baru mengeluh jauh di dalam. Dengan batasan, *type* yang salah ditolak di tempat
 *calling*, lengkap dengan alasan.
 
 ::: {.callout-note}
 ## Tujuan bab
 
-Setelah bab ini, pembaca bisa menulis *procedure* dan *type* generic, memasang batasan pada *parameter*
+Setelah bab ini, pembaca bisa menulis *procedure* dan *type* *generic*, memasang batasan pada *parameter*
 *type*, membaca *error message* saat batasannya tidak dipenuhi, serta membedakan inferensi otomatis dan
 *argument* *type* eksplisit.
 :::
@@ -33,13 +33,13 @@ echo identity("nim")
 nim
 ```
 
-`T` adalah nama untuk *type* yang belum ditentukan. Saat `identity(42)` di-call, compiler mengisi
+`T` adalah nama untuk *type* yang belum ditentukan. Saat `identity(42)` di-call, *compiler* mengisi
 `T` dengan `int`; saat `identity("nim")` di-call, `T` menjadi `string`. Proses mengisi `T` ini
 disebut instansiasi, dan *result*-nya dua *procedure* berbeda yang sama-sama bernama `identity`.
 
 Nama `T` hanya berlaku di dalam deklarasi itu, dan dua *procedure* *result* instansiasi tidak berbagi
-kode: yang satu bekerja dengan `int`, yang lain dengan `string`. Karena itu, error di dalam
-badan generic baru terlihat saat salah satu versinya dibuat. Compiler memeriksa tiap versi secara
+kode: yang satu bekerja dengan `int`, yang lain dengan `string`. Karena itu, *error* di dalam
+badan *generic* baru terlihat saat salah satu versinya dibuat. *Compiler* memeriksa tiap versi secara
 terpisah, dan *error message*-nya sering menyebut *type* yang sedang disimpulkan.
 
 ## Batasan *type*: `T: SomeInteger`
@@ -84,7 +84,7 @@ Expected one of (first mismatch at [position]):
 `float64` tidak termasuk `SomeInteger`, jadi tidak ada versi `double` yang cocok. Tanpa batasan,
 *message* seperti ini baru muncul di dalam badan, saat `T` sudah dipakai.
 
-## Generic pada *type*
+## *Generic* pada *type*
 
 Batasan `[T]` juga berlaku untuk *type*, bukan hanya *procedure*. Sebuah `object` bisa diberi *parameter*
 *type*, sehingga isinya menyesuaikan.
@@ -109,12 +109,12 @@ text
 di-write `Box[T](value: value)`, dan `T` di situ disesuaikan dari *value* yang dioper.
 
 *Procedure* yang bekerja pada `Box[T]` juga harus membawa *parameter* *type* yang sama. Itulah sebabnya
-`boxed` di-write `boxed[T]`, bukan sekadar `boxed`. Tanpa `[T]`, compiler tidak tahu *type* mana yang
+`boxed` di-write `boxed[T]`, bukan sekadar `boxed`. Tanpa `[T]`, *compiler* tidak tahu *type* mana yang
 dimaksud di dalam `Box[T]`.
 
 ## Inferensi dan *type argument* eksplisit
 
-Compiler menyimpulkan `T` dari *argument* yang bertipe `T`. Kalau tidak ada *argument* seperti itu, `T`
+*Compiler* menyimpulkan `T` dari *argument* yang bertipe `T`. Kalau tidak ada *argument* seperti itu, `T`
 harus disebut sendiri.
 
 ```{.nim}
@@ -131,7 +131,7 @@ echo makeSeq[string](2)
 @["", ""]
 ```
 
-Di sini `T` tidak muncul di daftar *parameter*, jadi `makeSeq(3)` tidak cukup: compiler tidak mungkin
+Di sini `T` tidak muncul di daftar *parameter*, jadi `makeSeq(3)` tidak cukup: *compiler* tidak mungkin
 menebak *type* isinya. *Argument* *type* di-write di dalam kurung siku setelah nama: `makeSeq[int](3)`.
 `default(T)` menghasilkan *value* kosong *type* `T`, yaitu `0` untuk `int` dan `""` untuk `string`.
 
@@ -175,8 +175,8 @@ echo fill[int, 2](9)
 ```
 
 `N` dipakai sebagai ukuran `array[N, T]`, dan ukuran *array* harus tetap, jadi `N` wajib diketahui
-compiler. Karena `N` tidak muncul di daftar *parameter* *value*, keduanya di-write eksplisit:
-`fill[char, 3]`. *Result* `fill[char, 3]('z')` adalah *array* tiga character. Ukuran `N` menjadi bagian
+*compiler*. Karena `N` tidak muncul di daftar *parameter* *value*, keduanya di-write eksplisit:
+`fill[char, 3]`. *Result* `fill[char, 3]('z')` adalah *array* tiga *character*. Ukuran `N` menjadi bagian
 dari *type* *result*, jadi `fill[int, 2](9)` menghasilkan `array[2, int]`, *type* yang berbeda dari
 `fill[int, 3](9)`.
 
@@ -206,7 +206,7 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
 ## Ringkasan
 
-- *Parameter* *type* di-write `[T]` setelah nama; compiler membuat satu versi per *type* yang dipakai.
+- *Parameter* *type* di-write `[T]` setelah nama; *compiler* membuat satu versi per *type* yang dipakai.
 - Batasan seperti `T: SomeInteger` menolak *type* yang tidak sesuai di tempat *calling*.
 - `[T]` juga dipakai pada `type`, bukan hanya *procedure*.
 - `T` disimpulkan dari *argument* yang bertipe `T`; kalau tidak ada, tulis *argument* *type* eksplisit.
@@ -215,5 +215,5 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
 ## Selanjutnya
 
-Bab berikutnya membahas *template*: potongan kode yang disalin compiler ke tempat *calling*,
-berbeda dari generic yang membuat versi baru dari sebuah *procedure*.
+Bab berikutnya membahas *template*: potongan kode yang disalin *compiler* ke tempat *calling*,
+berbeda dari *generic* yang membuat versi baru dari sebuah *procedure*.

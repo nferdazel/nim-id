@@ -18,10 +18,10 @@ Semua tautan diperiksa hidup pada Oktober 2026.
   `-d:release`, `--mm`, dan `--filenames` yang dipakai bab 1 dan bab 33.
 - **[NEP-1: Nim style guide](https://nim-lang.org/docs/nep1.html)** — dasar aturan penamaan di bab 3.
 - **[Nim tools](https://nim-lang.org/docs/tools.html)** — `nimpretty`, `nimble`, dan yang lain di
-  sekitar compiler.
+  sekitar *compiler*.
 - **[Nimble](https://nim-lang.github.io/nimble/)** — dokumentasi *package manager* yang dipakai bab 37.
 
-## Memory dan kepemilikan
+## *Memory* dan kepemilikan
 
 - **[Memory management](https://nim-lang.org/docs/mm.html)** — ARC, ORC, dan pilihan `--mm`; versi
   panjang dari bab 27.
@@ -34,22 +34,22 @@ Semua tautan diperiksa hidup pada Oktober 2026.
 - **[Nim 2.0 released](https://nim-lang.org/blog/2023/08/01/nim-v20-released.html)** — kenapa ORC
   menjadi pengelola *memory* bawaan.
 
-## Async, HTTP, dan thread
+## Async, HTTP, dan *thread*
 
 - **[std/asyncdispatch](https://nim-lang.org/docs/asyncdispatch.html)** — `async`, `await`, dan
   `Future`; dasar bab 31.
 - **[std/asynchttpserver](https://nim-lang.org/docs/asynchttpserver.html)** — server HTTP yang dipakai
   bab 35.
 - **[std/httpclient](https://nim-lang.org/docs/httpclient.html)** — sisi klien untuk bab yang sama.
-- **[std/typedthreads](https://nim-lang.org/docs/typedthreads.html)** — thread bertipe, bab 42.
+- **[std/typedthreads](https://nim-lang.org/docs/typedthreads.html)** — *thread* bertipe, bab 42.
 
-## Backend, FFI, dan data
+## *Backend*, FFI, dan data
 
 - **[Backend integration](https://nim-lang.org/docs/backends.html)** — apa yang perlu disiapkan saat
   memanggil C, versi panjang bab 32.
 - **[std/db_common](https://nim-lang.org/docs/db_common.html)** — antarmuka yang dipakai `db_sqlite` di
   bab 36.
-- **[std/json](https://nim-lang.org/docs/json.html)** — parser dan serialisasi yang dipakai bab 28.
+- **[std/json](https://nim-lang.org/docs/json.html)** — *parser* dan serialisasi yang dipakai bab 28.
 
 ## Buku dan contoh
 

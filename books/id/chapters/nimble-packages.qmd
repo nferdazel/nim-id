@@ -28,9 +28,9 @@ textstats/
     test_textstats.nim
 ```
 
-`src/textstats.nim` adalah *entry point* *package*. Pemakai write `import textstats`, dan compiler
+`src/textstats.nim` adalah *entry point* *package*. Pemakai write `import textstats`, dan *compiler*
 mencari *file* itu. *Module* tambahan diletakkan di `src/textstats/` lalu diimpor sebagai
-`import textstats/utils`. *Directory* `private/` di dalamnya menandai *module* internal. Itu konvensi, bukan pembatas: compiler
+`import textstats/utils`. *Directory* `private/` di dalamnya menandai *module* internal. Itu konvensi, bukan pembatas: *compiler*
 tetap bisa mengimpornya kalau *path* itu ada di *search path*.
 *Directory* `tests/` memuat *test*, dan `README.md` memuat cara pakai singkat.
 
@@ -40,7 +40,7 @@ tetap bisa mengimpornya kalau *path* itu ada di *search path*.
 nimble init textstats
 ```
 
-Wizard itu menanyakan lima hal: jenis *package* (library, binary, hybrid), versi awal, deskripsi,
+Wizard itu menanyakan lima hal: jenis *package* (*library*, binary, hybrid), versi awal, deskripsi,
 lisensi, dan versi Nim terendah. Setelah selesai, *directory* baru berisi `textstats.nimble`,
 `src/textstats.nim`, `src/textstats/submodule.nim`, `tests/test1.nim`, dan `tests/config.nims`.
 *File* yang tidak dipakai boleh dihapus; yang wajib hanya *file* `.nimble` dan kode di `src/`.
@@ -70,7 +70,7 @@ requires "nim >= 2.0.0"
 | `version` | versi *package*, dipakai nimble untuk memilih versi yang cocok |
 | `author` | nama *maintainer*, muncul di daftar *package* |
 | `description` | satu *line* penjelasan *package* |
-| `license` | identifier SPDX, misalnya `MIT` |
+| `license` | *identifier* SPDX, misalnya `MIT` |
 | `srcDir` | *directory* berisi kode; wajib kalau kodenya tidak sejajar dengan `.nimble` |
 | `requires` | dependensi, termasuk versi Nim terendah yang didukung |
 
@@ -88,7 +88,7 @@ task docs, "Build the documentation":
 
 Tugas itu dijalankan dengan `nimble docs`, dan daftarnya dilihat lewat `nimble tasks`.
 
-## *Module* library dan pemakainya
+## *Module* *library* dan pemakainya
 
 Kode yang layak jadi *package* punya satu ciri: ia dipakai tanpa perlu diketahui isinya. Dua contoh
 berikut menunjukkan *module* kecil dan program yang memakainya. Di dalam *package*, *file* pertama tinggal
@@ -122,7 +122,7 @@ Nim Is A Small Language
 
 Tanda bintang pada nama *procedure*, `wordCount*`, berarti *procedure* itu diekspor. Tanpa bintang, ia
 tetap pribadi bagi *module* itu. Blok `when isMainModule` hanya berjalan kalau *file* itu di-compile
-sebagai program utama. Jadi satu *file* bisa dipakai sebagai library dan sekaligus sebagai contoh
+sebagai program utama. Jadi satu *file* bisa dipakai sebagai *library* dan sekaligus sebagai contoh
 yang bisa dijalankan, dan saat pemakai mengimpornya, tidak ada yang di-print.
 
 Pemakainya cukup menulis satu *line* `import`:
@@ -167,12 +167,12 @@ main.nim(1, 8) Error: cannot open file: textstats_helpers
 ```
 
 Baca dari kiri: `main.nim` adalah *file* itu, `(1, 8)` berarti *line* 1 kolom 8, tepat di awal nama
-*module* setelah `import `. `cannot open file` berarti compiler menyusuri *search path* *module*, mulai
+*module* setelah `import `. `cannot open file` berarti *compiler* menyusuri *search path* *module*, mulai
 dari *directory* *file* *caller*, dan tidak menemukan *file* bernama `textstats_helpers.nim`.
 
-## Command nimble sehari-hari
+## *Command* nimble sehari-hari
 
-Dua command ini yang paling sering dipakai saat mengembangkan *package*:
+Dua *command* ini yang paling sering dipakai saat mengembangkan *package*:
 
 ```{.bash}
 nimble check
@@ -184,11 +184,11 @@ menjalankan semua *file* di `tests/` yang namanya dimulai huruf `t`. Kalau semua
 terakhirnya `Success: All tests passed`.
 
 *Package* biner mendeklarasikan `bin` di *file* `.nimble`, lalu `nimble build` menghasilkan binernya dan
-`nimble run` membangunnya lalu menjalankannya. *Package* library tidak punya biner, jadi `nimble build`
-berhenti dengan *message* `Nothing to build`; untuk library, pasangan yang tepat adalah `nimble check`
+`nimble run` membangunnya lalu menjalankannya. *Package* *library* tidak punya biner, jadi `nimble build`
+berhenti dengan *message* `Nothing to build`; untuk *library*, pasangan yang tepat adalah `nimble check`
 dan `nimble test`. Di dalam *package*, nimble juga menyediakan `nimble c` untuk meng-compile satu *file*.
 
-Command pemasangan:
+*Command* pemasangan:
 
 ```{.bash}
 nimble install
@@ -198,7 +198,7 @@ Tanpa nama *package*, `nimble install` memasang *package* di *directory* kerja k
 menguji sebelum *package* itu terbit. Setelah terbit, pemakai write `nimble install textstats`. *Package*
 yang belum masuk daftar resmi tetap bisa dipasang lewat URL repositori Git-nya.
 
-## Versi: major, minor, patch
+## Versi: major, minor, *patch*
 
 Nomor versi bukan hiasan. Pemakai memakainya untuk memutuskan kapan berani memperbarui dependensi,
 dan nimble memakainya untuk memilih versi. Aturan yang dipakai luas, versi semantik (semver),
@@ -241,8 +241,8 @@ nimble publish
 ```
 
 Nimble read tag yang berbentuk versi, misalnya `v0.2.0`, untuk mengetahui versi apa saja yang
-tersedia. Karena itu urutannya penting: naikkan `version` di *file* `.nimble`, commit, baru buat
-tag. `nimble publish` memerlukan akun GitHub dan personal access token; command itu mengusulkan
+tersedia. Karena itu urutannya penting: naikkan `version` di *file* `.nimble`, *commit*, baru buat
+tag. `nimble publish` memerlukan akun GitHub dan personal access *token*; *command* itu mengusulkan
 *package* ke daftar resmi di repositori `nim-lang/packages`. Satu kali saja, bukan setiap kali versi
 naik.
 
@@ -258,7 +258,7 @@ di proyek itu. *Package* mulai layak ketika:
 - namanya belum dipakai *package* lain di daftar resmi.
 
 Versi `0.1.0` sah untuk *package* muda. Lebih baik terbit lebih awal dan memperbaiki cepat daripada
-menyimpan *package* di laptop sampai "sempurna", karena error baru terlihat setelah ada yang
+menyimpan *package* di laptop sampai "sempurna", karena *error* baru terlihat setelah ada yang
 memakainya.
 
 ## Latihan
@@ -289,7 +289,7 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 - *Package* nimble adalah *directory* dengan `<nama>.nimble` di akar, kode di `src/`, *test* di `tests/`.
 - *File* `.nimble` memuat `version`, `author`, `description`, `license`, `srcDir`, dan `requires`.
 - *Procedure* yang dipakai dari luar harus diekspor dengan `*`; `when isMainModule` memisahkan demo dari
-  library.
+  *library*.
 - `nimble check` dan `nimble test` menemani pengembangan; `nimble build` hanya untuk *package* yang punya
   biner.
 - Versi semantik menentukan kapan pemakai boleh memperbarui; *release* ditandai tag Git, dan

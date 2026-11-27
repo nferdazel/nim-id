@@ -13,7 +13,7 @@ membaca *output* lulus dan gagal, serta mengenali `undeclared identifier` saat l
 `std/unittest`.
 :::
 
-## Suite dan test
+## *Suite* dan *test*
 
 Simpan kode berikut sebagai `tests.nim`, lalu jalankan `nim c -r tests.nim`.
 
@@ -45,7 +45,7 @@ Tiga hal yang perlu diperhatikan.
 - *Line* pertama *output* memang kosong. Itu bawaan `unittest`, bukan salah tulis di buku ini.
 
 `check` menerima *expression* `bool`; kalau bernilai `false`, *test*-nya ditandai gagal. Karena itu
-*comparison* di-write apa adanya di dalamnya, bukan string atau *result* lain.
+*comparison* di-write apa adanya di dalamnya, bukan *string* atau *result* lain.
 
 Beri nama *test* sebagai perilaku, bukan sebagai nama *procedure*. `"adds two positive numbers"` lebih
 berguna daripada `"test add"`, karena saat *test* gagal, nama itulah yang muncul di *output* dan
@@ -87,7 +87,7 @@ kalau langkah berikutnya tidak masuk akal tanpa langkah sebelumnya, misalnya mem
 yang baru saja dipastikan bukan nol.
 
 `expect` memeriksa bahwa sebuah blok melempar *exception* dengan *type* tertentu. Blok di dalamnya
-tidak boleh lolos tanpa error; kalau lolos, *test*-nya gagal. Ini cara menguji *path* error, bukan hanya
+tidak boleh lolos tanpa *error*; kalau lolos, *test*-nya gagal. Ini cara menguji *path* *error*, bukan hanya
 *path* sukses.
 
 ```{.nim}
@@ -126,7 +126,7 @@ Kalau tiap kasus butuh keadaan awal yang sama, `unittest` menyediakan `setup` da
 `suite`; di tingkat atas namanya tidak dikenali. Pakai kalau setiap *test* butuh data segar, misalnya *file* sementara
 yang harus dibuat dan dihapus ulang.
 
-## Error sengaja: lupa mengimpor `std/unittest`
+## *Error* sengaja: lupa mengimpor `std/unittest`
 
 `suite`, `test`, dan `check` bukan bagian dari bahasa. Semuanya berasal dari `std/unittest`.
 

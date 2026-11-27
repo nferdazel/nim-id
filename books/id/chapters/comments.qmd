@@ -1,6 +1,6 @@
-# *Comment* dan doc comment
+# *Comment* dan *doc comment*
 
-*Comment* adalah bagian kode yang tidak dijalankan compiler. Karena itu banyak orang menganggapnya
+*Comment* adalah bagian kode yang tidak dijalankan *compiler*. Karena itu banyak orang menganggapnya
 gratis, lalu menulis terlalu banyak. Di Nim ada tiga bentuk dengan aturan berbeda, dan salah satu di
 antaranya menjadi bahan dokumentasi. Salah menaruhnya membuat dokumentasi hilang tanpa satu pun
 *error message*.
@@ -8,9 +8,9 @@ antaranya menjadi bahan dokumentasi. Salah menaruhnya membuat dokumentasi hilang
 ::: {.callout-note}
 ## Tujuan bab
 
-Setelah bab ini, pembaca bisa memakai *line comment* `#`, *block comment* `#[ ]#`, dan doc comment
+Setelah bab ini, pembaca bisa memakai *line comment* `#`, *block comment* `#[ ]#`, dan *doc comment*
 `##` secara tepat, menghasilkan dokumentasi dengan `nim doc`, dan menulis contoh yang ikut diuji
-compiler lewat `runnableExamples`.
+*compiler* lewat `runnableExamples`.
 :::
 
 ## *Line comment*: `#`
@@ -26,8 +26,8 @@ echo "comments do not run"  # this one too
 comments do not run
 ```
 
-*Line comment* boleh berdiri sendiri di awal *line*, atau menempel di ujung kode. Compiler membuang
-keduanya sebelum kode mesin dibuat, jadi tidak ada biaya di runtime. Yang penting: *comment*
+*Line comment* boleh berdiri sendiri di awal *line*, atau menempel di ujung kode. *Compiler* membuang
+keduanya sebelum kode mesin dibuat, jadi tidak ada biaya di *runtime*. Yang penting: *comment*
 menjelaskan kenapa, bukan apa. `# tambah satu` di atas `total += 1` tidak memberi informasi apa
 pun.
 
@@ -54,7 +54,7 @@ yang sudah berisi *block comment* tetap bekerja.
 
 ## Ketika blok tidak ditutup
 
-Kalau `#[` dibiarkan terbuka, compiler tidak tahu kapan *comment* berakhir. Simpan kode berikut
+Kalau `#[` dibiarkan terbuka, *compiler* tidak tahu kapan *comment* berakhir. Simpan kode berikut
 sebagai `broken.nim`, lalu jalankan `nim r broken.nim`.
 
 ```{.nim}
@@ -62,23 +62,23 @@ sebagai `broken.nim`, lalu jalankan `nim r broken.nim`.
 echo "unreachable"
 ```
 
-Compiler menolaknya:
+*Compiler* menolaknya:
 
 ```{.txt}
 broken.nim(3, 1) Error: end of multiline comment expected
 ```
 
-Bacalah *message*-nya. `broken.nim` adalah *file* itu (kadang ditulis dengan path lengkap), `(3, 1)` *line* 3, kolom 1, dan `Error` berarti build
-berhenti. Isinya, "end of multiline comment expected", artinya compiler mencapai akhir *file*
+Bacalah *message*-nya. `broken.nim` adalah *file* itu (kadang ditulis dengan *path* lengkap), `(3, 1)` *line* 3, kolom 1, dan `Error` berarti *build*
+berhenti. Isinya, "end of multiline *comment* expected", artinya *compiler* mencapai akhir *file*
 sebelum menemukan `]#`.
 
-Ada pelajaran penting di posisinya. Kita write `#[` di *line* 1, tetapi compiler menunjuk *line* 3:
-*line* kosong setelah *line* terakhir. Compiler baru tahu *comment*-nya tidak pernah ditutup waktu
-mencapai akhir *file*. Jadi posisi yang dilaporkan adalah tempat compiler menyadari masalahnya,
-bukan selalu tempat error itu di-write. Karena itu, saat menemui error yang menunjuk di luar
+Ada pelajaran penting di posisinya. Kita write `#[` di *line* 1, tetapi *compiler* menunjuk *line* 3:
+*line* kosong setelah *line* terakhir. *Compiler* baru tahu *comment*-nya tidak pernah ditutup waktu
+mencapai akhir *file*. Jadi posisi yang dilaporkan adalah tempat *compiler* menyadari masalahnya,
+bukan selalu tempat *error* itu di-write. Karena itu, saat menemui *error* yang menunjuk di luar
 dugaan, periksa beberapa *line* sebelumnya.
 
-## Doc comment: `##`
+## *Doc comment*: `##`
 
 Bentuk ketiga dimulai dengan `##`. Ini bukan *comment* biasa, melainkan dokumentasi untuk deklarasi
 yang menyusulnya. Simpan kode berikut sebagai `area.nim`.
@@ -97,17 +97,17 @@ echo area(3.0, 4.0)
 12.0
 ```
 
-Terhadap program, `##` sama saja dengan `#`: tidak berpengaruh apa pun. Yang berbeda, command
-`nim doc area.nim` mengumpulkan semua doc comment dan menghasilkan *file* HTML di *directory*
+Terhadap program, `##` sama saja dengan `#`: tidak berpengaruh apa pun. Yang berbeda, *command*
+`nim doc area.nim` mengumpulkan semua *doc comment* dan menghasilkan *file* HTML di *directory*
 `htmldocs/`, di sini `htmldocs/area.html`. Isinya persis dua *line* penjelasan di atas *procedure* tadi.
 
-Bedanya dengan `#` penting. Doc comment harus memakai `##`; *comment* `#` di atas deklarasi tidak ikut
+Bedanya dengan `#` penting. *Doc comment* harus memakai `##`; *comment* `#` di atas deklarasi tidak ikut
 masuk dokumentasi. Jadi kalau kita write `# Computes ...` di atas `proc area`, keterangan itu tetap
 tidak muncul di HTML meski terlihat sama di editor.
 
 ## `runnableExamples`: dokumentasi yang diuji
 
-Doc comment bukan sekadar teks. Blok `runnableExamples` di dalamnya berisi kode yang benar-benar
+*Doc comment* bukan sekadar teks. Blok `runnableExamples` di dalamnya berisi kode yang benar-benar
 di-compile dan dijalankan oleh `nim doc`. Simpan sebagai `double.nim`.
 
 ```{.nim}
@@ -124,13 +124,13 @@ echo double(21)
 42
 ```
 
-Jalankan `nim doc double.nim`. Command itu meng-compile blok contoh dan menjalankannya; kalau
+Jalankan `nim doc double.nim`. *Command* itu meng-compile blok contoh dan menjalankannya; kalau
 `doAssert` gagal, `nim doc` berhenti dengan *exit code* bukan nol. Artinya, contoh di dokumentasi
-tidak bisa "basi": dia ikut gagal begitu perilaku *procedure* itu berubah. Ini alasan penulis library
+tidak bisa "basi": dia ikut gagal begitu perilaku *procedure* itu berubah. Ini alasan penulis *library*
 Nim banyak memakai `runnableExamples` ketimbang contoh statis yang tak pernah diuji.
 
 Satu catatan: `nim doc` hanya menjalankan `runnableExamples` pada deklarasi yang diekspor (yang
-diakhiri tanda bintang, seperti `double*`). *Procedure* privat tetap bisa punya doc comment, tetapi
+diakhiri tanda bintang, seperti `double*`). *Procedure* privat tetap bisa punya *doc comment*, tetapi
 contohnya tidak ikut dijalankan.
 
 ## *Comment* yang berguna
@@ -152,18 +152,18 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
    kodenya.
 2. Pada *block comment* contoh kedua, hapus blok bersarang `#[ Nested blocks work too. ]#`. Apakah
    *output* program berubah? Mengapa?
-3. Pada contoh *comment* yang tidak ditutup, di *line* berapa compiler melaporkan error? Mengapa bukan
+3. Pada contoh *comment* yang tidak ditutup, di *line* berapa *compiler* melaporkan *error*? Mengapa bukan
    di *line* tempat `#[` di-write?
 4. Sebuah *procedure* diberi keterangan dengan `#` alih-alih `##` tepat di atasnya. Apakah keterangan
    itu muncul di `htmldocs/`? Jelaskan.
-5. Tulis *procedure* yang diekspor dengan doc comment dan satu blok `runnableExamples`, lalu
+5. Tulis *procedure* yang diekspor dengan *doc comment* dan satu blok `runnableExamples`, lalu
    buktikan `nim doc` gagal kalau isi blok itu salah.
 
 ## Ringkasan
 
 - `#` mengabaikan sisa *line*; `#[ ... ]#` mengabaikan *range* dan boleh bersarang.
 - *Block comment* yang tidak ditutup dilaporkan di posisi akhir *file*, bukan di tempat `#[`.
-- `##` adalah doc comment dan satu-satunya bentuk yang masuk *output* `nim doc`; `runnableExamples` di
+- `##` adalah *doc comment* dan satu-satunya bentuk yang masuk *output* `nim doc`; `runnableExamples` di
 dalamnya ikut di-compile dan dijalankan.
 - *Comment* yang baik menjelaskan alasan; kode mati tidak disimpan di dalam *comment*.
 

@@ -13,7 +13,7 @@ tempatnya; `seq` berukuran dinamis dan bisa tumbuh. Bab ini memakai keduanya, la
 
 Setelah bab ini, pembaca bisa menulis `array` berukuran tetap, menumbuhkan `seq` dengan `add`,
 `insert`, dan `delete`, memakai *index* `[^1]` untuk *element* terakhir, menulis *parameter* `openArray`
-yang menerima `array` maupun `seq`, serta mengenali error *index* di luar batas.
+yang menerima `array` maupun `seq`, serta mengenali *error* *index* di luar batas.
 :::
 
 ## `array`: ukuran tetap
@@ -38,7 +38,7 @@ last: 60
 all: [90, 80, 60]
 ```
 
-`[90, 75, 60]` adalah literal `array`; *type* itu `array[3, int]`. *Index* itu mulai dari `0`, jadi
+`[90, 75, 60]` adalah *literal* `array`; *type* itu `array[3, int]`. *Index* itu mulai dari `0`, jadi
 *element* terakhir ada di `len - 1`. Nim menyediakan cara membaca dari belakang: `[^1]` berarti satu
 dari ujung, sama dengan `scores[2]` di sini.
 
@@ -85,11 +85,11 @@ last: cyd
 @["ada", "bob", "cyd"]
 ```
 
-Awalan `@` mengubah literal `array` menjadi `seq`, jadi `@["ada", "bob"]` bertipe `seq[string]`.
+Awalan `@` mengubah *literal* `array` menjadi `seq`, jadi `@["ada", "bob"]` bertipe `seq[string]`.
 `add` menambahkan satu *element* di ujung. Panjang `seq` diketahui saat program jalan, jadi jumlah
 *element* tidak di-write dalam *type*.
 
-Perhatikan *line* terakhir: `echo` print `@["ada", "bob", "cyd"]`, lengkap dengan `@`. Tanda itu
+Perhatikan *line* terakhir: `echo` *print* `@["ada", "bob", "cyd"]`, lengkap dengan `@`. Tanda itu
 menandai bahwa *value* itu `seq`, bukan `array`.
 
 ## Menyisipkan dan menghapus
@@ -136,7 +136,7 @@ len: 4
 `@[]` adalah `seq` kosong tanpa *element*. Karena kosong, *type* itu tidak bisa disimpulkan dari isinya,
 jadi anotasinya wajib: `seq[int]`. Setelah itu `add` di-call berulang kali di dalam *loop*.
 
-## `openArray`: parameter yang menerima keduanya
+## `openArray`: *parameter* yang menerima keduanya
 
 ```{.nim}
 proc total(values: openArray[int]): int =
@@ -205,7 +205,7 @@ echo total(toOpenArray(a, 1, 3))
 `toOpenArray(a, 1, 3)` menunjuk *element* 1 sampai 3 tanpa membuat `seq` baru. Untuk data besar itu
 menghindari penyalinan; untuk data kecil, `a[1 .. 3]` lebih sederhana dan hasilnya sama.
 
-## Batas *index* dan error out-of-bounds
+## Batas *index* dan *error* out-of-bounds
 
 *Index* yang sah untuk `array` dan `seq` berukuran `len` adalah `0` sampai `len - 1`. *Index* *constant*
 yang melewati batas ditangkap saat compile:
@@ -223,7 +223,7 @@ main.nim(3, 13) Error: conversion from int literal(5) to range 0..2(int) is inva
 Nim menghitung ulang *index* terhadap *range* yang sah (`0..2` untuk tiga *element*). Karena `5` tidak
 masuk *range* itu, programnya tidak pernah dibuat.
 
-Kalau *index* itu baru diketahui saat program jalan, compiler tidak bisa menolong:
+Kalau *index* itu baru diketahui saat program jalan, *compiler* tidak bisa menolong:
 
 ```{.nim}
 let values = [10, 20, 30]
@@ -242,7 +242,7 @@ ini lebih aman daripada C, yang pada kasus serupa membaca *memory* di luar *arra
 *Output* di atas dipotong; *output* lengkapnya juga memuat *stack trace*.
 
 Pemeriksaan ini menyala sejak awal, termasuk saat program di-compile dengan `-d:release`. Hanya
-`-d:danger` yang mematikannya; setelah itu contoh di atas print *value* acak dari luar *array*.
+`-d:danger` yang mematikannya; setelah itu contoh di atas *print* *value* acak dari luar *array*.
 
 ## Latihan
 
@@ -260,7 +260,7 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
    panggil dengan sebuah `array` dan sebuah `seq`.
 4. `var x = @[]` gagal di-compile, sementara `var y: seq[int]` jalan dan panjangnya `0`. Jelaskan
    kenapa keduanya berbeda.
-5. Kode berikut gagal. Perbaiki, lalu jelaskan kenapa compiler menolaknya:
+5. Kode berikut gagal. Perbaiki, lalu jelaskan kenapa *compiler* menolaknya:
    ```{.nim}
    var values = [10, 20, 30]
    values.add(40)
@@ -274,7 +274,7 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
   menghapus.
 - `openArray[T]` sebagai *parameter* menerima `array` dan `seq` tanpa menyalin, tapi tidak bisa disimpan
   atau di-return.
-- *Index* konstan di luar batas ditolak saat compile; *index* saat runtime melempar `IndexDefect`.
+- *Index* konstan di luar batas ditolak saat compile; *index* saat *runtime* melempar `IndexDefect`.
 
 ## Selanjutnya
 

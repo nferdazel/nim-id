@@ -5,8 +5,8 @@ bug paling tua: batas yang salah satu, *element* terakhir tidak ikut, atau *inde
 *array*.
 
 Nim tidak menyediakan `for (int i = 0; i < n; i++)` seperti C. *Loop* `for` di Nim selalu
-memakai *iterator*: *range*, *array*, `seq`, atau iterator buatan sendiri. Bentuk itu menghapus banyak
-error penghitungan *index*.
+memakai *iterator*: *range*, *array*, `seq`, atau *iterator* buatan sendiri. Bentuk itu menghapus banyak
+*error* penghitungan *index*.
 
 ::: {.callout-note}
 ## Tujuan bab
@@ -51,7 +51,7 @@ dalamnya ditolak dengan *message* `'i' cannot be assigned to`. Ini disengaja, su
 dirusak dari dalam.
 
 *Range* juga boleh kosong. `for i in 5 .. 3:` tidak menjalankan badannya sama sekali, dan itu bukan
-error. Kalau memang ingin mundur, pakai `countdown`, bukan *range* yang dibalik.
+*error*. Kalau memang ingin mundur, pakai `countdown`, bukan *range* yang dibalik.
 
 ## Mundur dan melompat: `countdown`, `countup`
 
@@ -75,7 +75,7 @@ for i in countup(1, 3, 2):
 ```
 
 `countdown(3, 1)` berjalan dari `3` turun ke `1`. `countup(1, 3, 2)` berjalan naik dengan langkah
-dua, jadi hanya `1` dan `3` yang di-print. Keduanya adalah iterator, bukan kata kunci; tanpa *argument*
+dua, jadi hanya `1` dan `3` yang di-print. Keduanya adalah *iterator*, bukan kata kunci; tanpa *argument*
 langkah, `countup(a, b)` sama dengan `a .. b`. Keduanya menghasilkan satu *value* tiap putaran,
 sehingga bisa dipakai langsung sebagai sumber `for`.
 
@@ -103,7 +103,7 @@ cyd
 2: cyd
 ```
 
-`for name in names` call iterator `items` secara implisit: setiap putaran mengambil *element* itu.
+`for name in names` call *iterator* `items` secara implisit: setiap putaran mengambil *element* itu.
 Kalau *index* itu dibutuhkan, tulis dua nama *variable*. Bentuk itu memakai `pairs`, yang menghasilkan
 *index* dan *element* sekaligus. Untuk `array` dan `seq`, *index* `pairs` bertipe `int` mulai dari nol.
 Untuk `Table` dan *type* lain, `pairs` menghasilkan pasangan yang sesuai *type* tersebut.
@@ -172,7 +172,7 @@ echo "after"
 main.nim(2, 1) Error: invalid control flow: break
 ```
 
-Compiler menunjuk langsung *line* dan kolom `break`. *Message*-nya menyebut alurnya tidak sah karena
+*Compiler* menunjuk langsung *line* dan kolom `break`. *Message*-nya menyebut alurnya tidak sah karena
 `break` hanya punya arti di dalam `for` atau `while`. Ini termasuk pemeriksaan yang dilakukan
 sebelum program jalan, jadi tidak perlu ada uji coba untuk menemukannya. `continue` memberi *message*
 yang sama di posisi serupa.
@@ -203,7 +203,7 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
 ## Ringkasan
 
-- `for` memakai iterator, bukan penghitung gaya C; `0 ..< n` eksklusif, `0 .. n` inklusif.
+- `for` memakai *iterator*, bukan penghitung gaya C; `0 ..< n` eksklusif, `0 .. n` inklusif.
 - `countdown(a, b)` dan `countup(a, b, step)` mengatur arah dan langkah.
 - `items` memberi *element*, `pairs` memberi *index* dan *element* sekaligus.
 - Kondisi `while` diperiksa sebelum badan, jadi bisa berjalan nol kali.

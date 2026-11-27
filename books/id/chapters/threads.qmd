@@ -15,7 +15,7 @@ antara *thread* dan `async`.
 
 ## Membuat *thread* pertama
 
-*Procedure* yang berjalan di *thread* sendiri ditandai pragma `{.thread.}`. *Argument*-nya satu *value*
+*Procedure* yang berjalan di *thread* sendiri ditandai *pragma* `{.thread.}`. *Argument*-nya satu *value*
 saja, yang diberikan saat pembuatan. *Result*-nya tidak kembali lewat `return value`, melainkan dikirim
 lewat `Channel`.
 
@@ -135,7 +135,7 @@ menyediakan `Isolated` yang memindahkan kepemilikan tanpa menyalin.
 
 ## `--threads:on` tidak lagi perlu
 
-Di Nim 2.x, dukungan *thread* menyala secara bawaan bersama mode *memory* `--mm:orc`. Pragma tambahan
+Di Nim 2.x, dukungan *thread* menyala secara bawaan bersama mode *memory* `--mm:orc`. *Pragma* tambahan
 `--threads:on` tidak diperlukan lagi. Untuk membuktikannya, `system` menyediakan
 `compileOption("threads")`.
 
@@ -181,16 +181,16 @@ hitungan. *Thread* lebih mahal dibuat, dan *memory* tidak dibagi begitu saja, se
 dibuat satu per tugas kecil.
 
 *Thread* berbagi heap dengan prosesnya, jadi yang membatasi bukan ruang *memory*-nya, melainkan
-penghitung referensi yang tidak atomik dan pemeriksaan `gcsafe` dari compiler. Kalau data harus
+penghitung referensi yang tidak atomik dan pemeriksaan `gcsafe` dari *compiler*. Kalau data harus
 melewati batas *thread*, kirim lewat `Channel` atau bungkus dengan `Isolated`. *Variable* global
 hanya aman untuk data yang tidak dikelola GC, dan itu pun tetap butuh penguncian: tanpa penguncian,
 dua *thread* yang menulis ke *variable* yang sama kehilangan sebagian penulisan.
 
 Satu catatan lama: `std/threadpool` dengan `spawn`, `^`, dan `sync` masih ada, tetapi ditandai
-`deprecated` di Nim 2.4.2. Compiler menyarankan *package* nimble seperti `malebolgia`, `taskpools`,
+`deprecated` di Nim 2.4.2. *Compiler* menyarankan *package* nimble seperti `malebolgia`, `taskpools`,
 atau `weave`. Bab ini hanya memakai *standard library*, jadi `Thread` dan `Channel` yang dipakai.
 
-## Error sengaja: *type* `Channel` yang salah
+## *Error* sengaja: *type* `Channel` yang salah
 
 `Channel` memeriksa *message type*-nya saat compile. Mengambil *message* sebagai *type* lain ditolak
 sebelum program berjalan.
@@ -250,12 +250,12 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 3. Tulis dari nol: satu *thread* mengirim lima angka lewat `Channel[int]`, *thread* utama
    menjumlahkannya selama antrean masih berisi *message*.
 4. Kapan *thread* lebih tepat daripada `async`? Sebutkan satu beban kerja.
-5. Kode pada bagian error gagal di-compile. Perbaiki dengan mengubah *type* *channel*, lalu
+5. Kode pada bagian *error* gagal di-compile. Perbaiki dengan mengubah *type* *channel*, lalu
    jelaskan *message*-nya.
 
 ## Ringkasan
 
-- Pragma `{.thread.}` menandai *procedure* yang berjalan di *thread* sendiri.
+- *Pragma* `{.thread.}` menandai *procedure* yang berjalan di *thread* sendiri.
 - `createThread` membuat *thread*, `joinThread` menunggu sampai selesai.
 - `Channel[T]` mengirim satu *type* *value* antar *thread* dengan urutan antrean yang pasti.
 - Di Nim 2.x *thread* menyala secara bawaan; `compileOption("threads")` bernilai `true`.

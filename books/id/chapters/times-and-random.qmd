@@ -16,7 +16,7 @@ menjelaskan kenapa `now()` berbahaya di dalam *test*.
 
 `DateTime` menyimpan tanggal dan jam bersama zona waktunya. Bentuknya lewat *procedure* `dateTime`,
 yang menerima tahun, bulan, hari, jam, menit, detik, *nanosecond*, dan zona. Bulan ditulis sebagai
-*value* enum seperti `mMar`, bukan angka, supaya urutan *argument* tidak mudah tertukar.
+*value* *enum* seperti `mMar`, bukan angka, supaya urutan *argument* tidak mudah tertukar.
 
 ```{.nim}
 import std/times
@@ -42,7 +42,7 @@ Simpan sebagai `main.nim`, lalu jalankan `nim c -r main.nim`. Setiap contoh di b
 
 Specifier `format` yang umum: `yyyy` untuk tahun empat digit, `MM` untuk bulan dua digit, `dd` untuk
 hari, dan `HH:mm:ss` untuk jam, menit, serta detik. Bentuk `MMM` menghasilkan nama bulan yang
-disingkat, `MMMM` nama panjang, sedangkan `ddd` nama hari. Field seperti `launch.hour` dan
+disingkat, `MMMM` nama panjang, sedangkan `ddd` nama hari. *Field* seperti `launch.hour` dan
 `launch.minute` mengambil bagian DateTime tanpa memformat ulang.
 
 Di Nim 2.4.2, nama lama untuk *procedure* ini adalah `initDateTime`, dan namanya sudah ditandai
@@ -51,7 +51,7 @@ Di Nim 2.4.2, nama lama untuk *procedure* ini adalah `initDateTime`, dan namanya
 ## Mengurai teks menjadi waktu
 
 `parse` adalah kebalikan `format`. Ia menerima teks, pola, dan zona, lalu mengembalikan `DateTime`.
-*Value* itu bisa dipecah menjadi field seperti `year`, `month`, atau `monthday`.
+*Value* itu bisa dipecah menjadi *field* seperti `year`, `month`, atau `monthday`.
 
 ```{.nim}
 import std/times
@@ -76,7 +76,7 @@ echo dateOnly.hour, ":", dateOnly.minute
 
 Selama polanya cocok, *result*-nya pasti. Teks tanpa jam, seperti `"2024-03-01"`, menjadi tengah malam,
 yaitu jam `0` dan menit `0`. Kalau teksnya tidak cocok, `parse` melempar `exception`, bukan
-mengembalikan *value* kosong. Kasus itu dibahas di bagian error.
+mengembalikan *value* kosong. Kasus itu dibahas di bagian *error*.
 
 ## Selisih waktu dan *timestamp*
 
@@ -171,7 +171,7 @@ ada
 ```
 
 `sample` tidak mengubah *seq* asalnya. `shuffle` mengubahnya di tempat, jadi *seq* itu harus
-disimpan di *variable* `var`. Mengocok salinan sementara lalu membuangnya adalah error yang
+disimpan di *variable* `var`. Mengocok salinan sementara lalu membuangnya adalah *error* yang
 sering terjadi.
 
 ## Bahaya `now()` di dalam *test*
@@ -180,7 +180,7 @@ sering terjadi.
 bergantung pada kapan *test* dijalankan, dan kegagalannya muncul sesekali tanpa bisa diulang.
 
 Jalan keluarnya sederhana: jangan panggil `now()` di dalam *procedure* yang diuji. Terima `DateTime`
-sebagai parameter, lalu kirim *value* tetap di dalam *test*.
+sebagai *parameter*, lalu kirim *value* tetap di dalam *test*.
 
 ```{.nim}
 import std/[times, unittest]
@@ -206,7 +206,7 @@ suite "isWeekend":
 *Procedure* itu murni: *output*-nya hanya bergantung pada *argument*-nya. Di program sungguhan, *caller*
 tingkat atas yang memanggil `now()` sekali, lalu meneruskan *value* itu ke bawah.
 
-## Error sengaja: format yang tidak cocok
+## *Error* sengaja: format yang tidak cocok
 
 `parse` memeriksa setiap bagian teks terhadap polanya. Satu angka di luar *range* sudah cukup untuk
 menghentikan program.
@@ -222,7 +222,7 @@ echo bad
 Error: unhandled exception: Failed to parse '2024-13-01' with format 'yyyy-MM-dd'. Failed on pattern 'MM' [TimeParseError]
 ```
 
-*Message*-nya menyebut teks aslinya, polanya, dan bagian yang gagal, di sini `MM`. Output lengkapnya juga
+*Message*-nya menyebut teks aslinya, polanya, dan bagian yang gagal, di sini `MM`. *Output* lengkapnya juga
 memuat jejak stack. Perbaikannya adalah memeriksa teks lebih dulu, atau membungkus `parse` dengan
 `try` dan `except TimeParseError`.
 
@@ -256,7 +256,7 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 - `DateTime` dan `Duration` bisa dijumlahkan; `toUnix` mengubah waktu menjadi detik sejak 1970.
 - `initRand` dengan *seed* tetap membuat angka acak bisa diulang di dalam *test*.
 - Panggilan `now()` disembunyikan di *caller* tingkat atas; *procedure* yang diuji menerima
-  `DateTime` sebagai parameter.
+  `DateTime` sebagai *parameter*.
 
 ## Selanjutnya
 

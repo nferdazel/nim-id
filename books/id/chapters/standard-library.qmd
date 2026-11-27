@@ -1,6 +1,6 @@
 # Tur *standard library*
 
-Bahasa yang bagus tanpa library akan melelahkan. Nim mengirim *standard library* bersama compiler,
+Bahasa yang bagus tanpa *library* akan melelahkan. Nim mengirim *standard library* bersama *compiler*,
 dan *module* itu diimpor dengan awalan `std/`. Bab ini menelusuri lima *module* yang paling sering
 dipakai hari-hari: `strutils`, `sequtils`, `tables`, dan `json`. Setiap *module* dibahas secukupnya;
 sisanya punya bab sendiri.
@@ -17,7 +17,7 @@ antara `Table` dan `seq` dengan alasan yang jelas.
 
 *Module* *standard library* diimpor dengan awalan `std/`, misalnya `import std/strutils` atau
 `import std/sequtils`. Awalan itu memisahkan *module* resmi dari *file* lokal. Tanpa `import`, nama
-seperti `strip` atau `hasKey` tidak dikenal compiler.
+seperti `strip` atau `hasKey` tidak dikenal *compiler*.
 
 ## `std/strutils`: mengolah teks
 
@@ -41,10 +41,10 @@ true
 a-b-c
 ```
 
-`strip` membuang spasi di kedua ujung. `split(',')` memecah string menjadi `seq[string]`.
+`strip` membuang spasi di kedua ujung. `split(',')` memecah *string* menjadi `seq[string]`.
 `toUpperAscii` mengubah huruf menjadi kapital, dan `startsWith` menguji awalan. `join("-")`
-menggabungkan kembali `seq[string]` menjadi satu string dengan pemisah. Semua fungsi ini
-return *value* baru; string asalnya tidak berubah.
+menggabungkan kembali `seq[string]` menjadi satu *string* dengan pemisah. Semua fungsi ini
+return *value* baru; *string* asalnya tidak berubah.
 
 ## `std/sequtils`: mengubah *seq*
 
@@ -64,7 +64,7 @@ echo numbers.filterIt(it > 2).mapIt(it * 10)
 @[30, 40, 50, 60]
 ```
 
-`filterIt` menyaring *element*, `mapIt` mengubah setiap *element*. Keduanya template: di dalam kurung,
+`filterIt` menyaring *element*, `mapIt` mengubah setiap *element*. Keduanya *template*: di dalam kurung,
 `it` merujuk *element* yang sedang diproses. Keduanya return `seq` baru dan bisa dirantai,
 seperti pada *line* terakhir.
 
@@ -137,9 +137,9 @@ code
 }
 ```
 
-`parseJson` mengubah teks JSON menjadi `JsonNode`. Field diakses seperti peta: `data["name"]`.
+`parseJson` mengubah teks JSON menjadi `JsonNode`. *Field* diakses seperti peta: `data["name"]`.
 Untuk mengambil *value* itu, pakai `getStr`, `getInt`, `getFloat`, atau `getBool` sesuai jenisnya.
-`pretty` print JSON dengan indentasi agar mudah dibaca.
+`pretty` *print* JSON dengan indentasi agar mudah dibaca.
 
 ## `std/json`: membangun data
 
@@ -174,13 +174,13 @@ echo parsed.name, " is ", parsed.age
 Ada is 36
 ```
 
-`%*{...}` membangun `JsonNode` langsung dari literal, tanpa menulis string JSON lalu menguraikannya.
-`to(Person)` mengubahnya menjadi *object* biasa. Keduanya menghindari penggabungan string manual yang
+`%*{...}` membangun `JsonNode` langsung dari *literal*, tanpa menulis *string* JSON lalu menguraikannya.
+`to(Person)` mengubahnya menjadi *object* biasa. Keduanya menghindari penggabungan *string* manual yang
 mudah salah.
 
-## Membaca error: kunci yang tidak ada
+## Membaca *error*: kunci yang tidak ada
 
-Mengakses kunci yang tidak ada bukan error compile; program baru berhenti saat berjalan.
+Mengakses kunci yang tidak ada bukan *error* compile; program baru berhenti saat berjalan.
 
 ```{.nim}
 import std/json
@@ -199,8 +199,8 @@ saat kuncinya hilang.
 
 ## `std/options`: *value* yang mungkin tidak ada
 
-`getOrDefault` mencegah error, tetapi ia menyamarkan "tidak ada" menjadi *value* biasa: `0` untuk
-`int`, string kosong untuk `string`. Kalau `0` juga *value* yang sah, pembaca tidak bisa membedakan
+`getOrDefault` mencegah *error*, tetapi ia menyamarkan "tidak ada" menjadi *value* biasa: `0` untuk
+`int`, *string* kosong untuk `string`. Kalau `0` juga *value* yang sah, pembaca tidak bisa membedakan
 "tidak ada" dari "nol". `std/options` membuat perbedaan itu eksplisit.
 
 ```{.nim}
@@ -228,7 +228,7 @@ false
 `get(cadangan)` mengembalikan cadangan. Karena status "ada" dibawa terpisah, `int` tetap boleh
 bernilai nol.
 
-Pola serupa dipakai `std/strutils`: `parseInt` mengembalikan `bool` dan mengisi parameter `var`,
+Pola serupa dipakai `std/strutils`: `parseInt` mengembalikan `bool` dan mengisi *parameter* `var`,
 bukan mengembalikan `Option`. Keduanya lebih jujur daripada `-1` sebagai penanda "tidak ketemu".
 
 ## *Module* lain punya babnya sendiri

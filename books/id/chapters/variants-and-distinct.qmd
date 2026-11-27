@@ -1,24 +1,24 @@
-# Object varian dan `distinct`
+# *Object* varian dan `distinct`
 
 Dua kebutuhan muncul berulang. Pertama, satu *type* yang isinya bergantung pada keadaan: bentuk punya
 `radius`, atau `width` dan `height`, tapi tidak keduanya sekaligus. Kedua, dua *value* yang secara
 data sama tetapi tidak boleh tertukar, misalnya id pengguna dan id pesanan.
 
-Nim menjawab keduanya dengan cara berbeda. Object varian menyatukan beberapa bentuk ke dalam satu
-*type* dengan sebuah penanda. `distinct` membuat *type* benar-benar baru, sehingga compiler menolak
+Nim menjawab keduanya dengan cara berbeda. *Object* varian menyatukan beberapa bentuk ke dalam satu
+*type* dengan sebuah penanda. `distinct` membuat *type* benar-benar baru, sehingga *compiler* menolak
 pencampuran. Semua contoh diuji di Nim 2.4.2.
 
 ::: {.callout-note}
 ## Tujuan bab
 
-Setelah bab ini, pembaca bisa mendefinisikan object varian dengan field `case`, membaca error
+Setelah bab ini, pembaca bisa mendefinisikan *object* varian dengan *field* `case`, membaca *error*
 konstruksi yang bertentangan, mengenali `FieldDefect`, membuat *type* `distinct`, melakukan konversi
 eksplisit, dan tahu kapan `distinct` lebih baik daripada alias *type*.
 :::
 
-## Object varian: field yang bergantung pada penanda
+## *Object* varian: *field* yang bergantung pada penanda
 
-Awali dengan sebuah enum sebagai penanda, lalu tulis blok `case` di dalam *object*.
+Awali dengan sebuah *enum* sebagai penanda, lalu tulis blok `case` di dalam *object*.
 
 ```{.nim}
 type
@@ -39,13 +39,13 @@ echo c.kind, " ", c.radius
 circle 2.0
 ```
 
-Field `kind` adalah **discriminator** (penanda). Ia menentukan cabang `case` mana yang aktif. Untuk
-`kind = circle`, yang ada hanyalah field `radius`; untuk `kind = rect`, yang ada adalah `width` dan
-`height`. Nim menyimpan penanda bersama field yang dipakai cabang itu.
+*Field* `kind` adalah **discriminator** (penanda). Ia menentukan cabang `case` mana yang aktif. Untuk
+`kind = circle`, yang ada hanyalah *field* `radius`; untuk `kind = rect`, yang ada adalah `width` dan
+`height`. Nim menyimpan penanda bersama *field* yang dipakai cabang itu.
 
-## Memakai `case` untuk mengakses field yang benar
+## Memakai `case` untuk mengakses *field* yang benar
 
-Cara aman membaca object varian adalah memeriksa penandanya lebih dulu.
+Cara aman membaca *object* varian adalah memeriksa penandanya lebih dulu.
 
 ```{.nim}
 type
@@ -74,12 +74,12 @@ echo area(Shape(kind: rect, width: 3.0, height: 4.0))
 12.0
 ```
 
-Setiap cabang `of` hanya menyentuh field milik cabang itu, jadi tidak ada akses yang salah. Karena
+Setiap cabang `of` hanya menyentuh *field* milik cabang itu, jadi tidak ada akses yang salah. Karena
 `ShapeKind` hanya punya dua anggota, `case` ini sudah lengkap dan tidak perlu `else`.
 
-## Field umum sebelum `case`
+## *Field* umum sebelum `case`
 
-Field yang di-write sebelum `case` dimiliki semua cabang.
+*Field* yang di-write sebelum `case` dimiliki semua cabang.
 
 ```{.nim}
 type
@@ -102,13 +102,13 @@ echo fail.id, " ", fail.code
 2 500
 ```
 
-`id` tersedia untuk kedua bentuk. Menaruh field bersama di luar `case` mengurangi pengulangan dan
-membuat *type* lebih rapi. Nama field harus unik di seluruh cabang, jadi `height` tidak bisa dipakai di
+`id` tersedia untuk kedua bentuk. Menaruh *field* bersama di luar `case` mengurangi pengulangan dan
+membuat *type* lebih rapi. Nama *field* harus unik di seluruh cabang, jadi `height` tidak bisa dipakai di
 cabang `rect` dan cabang lain sekaligus.
 
-## Error: mengisi field di luar cabang
+## *Error*: mengisi *field* di luar cabang
 
-Kalau penandanya sudah ditentukan di *constructor*, compiler memeriksa field yang diisi.
+Kalau penandanya sudah ditentukan di *constructor*, *compiler* memeriksa *field* yang diisi.
 
 ```{.nim}
 type
@@ -133,11 +133,11 @@ main.nim(11, 14) Error: a case selecting discriminator 'kind' with value 'circle
 cabang `rect`. Perbaikannya jelas dari isi *message*, yaitu hapus `width` dan isi `radius`, atau ubah
 `kind` menjadi `rect`.
 
-## Error saat runtime: `FieldDefect`
+## *Error* saat *runtime*: `FieldDefect`
 
-Nim tidak memeriksa akses field varian saat compile. Pemeriksaan penanda disisipkan pada setiap
-akses dan berjalan saat program berjalan, bahkan ketika penandanya literal di *constructor*. Yang
-tetap ditolak saat compile adalah *constructor* yang mengisi field di cabang yang salah.
+Nim tidak memeriksa akses *field* varian saat compile. Pemeriksaan penanda disisipkan pada setiap
+akses dan berjalan saat program berjalan, bahkan ketika penandanya *literal* di *constructor*. Yang
+tetap ditolak saat compile adalah *constructor* yang mengisi *field* di cabang yang salah.
 
 ```{.nim}
 type
@@ -158,10 +158,10 @@ echo c.width
 Error: unhandled exception: field 'width' is not accessible for type 'Shape' using 'kind = circle' [FieldDefect]
 ```
 
-Di sini `c.width` diminta padahal `c` adalah lingkaran. Compiler tidak selalu bisa membuktikan itu
+Di sini `c.width` diminta padahal `c` adalah lingkaran. *Compiler* tidak selalu bisa membuktikan itu
 saat compile, jadi Nim menyisipkan pemeriksaan yang berjalan saat akses terjadi. Karena penandanya
 tidak pernah berubah setelah konstruksi, bug ini biasanya berarti ada cabang di kode yang lupa
-diperiksa. Aturannya: akses field variant hanya lewat `case` pada penandanya.
+diperiksa. Aturannya: akses *field* *variant* hanya lewat `case` pada penandanya.
 
 ## `distinct`: *type* baru yang tidak tertukar
 
@@ -185,7 +185,7 @@ Tidak ada konversi otomatis ke arah mana pun. Inilah yang mencegah *value* tertu
 
 ## Konversi eksplisit di kedua arah
 
-Arah sebaliknya juga butuh konversi. Literal tidak masuk dengan sendirinya.
+Arah sebaliknya juga butuh konversi. *Literal* tidak masuk dengan sendirinya.
 
 ```{.nim}
 type Dollars = distinct float
@@ -198,8 +198,8 @@ echo float(price)
 main.nim(3, 22) Error: type mismatch: got 'float64' for '10.0' but expected 'Dollars = distinct float'
 ```
 
-Compiler menolak `10.0` karena *type* itu `float64`, bukan `Dollars`. Tulis `Dollars(10.0)`. *Message*
-errornya menyebut kedua *type*, jadi arah perbaikannya langsung terbaca.
+*Compiler* menolak `10.0` karena *type* itu `float64`, bukan `Dollars`. Tulis `Dollars(10.0)`. *Message*
+*errornya* menyebut kedua *type*, jadi arah perbaikannya langsung terbaca.
 
 ## `distinct` vs alias *type*
 
@@ -253,7 +253,7 @@ echo total
 `{.borrow.}` meminjam badan `+` dari `float` supaya tidak di-write ulang. Karena operasinya dipilih
 satu per satu, `distinct` memaksa kita berpikir soal satuan sebelum mencampur *value*.
 
-## Error: memakai `distinct` sebagai *type* dasarnya
+## *Error*: memakai `distinct` sebagai *type* dasarnya
 
 Yang membuat `distinct` berguna adalah penolakannya.
 
@@ -269,14 +269,14 @@ echo n
 main.nim(4, 14) Error: type mismatch: got 'UserId' for 'u' but expected 'int'
 ```
 
-`u` tidak bisa dipakai sebagai `int` tanpa `int(u)`. Compiler menyebut kedua *type*, dan itu petunjuk
+`u` tidak bisa dipakai sebagai `int` tanpa `int(u)`. *Compiler* menyebut kedua *type*, dan itu petunjuk
 perbaikannya. Inilah pengaman yang tidak dimiliki alias *type*.
 
 ## Latihan
 
 Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
-1. Tambahkan varian ketiga `triangle` dengan field `base` dan `altitude` pada `Shape`, lalu perluas
+1. Tambahkan varian ketiga `triangle` dengan *field* `base` dan `altitude` pada `Shape`, lalu perluas
    `area`.
 2. Tanpa menjalankan, prediksi *output* bila `Shape(kind: circle, width: 3.0)` diganti menjadi
    `Shape(kind: circle, radius: 3.0)`. Jelaskan.
@@ -288,9 +288,9 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
 ## Ringkasan
 
-- Object varian memakai field `case` dengan satu discriminator; hanya field cabang aktif yang ada.
-- *Constructor* yang mengisi field di luar cabang ditolak sebagai error compile.
-- Akses field variant tanpa memeriksa penanda berakhir `FieldDefect` saat program berjalan.
+- *Object* varian memakai *field* `case` dengan satu discriminator; hanya *field* cabang aktif yang ada.
+- *Constructor* yang mengisi *field* di luar cabang ditolak sebagai *error* compile.
+- Akses *field* *variant* tanpa memeriksa penanda berakhir `FieldDefect` saat program berjalan.
 - `distinct` membuat *type* baru; konversi ke dan dari *type* dasar harus eksplisit.
 - Alias *type* tidak memisahkan apa pun; `distinct` cocok untuk id, satuan, dan *value* yang mudah
   tertukar.

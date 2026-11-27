@@ -1,7 +1,7 @@
 # *File*, *directory*, dan OS
 
-Hampir setiap program akhirnya menyentuh *file*: membaca konfigurasi, menulis log, atau melihat isi
-*directory*. Di banyak bahasa, urusan ini tersebar di beberapa library. Nim mengumpulkannya di satu
+Hampir setiap program akhirnya menyentuh *file*: membaca konfigurasi, menulis *log*, atau melihat isi
+*directory*. Di banyak bahasa, urusan ini tersebar di beberapa *library*. Nim mengumpulkannya di satu
 *module*: `std/os`. Bab ini memakai *module* itu untuk hal yang paling sering dibutuhkan, sekaligus
 menunjukkan kenapa `import std/os` tidak boleh terlupa.
 
@@ -73,8 +73,8 @@ second line
 exists after remove: false
 ```
 
-`writeFile` menerima *path* dan satu string, lalu menimpanya kalau *file* sudah ada. `readFile`
-return seluruh isi sebagai satu string; *line*-nya dipecah dengan `splitLines` dari
+`writeFile` menerima *path* dan satu *string*, lalu menimpanya kalau *file* sudah ada. `readFile`
+return seluruh isi sebagai satu *string*; *line*-nya dipecah dengan `splitLines` dari
 `std/strutils`.
 
 Contoh ini write ke `getTempDir()`, bukan ke *directory* kerja. Alasannya praktis: contoh harus
@@ -82,8 +82,8 @@ berjalan di mesin siapa pun tanpa meninggalkan *file* di tempat yang tidak terdu
 `removeFile` menghapusnya dan `fileExists` membuktikan *file* itu sudah tidak ada. Untuk membuat
 *directory*, pakai `createDir`; untuk memeriksa keberadaannya, `dirExists`.
 
-Kalau *file* itu tidak ada, `readFile` tidak return penanda error seperti di C. Ia melempar
-`IOError`, dan *message*-nya memuat *path* yang dicari. Pola Nim konsisten di sini: error yang tidak
+Kalau *file* itu tidak ada, `readFile` tidak return penanda *error* seperti di C. Ia melempar
+`IOError`, dan *message*-nya memuat *path* yang dicari. Pola Nim konsisten di sini: *error* yang tidak
 bisa diabaikan menjadi *exception*, lalu ditangani dengan `try` dan `except` di tempat yang tahu
 cara menanganinya.
 
@@ -184,16 +184,16 @@ hai
 ```
 
 `execCmdEx` mengembalikan *tuple* berisi `output` dan `exitCode`. Dengan *option* bawaannya, stderr
-ikut masuk ke `output`, dan *command*-nya dijalankan lewat shell. `strip` menghapus *newline* di ujung
+ikut masuk ke `output`, dan *command*-nya dijalankan lewat *shell*. `strip` menghapus *newline* di ujung
 supaya hasilnya tidak dobel saat di-`echo`.
 
-Shell itu praktis sekaligus berbahaya: kalau *command*-nya disusun dari *input* pengguna, satu tanda
+*Shell* itu praktis sekaligus berbahaya: kalau *command*-nya disusun dari *input* pengguna, satu tanda
 kutip bisa menyisipkan *command* lain. Kalau *argument*-nya sudah berbentuk `seq`, `startProcess`
-menjalankannya tanpa shell, dan *output*-nya dibaca sendiri.
+menjalankannya tanpa *shell*, dan *output*-nya dibaca sendiri.
 
-## Error sengaja: lupa mengimpor `std/os`
+## *Error* sengaja: lupa mengimpor `std/os`
 
-Nama-nama di atas tidak tersedia begitu saja. Lupakan `import std/os`, dan compiler berhenti di
+Nama-nama di atas tidak tersedia begitu saja. Lupakan `import std/os`, dan *compiler* berhenti di
 *line* pertama.
 
 ```{.nim}
@@ -210,7 +210,7 @@ pernah dideklarasikan atau diimpor. *Line* `candidates` tepat di bawahnya menawa
 yang mungkin dimaksud.
 
 Perbaikan terpendek: tambahkan `import std/os` di *line* pertama. Kebiasaan yang berguna, kalau
-compiler menyebut nama yang menurut kita seharusnya ada, periksa daftar `import` lebih dulu.
+*compiler* menyebut nama yang menurut kita seharusnya ada, periksa daftar `import` lebih dulu.
 
 ## Latihan
 
@@ -239,7 +239,7 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 - Susun *path* dengan `joinPath` atau `/`, bukan dengan `&`, supaya pemisahnya benar di setiap sistem.
 - `readFile` dan `writeFile` cukup untuk *file* biasa; bersihkan *file* sementara setelah dipakai.
 - Urutan `walkDir` tidak dijamin; urutkan sendiri kalau *output* harus stabil.
-- Lupa `import std/os` menghasilkan `undeclared identifier` di compile, bukan crash saat runtime.
+- Lupa `import std/os` menghasilkan `undeclared identifier` di compile, bukan crash saat *runtime*.
 
 ## Selanjutnya
 

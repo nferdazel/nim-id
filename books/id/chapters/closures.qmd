@@ -1,4 +1,4 @@
-# Closure dan *variable* yang ditangkap
+# *Closure* dan *variable* yang ditangkap
 
 *Procedure* di Nim adalah *value*. Ia bisa disimpan dalam *variable*, dioper sebagai *argument*, dan
 di-return dari *procedure* lain. Saat sebuah *procedure* mengingat *variable* dari tempat ia dibuat, ia
@@ -6,14 +6,14 @@ menjadi *closure*.
 
 Yang mudah disalahpahami bukan sintaksnya, tapi isi ingatan itu. Perubahan pada *variable* yang
 ditangkap kadang terlihat, kadang tidak, tergantung apakah *variable* itu `var` atau `let`. Di dalam
-*loop*, satu pilihan kecil membuat semua closure menunjuk *variable* yang sama.
+*loop*, satu pilihan kecil membuat semua *closure* menunjuk *variable* yang sama.
 
 ::: {.callout-note}
 ## Tujuan bab
 
-Setelah bab ini, pembaca bisa menyimpan *procedure* dalam *variable* bertipe `proc`, menulis closure
+Setelah bab ini, pembaca bisa menyimpan *procedure* dalam *variable* bertipe `proc`, menulis *closure*
 yang menangkap *variable*, menjelaskan kapan capture menunjuk dan kapan menyalin, dan mengenali
-jebakan closure di dalam *loop*.
+jebakan *closure* di dalam *loop*.
 :::
 
 ## *Procedure* sebagai *value*
@@ -63,7 +63,7 @@ echo apply(proc(x: int): int = x + 1, 10)
 langsung di posisi *argument*, `proc(x: int): int = x + 1`. Bentuk ini disebut *procedure* anonim
 (anonymous proc), dan *result*-nya bertipe sama dengan `twice`.
 
-## Closure: *procedure* yang mengingat
+## *Closure*: *procedure* yang mengingat
 
 *Procedure* anonim boleh memakai *variable* dari *procedure* induknya. Nim menyimpan *variable* itu bersama
 *procedure* itu, dan pasangan inilah yang disebut *closure*.
@@ -91,9 +91,9 @@ echo c()
 menambah `count` yang sama. Kalau `makeCounter` di-call dua kali, kita mendapat dua `count`
 terpisah, masing-masing mulai dari nol.
 
-## Dua closure berbagi satu *variable*
+## Dua *closure* berbagi satu *variable*
 
-Beberapa closure yang lahir dari *calling* yang sama memakai *variable* yang sama.
+Beberapa *closure* yang lahir dari *calling* yang sama memakai *variable* yang sama.
 
 ```{.nim}
 proc makePair(): (proc(): int, proc(): int) =
@@ -121,9 +121,9 @@ sama, *calling* `current()` yang terakhir sudah melihat perubahan dari `incremen
 
 ## Menangkap `var` dan `let`
 
-Aturan yang perlu dipegang: closure menangkap *variable* itu, bukan *value* itu. Baik `var` maupun `let`
+Aturan yang perlu dipegang: *closure* menangkap *variable* itu, bukan *value* itu. Baik `var` maupun `let`
 diakses lewat *variable* yang sama dengan *scope* luarnya; bedanya, `let` tidak bisa diisi ulang
-setelah closure dibuat.
+setelah *closure* dibuat.
 
 ```{.nim}
 var message = "hello"
@@ -140,7 +140,7 @@ changed
 `show` tidak menyimpan teks `"hello"`, melainkan menunjuk *variable* `message`. Begitu `message`
 diganti, `show` melihat *value* barunya.
 
-Kalau *variable* itu `let`, isinya tidak bisa diganti. Closure tetap read *variable* yang sama, dan
+Kalau *variable* itu `let`, isinya tidak bisa diganti. *Closure* tetap read *variable* yang sama, dan
 karena *variable* itu tidak berubah, *result*-nya tetap.
 
 ```{.nim}
@@ -162,13 +162,13 @@ demo()
 ```
 
 `readVar` dan `readLet` sama-sama read *variable* itu lewat referensi. Bedanya, `x` diubah menjadi
-`99` sebelum kedua closure di-call, sedangkan `frozen` tidak pernah diisi ulang, jadi `readLet`
+`99` sebelum kedua *closure* di-call, sedangkan `frozen` tidak pernah diisi ulang, jadi `readLet`
 tetap melihat `1`.
 
 Ini penting untuk `let` yang berisi `ref`: *variable* itu tetap, tetapi *object* yang ditunjuk masih bisa
-berubah, dan closure melihat perubahan itu.
+berubah, dan *closure* melihat perubahan itu.
 
-## Closure di dalam *loop*
+## *Closure* di dalam *loop*
 
 Jebakan yang paling sering muncul ada di *loop*.
 
@@ -188,11 +188,11 @@ for f in fns:
 ```
 
 Yang mungkin diharapkan adalah `0`, `1`, `2`. Yang di-print tiga kali `2`. Sebabnya, `i` adalah
-satu *variable* yang dipakai ulang tiap putaran, dan ketiga closure menunjuk *variable* yang sama. Saat
+satu *variable* yang dipakai ulang tiap putaran, dan ketiga *closure* menunjuk *variable* yang sama. Saat
 *loop* selesai, `i` bernilai `2`.
 
 Membuat salinan di dalam badan *loop* tidak menolong, karena Nim tetap memakai satu slot untuk
-*variable* putaran. Perbaikannya: buat closure lewat *procedure* terpisah, sehingga tiap *calling*
+*variable* putaran. Perbaikannya: buat *closure* lewat *procedure* terpisah, sehingga tiap *calling*
 punya *parameter* sendiri.
 
 ```{.nim}
@@ -213,13 +213,13 @@ for f in fns:
 2
 ```
 
-Di `make`, *parameter* `value` baru untuk setiap *calling*. Closure di dalamnya menangkap `value`
+Di `make`, *parameter* `value` baru untuk setiap *calling*. *Closure* di dalamnya menangkap `value`
 milik *calling* itu, bukan satu *variable* bersama.
 
-## Membaca *error message*: calling convention
+## Membaca *error message*: *calling convention*
 
-Nim membedakan *procedure* biasa dan closure. *Procedure* biasa memakai konvensi nimcall, sedangkan
-closure memakai *closure* karena ia membawa lingkungannya. Menyamakan keduanya ditolak compiler.
+Nim membedakan *procedure* biasa dan *closure*. *Procedure* biasa memakai konvensi nimcall, sedangkan
+*closure* memakai *closure* karena ia membawa lingkungannya. Menyamakan keduanya ditolak *compiler*.
 
 ```{.nim}
 type IntFn = proc(x: int): int {.nimcall.}
@@ -245,8 +245,8 @@ Expected one of (first mismatch at [position]):
   Calling convention mismatch: got '{.closure.}', but expected '{.nimcall.}'.
 ```
 
-Baca dari bawah. *Line* terakhir menyebut masalahnya: `g` bertipe closure, sedangkan `IntFn`
-menuntut `{.nimcall.}`. `g` menjadi closure karena menangkap `base`. Ada dua perbaikan: hapus
+Baca dari bawah. *Line* terakhir menyebut masalahnya: `g` bertipe *closure*, sedangkan `IntFn`
+menuntut `{.nimcall.}`. `g` menjadi *closure* karena menangkap `base`. Ada dua perbaikan: hapus
 `{.nimcall.}` dari `IntFn`, atau jangan menangkap apa pun di `g`. Tanpa `base`, `g` menjadi
 *procedure* biasa dan muat di `IntFn`.
 
@@ -265,7 +265,7 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
    add(4)
    echo total
    ```
-3. Kenapa tiga closure pada contoh *loop* di atas print `2` semuanya? Sebutkan satu cara
+3. Kenapa tiga *closure* pada contoh *loop* di atas *print* `2` semuanya? Sebutkan satu cara
    memperbaikinya.
 4. Kode berikut gagal di-compile. Perbaiki, lalu jelaskan kenapa *message*-nya menyebut *calling
    convention*:
@@ -280,14 +280,14 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 ## Ringkasan
 
 - *Procedure* adalah *value* bertipe `proc(...)`; ia bisa disimpan, dioper, dan di-return.
-- Closure adalah *procedure* bersama *variable* yang ditangkapnya.
-- Closure menunjuk *variable* itu sendiri, baik `var` maupun `let`; bedanya hanya `let` tidak bisa
-  diisi ulang sesudahnya. Closure dari *calling* yang sama berbagi satu *variable*.
-- Closure di dalam *loop* menunjuk *variable* putaran yang sama; buat lewat *procedure* terpisah
-  agar tiap closure punya salinannya sendiri.
-- Closure memakai konvensi `{.closure.}`; mencampurnya dengan *type* `{.nimcall.}` ditolak compiler.
+- *Closure* adalah *procedure* bersama *variable* yang ditangkapnya.
+- *Closure* menunjuk *variable* itu sendiri, baik `var` maupun `let`; bedanya hanya `let` tidak bisa
+  diisi ulang sesudahnya. *Closure* dari *calling* yang sama berbagi satu *variable*.
+- *Closure* di dalam *loop* menunjuk *variable* putaran yang sama; buat lewat *procedure* terpisah
+  agar tiap *closure* punya salinannya sendiri.
+- *Closure* memakai konvensi `{.closure.}`; mencampurnya dengan *type* `{.nimcall.}` ditolak *compiler*.
 
 ## Selanjutnya
 
 Bab berikutnya membahas *generic*: write satu *procedure* atau *type* yang bekerja untuk banyak *type*,
-dengan batasan yang diperiksa compiler sebelum program berjalan.
+dengan batasan yang diperiksa *compiler* sebelum program berjalan.
