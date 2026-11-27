@@ -10,7 +10,7 @@ mengarahkan *result*-nya ke sistem lain, tetapi tidak dengan satu *flag* ajaib: 
 
 Setelah bab ini, pembaca bisa membangun biner untuk mesin lain.
 
-Memilih target dengan `--os` dan `--cpu`, menyalakan fitur lewat `-d:`, membedakan tingkat optimasi, dan membuat biner statis.
+Memilih target dengan `--os` dan `--cpu`, mengaktifkan fitur lewat `-d:`, membedakan tingkat optimasi, dan membuat biner statis.
 :::
 
 ## Memilih target: `--os` dan `--cpu`
@@ -112,7 +112,7 @@ build kind: release
 danger define is not set
 ```
 
-Contoh di atas dijalankan dengan `nim c -r -d:release`. `-d:release` menyalakan optimasi dan
+Contoh di atas dijalankan dengan `nim c -r -d:release`. `-d:release` mengaktifkan optimasi dan
 mematikan *stack trace*; pemeriksaan *runtime* tetap aktif. `--opt:speed` mengurus optimasinya saja,
 tanpa mengubah yang lain. `-d:danger` melangkah lebih jauh: ia mematikan semua pemeriksaan *runtime*.
 
@@ -247,8 +247,8 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
 - `--os` dan `--cpu` memilih target; `when defined(...)`, `hostOS`, dan `hostCPU` membacanya dari
   dalam kode.
-- `-d:nama` menyalakan simbol compile-time; `{.strdefine.}` dan `{.intdefine.}` menerima *value* itu.
-- `-d:release` menyalakan optimasi, `--opt:speed` mengurus optimasi sendiri, dan `-d:danger`
+- `-d:nama` mengaktifkan simbol compile-time; `{.strdefine.}` dan `{.intdefine.}` menerima *value* itu.
+- `-d:release` mengaktifkan optimasi, `--opt:speed` mengurus optimasi sendiri, dan `-d:danger`
   mematikan semua pemeriksaan.
 - `--passC` dan `--passL` meneruskan *option* ke *compiler* C dan penaut; `--passL:-static` menghasilkan
   biner statis di Linux.

@@ -147,7 +147,7 @@ for n in numbers():
 `countTo` menangkap `n`, lalu mengembalikan *iterator* anonim yang memakainya. Pola ini memisahkan
 penyiapan dari pengambilan *value*, dan *result*-nya bisa langsung dipakai di `for`.
 
-## Membaca *error*: *iterator* inline bukan *value*
+## Membaca *error message*: *iterator* inline bukan *value*
 
 *Iterator* inline hanya boleh dipakai di dalam `for`.
 

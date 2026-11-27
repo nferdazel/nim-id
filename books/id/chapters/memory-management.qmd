@@ -191,7 +191,7 @@ a = ""
 `=wasMoved`; sebuah `string` kembali menjadi `""`. Setelah `move`, isi `a` tidak boleh diandalkan
 lagi.
 
-## Membaca *error*: tanda tangan *hook* yang salah
+## Membaca *error message*: tanda tangan *hook* yang salah
 
 Setiap *hook* punya tanda tangan yang ditetapkan *compiler*.
 

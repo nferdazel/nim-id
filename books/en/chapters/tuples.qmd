@@ -160,7 +160,7 @@ localhost
 It is useful when all fields are processed in sequence, for validation or printing. The order
 follows the declaration order.
 
-## Reading the error: a pattern that does not fit
+## Reading an error message: a pattern that does not fit
 
 The number of variables on the left must match the number of elements on the right.
 
@@ -176,7 +176,7 @@ main.nim(1, 5) Error: tuple with 2 elements expected, but got '(int, int, int)' 
 The message names both sides: the pattern expects 2 elements, the value has 3. The fix is to add a
 variable or use other elements. The position `(1, 5)` points at the start of the pattern `(a, b)`.
 
-## Reading the error: a tuple is not an object
+## Reading an error message: a tuple is not an object
 
 Tuples have no constructors, and the compiler says so plainly.
 

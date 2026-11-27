@@ -159,7 +159,7 @@ localhost
 Fungsi ini berguna saat semua *field* diolah berurutan, misalnya untuk validasi atau penampilan.
 Urutannya mengikuti urutan deklarasi.
 
-## Membaca *error*: pola yang tidak cocok
+## Membaca *error message*: pola yang tidak cocok
 
 Jumlah *variable* di kiri harus sama dengan jumlah *element* di kanan.
 
@@ -175,7 +175,7 @@ main.nim(1, 5) Error: tuple with 2 elements expected, but got '(int, int, int)' 
 *Message* itu menyebut kedua belah pihak: pola menunggu 2 *element*, *value* itu punya 3. Solusinya menambah
 *variable* atau memakai *element* lain. Posisi `(1, 5)` menunjuk ke awal pola `(a, b)`.
 
-## Membaca *error*: *tuple* bukan *object*
+## Membaca *error message*: *tuple* bukan *object*
 
 *Tuple* tidak punya *constructor*, dan *compiler* menolaknya dengan jelas.
 

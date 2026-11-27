@@ -52,7 +52,7 @@ Dune is at row 1
 ```
 
 `seq[Book]` menyimpan *row* dalam urutan penulisan. `Table[string, int]` menyimpan *index*: dari
-judul buku ke posisinya. Keduanya berperan seperti tabel dan *index*.
+judul buku ke posisinya. Keduanya berfungsi seperti tabel dan *index*.
 
 Perhatikan *line* `shelf.sort`. Data di-write dalam urutan 1984, 1965, 1815, lalu di-print menaik
 menurut tahun. Di SQL, pekerjaan itu dilakukan `ORDER BY year`; di Nim, `sort`. Tanpa langkah ini,
@@ -135,8 +135,8 @@ for item in result:
 1984 Neuromancer
 ```
 
-`row["year"].getInt` mengambil satu *field* dan menuntut *type* itu `int`. *Loop* itu berperan
-seperti klausa `WHERE`: hanya *row* yang lolos syarat ikut dikumpulkan. `sort` berperan seperti
+`row["year"].getInt` mengambil satu *field* dan menuntut *type* itu `int`. *Loop* itu berfungsi
+seperti klausa `WHERE`: hanya *row* yang lolos syarat ikut dikumpulkan. `sort` berfungsi seperti
 `ORDER BY`.
 
 Kebiasaan yang menyelamatkan: urutkan selalu di tempat yang memutuskan *output*, bukan bergantung

@@ -196,7 +196,7 @@ Since a matching type may have only one of the fields, the procedure body must c
 applies. `when x is HasName` picks at compile time, and each branch touches only the field it is
 guaranteed to have. This pattern shows up often as soon as `or` is used.
 
-## Reading the error: predicate failed
+## Reading an error message: predicate failed
 
 Calling a procedure with a type that does not meet the concept is rejected by the compiler.
 

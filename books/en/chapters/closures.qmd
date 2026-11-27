@@ -216,7 +216,7 @@ for f in fns:
 Inside `make`, the parameter `value` is fresh for every call. The closure inside it captures the
 `value` of that call, not a shared variable.
 
-## Reading an error: calling convention
+## Reading an error message: calling convention
 
 Nim distinguishes ordinary procedures from closures. An ordinary procedure uses the *nimcall*
 convention, while a closure uses *closure* because it carries its environment. Mixing the two is

@@ -197,7 +197,7 @@ Karena satu *type* yang cocok mungkin hanya punya salah satu *field*, badan *pro
 cabang mana yang berlaku. `when x is HasName` memilih saat compile, dan tiap cabang hanya mengakses
 *field* yang dijamin ada. Ini pola yang sering muncul begitu `or` dipakai.
 
-## Membaca *error*: predicate gagal
+## Membaca *error message*: predicate gagal
 
 Memanggil *procedure* dengan *type* yang tidak memenuhi konsep ditolak *compiler*.
 

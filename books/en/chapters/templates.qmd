@@ -152,7 +152,7 @@ proc: 1 (calls: 1)
 3. The procedure `minOf3` receives its values as arguments, so `next()` is called once. The
 practical lesson: never pass a costly or side-effecting expression to a template.
 
-## Reading an error: a symbol that stays hidden
+## Reading an error message: a symbol that stays hidden
 
 Hygiene works both ways. A symbol declared by a template is not visible to the caller.
 

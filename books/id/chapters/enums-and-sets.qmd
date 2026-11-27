@@ -204,7 +204,7 @@ Dasar *set* harus ordinal dengan paling banyak 2^16 *value*. `set[int]` melewati
 `set is too large; use std/sets for ordinal types with more than 2^16 elements`. Untuk *set*
 besar, pakai `std/sets`.
 
-## Membaca *error*: *integer* bukan *enum*
+## Membaca *error message*: *integer* bukan *enum*
 
 ```{.nim}
 type Color = enum

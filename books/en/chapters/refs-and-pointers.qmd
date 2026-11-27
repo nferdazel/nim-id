@@ -172,7 +172,7 @@ the value; it reinterprets the same bits. Compare `cast[int32](3.5'f32)`, which 
 `1080033280`, the float's bits read as an `int32`. To convert with the language's rules, use
 `int(x)`, `float(x)`, or `$x`; save `cast` for low-level code.
 
-## Reading an error: expression has no address
+## Reading an error message: expression has no address
 
 `addr` demands a fixed location. A literal has none, so its address cannot be taken.
 

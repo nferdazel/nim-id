@@ -201,7 +201,7 @@ the compiler rejects it:
 `set is too large; use std/sets for ordinal types with more than 2^16 elements`. For larger
 collections, use `std/sets`.
 
-## Reading the error: an integer is not an enum
+## Reading an error message: an integer is not an enum
 
 ```{.nim}
 type Color = enum

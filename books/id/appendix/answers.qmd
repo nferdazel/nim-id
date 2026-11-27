@@ -2058,7 +2058,7 @@ Di macOS dengan prosesor Apple, jawabannya `--os:macosx --cpu:arm64`. Di Linux 6
 `--os:linux --cpu:amd64`. Yang *print* *value* mentahnya adalah `hostOS` dan `hostCPU`; contoh di bab
 sengaja hanya *print* *comparison*-nya supaya *output*-nya sama di kedua mesin.
 
-**2.** *Flag* `-d:release` menyalakan simbol `release`, dan `-d:workers=8` mengganti *value* bawaan
+**2.** *Flag* `-d:release` mengaktifkan simbol `release`, dan `-d:workers=8` mengganti *value* bawaan
 `{.intdefine.}`. `targetName` tidak diberikan, jadi tetap memakai bawaannya:
 
 ```{.txt}

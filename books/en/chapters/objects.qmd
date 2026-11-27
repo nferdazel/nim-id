@@ -217,7 +217,7 @@ changing `d` changes `c` too.
 The rule: use `object` for small values you want copied, and `ref object` for large data or when
 several parts of the code really must share one value.
 
-## Reading the error: a field that does not exist
+## Reading an error message: a field that does not exist
 
 Reaching for an undeclared field is rejected by the compiler.
 

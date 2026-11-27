@@ -177,7 +177,7 @@ Ada is 36
 `%*{...}` builds a `JsonNode` straight from a literal, without writing a JSON string and parsing it
 back. `to(Type)` turns it into an ordinary object. Both avoid error-prone manual string assembly.
 
-## Reading an error: a missing key
+## Reading an error message: a missing key
 
 Reaching for a missing key is not a compile error; the program only stops while running.
 

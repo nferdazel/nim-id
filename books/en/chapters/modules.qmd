@@ -181,7 +181,7 @@ Notice `appName` is used plainly, with no module prefix. No module was created. 
 works by copying text, a name inside it can collide with a name in the parent file without a warning
 from the compiler. To separate code, `import` is almost always the safer choice.
 
-## Reading an error: module not found
+## Reading an error message: module not found
 
 When a module name is wrong, the compiler searches for the file and stops.
 

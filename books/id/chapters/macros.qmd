@@ -274,7 +274,7 @@ Aturan praktisnya:
 - Butuh *value* saat compile: `const` atau blok `static:`.
 - Butuh membaca AST, *type*, atau membangkitkan kode dari data: `macro`.
 
-## Membaca *error*: `typed` menuntut *argument* yang sah
+## Membaca *error message*: `typed` menuntut *argument* yang sah
 
 *Macro* bertipe memeriksa *argument*-nya sebelum badan *macro* berjalan.
 

@@ -157,7 +157,7 @@ Inside nested loops, both apply to the innermost loop only. A `break` within `fo
 the `for i` around it. To leave two loops at once, move that part into its own procedure, or keep a
 `bool` flag that the outer loop checks.
 
-## Reading the error: `break` outside a loop
+## Reading an error message: `break` outside a loop
 
 ```{.nim}
 echo "before"

@@ -173,7 +173,7 @@ mengubah *value*; ia menafsirkan ulang bit yang sama. Bandingkan `cast[int32](3.
 menghasilkan `1080033280`: bit *float* itu di-read sebagai `int32`. Untuk mengubah *type* mengikuti
 aturan bahasa, pakai `int(x)`, `float(x)`, atau `$x`; `cast` hanya untuk kode tingkat rendah.
 
-## Membaca *error*: *expression* tanpa alamat
+## Membaca *error message*: *expression* tanpa alamat
 
 `addr` menuntut lokasi yang tetap. *Literal* tidak punya lokasi, jadi tidak bisa dialamati.
 

@@ -146,7 +146,7 @@ for n in numbers():
 `countTo` captures `n`, then returns an anonymous iterator that uses it. The pattern separates setup
 from gathering values, and the result can be used directly in `for`.
 
-## Reading an error: an inline iterator is not a value
+## Reading an error message: an inline iterator is not a value
 
 An inline iterator may only be used inside `for`.
 

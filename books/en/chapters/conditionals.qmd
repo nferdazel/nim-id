@@ -121,7 +121,7 @@ On Linux and macOS, `defined(windows)` is false, so the output is `/`. On Window
 clear here: with `if`, both branches must still compile even when one never runs. The same pattern
 appears in `when isMainModule:` or `when sizeof(int) == 8:`.
 
-## Reading the error: the condition must be `bool`
+## Reading an error message: the condition must be `bool`
 
 Nim does not convert other values to boolean. The number `0`, the empty string, and `nil` are not
 `false`.
@@ -147,7 +147,7 @@ main.nim(3, 4) Error: type mismatch: got 'int' for 'count' but expected 'bool'
 The reading is simple: an `if` condition must be a `bool`. Write an explicit comparison instead,
 such as `if count > 0:`.
 
-## Reading the error: an incomplete `case`
+## Reading an error message: an incomplete `case`
 
 ```{.nim}
 proc describe(n: int): string =

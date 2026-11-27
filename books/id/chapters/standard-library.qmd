@@ -178,7 +178,7 @@ Ada is 36
 `to(Person)` mengubahnya menjadi *object* biasa. Keduanya menghindari penggabungan *string* manual yang
 mudah salah.
 
-## Membaca *error*: kunci yang tidak ada
+## Membaca *error message*: kunci yang tidak ada
 
 Mengakses kunci yang tidak ada bukan *error* compile; program baru berhenti saat berjalan.
 

@@ -7,7 +7,7 @@ server sulit diuji bukan *socket*-nya, melainkan *handler* yang bercampur dengan
 ::: {.callout-note}
 ## Tujuan bab
 
-Setelah bab ini, pembaca bisa menyalakan server HTTP kecil dengan Nim.
+Setelah bab ini, pembaca bisa mengaktifkan server HTTP kecil dengan Nim.
 
 Menulis *route* sederhana, membaca body JSON lalu membalas JSON, membaca *query string*, dan membaca *message* saat lupa `await`.
 :::

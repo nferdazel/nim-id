@@ -267,7 +267,7 @@ The rule of thumb:
 - Need a value at compile time: `const` or a `static:` block.
 - Need to read the AST, the type, or generate code from data: `macro`.
 
-## Reading errors: `typed` demands a valid argument
+## Reading an error message: `typed` demands a valid argument
 
 A typed macro checks its argument before its body runs.
 

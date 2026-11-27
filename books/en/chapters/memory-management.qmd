@@ -190,7 +190,7 @@ a = ""
 `move(a)` moves the value without calling `=copy` or `=sink`, then empties `a` through `=wasMoved`;
 a `string` goes back to `""`. After a `move`, the contents of `a` must not be relied on.
 
-## Reading an error: a hook with the wrong signature
+## Reading an error message: a hook with the wrong signature
 
 Every hook has a signature fixed by the compiler.
 

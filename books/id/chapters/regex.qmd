@@ -10,7 +10,7 @@ susah dibaca. *Regex* menulis aturan itu sekali sebagai satu pola. Nim mengirim 
 
 Setelah bab ini, pembaca bisa mencari dan mengganti teks dengan *regex*.
 
-Memakai `match`, `find`, dan `findAll`, memakai *capture group*, menyalakan `(?i)`, dan tahu kapan `strutils` sudah cukup.
+Memakai `match`, `find`, dan `findAll`, memakai *capture group*, mengaktifkan `(?i)`, dan tahu kapan `strutils` sudah cukup.
 :::
 
 ::: {.callout-warning}
@@ -258,7 +258,7 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 - `match` berlabuh di awal *string*, `find` menyisir seluruh *string* dan mengembalikan *index*.
 - `findAll` mengumpulkan semua kecocokan; `replace`, `replacef`, dan `split` mengubah serta memecah
   teks.
-- `(?i)` menyalakan pencocokan tanpa beda huruf besar-kecil; `re"..."` adalah *raw string*.
+- `(?i)` mengaktifkan pencocokan tanpa beda huruf besar-kecil; `re"..."` adalah *raw string*.
 - Pola diproses saat *runtime*, jadi pola salah baru ketahuan ketika program berjalan.
 
 ## Selanjutnya

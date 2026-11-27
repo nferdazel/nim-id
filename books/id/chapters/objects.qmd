@@ -219,7 +219,7 @@ sama, sehingga mengubah `d` ikut mengubah `c`.
 Aturannya: pakai `object` untuk *value* kecil yang ingin disalin, dan `ref object` untuk data besar
 atau saat beberapa bagian kode memang harus berbagi satu *value*.
 
-## Membaca *error*: *field* yang tidak ada
+## Membaca *error message*: *field* yang tidak ada
 
 Mengakses *field* yang tidak dideklarasikan ditolak *compiler*.
 

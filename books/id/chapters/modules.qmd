@@ -183,7 +183,7 @@ Perhatikan `appName` dipakai langsung, tanpa awalan *module*. Tidak ada *module*
 *file* induk tanpa *warning* dari *compiler*. Untuk memisahkan kode, `import` hampir selalu pilihan
 yang lebih aman.
 
-## Membaca *error*: *module* tidak ditemukan
+## Membaca *error message*: *module* tidak ditemukan
 
 Kalau nama *module* salah, *compiler* mencarinya di *file* dan berhenti.
 
