@@ -1277,7 +1277,7 @@ echo x
 
 *Output*-nya `2`. `p[]` read dan write *value* di alamat yang ditunjuk `p`.
 
-**4.** `var p: Person` berisi `nil`; belum ada *object* di heap untuk ditunjuk. `new(p)`
+**4.** `var p: Person` berisi `nil`; belum ada *object* di *heap* untuk ditunjuk. `new(p)`
 mengalokasikan *object* dengan default setiap *field* lalu menyimpan alamatnya di `p`. Tanpa itu,
 `p.name` mendereferensi `nil` dan program berhenti saat berjalan.
 
@@ -2450,6 +2450,7 @@ aturan itu disalin ke dua tempat, keduanya bisa berbeda diam-diam.
 
 Satu pekerjaan yang harus ditambahkan sebelum dipakai dari dua komputer: aturan untuk penulisan
 bersamaan. *File* JSON ditimpa seluruhnya setiap kali disimpan, jadi dua pengguna yang menambah
-catatan pada saat yang sama akan saling menghapus. Pilihannya mengunci *file* saat menulis,
-menyimpan ke *file* terpisah per pengguna, atau memindahkan datanya ke layanan seperti pada bab
-database.
+catatan pada saat yang sama akan saling menghapus.
+
+Pilihannya mengunci *file* saat menulis, menyimpan ke *file* terpisah per pengguna, atau memindahkan
+datanya ke layanan seperti pada bab database.

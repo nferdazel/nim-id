@@ -23,6 +23,12 @@ releases page are the record for those releases.
 - *wall-clock time* and *hotspot* replace the literal translations "waktu dinding" and "titik panas",
   and `tools/lint-glossary.py` rejects both. Word-count targets per chapter are gone: chapters run as
   long as the topic needs.
+- The last upright glossary terms are italic: *heap* in six chapters and *compiler* in the
+  benchmarking closer. `tools/italicize-terms.py` now also protects terms inside bold runs and skips
+  the generated appendix glossary page.
+- Every "Selanjutnya" section opens with its own sentence instead of "Bab berikutnya membahas".
+  Prose paragraphs that ran past four lines are split, and the closing antithesis count drops to at
+  most one per chapter.
 
 ## [0.7.15] - 2026-11-25
 

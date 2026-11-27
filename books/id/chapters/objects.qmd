@@ -116,9 +116,9 @@ Setelah `$` didefinisikan, `echo` memakainya otomatis. Aturan yang sama berlaku 
 interpolasi *string*, dan *calling* `$` eksplisit. Inilah cara idiomatis menambah representasi teks
 pada *type* sendiri.
 
-## `ref object`: disimpan di heap
+## `ref object`: disimpan di *heap*
 
-`ref object` menyimpan datanya di heap, dan *variable* itu menyimpan *pointer* ke sana.
+`ref object` menyimpan datanya di *heap*, dan *variable* itu menyimpan *pointer* ke sana.
 
 ```{.nim}
 type Node = ref object

@@ -30,9 +30,11 @@ textstats/
 
 `src/textstats.nim` adalah *entry point* *package*. Pemakai write `import textstats`, dan *compiler*
 mencari *file* itu. *Module* tambahan diletakkan di `src/textstats/` lalu diimpor sebagai
-`import textstats/utils`. *Directory* `private/` di dalamnya menandai *module* internal. Itu konvensi, bukan pembatas: *compiler*
-tetap bisa mengimpornya kalau *path* itu ada di *search path*.
-*Directory* `tests/` memuat *test*, dan `README.md` memuat cara pakai singkat.
+`import textstats/utils`.
+
+*Directory* `private/` di dalamnya menandai *module* internal. Itu konvensi, bukan pembatas:
+*compiler* tetap bisa mengimpornya kalau *path* itu ada di *search path*. *Directory* `tests/`
+memuat *test*, dan `README.md` memuat cara pakai singkat.
 
 `nimble init` membuat kerangka ini:
 
@@ -242,7 +244,9 @@ nimble publish
 
 Nimble read tag yang berbentuk versi, misalnya `v0.2.0`, untuk mengetahui versi apa saja yang
 tersedia. Karena itu urutannya penting: naikkan `version` di *file* `.nimble`, *commit*, baru buat
-tag. `nimble publish` memerlukan akun GitHub dan personal access *token*; *command* itu mengusulkan
+tag.
+
+`nimble publish` memerlukan akun GitHub dan personal access *token*; *command* itu mengusulkan
 *package* ke daftar resmi di repositori `nim-lang/packages`. Satu kali saja, bukan setiap kali versi
 naik.
 

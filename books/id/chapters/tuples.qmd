@@ -224,4 +224,4 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
 ## Selanjutnya
 
-Bab berikutnya membahas [*object*](objects.qmd): *type* gabungan dengan *field* bernama, *constructor*, dan *value* *semantics*-nya.
+Berikutnya [*object*](objects.qmd): *type* gabungan dengan *field* bernama, *constructor*, dan *value* *semantics*-nya.

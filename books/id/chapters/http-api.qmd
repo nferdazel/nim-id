@@ -37,8 +37,10 @@ GET
 application/json
 ```
 
-`Http200` adalah *value* `HttpCode`, *type* `distinct` yang *value* itu dibatasi 0 sampai 599. `httpcore`
-memberi `$` untuk *type* ini, sehingga `echo Http200` *print* `"200 OK"`, bukan angka telanjang.
+`Http200` adalah *value* `HttpCode`, *type* `distinct` yang *value* itu dibatasi 0 sampai 599.
+`httpcore` memberi `$` untuk *type* ini, sehingga `echo Http200` *print* `"200 OK"`, bukan angka
+telanjang.
+
 Konversi `.int` return angkanya saja, dan dipakai nanti untuk menyusun *output* yang ringkas.
 `HttpMethod` adalah `enum`: `HttpGet` bernilai teks `GET`, `HttpPost` bernilai `POST`, begitu
 seterusnya.
@@ -269,7 +271,7 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
 - `std/httpcore` menyediakan `HttpCode`, `HttpMethod`, dan `HttpHeaders` untuk kedua sisi.
 - `dispatch` murni memisahkan keputusan *route* dari *socket*, sehingga bisa diuji dengan *output* tetap.
-- Body JSON di-read dengan `parseJson` dan dibalas dengan `%*` lalu `$`.
+- Body JSON dibaca dengan `parseJson` dan dibalas dengan `%*` lalu `$`.
 - `parseUri` dan `decodeQuery` dari `std/uri` mengambil *value* dari *query string*.
 - `newAsyncHttpServer` dan `serve` menyambungkan *handler*; `respond` tanpa `await` ditolak dengan
   `has to be used (or discarded)`.

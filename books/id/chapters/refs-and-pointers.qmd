@@ -1,7 +1,7 @@
 # `ref`, `ptr`, dan `nil`
 
 Bab *object* berhenti tepat sebelum pertanyaan yang paling sering muncul: di mana datanya sebenarnya
-disimpan? `Person(name: "Ada")` pada `ref object` menaruh data di heap dan menyimpan *pointer* ke
+disimpan? `Person(name: "Ada")` pada `ref object` menaruh data di *heap* dan menyimpan *pointer* ke
 sana. Pada `object` biasa, data menempel langsung di *variable* itu. Bab ini membuka kotak itu:
 `ref`, `ptr`, dan `nil`.
 
@@ -13,9 +13,9 @@ Setelah bab ini, pembaca bisa memakai `ref` dan `ptr` dengan sadar.
 Mengalokasikan dengan `new`, membaca *field* lewat dereferensi otomatis, menguji `nil`, dan tahu kapan `ptr` perlu.
 :::
 
-## `ref`: data disimpan di heap
+## `ref`: data disimpan di *heap*
 
-`ref object` menyimpan datanya di heap. *Variable* itu hanya memegang *pointer* ke sana.
+`ref object` menyimpan datanya di *heap*. *Variable* itu hanya memegang *pointer* ke sana.
 
 ```{.nim}
 type Person = ref object
@@ -33,7 +33,7 @@ echo p.name, " is ", p.age
 Ada is 36
 ```
 
-`var p: Person` belum menunjuk ke *object* apa pun; *value* itu `nil`. `new(p)` meminta *memory* di heap,
+`var p: Person` belum menunjuk ke *object* apa pun; *value* itu `nil`. `new(p)` meminta *memory* di *heap*,
 membentuk *object* dengan default setiap *field*, lalu menyimpan alamatnya di `p`. Setelah itu *field*
 bisa diisi seperti *object* biasa.
 
@@ -196,7 +196,7 @@ Perbedaannya paling terasa saat *value* disalin.
 
 | Aspek | `object` | `ref object` |
 |---|---|---|
-| data disimpan di | *variable* itu sendiri | heap |
+| data disimpan di | *variable* itu sendiri | *heap* |
 | isi *variable* | data langsung | *pointer* |
 | menyalin berarti | menggandakan data | menggandakan *pointer* |
 | *default value* | default setiap *field* | `nil` |
@@ -248,7 +248,7 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
 ## Ringkasan
 
-- `ref object` menyimpan data di heap; `p.name` sudah melakukan dereferensi otomatis.
+- `ref object` menyimpan data di *heap*; `p.name` sudah melakukan dereferensi otomatis.
 - `new(p)` mengalokasikan `ref` yang masih `nil`; `isNil` menguji apakah referensinya kosong.
 - `ptr T` menyimpan alamat, diambil dengan `addr` dan di-read dengan `p[]`; `unsafeAddr` alias
   usangnya.
@@ -257,4 +257,4 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
 ## Selanjutnya
 
-Bab berikutnya membahas apa yang terjadi pada *memory* setelah sebuah *value* dibuang: [manajemen *memory* dengan ARC dan ORC](memory-management.qmd).
+Yang tersisa: apa yang terjadi pada *memory* setelah sebuah *value* dibuang, di [manajemen *memory* dengan ARC dan ORC](memory-management.qmd).

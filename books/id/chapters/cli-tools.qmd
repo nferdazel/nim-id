@@ -248,19 +248,21 @@ echo parser.kind
 main.nim(1, 14) Error: undeclared identifier: 'initOptParser'
 ```
 
-Baca dari kiri: *file*, posisi `(line, column)`, tingkat, lalu *message*-nya. Posisi `(1, 14)` adalah
-awal nama yang tidak dikenal, tepat setelah `let parser = `. `undeclared identifier` berarti nama
-itu dipakai tanpa pernah dideklarasikan atau diimpor. *Line* `candidates` di bawahnya *print* nama
-yang jarak editnya dekat; pada contoh ini tidak ada yang relevan. Perbaikan terpendek: tambahkan `import std/parseopt` di *line*
-pertama.
+Baca dari kiri: *file*, posisi `(line, column)`, tingkat, lalu *message*-nya. Posisi `(1, 14)`
+adalah awal nama yang tidak dikenal, tepat setelah `let parser = `. `undeclared identifier` berarti
+nama itu dipakai tanpa pernah dideklarasikan atau diimpor.
+
+*Line* `candidates` di bawahnya *print* nama yang jarak editnya dekat; pada contoh ini tidak ada
+yang relevan. Perbaikan terpendek: tambahkan `import std/parseopt` di *line* pertama.
 
 ## Kapan `parseopt` cukup
 
 `parseopt` sengaja kecil. Ia tidak memeriksa *type* secara otomatis, tidak membuat halaman bantuan,
-dan tidak mendukung *subcommand* bawaan. Untuk tool yang menerima sepuluh *option* atau kurang, itu justru
-kelebihannya: tidak ada konfigurasi, tidak ada *file* tambahan, dan perilakunya jelas. Kalau
-kebutuhan tumbuh menjadi banyak *subcommand* dengan bantuan otomatis, ada *package* `cligen` di luar
-*standard library*. Bab ini tidak memakainya karena kumpulan contoh dipakai kedua buku, dan
+dan tidak mendukung *subcommand* bawaan. Untuk tool yang menerima sepuluh *option* atau kurang, itu
+justru kelebihannya: tidak ada konfigurasi, tidak ada *file* tambahan, dan perilakunya jelas.
+
+Kalau kebutuhan tumbuh menjadi banyak *subcommand* dengan bantuan otomatis, ada *package* `cligen`
+di luar *standard library*. Bab ini tidak memakainya karena kumpulan contoh dipakai kedua buku, dan
 *standard library* selalu tersedia bersama *compiler*.
 
 ## Latihan

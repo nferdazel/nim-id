@@ -247,4 +247,4 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
 ## Selanjutnya
 
-Bab berikutnya membahas [*iterator*](iterators.qmd): cara menghasilkan *value* satu per satu, dan kapan *iterator* lebih hemat daripada *seq*.
+[*Iterator*](iterators.qmd) menutup bagian ini: cara menghasilkan *value* satu per satu, dan kapan *iterator* lebih hemat daripada *seq*.

@@ -115,11 +115,13 @@ while true:
 5
 ```
 
-`countBetween` adalah fungsi yang bisa dilanjutkan. `var it = countBetween` menyiapkan *iteratornya*,
-dan *argument* `(3, 5)` diberikan pada tiap *calling*. `finished(it)` bernilai `true` setelah *iterator*
-selesai. Perhatikan urutannya: panggil dulu, periksa `finished`, baru pakai *value* itu. Manual Nim
-memperingatkan bahwa `finished` baru bernilai `true` satu putaran setelah *value* terakhir keluar, jadi
-*value* pada putaran itu harus dibuang.
+`countBetween` adalah fungsi yang bisa dilanjutkan. `var it = countBetween` menyiapkan
+*iteratornya*, dan *argument* `(3, 5)` diberikan pada tiap *calling*. `finished(it)` bernilai `true`
+setelah *iterator* selesai.
+
+Perhatikan urutannya: panggil dulu, periksa `finished`, baru pakai *value* itu. Manual Nim
+memperingatkan bahwa `finished` baru bernilai `true` satu putaran setelah *value* terakhir keluar,
+jadi *value* pada putaran itu harus dibuang.
 
 ## Factory: *procedure* yang mengembalikan *iterator*
 
@@ -216,4 +218,4 @@ tidak menyimpannya dan dipakai langsung di dalam `for`.
 
 ## Selanjutnya
 
-Bab berikutnya membahas [*closure*](closures.qmd): *procedure* yang mengingat *variable* di sekitarnya, dan jebakan yang muncul di dalam *loop*.
+Setelah ini, [*closure*](closures.qmd): *procedure* yang mengingat *variable* di sekitarnya, dan jebakan yang muncul di dalam *loop*.

@@ -2,9 +2,11 @@
 
 Buku ini ditulis untuk pembaca yang sudah menulis program di bahasa lain, tetapi belum pernah
 memakai Nim. Halaman ini mengumpulkan padanan istilah dan kebiasaan untuk tiga bahasa yang paling
-sering dipakai bergantian dengan Nim: Python, Go, dan Rust. Tidak ada contoh yang harus dijalankan;
-fokusnya memetakan kebiasaan yang sudah ada supaya perpindahan terasa ringan. Setiap bagian dimulai
-dari tabel padanan, lalu dijelaskan singkat apa yang sama dan apa yang perlu disesuaikan.
+sering dipakai bergantian dengan Nim: Python, Go, dan Rust.
+
+Tidak ada contoh yang harus dijalankan; fokusnya memetakan kebiasaan yang sudah ada supaya
+perpindahan terasa ringan. Setiap bagian dimulai dari tabel padanan, lalu dijelaskan singkat apa
+yang sama dan apa yang perlu disesuaikan.
 
 ## *Variable*
 
@@ -59,9 +61,11 @@ dan konsep untuk menyusun *type*.
 
 Konsep Nim tidak dikenali saat program berjalan; ia diperiksa saat *overloading* di compile. Ini
 lebih dekat ke `interface` Go daripada ke `trait` Rust: keduanya struktural, jadi *type* yang
-kebetulan punya *procedure* yang cocok otomatis memenuhi, tanpa `impl` eksplisit seperti di Rust. Konsep memeriksa bentuk *type*,
-misalnya keberadaan *field* atau *procedure*, tanpa menuntut deklarasi pewarisan. Karena itu *type* dari
-*library* lain bisa memenuhinya tanpa diubah sedikit pun.
+kebetulan punya *procedure* yang cocok otomatis memenuhi, tanpa `impl` eksplisit seperti di Rust.
+
+Konsep memeriksa bentuk *type*, misalnya keberadaan *field* atau *procedure*, tanpa menuntut
+deklarasi pewarisan. Karena itu *type* dari *library* lain bisa memenuhinya tanpa diubah sedikit
+pun.
 
 ## Penanganan *error*
 
@@ -72,11 +76,12 @@ misalnya keberadaan *field* atau *procedure*, tanpa menuntut deklarasi pewarisan
 | Rust | `Result[T, E]` dan operator `?` |
 | Nim | `try`/`except`/`raise`, *effect* `raises` diperiksa *compiler* |
 
-Nim memakai *exception* seperti Python, tetapi menaikkan pemeriksaannya ke compile. *Procedure*
-bisa menyatakan jenis *exception* yang mungkin keluar, dan *compiler* menolak janji yang dipatahkan.
+Nim memakai *exception* seperti Python, tetapi menaikkan pemeriksaannya ke compile. *Procedure* bisa
+menyatakan jenis *exception* yang mungkin keluar, dan *compiler* menolak janji yang dipatahkan.
+
 *Error* yang tidak tertangani menghentikan program dengan *stack trace*, mirip Python. Bedanya,
-tanda tangan *procedure* bisa membatasi jenis yang mungkin keluar, sehingga penanganan *error* menjadi
-bagian dari kontrak yang bisa dibaca.
+tanda tangan *procedure* bisa membatasi jenis yang mungkin keluar, sehingga penanganan *error*
+menjadi bagian dari kontrak yang bisa dibaca.
 
 ## *Package*
 
@@ -128,12 +133,14 @@ nol, jadi ramah untuk CI.
 | Rust | *thread* dengan `Send`/`Sync`, `async`/`await` lewat tokio |
 | Nim | `{.async.}` di `std/asyncdispatch`, *thread*, dan `spawn` |
 
-Nim punya dua *path*: `async`/`await` untuk IO dalam satu *thread*, dan *thread* sungguhan. Sejak
-Nim 2.x, *thread* aktif secara bawaan (`compileOption("threads")` bernilai `true`), jadi
-`--threads:on` tidak lagi diperlukan. Model async memakai satu *event loop*, dan tugas menunggu
-tanpa memblokir *thread*. Untuk komunikasi antar-*thread* ada `Channel[T]`; `std/threadpool` dan
-`spawn` masih ada tetapi sudah ditandai usang. Yang tidak ada adalah model goroutine Go, yaitu
-goroutine ringan dengan `select` di atas banyak *channel*.
+Nim punya dua *path*: `async` / `await` untuk IO dalam satu *thread*, dan *thread* sungguhan. Sejak
+Nim 2.x, *thread* aktif secara bawaan ( `compileOption("threads")` bernilai `true`), jadi
+`--threads:on` tidak lagi diperlukan.
+
+Model async memakai satu *event loop*, dan tugas menunggu tanpa memblokir *thread*. Untuk komunikasi
+antar-*thread* ada `Channel[T]`; `std/threadpool` dan `spawn` masih ada tetapi sudah ditandai usang.
+Yang tidak ada adalah model goroutine Go, yaitu goroutine ringan dengan `select` di atas banyak
+*channel*.
 
 ## Yang mirip
 
@@ -154,15 +161,17 @@ sama, jadi *expression* lama sering bisa disalin dengan sedikit penyesuaian saja
 ## Yang berbeda
 
 Nim di-compile menjadi biner lewat C, C++, atau JavaScript; tidak ada mesin virtual yang menafsir
-kode saat berjalan. Indentasi menentukan blok, seperti Python, tanpa kurung kurawal. Manajemen
-*memory* memakai ARC atau ORC dengan *destructor* deterministik, bukan *garbage collector* berhenti-dunia.
-`nil` berlaku untuk `ref`, `ptr`, `cstring`, `pointer`, dan *procedure*; *object* *value* tidak
-pernah `nil`. *Effect*
-`raises` diperiksa *compiler*. *Range* `0 .. 5` inklusif, sedangkan `range` Python eksklusif. `and`,
-`or`, dan `not` menggantikan `&&`, `||`, dan `!`. Tidak ada kata kunci `async`/`await` bawaan; async
-dibangun lewat makro `{.async.}`. *Integer* punya lebar tetap, bukan presisi sembarang seperti di
-Python. *Overflow* pada *type* signed memicu `OverflowDefect` bahkan di `-d:release`; *integer*
-unsigned membungkus; baru `-d:danger` mematikan pemeriksaan itu.
+kode saat berjalan. Indentasi menentukan blok, seperti Python, tanpa kurung kurawal.
+
+Manajemen *memory* memakai ARC atau ORC dengan *destructor* deterministik, bukan *garbage collector*
+berhenti-dunia. `nil` berlaku untuk `ref`, `ptr`, `cstring`, `pointer`, dan *procedure*; *object*
+*value* tidak pernah `nil`. *Effect* `raises` diperiksa *compiler*.
+
+*Range* `0 .. 5` inklusif, sedangkan `range` Python eksklusif. `and`, `or`, dan `not` menggantikan
+`&&`, `||`, dan `!`. Tidak ada kata kunci `async` / `await` bawaan; async dibangun lewat makro
+`{.async.}`. *Integer* punya lebar tetap, bukan presisi sembarang seperti di Python. *Overflow* pada
+*type* signed memicu `OverflowDefect` bahkan di `-d:release`; *integer* unsigned membungkus; baru
+`-d:danger` mematikan pemeriksaan itu.
 
 *Object* *value* disalin saat ditugaskan, bukan dibagi lewat referensi seperti `class` Python. Untuk
 berbagi, pakai `ref object`. Tidak ada dekorator seperti di Python; peran serupa diambil *pragma*
@@ -177,21 +186,28 @@ biasa dipakai Rust dan Go digantikan oleh titik dua dan indentasi.
 ## Jebakan
 
 Indentasi signifikan, dan *tab* tidak boleh dipakai untuk menjorok. Campur spasi dan *tab* membuat
-*compiler* menolak atau salah membaca. *Parameter* `var` membuat *procedure* bisa mengubah *variable*
-*caller* tanpa *pointer* eksplisit. *Identifier* Nim mengabaikan besar-kecil dan garis bawah kecuali
-huruf pertama, jadi `get_name` sama dengan `getName`, tetapi `GetName` berbeda. `var n: Node` untuk
-`ref object` berisi `nil`, sehingga perlu `new(n)` sebelum dipakai. Menyalin `ref` menyalin
-*pointer*-nya, bukan isinya, jadi dua nama bisa menunjuk *object* yang sama. `case` pada *enum* harus
-lengkap, dan *compiler* menolak cabang yang kurang. Tidak ada konversi otomatis dari *variable* `int` ke
-`float`; *literal* seperti `1` masih diterima. `if` berjalan saat program berjalan, sedangkan `when` diselesaikan saat compile;
-tertukar keduanya berarti artinya berubah. *String* bukan *seq* `char`, dan `s[0]` bertipe `char`.
-Terakhir, `echo` tidak menambahkan pemisah antar *argument*.
+*compiler* menolak atau salah membaca. *Parameter* `var` membuat *procedure* bisa mengubah
+*variable* *caller* tanpa *pointer* eksplisit.
 
-Bila *compiler* mengeluh soal *effect* `raises`, jangan buru-buru mematikannya; biasanya ada *exception*
-yang memang perlu ditangani. `discard` juga bukan basa-basi: call *procedure* yang return
-*value* tanpa memakainya akan ditolak, dan itu justru menangkap *error* yang mudah luput di bahasa
-dinamis. Pada *object* varian, *field* yang sama tidak boleh muncul di dua cabang `case`, jadi nama
-*field* perlu dipilih dengan hati-hati sejak awal.
+*Identifier* Nim mengabaikan besar-kecil dan garis bawah kecuali huruf pertama, jadi `get_name` sama
+dengan `getName`, tetapi `GetName` berbeda. `var n: Node` untuk `ref object` berisi `nil`, sehingga
+perlu `new(n)` sebelum dipakai.
+
+Menyalin `ref` menyalin *pointer*-nya, bukan isinya, jadi dua nama bisa menunjuk *object* yang sama.
+`case` pada *enum* harus lengkap, dan *compiler* menolak cabang yang kurang. Tidak ada konversi
+otomatis dari *variable* `int` ke `float`; *literal* seperti `1` masih diterima.
+
+`if` berjalan saat program berjalan, sedangkan `when` diselesaikan saat compile; tertukar keduanya
+berarti artinya berubah. *String* bukan *seq* `char`, dan `s[0]` bertipe `char`. Terakhir, `echo`
+tidak menambahkan pemisah antar *argument*.
+
+Bila *compiler* mengeluh soal *effect* `raises`, jangan buru-buru mematikannya; biasanya ada
+*exception* yang memang perlu ditangani. `discard` juga bukan basa-basi: call *procedure* yang
+return *value* tanpa memakainya akan ditolak, dan itu justru menangkap *error* yang mudah luput di
+bahasa dinamis.
+
+Pada *object* varian, *field* yang sama tidak boleh muncul di dua cabang `case`, jadi nama *field*
+perlu dipilih dengan hati-hati sejak awal.
 
 Satu hal lagi, penamaan *type* dan *variable* dibedakan oleh huruf pertama saja; gaya resmi Nim adalah
 `PascalCase` untuk *type* dan `camelCase` untuk nama lain. Menjaga satu gaya sejak awal menghindari

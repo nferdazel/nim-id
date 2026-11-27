@@ -288,5 +288,5 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
 ## Selanjutnya
 
-Bab berikutnya membahas [*tuple*](tuples.qmd): menggabungkan beberapa *value* menjadi satu,
+Lanjut ke [*tuple*](tuples.qmd): menggabungkan beberapa *value* menjadi satu,
 mengembalikannya dari *procedure*, dan membongkarnya kembali dalam satu *line*.

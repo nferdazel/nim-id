@@ -64,10 +64,11 @@ label: keep going
 ```
 
 Perhatikan bentuk satu *line* `if score >= 75: 'A' else: 'B'`. Bentuk ini valid karena setiap cabang
-menghasilkan satu *value*. Kalau `if` dipakai sebagai *expression*, semua cabang harus bertipe sama, dan
-`else` wajib ada. Tanpa `else`, Nim memperlakukannya sebagai *statement* biasa, sehingga *value* di
-dalamnya dianggap tidak terpakai: `let x = if cond: 1` ditolak dengan *message*
-`has to be used (or discarded)`.
+menghasilkan satu *value*. Kalau `if` dipakai sebagai *expression*, semua cabang harus bertipe sama,
+dan `else` wajib ada.
+
+Tanpa `else`, Nim memperlakukannya sebagai *statement* biasa, sehingga *value* di dalamnya dianggap
+tidak terpakai: `let x = if cond: 1` ditolak dengan *message* `has to be used (or discarded)`.
 
 ## `case`: memilih berdasarkan *value*
 

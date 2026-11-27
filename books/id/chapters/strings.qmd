@@ -158,9 +158,11 @@ Hello, Nim!
 count: 11
 ```
 
-`add` menambahkan langsung ke *string* yang sudah ada. Karena mengubah *value*, `greeting` harus `var`.
-Operator `&` membuat *string* baru dari dua sisi tanpa menyentuh yang lama; karena itu `shout` boleh
-`let`. Untuk menggabung banyak bagian sekaligus, `add` lebih hemat karena tidak menyalin berulang.
+`add` menambahkan langsung ke *string* yang sudah ada. Karena mengubah *value*, `greeting` harus
+`var`. Operator `&` membuat *string* baru dari dua sisi tanpa menyentuh yang lama; karena itu
+`shout` boleh `let`.
+
+Untuk menggabung banyak bagian sekaligus, `add` lebih hemat karena tidak menyalin berulang.
 Rangkaian `a & b & c` membuat *string* perantara di tiap langkah, sedangkan `add` menumbuhkan satu
 *buffer* yang sama.
 

@@ -256,9 +256,10 @@ Beberapa kebiasaan membuat angka tidak menyesatkan:
 
 Optimasi tidak selalu perlu. Kalau program sudah selesai dalam waktu yang bisa ditunggu, mengejar
 beberapa milidetik hanya menambah kode yang sulit dibaca. Kalau waktu habis di *input*/*output* atau
-menunggu jaringan, mempercepat perhitungan tidak mengubah apa pun. Ukur dulu, temukan
-*hotspot*-nya dengan *profiler*, baru ubah algoritmanya: mengganti algoritma yang salah hampir selalu
-lebih besar *result*-nya daripada menambal detail kecil.
+menunggu jaringan, mempercepat perhitungan tidak mengubah apa pun.
+
+Ukur dulu, temukan *hotspot*-nya dengan *profiler*, baru ubah algoritmanya: mengganti algoritma yang
+salah hampir selalu lebih besar *result*-nya daripada menambal detail kecil.
 
 ## Latihan
 
@@ -286,4 +287,4 @@ dipakai untuk selang.
 
 ## Selanjutnya
 
-Angka sudah ada, dan *hotspot* sudah ketemu. Yang belum: biner yang bisa dijalankan di mesin selain mesin pengembang. Bab berikutnya membahas pilihan target, *flag* compiler, dan biner statis. Lanjut ke [Cross-compile dan deploy biner](cross-compile.qmd).
+Angka sudah ada, dan *hotspot* sudah ketemu. Yang belum: biner yang bisa dijalankan di mesin selain mesin pengembang. Bab berikutnya membahas pilihan target, *flag* *compiler*, dan biner statis. Lanjut ke [Cross-compile dan deploy biner](cross-compile.qmd).

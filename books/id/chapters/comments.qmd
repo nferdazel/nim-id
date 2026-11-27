@@ -72,11 +72,13 @@ Bacalah *message*-nya. `broken.nim` adalah *file* itu (kadang ditulis dengan *pa
 berhenti. Isinya, "end of multiline *comment* expected", artinya *compiler* mencapai akhir *file*
 sebelum menemukan `]#`.
 
-Ada pelajaran penting di posisinya. Kita write `#[` di *line* 1, tetapi *compiler* menunjuk *line* 3:
-*line* kosong setelah *line* terakhir. *Compiler* baru tahu *comment*-nya tidak pernah ditutup waktu
-mencapai akhir *file*. Jadi posisi yang dilaporkan adalah tempat *compiler* menyadari masalahnya,
-bukan selalu tempat *error* itu ditulis. Karena itu, saat menemui *error* yang menunjuk di luar
-dugaan, periksa beberapa *line* sebelumnya.
+Ada pelajaran penting di posisinya. Kita write `#[` di *line* 1, tetapi *compiler* menunjuk *line*
+3: *line* kosong setelah *line* terakhir. *Compiler* baru tahu *comment*-nya tidak pernah ditutup
+waktu mencapai akhir *file*.
+
+Jadi posisi yang dilaporkan adalah tempat *compiler* menyadari masalahnya, bukan selalu tempat
+*error* itu ditulis. Karena itu, saat menemui *error* yang menunjuk di luar dugaan, periksa beberapa
+*line* sebelumnya.
 
 ## *Doc comment*: `##`
 

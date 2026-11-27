@@ -49,11 +49,12 @@ orc
 
 ## Mengubah mode dengan `--mm`
 
-Untuk memilih mode lain, berikan *flag* ke *compiler*. *File* contoh `a06_mm_arc.nim` berisi kode yang
-sama dengan di atas, dengan *file* `a06_mm_arc.mode` berisi `--mm:arc`. Jalankan dengan
-`nim c -r --mm:arc main.nim`, dan *output*-nya menjadi `arc`, karena *flag* itu mendefinisikan
-`gcArc` dan bukan `gcOrc`. Ganti *flag* menjadi `--mm:orc` untuk kembali ke mode bawaan. Verifikasi
-seperti ini lebih meyakinkan daripada menghafal mana yang berlaku.
+Untuk memilih mode lain, berikan *flag* ke *compiler*. *File* contoh `a06_mm_arc.nim` berisi kode
+yang sama dengan di atas, dengan *file* `a06_mm_arc.mode` berisi `--mm:arc`.
+
+Jalankan dengan `nim c -r --mm:arc main.nim`, dan *output*-nya menjadi `arc`, karena *flag* itu
+mendefinisikan `gcArc` dan bukan `gcOrc`. Ganti *flag* menjadi `--mm:orc` untuk kembali ke mode
+bawaan. Verifikasi seperti ini lebih meyakinkan daripada menghafal mana yang berlaku.
 
 ## `=destroy`: membersihkan saat *value* dibuang
 

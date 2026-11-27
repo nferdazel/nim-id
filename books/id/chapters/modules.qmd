@@ -1,10 +1,11 @@
 # *Module*, `import`, dan `export`
 
 Program sepanjang seratus *line* masih nyaman di satu *file*. Begitu melewati beberapa ratus *line*,
-satu *file* menjadi sulit dibaca, dan setiap perubahan menyeret separuh program. Nim membagi program
-menjadi *module*: satu *file*, satu ruang nama, satu unit yang bisa diimpor. Aturannya sebenarnya
-sederhana. Yang menyimpan kejutan adalah `import`: nama apa yang masuk, milik siapa, dan siapa yang
-boleh memakainya.
+satu *file* menjadi sulit dibaca, dan setiap perubahan menyeret separuh program.
+
+Nim membagi program menjadi *module*: satu *file*, satu ruang nama, satu unit yang bisa diimpor.
+Aturannya sebenarnya sederhana. Yang menyimpan kejutan adalah `import`: nama apa yang masuk, milik
+siapa, dan siapa yang boleh memakainya.
 
 ::: {.callout-note}
 ## Tujuan bab
@@ -197,11 +198,13 @@ echo "never reached"
 main.nim(1, 8) Error: cannot open file: not_a_real_module
 ```
 
-Posisi `(1, 8)` menunjuk nama *module* di *line* `import`. *Compiler* tidak tahu *file* itu memang tidak
-ada atau hanya salah ketik, jadi *message*-nya *literal*: *file* tidak bisa dibuka. Periksa kembali nama
-*file* dan letaknya. Untuk *standard library*, awalan `std/` adalah konvensi yang membuat asal *module*
-jelas: `import std/strutils`. Bentuk tanpa awalan masih dikenali *compiler*, tetapi tidak menunjukkan
-bahwa *module* itu bagian dari *standard library*.
+Posisi `(1, 8)` menunjuk nama *module* di *line* `import`. *Compiler* tidak tahu *file* itu memang
+tidak ada atau hanya salah ketik, jadi *message*-nya *literal*: *file* tidak bisa dibuka. Periksa
+kembali nama *file* dan letaknya.
+
+Untuk *standard library*, awalan `std/` adalah konvensi yang membuat asal *module* jelas:
+`import std/strutils`. Bentuk tanpa awalan masih dikenali *compiler*, tetapi tidak menunjukkan bahwa
+*module* itu bagian dari *standard library*.
 
 ## Latihan
 

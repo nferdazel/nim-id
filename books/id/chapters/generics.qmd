@@ -86,7 +86,7 @@ Expected one of (first mismatch at [position]):
 
 ## *Generic* pada *type*
 
-Batasan `[T]` juga berlaku untuk *type*, bukan hanya *procedure*. Sebuah `object` bisa diberi *parameter*
+Batasan `[T]` berlaku untuk *type* juga. Sebuah `object` bisa diberi *parameter*
 *type*, sehingga isinya menyesuaikan.
 
 ```{.nim}
@@ -176,8 +176,10 @@ echo fill[int, 2](9)
 
 `N` dipakai sebagai ukuran `array[N, T]`, dan ukuran *array* harus tetap, jadi `N` wajib diketahui
 *compiler*. Karena `N` tidak muncul di daftar *parameter* *value*, keduanya di-write eksplisit:
-`fill[char, 3]`. *Result* `fill[char, 3]('z')` adalah *array* tiga *character*. Ukuran `N` menjadi bagian
-dari *type* *result*, jadi `fill[int, 2](9)` menghasilkan `array[2, int]`, *type* yang berbeda dari
+`fill[char, 3]`.
+
+*Result* `fill[char, 3]('z')` adalah *array* tiga *character*. Ukuran `N` menjadi bagian dari *type*
+*result*, jadi `fill[int, 2](9)` menghasilkan `array[2, int]`, *type* yang berbeda dari
 `fill[int, 3](9)`.
 
 ## Latihan

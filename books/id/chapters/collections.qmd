@@ -156,10 +156,11 @@ seq: 15
 ```
 
 `openArray[int]` menerima `array` maupun `seq` bertipe *element* `int`, tanpa menyalin isinya. Ini
-jenis *parameter* yang dipakai `add`, `insert`, dan banyak *procedure* `std/` lainnya. Bedanya dengan
-`array` dan `seq`: `openArray` hanya berlaku sebagai *parameter*, bukan *type* yang bisa disimpan di
-*variable* atau di-return dari *procedure*. *Procedure* yang menerima `openArray` juga tidak bisa
-mengubah panjangnya.
+jenis *parameter* yang dipakai `add`, `insert`, dan banyak *procedure* `std/` lainnya.
+
+Bedanya dengan `array` dan `seq`: `openArray` hanya berlaku sebagai *parameter*, bukan *type* yang
+bisa disimpan di *variable* atau di-return dari *procedure*. *Procedure* yang menerima `openArray`
+juga tidak bisa mengubah panjangnya.
 
 Satu catatan tentang penyalinan: menugaskan `array` atau `seq` ke *variable* baru menyalin isinya,
 bukan berbagi. Mengubah salinannya tidak menyentuh yang asli, berbeda dari `list` di Python.

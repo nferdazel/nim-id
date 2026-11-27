@@ -226,11 +226,13 @@ main.nim(3, 6) Named: expression '' has no type (or is ambiguous)
 main.nim(3, 5) Named: concept predicate failed
 ```
 
-Bacalah dari bawah. *Line* terakhir, `concept predicate failed`, menyebut penyebab sebenarnya. *Line*
-di atasnya menunjuk *file* dan *line* konsep, yaitu `Named` di *line* 3, lalu merinci *expression* mana
-yang gagal. *Compiler* mencoba `x.name` pada `int`, menemukan tidak ada *field* `name`, dan melaporkannya
-berulang untuk tiap bagian *expression*. *Message*-nya panjang, tapi arahnya jelas: periksa konsep di *line*
-yang ditunjuk.
+Bacalah dari bawah. *Line* terakhir, `concept predicate failed`, menyebut penyebab sebenarnya.
+*Line* di atasnya menunjuk *file* dan *line* konsep, yaitu `Named` di *line* 3, lalu merinci
+*expression* mana yang gagal.
+
+*Compiler* mencoba `x.name` pada `int`, menemukan tidak ada *field* `name`, dan melaporkannya
+berulang untuk tiap bagian *expression*. *Message*-nya panjang, tapi arahnya jelas: periksa konsep
+di *line* yang ditunjuk.
 
 ## Batas konsep
 
@@ -276,4 +278,4 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
 ## Selanjutnya
 
-Bab berikutnya membahas [*object* varian dan `distinct`](variants-and-distinct.qmd): satu *type* *object* yang bentuk *field*-nya berubah sesuai penanda, dan *type* baru yang tidak bisa tertukar.
+Lanjut ke [*object* varian dan `distinct`](variants-and-distinct.qmd): satu *type* *object* yang bentuk *field*-nya berubah sesuai penanda, dan *type* baru yang tidak bisa tertukar.

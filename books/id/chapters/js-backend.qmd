@@ -134,7 +134,7 @@ Perhatikan *file* yang disebut: `marshal.nim`, bukan *file* kita. *Message*-nya 
 itu sendiri, yang menolak di-compile ke target ini pada *line* 52. Kalimatnya menyebut syaratnya
 langsung dan menambahkan saran memakai *package* lain untuk serialisasi.
 
-*Error message* bisa datang dari dalam *standard library*, bukan hanya dari kode kita. Membaca nama
+*Error message* juga bisa datang dari dalam *standard library*, tidak selalu dari kode kita. Membaca nama
 *file* itu membantu memisahkan masalah di kode sendiri dari batas target.
 
 Solusinya memilih *module* yang didukung. Untuk urusan data, `std/json` bekerja di semua *backend*.

@@ -249,4 +249,4 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
 ## Selanjutnya
 
-Bab berikutnya membahas *data type* dasar secara lebih rinci: *range* setiap *type* *integer*, kapan memakai `int` dan kapan `int64`, serta *literal* dalam basis lain. Lanjut ke [*Data type* primitif dan *literal*](primitive-types.qmd).
+*Data type* dasar dibahas lebih rinci berikutnya: *range* setiap *type* *integer*, kapan memakai `int` dan kapan `int64`, serta *literal* dalam basis lain. Lanjut ke [*Data type* primitif dan *literal*](primitive-types.qmd).

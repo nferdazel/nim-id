@@ -100,11 +100,12 @@ echo "calls: ", calls
 calls: 1
 ```
 
-`quote do` menghasilkan AST yang berisi `block`, `let`, dan penjumlahan. Tanda *backtick* menempelkan
-*value* dari luar ke dalam *result*-nya: `` `x` `` menaruh AST *argument* di posisi itu. Karena *value* itu
-disimpan lebih dulu di `let it`, `bump()` hanya di-call sekali. Nama `it` yang dideklarasikan di
-dalam `quote do` juga diberi penanda internal, sehingga tidak bentrok dengan `it` milik kode
-*caller*.
+`quote do` menghasilkan AST yang berisi `block`, `let`, dan penjumlahan. Tanda *backtick*
+menempelkan *value* dari luar ke dalam *result*-nya: `` `x` `` menaruh AST *argument* di posisi itu.
+
+Karena *value* itu disimpan lebih dulu di `let it`, `bump()` hanya di-call sekali. Nama `it` yang
+dideklarasikan di dalam `quote do` juga diberi penanda internal, sehingga tidak bentrok dengan `it`
+milik kode *caller*.
 
 Bedanya dengan *template*:
 
@@ -329,4 +330,4 @@ Jawaban ada di [Lampiran A](../appendix/answers.qmd).
 
 ## Selanjutnya
 
-Bab berikutnya membahas [konsep dan pencocokan *type*](concepts.qmd): membatasi *procedure* *generic* berdasarkan bentuk *type*, bukan namanya.
+Batasan pada *procedure* *generic* dibahas di [konsep dan pencocokan *type*](concepts.qmd): memilih *procedure* *generic* berdasarkan bentuk *type*, bukan namanya.
