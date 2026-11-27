@@ -161,7 +161,7 @@ nim c --passC:-DLOG_LEVEL=2 --passL:-lm --out:app app.nim
 Pakai keduanya seperlunya. *Option* yang tidak dipahami *compiler* C akan menggagalkan *build*, dan
 *message*-nya datang dari *compiler* C, bukan dari Nim.
 
-## *Error* sengaja: `when` butuh *value* compile-time
+## *Error* sengaja: `when` butuh *value* *compile-time*
 
 `when` berbeda dari `if`. Cabangnya dipilih saat compile, jadi syaratnya harus bisa dihitung saat
 itu juga.
